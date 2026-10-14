@@ -1285,7 +1285,12 @@
     if(window._gnGroup===g && window._gnCh) return;
     gnotesUnsub(); window._gnGroup=g; window._gnLast='';
     // Gruppen-Zugehörigkeit merken (für die individuelle Nachbereitung nach der Stunde)
-    try{ const { data:{ user } }=await sb.auth.getUser(); if(user){ sb.from('class_group_members').upsert({ class_id:STUNDE, user_id:user.id, grp:g, name:(window._meName||null), updated_at:new Date().toISOString() },{ onConflict:'class_id,user_id' }).then(({error})=>{ if(error) console.warn('Gruppen-Zuordnung', error); }); } }catch(e){}
+    /* Diese Zeile wird JETZT abgewartet, nicht mehr nebenbei abgeschickt.
+       Seit dem 14.10.2026 entscheidet genau dieser Eintrag, wer die Tafel
+       dieses Raums lesen darf (RLS auf group_notes): jeder Raum sieht nur
+       seine eigene Tafel. Lief der Eintrag nebenbei, kam die Abfrage der
+       Tafel zwei Zeilen weiter manchmal zuerst — und der Raum blieb leer. */
+    try{ const { data:{ user } }=await sb.auth.getUser(); if(user){ const { error:zErr } = await sb.from('class_group_members').upsert({ class_id:STUNDE, user_id:user.id, grp:g, name:(window._meName||null), updated_at:new Date().toISOString() },{ onConflict:'class_id,user_id' }); if(zErr) console.warn('Gruppen-Zuordnung', zErr); } }catch(e){}
     // aktuellen Stand aus der DB laden (für Nachzügler / Reload)
     try{ const { data } = await sb.from('group_notes').select('notes').eq('class_id',STUNDE).eq('grp',g).maybeSingle(); const v=(data&&data.notes)||''; window._gnLast=v; if(document.activeElement!==el) el.innerHTML=v; }catch(e){}
     // Live-Sync per Broadcast (wie Breakout/Handmeldung/Stift – unabhängig von RLS, kommt sofort bei ALLEN an)

@@ -5,6 +5,17 @@
 import { createClient } from '@supabase/supabase-js';
 
 export const maxDuration = 60;
+/* Julia, 14.10.2026: "Bis zum 01.11 laeuft alles normal mit der
+   Nachbereitung, sowohl in der Hauptgruppe als auch alles von den
+   Kleingruppen werden in EINER Nachbereitung erstellt und an die
+   Schueler verschickt."
+   Die gemeinsame Nachbereitung nimmt die Kleingruppen-Tafeln schon mit
+   (siehe buildPrompt: "GRUPPENCHATS AUS DEN KLEINGRUPPEN ... UNBEDINGT
+   mit uebernehmen"). Die zusaetzliche individuelle Nachbereitung pro
+   Kleingruppe wuerde daraus zwei machen — die ruht deshalb bis zum
+   1. November. */
+const EINZELN_AB = Date.parse('2026-11-01T00:00:00+01:00');
+const einzelnJetzt = () => Date.now() >= EINZELN_AB;
 // Schnelles Modell, damit die Generierung sicher im Zeitlimit bleibt (Sonnet war zu langsam -> Abbruch).
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001';
 
@@ -50,7 +61,7 @@ export default async function handler(req, res) {
      Lauf galt sie als fertig und fiel aus der Auswahl.
      Deshalb jetzt ein eigener Nachholer, der vor der teuren Arbeit
      laeuft: eine Stunde pro Durchgang, aelteste zuerst. */
-  await rueckstandGruppen(sb, base, ended);
+  if (einzelnJetzt()) await rueckstandGruppen(sb, base, ended);
 
   const ids = ended.map(c => c.id);
   const [{ data: notes }, { data: gnotes }, { data: mats }] = await Promise.all([
@@ -91,7 +102,7 @@ export default async function handler(req, res) {
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts, source: r.source });
       // Additiv: individuelle Nachbereitung pro Kleingruppe anstoßen (schreibt student_nachbereitung;
       // ändert NICHT die gemeinsame Nachbereitung). Nur wenn es Gruppen-Zuordnungen gibt, passiert etwas.
-      if (r.ok) await gruppenAnstossen(sb, base, c);
+      if (r.ok && einzelnJetzt()) await gruppenAnstossen(sb, base, c);
     } catch (e) {
       results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: false, error: e.message });
     }
