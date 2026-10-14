@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     .in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
 
-  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], ohne_stripe: [], fehler: [] };
+  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], ohne_stripe: [], fehler: [] };
 
   for (const p of leute || []) {
     bericht.geprueft++;
@@ -107,6 +107,37 @@ export default async function handler(req, res) {
         }
       }
 
+      /* --- 3b. Das Abo ins Profil schreiben ------------------------
+         Bis zum 13.10.2026 stand nirgends, von wann bis wann ein Abo
+         laeuft und ob gekuendigt wurde — das lag nur bei Stripe. Julia
+         konnte in der Schuelerliste also nicht sehen, wer wann
+         auslaeuft. Jetzt steht es im Profil und wird hier jede Nacht
+         aufgefrischt. */
+      const jungstes = (laufend[0] || (subs.data || [])[0]) || null;
+      const zeit = (t) => (t ? new Date(t * 1000).toISOString() : null);
+      const abo = jungstes ? {
+        abo_start:         zeit(jungstes.current_period_start),
+        abo_ende:          zeit(jungstes.current_period_end),
+        /* cancel_at_period_end heisst: laeuft noch bis zum Periodenende
+           und hoert dann auf. canceled_at heisst: schon beendet. */
+        abo_gekuendigt_am: zeit(jungstes.canceled_at)
+                           || (jungstes.cancel_at_period_end ? new Date().toISOString() : null),
+        abo_stripe_status: jungstes.status || null,
+        abo_plan:          (jungstes.metadata && jungstes.metadata.plan) || null,
+        abo_geprueft_am:   new Date().toISOString(),
+      } : {
+        abo_stripe_status: 'kein_abo',
+        abo_geprueft_am:   new Date().toISOString(),
+      };
+      if (!trocken) await sb.from('profiles').update(abo).eq('id', p.id);
+
+      if (jungstes && jungstes.cancel_at_period_end && LAEUFT.includes(jungstes.status)) {
+        bericht.gekuendigt_laeuft_aus.push({
+          name: p.name || p.email, email: p.email,
+          bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
+        });
+      }
+
       // --- 4. Status angleichen
       const sollAktiv = hatAbo;
       const istAktiv = (p.status || '') === 'aktiv';
@@ -114,11 +145,29 @@ export default async function handler(req, res) {
         if (!trocken) await sb.from('profiles').update({ status: 'aktiv' }).eq('id', p.id);
         bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status });
       } else if (!sollAktiv && istAktiv) {
-        if (!trocken) await sb.from('profiles').update({ status: 'inaktiv' }).eq('id', p.id);
+        /* Kein laufendes Abo mehr: Status auf 'gekuendigt' statt
+           'inaktiv', damit Julia in der Liste nachvollziehen kann,
+           warum jemand weg ist. Und das Abzeichen faellt weg — wer
+           nicht mehr zahlt, soll nicht weiter als Premium dastehen.
+           Was bleibt: die Materialien und das Material der gebuchten
+           Stunden (RLS, siehe ist_altschueler()). */
+        if (!trocken) {
+          await sb.from('profiles')
+            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
+            .eq('id', p.id);
+          await sb.from('zugang_log').insert({
+            user_id: p.id, email: p.email, aktion: 'gekuendigt',
+            grund: 'kein laufendes Abo bei Stripe mehr'
+              + (abo.abo_ende ? ' (lief bis ' + String(abo.abo_ende).slice(0, 10) + ')' : ''),
+            vorher:  { status: p.status, tier: p.tier },
+            nachher: { status: 'gekuendigt', tier: null },
+          });
+        }
         bericht.gesperrt.push({
           name: p.name || p.email,
           email: p.email,
-          letztes_abo: (subs.data && subs.data[0] && subs.data[0].status) || 'keins'
+          letztes_abo: (subs.data && subs.data[0] && subs.data[0].status) || 'keins',
+          lief_bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
         });
       }
     } catch (e) {
