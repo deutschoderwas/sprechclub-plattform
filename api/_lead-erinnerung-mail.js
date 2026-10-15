@@ -40,82 +40,78 @@ export function fristSatz(jetzt) {
 
 export function erinnerungHtml(vorname, jetzt) {
   const v = esc(vorname || 'du');
-  const punkt = (titel, text) =>
-    `<tr><td style="padding:0 0 14px"><table role="presentation" cellpadding="0" cellspacing="0"><tr>
-      <td valign="top" style="padding-right:10px;font-size:16px;line-height:1.5;color:#35AFD0">&#9679;</td>
-      <td style="font-size:16px;line-height:1.6"><strong>${titel}</strong> ${text}</td>
-    </tr></table></td></tr>`;
+  const tage = tageBisEnde(jetzt);
+  const frist = tage <= 0 ? 'Der Fruehbucherpreis ist abgelaufen'
+    : (tage === 1 ? 'Nur noch <b>ein Tag</b>' : 'Noch <b>' + tage + ' Tage</b>');
 
+  /* Aufbau nach Julias Vorgabe vom 15.10.2026: "Kein blosser Text,
+     Abschnitte, Klarheit, bestimmte Sachen einrahmen in Boxen, kuerzer,
+     darauf aufmerksam machen, dass der Sprechclub am 01.11 startet und
+     der grosse Rabatt bis zum 31.10 gilt."
+     Also: zwei Saetze Begruessung, drei Kaesten, ein Knopf, ein Satz zum
+     Schluss. Die beiden Daten stehen in eigenen Kaesten, damit sie auch
+     beim Durchscrollen haengen bleiben. */
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Noch ist Zeit</title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Noch ${tage} Tage</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">Zwischen verstehen und sagen liegt eine L&uuml;cke. Die schlie&szlig;t man nur durch Reden.</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">Start am 1. November &middot; Rabatt nur bis 31. Oktober</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
-  <tr><td style="padding:24px 32px 8px">
-    <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
-    <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spa&szlig; &amp; Leichtigkeit</span>
+  <tr><td style="padding:24px 30px 0">
+    <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:20px">deutsch<span style="color:#14B8A6">oderwas</span></span>
   </td></tr>
-  <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
 
-  <tr><td style="padding:24px 32px 4px">
-    <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:27px;line-height:1.25;margin:0 0 18px;color:#1A1A1A">
-      Zwischen <span style="color:#DD0000">verstehen</span> und <span style="color:#DD0000">sagen</span>
+  <tr><td style="padding:16px 30px 0">
+    <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:0 0 12px">
+      ${frist}, ${v}. Dann wird <span style="color:#DD0000">gesprochen</span>.
     </h1>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Hallo ${v},</p>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">du hast dich vor einer Weile f&uuml;r den Sprechclub eingetragen &mdash; dar&uuml;ber habe ich mich sehr gefreut. Dabei bist du bisher noch nicht, und ich dachte, ich melde mich noch einmal bei dir.</p>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Vielleicht kennst du das: Du verstehst fast alles. Du liest, du schaust Serien auf Deutsch, du hast Kurse gemacht &mdash; einen nach dem anderen. Und dann stehst du beim Arzt, beim Amt oder in der Kaffeek&uuml;che, jemand stellt dir eine einfache Frage, und im Kopf ist es pl&ouml;tzlich still.</p>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 20px">Nicht, weil du zu wenig kannst. Sondern weil zwischen <em>verstehen</em> und <em>sagen</em> eine L&uuml;cke liegt, die sich nur durch Reden schlie&szlig;t.</p>
-  </td></tr>
-
-  <tr><td style="padding:0 32px 4px">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:16px">
-      <tr><td style="padding:20px 22px 8px">
-        <p style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0F766E;margin:0 0 14px">Genau daf&uuml;r gibt es den Club</p>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-          ${punkt('LIVE-Sprechrunden in kleinen Gruppen', '&mdash; von Montag bis Sonntag, du suchst dir aus, wann. Themen aus dem Alltag, vorbereiten musst du nichts.')}
-          ${punkt('Die Lernplattform von A1 bis C1', '&mdash; Lektionen mit Dialogen, Wortschatz und &Uuml;bungen, rund um die Uhr offen.')}
-          ${punkt('Amanda, deine KI-Tutorin', '&mdash; sie h&ouml;rt zu, antwortet und korrigiert. Nachts um drei genauso geduldig wie am Nachmittag.')}
-          ${punkt('Menschen mit demselben Ziel', '&mdash; eine Community, in der niemand ausgelacht wird, wenn ein Satz schiefgeht.')}
-        </table>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <tr><td style="padding:20px 32px 0">
-    <p style="font-size:16px;line-height:1.65;margin:0 0 16px">Der LIVE-Unterricht startet am <strong>1. November</strong>. Die Lernplattform ist ab deiner Anmeldung sofort f&uuml;r dich offen.</p>
-  </td></tr>
-
-  <tr><td style="padding:4px 32px 4px">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:2px solid #DD0000;border-radius:16px">
-      <tr><td style="padding:20px 22px" align="center">
-        <span style="display:inline-block;background:#DD0000;color:#FFFFFF;font-weight:700;font-size:13px;border-radius:999px;padding:6px 14px;margin-bottom:12px">${fristSatz(jetzt)}</span>
-        <p style="font-size:17px;line-height:1.6;margin:8px 0 4px;color:#1A1A1A">
-          <strong>39 &euro; im Monat</strong> im Jahresabo <span style="color:#6B7280;text-decoration:line-through">99 &euro;</span><br>
-          <span style="font-size:15px;color:#5A6B72">oder 49 &euro; im Monat, monatlich k&uuml;ndbar</span>
-        </p>
-        <p style="font-size:14px;line-height:1.55;margin:10px 0 16px;color:#5A6B72">Der Preis bleibt dir erhalten, auch wenn der Club sp&auml;ter teurer wird.</p>
-        <a href="https://www.deutschoderwas-club.de/preise" style="display:inline-block;background:linear-gradient(135deg,#2DD4BF,#14B8A6);color:#06403A;font-weight:700;font-size:16px;text-decoration:none;border-radius:999px;padding:14px 32px">Meinen Platz sichern</a>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <tr><td style="padding:22px 32px 6px">
-    <p style="font-size:15px;line-height:1.6;margin:0 0 16px;color:#5A6B72">Und falls du dich in der Zwischenzeit schon angemeldet hast: Dann ignorier diese Nachricht einfach &mdash; und ich freue mich bald auf dich.</p>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 6px">Ich w&uuml;rde mich freuen, dich im Club zu sehen.</p>
-    <p style="font-size:16px;line-height:1.65;margin:0">Herzliche Gr&uuml;&szlig;e<br><strong>Julia</strong></p>
-  </td></tr>
-
-  <tr><td style="padding:18px 32px 28px">
-    <div style="height:1px;background:#F0E5D8;margin-bottom:14px"></div>
-    <p style="font-size:12.5px;line-height:1.6;color:#6B7280;margin:0">
-      Du bekommst diese Mail, weil du dich auf deutschoderwas f&uuml;r den Sprechclub eingetragen hast.
-      Kein Interesse mehr? Antworte einfach mit &bdquo;Stopp&ldquo;, dann h&ouml;rst du nichts mehr von mir.
+    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
+      Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Daten sind jetzt wichtig f&uuml;r dich:
     </p>
-    <p style="font-size:12.5px;line-height:1.6;color:#6B7280;margin:10px 0 0">
-      deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen, Deutschland &middot;
-      <a href="mailto:deutschoderwas@gmail.com" style="color:#0F766E">deutschoderwas@gmail.com</a> &middot; USt-ID: DE676677898
+  </td></tr>
+
+  <tr><td style="padding:0 30px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
+      <tr><td style="padding:16px 18px">
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#128197; Der Unterricht startet am 1. November</div>
+        <div style="font-size:15px;line-height:1.55;color:#06403A">Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.</div>
+      </td></tr>
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF3D6;border:2px solid #FFCE00;border-radius:14px;margin-bottom:12px">
+      <tr><td style="padding:16px 18px">
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#9203; Der gro&szlig;e Rabatt gilt nur bis zum <span style="color:#DD0000">31. Oktober</span></div>
+        <div style="font-size:15px;line-height:1.55">
+          <b>39&nbsp;&euro; statt 99&nbsp;&euro;</b> im Monat (Jahresabo) oder 49&nbsp;&euro; monatlich.
+          Wer sp&auml;ter kommt, zahlt den vollen Preis. Dein Preis bleibt dir, solange du dabei bist.
+        </div>
+      </td></tr>
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
+      <tr><td style="padding:14px 18px">
+        <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td align="center" style="padding:0 30px 20px">
+    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">Platz sichern &ndash; bis 31. Oktober</a>
+  </td></tr>
+
+  <tr><td style="padding:0 30px 24px">
+    <p style="font-size:15.5px;line-height:1.65;margin:0">
+      Fragen? Antworte einfach auf diese Mail, ich lese sie selbst.<br>
+      <b>Julia</b> &#128156;
+    </p>
+  </td></tr>
+
+  <tr><td style="background:#1A1A1A;padding:18px 30px">
+    <p style="font-size:11.5px;line-height:1.6;color:#b9b9b9;margin:0">
+      deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen, Deutschland &middot; deutschoderwas@gmail.com &middot; USt-ID: DE676677898<br>
+      Du bekommst diese Mail, weil du dich f&uuml;r den Sprechclub eingetragen hast. Keine weiteren Mails? Antworte kurz mit &bdquo;Stopp&ldquo;.
     </p>
   </td></tr>
 

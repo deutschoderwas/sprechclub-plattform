@@ -24,7 +24,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { erinnerungHtml, tageBisEnde } from './_lead-erinnerung-mail.js';
 
-const KENNUNG = 'lead_erinnerung_okt26';   // ein Mensch, eine Mail
+/* Zweite Welle, 15.10.2026. Eigene Kennung, weil die erste
+   ('lead_erinnerung_okt26', 138 Mails am 5. Oktober) sonst alle
+   aussperren wuerde, die genau jetzt an die Frist erinnert werden
+   sollen. Innerhalb dieser Welle bleibt es bei: ein Mensch, eine Mail. */
+const KENNUNG = 'lead_frist_okt26';
 const MAX = 400;
 
 async function istAdmin(sb, token) {
@@ -92,11 +96,19 @@ export default async function handler(req, res) {
     nach.set(m, { id: l.id, email: m, vorname: vorname(l.name, m) });
   }
 
-  /* 2. Premium-Mitglieder raus */
-  const { data: profile } = await sb.from('profiles').select('email,tier').not('email', 'is', null).limit(5000);
+  /* 2. Wer schon ein Abo hat, raus — und wer schon Schueler ist.
+     Julia, 15.10.2026: "an alle, die noch KEIN ABO haben". Hier stand
+     vorher nur tier='premium'; seit es Community gibt, haette ein
+     zahlendes Community-Mitglied die Werbemail bekommen. Dazu raus:
+     Lehrkraefte, Admins und alte Schueler mit Guthaben — die sind
+     Kundschaft, keine Interessenten, und eine "Schoen, dass du dich
+     eingetragen hast"-Mail waere ihnen gegenueber peinlich. */
+  const { data: profile } = await sb.from('profiles')
+    .select('email,tier,credits,is_admin,is_teacher').not('email', 'is', null).limit(5000);
   let premium = 0;
   for (const p of (profile || [])) {
-    if (p.tier !== 'premium') continue;
+    const istKunde = !!p.tier || p.is_admin || p.is_teacher || Number(p.credits || 0) > 0;
+    if (!istKunde) continue;
     const m = String(p.email || '').trim().toLowerCase();
     if (nach.delete(m)) premium++;
   }
@@ -123,7 +135,9 @@ export default async function handler(req, res) {
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'kein_brevo_schluessel', ...bilanz });
 
   const tage = tageBisEnde();
-  const betreff = 'Noch ' + tage + ' Tage — und ich würde mich freuen, dich dabei zu haben';
+  const betreff = tage === 1
+    ? 'Nur noch morgen: der Rabatt läuft am 31. Oktober aus'
+    : 'Noch ' + tage + ' Tage — danach ist der Rabatt weg';
   let geschickt = 0, fehler = 0;
   const schiefgelaufen = [];
   for (const o of offen) {
