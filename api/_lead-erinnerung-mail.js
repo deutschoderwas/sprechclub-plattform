@@ -100,7 +100,7 @@ export function erinnerungHtml(vorname, jetzt, art) {
         <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">${istCommunity ? '&#128260; Was sich f&uuml;r dich &auml;ndert' : '&#9989; Die Lernplattform ist sofort offen'}</div>
         <div style="font-size:14.5px;line-height:1.55;color:#6B7280">${istCommunity
           ? 'Premium ist alles, was du aus der Community kennst &ndash; plus den Sprechclub. Deine Kurse, &Uuml;bungen und Amanda bleiben nat&uuml;rlich.'
-          : 'Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.'}</div>
+          : 'Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.'}</div>
       </td></tr>
     </table>
   </td></tr>

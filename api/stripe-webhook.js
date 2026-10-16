@@ -259,7 +259,7 @@ async function sendPaymentMail(sub, inv) {
       ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
           <tr><td style="padding:16px 18px">
             <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#9989; Die Lernplattform ist ab sofort offen</div>
-            <div style="font-size:15px;line-height:1.55;color:#06403A">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+            <div style="font-size:15px;line-height:1.55;color:#06403A">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
           </td></tr></table>`
       : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
           <tr><td style="padding:16px 18px">
@@ -275,7 +275,7 @@ async function sendPaymentMail(sub, inv) {
       : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
           <tr><td style="padding:14px 18px">
             <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
-            <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+            <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
           </td></tr></table>`;
     const knopf = community ? 'Zur Lernplattform' : (abo ? 'Stundenplan ansehen' : 'Jetzt Stunde buchen');
     const ziel = community ? 'https://www.deutschoderwas-club.de/schuelerbereich' : BOOK;
@@ -484,7 +484,7 @@ async function sendCommunityWelcome(email, name, abDatum) {
         <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
         <h1 style="font-size:26px;line-height:1.2;margin:8px 0 14px">Willkommen in der Community! &#127881;</h1>
         <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">deine Zahlung ist angekommen &ndash; wie sch&ouml;n, dass du dabei bist! &#128153; Dir steht jetzt die ganze Lernplattform offen: Kursbibliothek von A1 bis C2, Vokabeltrainer, t&auml;glicher Podcast, die Community und Amanda rund um die Uhr.</p>
+        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">deine Zahlung ist angekommen &ndash; wie sch&ouml;n, dass du dabei bist! &#128153; Dir steht jetzt die ganze Lernplattform offen: Kursbibliothek von A1 bis C2, Vokabeltrainer, regelm&auml;&szlig;iger Podcast, die Community und Amanda rund um die Uhr.</p>
         ${start}
       </td></tr>
       <tr><td align="center" style="padding:14px 32px 4px">
@@ -536,7 +536,7 @@ async function sendVerlaengerung(email, name, tier, inv) {
       ? `<div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px"><b>Gezahlt:</b> ${betrag}</div>`
       : '';
     const nutzen = istPremium
-      ? `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">Nutz sie auch diesen Monat: die ganze Lernplattform von A1 bis C2, Vokabeltrainer, t&auml;glicher Podcast, die Community und Amanda rund um die Uhr. Und vor allem der <b>Sprechclub</b> &ndash; t&auml;glich von Montag bis Sonntag. Such dir im Wochenplan eine Stunde aus und sprich.</p>`
+      ? `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">Nutz sie auch diesen Monat: die ganze Lernplattform von A1 bis C2, Vokabeltrainer, regelm&auml;&szlig;iger Podcast, die Community und Amanda rund um die Uhr. Und vor allem der <b>Sprechclub</b> &ndash; t&auml;glich von Montag bis Sonntag. Such dir im Wochenplan eine Stunde aus und sprich.</p>`
       : `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">Nutz sie auch diesen Monat: die Kursbibliothek von A1 bis C2, der Vokabeltrainer, der t&auml;gliche Podcast, die Community und Amanda rund um die Uhr &ndash; alles ist f&uuml;r dich offen.</p>`;
     const knopf = istPremium
       ? `<a href="${site}/schuelerbereich#kalender" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">Stunde im Sprechclub aussuchen</a>`

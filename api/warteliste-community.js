@@ -62,7 +62,7 @@ function mailCommunity(hallo) {
       absaetze: [
         hallo,
         'du stehst seit ein paar Tagen auf der Warteliste &ndash; und jetzt kann ich dir endlich schreiben: <b>die Community ist offen.</b> Ab sofort, ohne Wartezeit.',
-        KASTEN('Die ganze Kursbibliothek <b>A1 bis C1</b><br>Vokabeltrainer, t&auml;glicher Podcast und &Uuml;bungen<br><b>Community-Chat</b> mit den anderen Lernenden<br><b>Amanda</b> beantwortet dir rund um die Uhr jede Frage'),
+        KASTEN('Die ganze Kursbibliothek <b>A1 bis C1</b><br>Vokabeltrainer, regelm&auml;&szlig;iger Podcast und &Uuml;bungen<br><b>Community-Chat</b> mit den anderen Lernenden<br><b>Amanda</b> beantwortet dir rund um die Uhr jede Frage'),
         '<b>12 &euro; im Monat</b> bei j&auml;hrlicher Zahlung, 16 &euro; wenn du monatlich zahlst. K&uuml;ndbar, wann du willst.',
       ],
       knopf: '&#128155; Jetzt Mitglied werden',

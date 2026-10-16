@@ -66,7 +66,7 @@ function html(vorname) {
     <div style="background:#FFF8E0;border:1px solid #F0E5D8;border-radius:14px;padding:16px 18px;margin-bottom:18px">
       <div style="font-weight:700;margin-bottom:4px">Die Lernplattform steht dir ab sofort offen</div>
       <div style="font-size:15px;line-height:1.55;color:#6B7280">
-        Kursbibliothek von A1 bis C1, Vokabeltrainer, täglicher Podcast und Amanda.
+        Kursbibliothek von A1 bis C1, Vokabeltrainer, regelmäßiger Podcast und Amanda.
       </div>
     </div>
   </td></tr>
@@ -132,11 +132,20 @@ export default async function handler(req, res) {
   }
   if (!erlaubt) return res.status(401).json({ error: 'nicht_erlaubt' });
 
+  /* 16.10.2026 — Stichtag dazu. Ohne ihn waechst diese Gruppe mit
+     jedem neuen Premium-Kauf weiter, und die Karte im Admin bot an,
+     jemandem eine Entschuldigung fuer eine Mail zu schicken, die er nie
+     bekommen hat. Aufgefallen an Nounagnon Romaric Tochoedo: gekauft am
+     14.10. um 23:30, also lange nach dem Fix — seine Bestaetigung war
+     von Anfang an richtig. Der letzte der 27 Betroffenen hat am 13.10.
+     um 15:24 gekauft; der Stichtag liegt sauber dazwischen. */
+  const FALSCHE_MAIL_BIS = '2026-10-14T00:00:00Z';
   const { data: leute, error } = await sb
     .from('profiles')
     .select('id, email, name')
     .in('tier', ['premium', 'premiumplus', 'premium_plus'])
-    .eq('tier_ab', '2026-11-01');
+    .eq('tier_ab', '2026-11-01')
+    .lt('created_at', FALSCHE_MAIL_BIS);
   if (error) return res.status(500).json({ error: 'abfrage_fehlgeschlagen', detail: error.message });
 
   const { data: schon } = await sb

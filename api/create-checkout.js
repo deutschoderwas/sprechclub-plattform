@@ -45,9 +45,9 @@ const PLANS = {
   sparpass:         { alt: true, abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
   // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
   community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
-    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, täglicher Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
+    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
-    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, täglicher Podcast und Community. Monatlich kündbar.' },
+    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen.
      Premium bucht ab tier_ab unbegrenzt — book_class fragt dann gar
