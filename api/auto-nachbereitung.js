@@ -57,6 +57,14 @@ export default async function handler(req, res) {
   try {
     fetch(base + '/api/lead-willkommen', { signal: AbortSignal.timeout(4000) }).catch(() => {});
   } catch (e) { /* nie der Grund, dass eine Nachbereitung ausfaellt */ }
+
+  /* Genauso huckepack: die Auftragstabelle. Julia sagt ein Wort, in
+     mail_auftraege landet eine Zeile, und beim naechsten Viertelstunden-
+     Lauf ist sie abgearbeitet — ohne Knopf, ohne Schluessel in fremder
+     Hand. Liegt kein Auftrag an, kostet der Aufruf nichts. */
+  try {
+    fetch(base + '/api/mail-auftraege', { signal: AbortSignal.timeout(4000) }).catch(() => {});
+  } catch (e) { /* nie der Grund, dass eine Nachbereitung ausfaellt */ }
   const { data: cls } = await sb.from('classes')
     .select('id,title,starts_at,duration_min,is_cancelled,material_live')
     .gte('starts_at', windowStart).lte('starts_at', nowISO)

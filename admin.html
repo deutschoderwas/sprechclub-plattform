@@ -1299,8 +1299,49 @@ window.erinnerungFenster = async function(){
     + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'
     +   '<button class="btn btn-primary" onclick="erinnerungSenden(this)">Jetzt an ' + j.offen + ' schicken</button>'
     +   '<button class="btn btn-ghost" onclick="document.getElementById(\'er-fenster\').remove()">Abbrechen</button>'
-    + '</div>';
+    + '</div>'
+    + '<div id="er-auftraege" style="margin-top:16px;border-top:1px dashed #E3E3E3;padding-top:12px"></div>';
+  auftraegeZeigen();
 };
+
+/* ---------- Die Auftragstabelle ----------
+   Julia, 16.10.2026: "mach du das fuer mich, wenn ich dich darum
+   bitte." Claude legt eine Zeile in mail_auftraege an, der Lauf alle
+   15 Minuten arbeitet sie ab. Hier steht, was dabei herauskam —
+   damit ein Versand, den Julia nicht selbst angeklickt hat, nicht
+   unsichtbar bleibt. */
+const AUF_STATUS = {
+  offen:   { t:'⏳ wartet',  f:'#8A6D00', b:'#FFF6D6' },
+  laeuft:  { t:'▶️ läuft',   f:'#1A4E79', b:'#EEF4FB' },
+  fertig:  { t:'✅ fertig',  f:'#1F7A3D', b:'#EAF7EE' },
+  fehler:  { t:'⚠️ Fehler',  f:'#B3241C', b:'#FDECEA' },
+};
+async function auftraegeZeigen(){
+  const z = document.getElementById('er-auftraege'); if(!z) return;
+  const { data, error } = await sb.from('mail_auftraege')
+    .select('id,art,status,grund,angelegt_von,created_at,fertig_at,bericht')
+    .order('id', { ascending:false }).limit(5);
+  if(error || !data || !data.length){
+    z.innerHTML = '<div style="font-size:12.5px;color:#6B7280">Noch kein Auftrag gelaufen. '
+      + 'Du kannst mich jederzeit bitten, die Mail zu verschicken — dann landet hier, was dabei herauskam.</div>';
+    return;
+  }
+  z.innerHTML = '<div style="font-size:12.5px;font-weight:800;color:#6B7280;letter-spacing:.04em;margin-bottom:8px">AUFTRÄGE</div>'
+    + data.map(function(a){
+        const st = AUF_STATUS[a.status] || { t:a.status, f:'#1A1A1A', b:'#F2F2F2' };
+        const b = a.bericht || {};
+        const ergebnis = a.status==='fertig'
+          ? (b.geschickt!=null ? b.geschickt + ' Mails raus' + (b.fehler ? ', ' + b.fehler + ' nicht' : '') : (b.offen!=null ? b.offen + ' wären dran' : 'erledigt'))
+          : (a.status==='fehler' ? esc(String(b.grund||b.fehlertext||'unbekannt')).slice(0,90) : '');
+        return '<div style="display:flex;gap:9px;align-items:baseline;padding:6px 0;border-bottom:1px solid #F5F5F5">'
+          + '<span style="background:'+st.b+';color:'+st.f+';border-radius:20px;padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap">'+st.t+'</span>'
+          + '<span style="font-size:13px;flex:1">' + esc(a.grund || a.art)
+          +   (ergebnis ? ' <b>— ' + ergebnis + '</b>' : '')
+          +   '<br><span style="color:#6B7280;font-size:11.5px">' + dt(a.fertig_at || a.created_at)
+          +   (a.angelegt_von ? ' · von ' + esc(a.angelegt_von) : '') + '</span></span>'
+          + '</div>';
+      }).join('');
+}
 window.erinnerungSenden = async function(btn){
   if(!confirm('Die Erinnerung jetzt verschicken? Wer Premium hat, bekommt nichts.')) return;
   const info=document.getElementById('er-info');
