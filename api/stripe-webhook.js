@@ -226,8 +226,15 @@ async function sendPaymentMail(sub, inv) {
        intern stunden:8 trug. 27 Leute haben diese falsche Mail
        bekommen. */
     const abo = /premium/.test(tier);
+    const community = tier === 'community';
     const abDatum = tier === 'premiumplus' ? '1. Februar 2027' : '1. November 2026';
-    if (!userId || (!stunden && !abo)) return; // kein Club-Abo (z. B. Amanda) -> keine Mail
+    /* 16.10.2026: Hier stand "if (!userId || (!stunden && !abo)) return".
+       Community hat stunden:0 und faellt nicht unter /premium/ - jedes
+       Community-Mitglied stand nach dem Kauf also ohne ein Wort da.
+       Nachgesehen: 20 Konten mit tier 'community', kein einziges mit
+       einer Bestaetigung. /api/welcome, das die Luecke haette fuellen
+       koennen, wird seit Juli von keiner Seite mehr aufgerufen. */
+    if (!userId || (!stunden && !abo && !community)) return; // z. B. Amanda -> keine Mail
     const email = inv.customer_email; if (!email) return;
     if (!process.env.BREVO_API_KEY) return;
     const name = ((inv.customer_name || '').trim().split(' ')[0]) || '';
@@ -237,40 +244,89 @@ async function sendPaymentMail(sub, inv) {
     const label = PL[plan] || 'Mitgliedschaft';
     const PORTAL = 'https://billing.stripe.com/p/login/cNi8wP2DQcez5av6Yd5Rm00';
     const BOOK = 'https://www.deutschoderwas-club.de/schuelerbereich#kalender';
-    const html = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:24px 12px"><tr><td align="center">
-    <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
-      <tr><td style="padding:24px 32px 8px">
-        <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:22px;color:#1A1A1A">deutsch<span style="color:#35AFD0">oderwas</span></span>
-        <span style="display:block;font-size:12px;color:#6B7280;margin-top:2px">Deutsch lernen mit Spaß &amp; Leichtigkeit</span>
-      </td></tr>
-      <tr><td style="padding:0 32px"><div style="height:3px;background:linear-gradient(135deg,#7ED8EA,#35AFD0);border-radius:999px"></div></td></tr>
-      <tr><td style="padding:22px 32px 4px">
-        <span style="font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung erfolgreich</span>
-        <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.2;margin:8px 0 14px;color:#1A1A1A">Deine Stunden sind da! 🎉</h1>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 12px">${hallo}</p>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">wie schön, dass du dabei bist! 💛 Deine Zahlung ist angekommen.</p>
-        <p style="font-size:16px;line-height:1.6;margin:0 0 14px">${abo
-          ? `Deine Mitgliedschaft startet am <b>${abDatum}</b>. Ab dann buchst du im Sprechclub <b>so viele Stunden, wie du willst</b> – ohne Guthaben, ohne Limit. Du kannst dir deine Stunden ab dem ${abDatum} <b>schon jetzt</b> im Stundenplan aussuchen und reservieren. Die Lernplattform mit Kursen, Vokabeltrainer und Podcast steht dir ab sofort offen.`
-          : `Ich hab dir gerade deine <b>${stunden} LIVE-Stunden</b> gutgeschrieben. Jetzt kann's losgehen – such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.`}</p>
-        <div style="background:#fff;border-left:4px solid #7ED8EA;border-radius:10px;padding:10px 14px;margin:6px 0 4px;font-size:14px"><b>Dein Tarif:</b> ${label} · ${abo ? `unbegrenzt buchen ab ${abDatum}` : `${stunden} LIVE-Stunden / Monat`}</div>
-      </td></tr>
-      <tr><td align="center" style="padding:14px 32px 4px">
-        <a href="${BOOK}" style="display:inline-block;background:linear-gradient(135deg,#7ED8EA,#35AFD0);color:#10627A;font-weight:700;font-size:16px;text-decoration:none;padding:14px 30px;border-radius:999px">📅 Jetzt Stunde buchen</a>
-      </td></tr>
-      <tr><td style="padding:12px 32px 4px">
-        <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Dein Abo verlängert sich automatisch monatlich – jederzeit kündbar. <a href="${PORTAL}" style="color:#35AFD0">Abo verwalten / kündigen</a></p>
-      </td></tr>
-      ${APP_BLOCK}
-      <tr><td style="padding:14px 32px 22px">
-        <p style="font-size:16px;line-height:1.6;margin:0">Ich freue mich riesig, dich bei uns im Club zu sehen!<br><strong>Julia</strong> 💛</p>
-      </td></tr>
-      <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
-        <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas · <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>
-      </td></tr>
-    </table>
-  </td></tr></table>
-</body></html>`;
+    /* Gleicher Aufbau wie Willkommens- und Erinnerungsmail (Julia,
+       16.10.2026: "ja einheitlich"): kurze Begruessung, Kaesten, ein
+       Knopf, ein Satz zum Schluss. Drei Faelle, weil drei verschiedene
+       Dinge gekauft werden koennen. */
+    const kopf = abo ? 'Du bist dabei!' : (community ? 'Willkommen in der Community!' : `Deine ${stunden} Stunden sind da!`);
+    const kasten1 = abo
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
+          <tr><td style="padding:16px 18px">
+            <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#128197; Dein Unterricht startet am ${abDatum}</div>
+            <div style="font-size:15px;line-height:1.55;color:#06403A">Ab dann buchst du so viele Stunden, wie du willst &ndash; ohne Guthaben, ohne Limit. Deine Pl&auml;tze kannst du dir <b>schon jetzt</b> im Stundenplan reservieren.</div>
+          </td></tr></table>`
+      : (community
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
+          <tr><td style="padding:16px 18px">
+            <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#9989; Die Lernplattform ist ab sofort offen</div>
+            <div style="font-size:15px;line-height:1.55;color:#06403A">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+          </td></tr></table>`
+      : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
+          <tr><td style="padding:16px 18px">
+            <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#127919; ${stunden} LIVE-Stunden sind auf deinem Konto</div>
+            <div style="font-size:15px;line-height:1.55;color:#06403A">Such dir im Stundenplan aus, worauf du Lust hast, und buch deine erste Stunde.</div>
+          </td></tr></table>`);
+    const kasten2 = community
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
+          <tr><td style="padding:14px 18px">
+            <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#128172; Live-Stunden sind in der Community nicht dabei</div>
+            <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Wenn du im Sprechclub mitreden willst, wechselst du jederzeit auf Premium.</div>
+          </td></tr></table>`
+      : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
+          <tr><td style="padding:14px 18px">
+            <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
+            <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+          </td></tr></table>`;
+    const knopf = community ? 'Zur Lernplattform' : (abo ? 'Stundenplan ansehen' : 'Jetzt Stunde buchen');
+    const ziel = community ? 'https://www.deutschoderwas-club.de/schuelerbereich' : BOOK;
+    const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${kopf}</title></head>
+<body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+
+  <tr><td style="padding:24px 30px 0">
+    <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:20px">deutsch<span style="color:#14B8A6">oderwas</span></span>
+  </td></tr>
+
+  <tr><td style="padding:16px 30px 0">
+    <span style="font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#DD0000">Zahlung angekommen</span>
+    <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:8px 0 12px">${kopf}</h1>
+    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">${hallo} sch&ouml;n, dass du dabei bist. Das Wichtigste auf einen Blick:</p>
+  </td></tr>
+
+  <tr><td style="padding:0 30px">
+    ${kasten1}
+    ${kasten2}
+  </td></tr>
+
+  <tr><td align="center" style="padding:0 30px 18px">
+    <a href="${ziel}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${knopf}</a>
+  </td></tr>
+
+  <tr><td style="padding:0 30px 10px">
+    <p style="font-size:13.5px;line-height:1.6;color:#6B7280;margin:0">
+      <b>Dein Tarif:</b> ${label} &middot; ${abo ? 'unbegrenzt buchen ab ' + abDatum : (community ? 'Lernplattform, ohne Live-Stunden' : stunden + ' LIVE-Stunden / Monat')}<br>
+      Dein Abo verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#0F766E">Abo verwalten</a>
+    </p>
+  </td></tr>
+
+  ${APP_BLOCK}
+
+  <tr><td style="padding:10px 30px 24px">
+    <p style="font-size:15.5px;line-height:1.65;margin:0">
+      Fragen? Antworte einfach auf diese Mail, ich lese sie selbst.<br>
+      <b>Julia</b> &#128156;
+    </p>
+  </td></tr>
+
+  <tr><td style="background:#1A1A1A;padding:18px 30px">
+    <p style="font-size:11.5px;line-height:1.6;color:#b9b9b9;margin:0">
+      deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen, Deutschland &middot; deutschoderwas@gmail.com &middot; USt-ID: DE676677898
+    </p>
+  </td></tr>
+
+</table></td></tr></table></body></html>`;
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
@@ -278,7 +334,8 @@ async function sendPaymentMail(sub, inv) {
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email, name: name || undefined }],
-        subject: 'Zahlung erfolgreich 🎉 – deine Stunden sind da!',
+        subject: abo ? 'Du bist dabei 🎉 – deine Mitgliedschaft ist da'
+          : (community ? 'Willkommen in der Community 🎉' : 'Zahlung erfolgreich 🎉 – deine Stunden sind da!'),
         htmlContent: html,
       }),
     });
@@ -957,3 +1014,4 @@ export default async function handler(req, res) {
 
   return res.status(200).json({ received: true });
 }
+[git-sicher] Sperren: 0
