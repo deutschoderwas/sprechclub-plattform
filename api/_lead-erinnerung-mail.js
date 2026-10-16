@@ -38,8 +38,13 @@ export function fristSatz(jetzt) {
   return 'Bis zum 31. Oktober — also noch <strong>' + t + ' Tage</strong>';
 }
 
-export function erinnerungHtml(vorname, jetzt) {
+export function erinnerungHtml(vorname, jetzt, art) {
   const v = esc(vorname || 'du');
+  /* 'community' = zahlt schon fuer die Lernplattform, ist im Sprechclub
+     aber nicht dabei. Dieser Person "danke, dass du dich eingetragen
+     hast" zu schreiben, waere peinlich — sie ist laengst Kundin.
+     Deshalb eine eigene erste Zeile und ein eigener dritter Kasten. */
+  const istCommunity = art === 'community';
   const tage = tageBisEnde(jetzt);
   const frist = tage <= 0 ? 'Der Fruehbucherpreis ist abgelaufen'
     : (tage === 1 ? 'Nur noch <b>ein Tag</b>' : 'Noch <b>' + tage + ' Tage</b>');
@@ -66,8 +71,9 @@ export function erinnerungHtml(vorname, jetzt) {
     <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:0 0 12px">
       ${frist}, ${v}. Dann wird <span style="color:#DD0000">gesprochen</span>.
     </h1>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
-      Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Daten sind jetzt wichtig f&uuml;r dich:
+    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">${istCommunity
+      ? 'Du bist in der Community dabei &ndash; im Sprechclub noch nicht. Mit einem Klick wechselst du auf Premium, und zwei Daten sind daf&uuml;r wichtig:'
+      : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Daten sind jetzt wichtig f&uuml;r dich:'}
     </p>
   </td></tr>
 
@@ -91,14 +97,16 @@ export function erinnerungHtml(vorname, jetzt) {
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
-        <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
-        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+        <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">${istCommunity ? '&#128260; Was sich f&uuml;r dich &auml;ndert' : '&#9989; Die Lernplattform ist sofort offen'}</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">${istCommunity
+          ? 'Premium ist alles, was du aus der Community kennst &ndash; plus den Sprechclub. Deine Kurse, &Uuml;bungen und Amanda bleiben nat&uuml;rlich.'
+          : 'Kurse von A1 bis C1, &Uuml;bungen, t&auml;glicher Podcast und Amanda, mit der du sprechen kannst, wann du willst.'}</div>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">Platz sichern &ndash; bis 31. Oktober</a>
+    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${istCommunity ? 'Auf Premium wechseln' : 'Platz sichern'} &ndash; bis 31. Oktober</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">

@@ -96,21 +96,28 @@ export default async function handler(req, res) {
     nach.set(m, { id: l.id, email: m, vorname: vorname(l.name, m) });
   }
 
-  /* 2. Wer schon ein Abo hat, raus — und wer schon Schueler ist.
-     Julia, 15.10.2026: "an alle, die noch KEIN ABO haben". Hier stand
-     vorher nur tier='premium'; seit es Community gibt, haette ein
-     zahlendes Community-Mitglied die Werbemail bekommen. Dazu raus:
-     Lehrkraefte, Admins und alte Schueler mit Guthaben — die sind
-     Kundschaft, keine Interessenten, und eine "Schoen, dass du dich
-     eingetragen hast"-Mail waere ihnen gegenueber peinlich. */
+  /* 2. Premium raus, Community bleibt drin — aber mit eigener Anrede.
+     Julia, 16.10.2026, auf die Frage, ob zahlende Community-Mitglieder
+     die Mail mitbekommen sollen: "Ja, als Upgrade-Anstoss". Sie haben
+     ein Abo, aber keinen Sprechclub; fuer sie ist die Frist genauso
+     interessant. Ihnen "danke, dass du dich eingetragen hast" zu
+     schreiben, waere allerdings peinlich — deshalb bekommen sie in der
+     Mail eine eigene erste Zeile (art='community').
+     Raus fliegen: Premium und Premium Plus (haben schon alles),
+     Lehrkraefte, Admins und alte Schueler mit Guthaben. */
   const { data: profile } = await sb.from('profiles')
     .select('email,tier,credits,is_admin,is_teacher').not('email', 'is', null).limit(5000);
-  let premium = 0;
+  let premium = 0, communityDabei = 0;
   for (const p of (profile || [])) {
-    const istKunde = !!p.tier || p.is_admin || p.is_teacher || Number(p.credits || 0) > 0;
-    if (!istKunde) continue;
     const m = String(p.email || '').trim().toLowerCase();
-    if (nach.delete(m)) premium++;
+    if (!nach.has(m)) continue;
+    const tier = String(p.tier || '');
+    if (tier === 'community') {
+      const e = nach.get(m); e.art = 'community'; nach.set(m, e); communityDabei++;
+      continue;
+    }
+    const istKunde = !!tier || p.is_admin || p.is_teacher || Number(p.credits || 0) > 0;
+    if (istKunde && nach.delete(m)) premium++;
   }
 
   /* 3. Abgemeldete raus */
@@ -129,7 +136,7 @@ export default async function handler(req, res) {
   for (const m of alle) if (schon.has(m)) { nach.delete(m); bereits++; }
 
   const offen = [...nach.values()].slice(0, MAX);
-  const bilanz = { gefunden: (leads || []).length, premium_uebersprungen: premium, abgemeldet_uebersprungen: abgemeldete, schon_bekommen: bereits, offen: offen.length, tage_bis_ende: tageBisEnde() };
+  const bilanz = { gefunden: (leads || []).length, premium_uebersprungen: premium, community_dabei: communityDabei, abgemeldet_uebersprungen: abgemeldete, schon_bekommen: bereits, offen: offen.length, tage_bis_ende: tageBisEnde() };
 
   if (!senden) return res.status(200).json({ ok: true, vorschau: true, ...bilanz, beispiele: offen.slice(0, 5).map((o) => o.email) });
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'kein_brevo_schluessel', ...bilanz });
@@ -155,7 +162,7 @@ export default async function handler(req, res) {
           replyTo: { email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' },
           to: [{ email: o.email, name: o.vorname }],
           subject: betreff,
-          htmlContent: erinnerungHtml(o.vorname),
+          htmlContent: erinnerungHtml(o.vorname, Date.now(), o.art || 'lead'),
           tags: [KENNUNG],
         }),
       });
