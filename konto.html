@@ -1557,13 +1557,16 @@ const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard',
    Lernbereich, Community, Amanda. Die Datenbank sieht es genauso
    (RLS auf materials mit ist_altschueler(), und "Material sichtbar
    fuer Gebuchte" auf class_materials). */
-/* 17.10.2026 dazugekommen: 'kalender'. Julia: "Premium mitglieder und
-   alte Schueler haben jetzt ueberall zugriff auf den Kalender."
-   Angesehen werden darf er also von allen; gebucht wird dort weiter nur
-   mit Guthaben ("Alte schueler duerfen wie immer bis zum 31.10 nur mit
-   guthaben buchen nach dem alten system"), und ohne Guthaben sagt das
-   Fenster genau das. */
-const ALTSCHUELER_OFFEN=['materialien','stunden','kalender'];
+/* Am 17.10.2026 stand hier kurz auch 'kalender' — ich hatte Julias
+   "alte Schueler haben ueberall Zugriff auf den Kalender" auf die
+   ARCHIVIERTEN bezogen. Falsch. Julia darauf: "archivierte schueler
+   nicht, die haben ja kein Guthaben und sind weg."
+
+   Gemeint sind ihre Bestandsschueler mit Guthaben — die kommen ohnehin
+   ueber isActive() in den Kalender. Wer im Archiv steht, behaelt nur,
+   was er schon hatte: die Materialien und die Stunden, die er gebucht
+   hatte. */
+const ALTSCHUELER_OFFEN=['materialien','stunden'];
 function show(v){
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
