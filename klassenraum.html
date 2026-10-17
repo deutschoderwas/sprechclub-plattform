@@ -1001,6 +1001,8 @@
     dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
       // Bildqualität clever steuern: aktiver Sprecher scharf, Rest klein (spart Leistung bei vielen Kameras)
       setTimeout(()=>dailyQuality(), 1500);
+      // Hauptraum: Schüler kommen stumm rein → einmal freundlich erklären, wie man das Mikro freischaltet.
+      setTimeout(()=>{ try{ var lp=(dframe.participants&&dframe.participants().local); if(lp && lp.audio===false && !document.body.classList.contains('ingroup')){ showMicHint('🔇 <b>Du bist noch stumm.</b> Tippe unten auf <b>🎤 Mikro</b>, wenn du sprechen möchtest.'); } }catch(e){} }, 2600);
       // Geräuschunterdrückung: Hintergrundlärm/Tastatur/Hall aus dem Mikro filtern (Krisp)
       setTimeout(()=>{ try{ dframe.updateInputSettings({ audio:{ processor:{ type:'noise-cancellation' } } }); }catch(e){} }, 1800); });
     // Qualität nachsteuern, wenn jemand spricht / kommt / geht

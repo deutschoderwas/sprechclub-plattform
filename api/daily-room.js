@@ -46,7 +46,7 @@ async function ensureRoom(name) {
   throw new Error('create_failed(' + r.status + '): ' + createErr.slice(0, 240));
 }
 
-async function meetingToken({ room, isOwner, userName, userId }) {
+async function meetingToken({ room, isOwner, userName, userId, inGroup }) {
   const exp = Math.floor(Date.now() / 1000) + 6 * 3600; // 6 Stunden gültig
   const r = await fetch(DAILY + '/meeting-tokens', {
     method: 'POST',
@@ -59,7 +59,9 @@ async function meetingToken({ room, isOwner, userName, userId }) {
         user_id: userId || undefined,   // = Supabase-User-ID (für Breakout-Zuordnung)
         exp,
         start_video_off: false,
-        start_audio_off: false,
+        // Hauptraum: Schüler kommen STUMM rein (Mikro per Knopf selbst freischalten);
+        // Lehrkraft/Admin nicht. In Kleingruppen (inGroup) darf frei gesprochen werden.
+        start_audio_off: (!isOwner && !inGroup),
       },
     }),
   });
@@ -101,7 +103,7 @@ export default async function handler(req, res) {
 
   try {
     const roomObj = await ensureRoom(room);
-    const mtoken = await meetingToken({ room, isOwner, userName, userId: user.id });
+    const mtoken = await meetingToken({ room, isOwner, userName, userId: user.id, inGroup: !!g });
     return res.status(200).json({ ok: true, url: roomObj.url, token: mtoken, owner: isOwner, name: userName });
   } catch (e) {
     return res.status(200).json({ ok: false, error: 'daily_error', detail: String((e && e.message) || e).slice(0, 300) });
