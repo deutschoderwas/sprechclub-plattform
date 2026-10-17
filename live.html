@@ -124,6 +124,7 @@ footer a{color:var(--accent);text-decoration:none}
 .ev-meta{font-size:11.5px;color:var(--text-soft)}
 .ev-lvlrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .ev-lvl{font-size:10px;font-weight:800;letter-spacing:.3px;padding:1px 7px;border-radius:20px;background:#fff;white-space:nowrap}
+.ev-wer{font-size:11.5px;font-weight:600;color:#5C6B72;white-space:nowrap}
 .ev-btn{margin-top:2px;border:none;border-radius:20px;padding:7px 10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;display:block}
 .ev-btn.book{background:var(--secondary);color:#fff}
 .ev-btn.book:hover{background:#000}
@@ -349,6 +350,17 @@ function levelMatch(classLevel,filter){
 }
 const LVLC={'A2':'#B45309','A2/B1':'#15803D','B1':'#1D4ED8','B1/B2':'#0891B2','B2':'#7C3AED','B2/C1':'#7C3AED','C1':'#BE185D','ab A2':'#B45309','ab B1':'#BE185D','ab B2':'#7C3AED'};
 function lvlColor(l){ return LVLC[l]||'#6B7280'; }
+/* Julia, 17.10.2026: "ab dem 01.11 ist ein anderes system wie davor" —
+   "gar keine Plaetze anzeigen, das sieht keiner, es sieht auch keiner
+   wer gebucht hat, man sieht nur den Lehrer und das Thema der Stunde
+   auch Niveau muss raus ab dem 01.11". */
+const SC_START_LIVE = new Date('2026-11-01T00:00:00+01:00');
+const evEsc = (x) => String(x == null ? '' : x)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function neuesSystem(startsAt){
+  const d = new Date(String(startsAt||'').replace(' ','T'));
+  return isNaN(d) ? false : d >= SC_START_LIVE;
+}
 function evCard(c){
   const start = new Date(c.starts_at);
   const end = new Date(start.getTime()+((c.duration_min||60)*60000));
@@ -363,12 +375,16 @@ function evCard(c){
       ? `<a class="ev-btn meet" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.topic||c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener">🔴 Beitreten</a>`
       : `<span class="ev-btn mine">✓ Gebucht</span>`;
   } else if (past){ btn = `<span class="ev-btn off">vorbei</span>`; }
-  else if (free<=0){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
+  /* Im Sprechclub ist die Platzzahl keine Schranke mehr: ein Abo kommt
+     immer rein (book_class prueft die Plaetze nur ohne Abo). */
+  else if (free<=0 && !neuesSystem(c.starts_at)){ btn = `<span class="ev-btn off">ausgebucht</span>`; }
   else { btn = `<button class="ev-btn book" onclick="book('${c.id}')">Buchen</button>`; }
   return `<div class="ev" style="--c:${color};background:${color}14">
     <div class="ev-top"><span class="ev-time">${fmtTime(start)}–${fmtTime(end)}</span><span class="ev-club" style="background:${color}">${c.club_name||''}</span></div>
     <div class="ev-title">${c.topic || c.title}</div>
-    <div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span></div>
+    ${neuesSystem(c.starts_at)
+      ? (c.teacher_name ? `<div class="ev-lvlrow"><span class="ev-wer">mit ${evEsc(c.teacher_name)}</span></div>` : '')
+      : `<div class="ev-lvlrow"><span class="ev-lvl" style="border:1.5px solid ${lc};color:${lc}">${c.level}</span></div>`}
     ${btn}</div>`;
 }
 function renderSchedule(weekStart){

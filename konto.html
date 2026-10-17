@@ -2496,9 +2496,23 @@ function kalArtFarbe(art, titel){
   return {c:p[0], s:p[1]};
 }
 
+/* Julia, 17.10.2026: "ab dem 01.11 ist ein anderes system wie davor."
+   Eine Stunde ab dem 1. November gehoert zum Sprechclub: unbegrenzt
+   buchbar, ohne Guthaben, ohne Platzzahl und ohne Niveau. Alles davor
+   ist der alte Unterricht mit Stundenpaketen — dort bleibt die
+   Darstellung, wie sie war. */
+function neuesSystem(startsAt){
+  const s = new Date(String(startsAt||'').replace(' ','T'));
+  return isNaN(s) ? false : s >= SC_START;
+}
 function kalEv(c){
   const start=new Date(c.starts_at); const end=new Date(start.getTime()+((c.duration_min||60)*60000));
   const free=c.capacity-(c.booked||0); const past=start<new Date();
+  /* Julia, 17.10.2026, zur Frage was passiert, wenn eine Stunde voll
+     ist: "Premium kommt immer rein, auch ueber 20." Die 20 Plaetze
+     sind damit nur noch eine Rechengroesse fuer die Schueler mit
+     Guthaben. book_class sieht es genauso: die Platzpruefung steht
+     dort im Zweig "nicht premium". */
   const f=kalFokus(c.topic||c.title);
   const farbe=kalArtFarbe(f.art, f.fokus);
   let btn;
@@ -2507,17 +2521,26 @@ function kalEv(c){
   /* Feiertage stehen mit Platzzahl 0 im Kalender — "ausgebucht" waere
      dort das falsche Wort. */
   else if((Number(c.capacity)||0)===0){ btn=`<span class="ev-btn off">kein Unterricht</span>`; }
-  else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
+  else if(free<=0 && !neuesSystem(c.starts_at)){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   const matBtn = (c.has_material && (isActive() || c.mine)) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
-  /* Die Platzzahl ist eine interne Grenze (20), keine Information fuer
-     Lernende: "6 Plaetze frei" macht Druck und sieht nach Mangel aus,
-     obwohl man so viele Stunden buchen darf, wie man moechte. Sichtbar
-     wird sie nur, wenn eine Stunde wirklich voll ist. */
-  if(_cap>0 && !past && _free<=0){ seats=`<div class="ev-seats full">ausgebucht</div>`; }
+  /* Julia, 17.10.2026: "gar keine Plaetze anzeigen, das sieht keiner,
+     es sieht auch keiner wer gebucht hat, man sieht nur den Lehrer und
+     das Thema der Stunde."
+
+     Im neuen System steht also nur noch Uhrzeit, Thema und Lehrkraft
+     auf der Karte. Die 20 Plaetze sind eine interne Rechengroesse, und
+     "ausgebucht" waere ohnehin falsch: Premium kommt immer rein.
+
+     Die Oktoberstunden laufen noch nach dem alten System. Dort ist die
+     Grenze echt — wer mit Guthaben bucht, wird bei 20 abgewiesen — und
+     darum bleibt der Hinweis dort stehen. */
+  if(_cap>0 && !past && _free<=0 && !neuesSystem(c.starts_at)){
+    seats=`<div class="ev-seats full">ausgebucht</div>`;
+  }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
   const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';
   return `<div class="ev ${past?'vorbei':''}" style="--kc:${farbe.c};--kcs:${farbe.s}">`
@@ -2656,7 +2679,10 @@ function kalBook(id){
   const c=kalCache.find(x=>String(x.id)===String(id));
   const start=c?new Date(c.starts_at):null;
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
-  const sub=c?[esc(c.level),c.club_name?esc(c.club_name):'',c.teacher_name?esc(c.teacher_name):''].filter(Boolean).join(' · '):'';
+  /* Das Niveau stand hier mit in der Zeile. Julia, 17.10.2026: "auch
+     Niveau muss raus ab dem 01.11" — im Sprechclub bleibt die
+     Lehrkraft und der Club, das Thema steht eine Zeile darueber. */
+  const sub=c?[neuesSystem(c&&c.starts_at)?'':esc(c.level),c.club_name?esc(c.club_name):'',c.teacher_name?esc(c.teacher_name):''].filter(Boolean).join(' · '):'';
   const when=start?fmt(start):'';
   const gratis=ohneGuthaben(c&&c.starts_at);
   const card=document.getElementById('cfmCard');
