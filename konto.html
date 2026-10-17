@@ -1546,9 +1546,10 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    Lernbereich bis zum 1. November zu, obwohl er bezahlt und fertig ist. */
 /* Frueher standen hier 'kalender' und 'stunden': wer im Vorverkauf
    gekauft hatte, sah statt des Kalenders eine Sperrseite. Seit dem
-   17.10.2026 darf er buchen — der Kalender zeigt ihm nur die Stunden ab
-   seinem Starttag (nurErlaubteStunden). Die Liste bleibt stehen, falls
-   wieder ein Bereich vor einem Start zugehen soll. */
+   17.10.2026 steht ihm der ganze Kalender offen — eine Stunde vor
+   seinem Starttag traegt statt des Buchen-Knopfes den Hinweis auf den
+   1. November (kalEv/erstAbStart). Die Liste bleibt leer stehen, falls
+   wieder einmal ein Bereich vor einem Start zugehen soll. */
 VORVERKAUF_ZU=[];
 const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 /* Diese beiden Ansichten bleiben auch gesperrten Altschuelern offen:
@@ -2329,9 +2330,10 @@ function darfBuchen(){
     /* Premium bucht ohne Guthaben. Bis zum 16.10.2026 stand hier
        zusaetzlich scGestartet() — die Sonderregel sollte erst ab dem
        1. November greifen. Julia am 17.10.2026: sie duerfen JETZT
-       buchen, nur eben Stunden ab dem 1. November. Welche Stunden das
-       sind, entscheidet der Kalender (nurErlaubteStunden) und am Ende
-       die Datenbank (book_class gegen tier_ab). */
+       buchen, nur eben Stunden ab dem 1. November. WELCHE Stunden das
+       sind, entscheidet nicht diese Funktion: auf der Karte haengt es
+       an stundeErlaubt(), und das letzte Wort hat die Datenbank
+       (book_class gegen tier_ab). */
     if(istPremium()) return true;
     return false;
   }catch(e){ return false; }
@@ -2797,9 +2799,10 @@ async function doBook(id){
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
   if(error||!data||!data.ok){
     if(data&&data.error==='no_credits'){ showNoCredit(); return; }
-    /* Die Stunde liegt vor dem eigenen Starttag. Das sollte der Kalender
-       gar nicht erst anbieten (nurErlaubteStunden) — aber wenn doch, dann
-       mit dem Datum aus der Datenbank und nicht mit "fehlgeschlagen". */
+    /* Die Stunde liegt vor dem eigenen Starttag. Dahin kommt man ueber
+       den Kalender nicht — dort steht auf der Karte der Hinweis statt
+       des Knopfes, und kalBook() faengt es noch einmal ab. Falls doch:
+       mit dem Datum aus der Datenbank, nicht mit "fehlgeschlagen". */
     if(data&&data.error==='mitgliedschaft_startet_spaeter'){
       closeCfm(); toast('Deine Mitgliedschaft startet am '+(data.ab||'1.11.2026')+' — ab dann kannst du diese Stunde buchen.');
       return;
