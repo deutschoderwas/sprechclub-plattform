@@ -43,26 +43,33 @@ const PLANS = {
   gelegenheitspass: { alt: true, abo: true,  interval:'month', stunden: 8,  preis: 139, label: 'Gelegenheitspass' },
   allinclusive:     { alt: true, abo: true,  interval:'month', stunden: 12, preis: 189, label: 'Profi-Pass' },
   sparpass:         { alt: true, abo: false, stunden: 30, preis: 399, label: 'Spar Pass' },
-  // --- Neues Modell: Community (ohne Live-Buchung) + Premium (mit 8 Live-Stunden) ---
+  /* --- Neues Modell: Community (ohne Live-Buchung) + Premium (LIVE
+     unbegrenzt) --- Julia, 17.10.2026: "es gibt keine 8 Stunde mehr,
+     PREMIUM ist immer Unlimited". */
   community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
     desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
   community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
     desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
-  /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen.
-     Premium bucht ab tier_ab unbegrenzt — book_class fragt dann gar
-     nicht nach Guthaben. Das Feld steuert nur noch zwei Dinge:
-     pass_until (Zugang zur Lernplattform) und das Amanda-Minuten-
-     budget. Wer es auf 0 setzt, nimmt den Premium-Mitgliedern
-     versehentlich den Plattformzugang. Guthaben bekommen sie seit
-     dem 13.10.2026 keines mehr: apply_pending_purchases ueberspringt
-     die Gutschrift fuer alle premium-Plaene. */
+  /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen —
+     Premium bucht unbegrenzt, book_class fragt bei einem Abo gar nicht
+     nach Guthaben. Die 8 steuert nur noch zwei Dinge: pass_until
+     (Zugang zur Lernplattform) und das Amanda-Minutenbudget. Wer sie
+     auf 0 setzt, nimmt den Premium-Mitgliedern versehentlich den
+     Plattformzugang. Guthaben bekommen sie seit dem 13.10.2026 keines
+     mehr: apply_pending_purchases ueberspringt die Gutschrift fuer
+     alle premium-Plaene, und grant() bucht bei einem Abo 0 Stunden.
+
+     In KEINEN kundenseitigen Text darf diese Zahl geraten. Genau das
+     ist am 13.10.2026 passiert: 27 Kaufbestaetigungen sprachen von
+     "8 LIVE-Stunden", weil die Mail stunden aus der Metadaten las.
+     Die Richtigstellung liegt in api/korrektur-premium-mail.js. */
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
     desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Monatlich kündbar.' },
   premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
     desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
-    desc: 'Alles aus Community + 8 LIVE-Stunden im Monat: sprechen mit echten Menschen.' },
+    desc: 'Alles aus Community + Sprechclub: unbegrenzt LIVE-Stunden, sprechen mit echten Menschen.' },
 
   /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
      8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:
@@ -324,7 +331,14 @@ export default async function handler(req, res) {
       const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
-      let abodesc = plan.desc || `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`;
+      /* Der Rueckfall, falls einem Plan die Beschreibung fehlt. Fuer eine
+         Mitgliedschaft darf hier NIE plan.stunden landen: das Feld ist ein
+         internes Budget (pass_until, Amanda-Minuten) und keine Stundenzahl
+         fuers Buchen. Genau diese Verwechslung hat am 13.10.2026 27 Leuten
+         "8 LIVE-Stunden" versprochen. Premium ist unbegrenzt. */
+      let abodesc = plan.desc || (plan.tier
+        ? 'Alles aus Community + Sprechclub: unbegrenzt LIVE-Stunden · Üben 24/7, Amanda & Community inklusive'
+        : `${plan.stunden} LIVE-Stunden pro Monat · Üben 24/7, Amanda & Community inklusive`);
       if (plan.tier === 'premium' && zugangAb) {
         // Vorverkauf: jetzt zahlen, Laufzeit ab 1.11. — naechste Zahlung 1.12. bzw. 1.11. im Folgejahr.
         abodesc += (plan.interval === 'year')

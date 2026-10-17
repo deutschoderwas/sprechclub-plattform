@@ -1141,7 +1141,7 @@ function vorverkaufKarte(){
   if(!nochNichtOffen()) return '';
   const tage=tageBisStart(), prem=(profile&&profile.tier)==='premium';
   const punkte = prem
-    ? ['🗓️ <b>8 LIVE-Stunden im Monat</b> in kleiner Gruppe — deine Stunden liegen schon bereit.',
+    ? ['🗓️ <b>Unbegrenzt LIVE-Stunden</b> in kleiner Gruppe — buch so viele, wie du möchtest.',
        '💬 <b>Alles aus der Community</b>: Kursbibliothek A1–C2, Chat, Korrektur und Podcast.',
        '✍️ <b>Korrektur deiner Texte</b> und persönliches Feedback von echten Lehrern.']
     : ['📚 <b>Die ganze Kursbibliothek</b> von A1 bis C2 — über 100 Lektionen zum Üben.',
@@ -1577,12 +1577,30 @@ const LOCK_LABELS={kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfun
    ============================================================ */
 const SPRECHCLUB_ZU = ['kalender','stunden'];
 
+/* Julia, 17.10.2026: "es gibt keine 8 Stunde mehr, PREMIUM ist immer
+   Unlimited" und "Es gibt keinen Guthaben mehr".
+
+   Fuer ein Abo ohne Restguthaben hat die Guthaben-Seite nichts zu
+   sagen: sie zeigte "Aktuelles Guthaben: 0 Stunden" und einen Knopf zu
+   Paketen, die es seit dem 5. Oktober nicht mehr gibt — also genau das
+   Gegenteil von unbegrenzt. Die drei Premium-Mitglieder mit alten
+   Reststunden (9, 8 und 24) behalten die Seite, denn bei ihnen steht
+   dort etwas Echtes. */
+function abosHaben(){
+  try{ return istPremium() && !(credits > 0); }catch(e){ return false; }
+}
 function sprechclubMarkieren(){
   var zu = false;
   try{ zu = nurCommunity(); }catch(e){}
   document.querySelectorAll('.sidebar .navlink[data-live="1"]').forEach(function(b){
     b.classList.toggle('cl-zu', zu);
   });
+  try{
+    var weg = abosHaben();
+    document.querySelectorAll('.navlink[data-view="guthaben"]').forEach(function(b){
+      b.style.display = weg ? 'none' : '';
+    });
+  }catch(e){}
 }
 
 function renderSprechclubZu(v){
@@ -3254,8 +3272,11 @@ function renderGuthaben(){
   const ERSTE=40;
   document.getElementById('v-guthaben').innerHTML=`
     <div class="pagehead"><h1 data-i18n="gu_h1">Guthaben & Verlauf</h1></div>
-    <div class="hero-card"><div><div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px" data-i18n="gu_cur">Aktuelles Guthaben</div><h1 style="font-size:40px">${credits} <span style="font-size:18px;font-weight:600">Stunden</span></h1></div>
-      <a class="btn btn-primary" href="index.html#pakete"><span data-i18n="gu_buy">Stunden nachkaufen</span></a></div>
+    ${abosHaben() ? `<div class="hero-card"><div><div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px">Dein Abo</div><h1 style="font-size:40px">Unbegrenzt</h1>
+      <p class="muted" style="margin-top:4px;max-width:34em">Du buchst so viele Stunden, wie du möchtest — es wird nichts abgezogen. Guthaben brauchst du dafür nicht.</p></div>
+      <button class="btn btn-primary" onclick="go('kalender')">Stunde aussuchen →</button></div>`
+      : `<div class="hero-card"><div><div class="muted" style="font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px" data-i18n="gu_cur">Aktuelles Guthaben</div><h1 style="font-size:40px">${credits} <span style="font-size:18px;font-weight:600">Stunden</span></h1></div>
+      <a class="btn btn-primary" href="/preise"><span data-i18n="gu_buy">Abo ansehen</span></a></div>`}
     <h2 class="sec"><span data-i18n="gu_hist">Verlauf</span></h2>
     ${creditLog.length?creditLog.slice(0,ERSTE).map(zeile).join('')
       +(creditLog.length>ERSTE?`<div id="guMehr" hidden>${creditLog.slice(ERSTE).map(zeile).join('')}</div><button class="btn btn-sm" style="margin-top:12px" onclick="document.getElementById('guMehr').hidden=false;this.remove()">Ältere Einträge zeigen (${creditLog.length-ERSTE})</button>`:'')
