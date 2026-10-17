@@ -242,6 +242,11 @@ footer a{color:var(--accent);text-decoration:none}
 <script>
 const CFG = window.SPRECHCLUB_CONFIG;
 let sb = null, user = null, credits = 0, weekOffset = 0, levelSel = 'alle';
+/* Premium bucht ohne Guthaben. Diese Seite ist nur noch der Eingang —
+   angemeldete Leute schickt sie in den Schuelerbereich — aber wer hier
+   doch auf "Buchen" tippt, soll nicht an einer Guthaben-Pruefung
+   haengen, die fuer ihn gar nicht gilt. */
+let istAbo = false;
 let classes = [], availability = {}, myBooked = new Set(), curWeekStart = null;
 let clubSlug = (new URLSearchParams(location.search).get('club') || 'sprechclub').toLowerCase();
 let clubs = [];
@@ -301,8 +306,10 @@ async function onLogin(u){
   user = u;
   document.getElementById('navAuth').textContent = 'Mein Bereich';
   document.getElementById('navAuth').onclick = ()=>{ location.href='/schuelerbereich'; };
-  const { data } = await sb.from('profiles').select('credits').eq('id', u.id).single();
+  const { data } = await sb.from('profiles').select('credits,tier,status').eq('id', u.id).single();
   credits = data ? data.credits : 0;
+  istAbo = !!(data && ['premium','premiumplus','premium_plus'].indexOf(String(data.tier||'')) >= 0
+              && ['aktiv',''].indexOf(String(data.status||'')) >= 0);
   const { data: bk } = await sb.rpc('my_bookings');
   (bk||[]).forEach(b=>{ if (b.status==='booked') myBooked.add(b.class_id); });
 }
@@ -409,10 +416,15 @@ function renderPakete(){}
 
 async function book(id){
   if (!user) return openLogin();
-  if (credits<1){ showNoCredit(); return; }
+  if (credits<1 && !istAbo){ showNoCredit(); return; }
   const { data, error } = await sb.rpc('book_class', { p_class_id: id });
   if (error || !data.ok){
     if (data?.error==='no_credits'){ showNoCredit(); return; }
+    /* Premium im Vorverkauf: die Stunde liegt vor dem eigenen Starttag.
+       Die Datenbank sagt genau das, mit Datum. */
+    if (data?.error==='mitgliedschaft_startet_spaeter'){
+      return toast('Deine Mitgliedschaft startet am ' + (data.ab || '1.11.2026') + ' \u2014 ab dann kannst du diese Stunde buchen.');
+    }
     const msgs = { booking_paused:'Die Buchung ist gerade kurz nicht möglich — bitte versuch es in einem Moment noch einmal.', class_full:'Diese Stunde ist leider voll.', already_booked:'Schon gebucht!', class_in_past:'Diese Stunde ist vorbei.' };
     return toast(msgs[data?.error] || 'Buchung fehlgeschlagen.');
   }

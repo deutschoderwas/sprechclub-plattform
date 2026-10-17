@@ -1,0 +1,62 @@
+-- ============================================================
+--  Premium darf jetzt buchen — Stunden ab dem 1. November
+--
+--  Julia, 17.10.2026: "alle, die PREMIUM gebucht haben DUERFEN jetzt
+--  den Unterricht AB DEM 01.11 buchen. VOR DEM 01.11 wird fuer sie kein
+--  Unterricht angezeigt aber AB DEM 01.11 duerfen sie buchen."
+--
+--  Vorher war es genau umgekehrt gedacht: der Kalender blieb bis zum
+--  1. November zu, und erst dann durfte gebucht werden. Jetzt ist er
+--  offen und zeigt nur, was ab dem eigenen Starttag stattfindet.
+--
+--  Fuer die 28 Mitglieder MIT tier_ab = 2026-11-01 hat book_class das
+--  schon richtig gemacht: es vergleicht das Datum DER STUNDE mit
+--  tier_ab, nicht das von heute. An dieser Datei aendert sich fuer sie
+--  nichts.
+--
+--  Geaendert wird der andere Zweig — Premium OHNE tier_ab. Das sind
+--  Bestandsschueler, denen startFuer() (api/stripe-webhook.js) bewusst
+--  kein Startdatum gibt, damit sich im Oktober nichts fuer sie aendert.
+--  Dort stand:
+--
+--      v_premium := v_ist_abo and now() >= timestamptz '2026-11-01';
+--
+--  Der Premium-Weg galt also erst AM 1. November. Folgen am 17.10.2026:
+--    · eine Novemberstunde liess sich nicht vorbuchen
+--    · wer kein Guthaben hatte, konnte GAR NICHTS buchen — betraf
+--      munwarlaload822@gmail.com, Kauf am 16.10., 0 Stunden auf dem
+--      Konto, also ein zahlendes Premium-Mitglied vor einer leeren Wand
+--
+--  Neu entscheidet auch hier das Datum der Stunde:
+--
+--      v_premium := v_ist_abo and v_class.starts_at >= '2026-11-01';
+--
+--  Damit gilt fuer alle dasselbe: Stunden ab dem 1. November sofort und
+--  ohne Abzug, Oktoberstunden weiter nur mit Guthaben — fuer die drei
+--  Bestandsmitglieder mit Guthaben (9, 8 und 24 Stunden) aendert sich
+--  also nichts.
+--
+--  Gegengeprueft am 17.10.2026 mit echten Konten in einer Transaktion,
+--  die zurueckgerollt wurde:
+--    tier_ab 01.11, Oktober   -> mitgliedschaft_startet_spaeter (01.11.2026)
+--    tier_ab 01.11, November  -> ok, premium=true
+--    ohne tier_ab, 0 Guthaben, Oktober  -> no_credits
+--    ohne tier_ab, 0 Guthaben, November -> ok, premium=true
+--    ohne tier_ab, 24 Guthaben: Oktober + November zusammen
+--                               -> Guthaben 24 auf 23, also genau eine
+--                                  Stunde fuer den Oktober, November frei
+--
+--  Angewandt am 17.10.2026.
+-- ============================================================
+
+-- Die vollstaendige Funktion liegt in der Datenbank; hier steht nur die
+-- geaenderte Stelle, damit nachvollziehbar bleibt, was sich bewegt hat.
+--
+--   else
+--     v_premium := v_ist_abo and v_class.starts_at >= v_start;
+--   end if;
+--
+-- mit  v_start constant timestamptz := timestamptz '2026-11-01 00:00:00+01';
+--
+-- Nachlesen lässt sich der aktuelle Stand jederzeit mit:
+--   select pg_get_functiondef('public.book_class(uuid)'::regprocedure);

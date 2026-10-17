@@ -1088,6 +1088,52 @@ function nochNichtOffen(){
   try{ if(bookings && bookings.some(function(b){return b.status==='booked';})) return false; }catch(e){}
   return true;
 }
+/* ---- Der eigene Starttag als Filter, nicht als Riegel ----
+   Julia, 17.10.2026: "alle, die PREMIUM gebucht haben DUERFEN jetzt den
+   Unterricht AB DEM 01.11 buchen. VOR DEM 01.11 wird fuer sie kein
+   Unterricht angezeigt."
+
+   Bis heute war der Kalender fuer Vorverkaufs-Mitglieder ganz zu, mit
+   einer Countdown-Karte davor. Jetzt ist er offen und zeigt nur, was ab
+   dem eigenen Starttag stattfindet. Die Oktoberstunden der
+   Bestandsschueler bleiben unsichtbar.
+
+   Die Datenbank sieht es genauso: book_class vergleicht starts_at mit
+   tier_ab und weist alles davor ab ('mitgliedschaft_startet_spaeter').
+   Hier haengt also nur, was der Mensch zu sehen bekommt — der Riegel
+   selbst liegt im Server. */
+function stundenAb(){
+  const d = startAb();
+  if(d && d > new Date()) return d;
+  /* Vier Premium-Mitglieder haben gar kein tier_ab: wer beim Kauf schon
+     Zugang hatte, bekommt vom Server bewusst kein Startdatum
+     (startFuer() in api/stripe-webhook.js), damit sich fuer ihn im
+     Oktober nichts aendert. Drei von ihnen haben Guthaben und buchen
+     die Oktoberstunden weiter wie bisher — fuer die gilt hier kein
+     Filter.
+
+     Der vierte hat am 16.10. Premium gekauft und kein Guthaben. Ohne
+     diese Zeilen stuenden bei ihm die Oktoberstunden im Kalender, jede
+     mit einem Buchen-Knopf, der ihn in "Dafuer brauchst du freie
+     Stunden" laufen laesst — bei jemandem, der gerade 49 Euro bezahlt
+     hat. Fuer ihn ist der 1. November der Starttag, auch ohne
+     tier_ab. */
+  try{
+    if(istPremium() && !scGestartet() && !(credits > 0)) return SC_START;
+  }catch(e){}
+  return null;
+}
+function stundeErlaubt(startsAt){
+  const g = stundenAb();
+  if(!g) return true;
+  const s = new Date(String(startsAt||'').replace(' ','T'));
+  return isNaN(s) ? true : s >= g;
+}
+function nurErlaubteStunden(liste){
+  if(!Array.isArray(liste)) return [];
+  if(!stundenAb()) return liste;
+  return liste.filter(function(c){ return stundeErlaubt(c && c.starts_at); });
+}
 function tageBisStart(){ const d=startAb(); if(!d) return 0; return Math.max(0,Math.ceil((d-new Date())/86400000)); }
 function startText(){ const d=startAb(); return d? d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'}) : ''; }
 function bereichName(){ return ((profile&&profile.tier)==='premium') ? 'Premium' : 'Community'; }
@@ -1108,15 +1154,18 @@ function vorverkaufKarte(){
         <div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">${tage===1?'Tag':'Tage'}</div>
       </div>
       <div style="flex:1;min-width:240px">
-        <b style="font-size:19px">🎉 Dein ${bereichName()}-Bereich öffnet am ${startText()}</b>
-        <p class="muted" style="margin-top:5px">Danke, dass du von Anfang an dabei bist! Deine Mitgliedschaft ist bezahlt und läuft
-        ab dem ${startText()} — du verlierst also keinen einzigen Tag. Wir schreiben dir eine E-Mail, sobald alles offen ist.</p>
+        <b style="font-size:19px">🎉 Dein LIVE-Unterricht startet am ${startText()}</b>
+        <p class="muted" style="margin-top:5px">Danke, dass du von Anfang an dabei bist! ${prem
+          ? 'Deine Stunden stehen schon im Kalender — <b>buchen kannst du ab sofort</b>. Such dir die Termine aus, die dir passen; los geht es am ' + startText() + '.'
+          : 'Deine Mitgliedschaft ist bezahlt und läuft ab dem ' + startText() + ' — du verlierst also keinen einzigen Tag.'}</p>
       </div>
     </div>
     <ul style="list-style:none;display:grid;gap:8px;margin-top:14px;padding:0">
       ${punkte.map(p=>`<li style="background:#fff;border:1px solid #d9ece9;border-radius:12px;padding:9px 13px;font-size:14.5px">${p}</li>`).join('')}
     </ul>
-    <p class="muted" style="margin-top:12px;font-size:13.5px">Bis dahin kannst du hier schon dein Profil ausfüllen und uns über „Nachrichten" schreiben.</p>
+    <p class="muted" style="margin-top:12px;font-size:13.5px">${prem
+      ? 'Im Kalender stehen alle Termine ab dem ' + startText() + '. Stunden davor gehören noch zum alten Unterricht und tauchen bei dir nicht auf.'
+      : 'Bis dahin kannst du hier schon dein Profil ausfüllen und uns über „Nachrichten" schreiben.'}</p>
   </div>`;
 }
 function renderVorverkauf(v){
@@ -1133,7 +1182,9 @@ function istLeitung(){ return !!(profile && (profile.is_admin || profile.is_teac
 function nurCommunity(){ if(istLeitung()) return false;
   return (profile&&profile.tier)==='community' && !(credits>0) && !passActive(); }
 function darfLive(){
-  if(nochNichtOffen()) return false;              // Vorverkauf: Start noch nicht erreicht
+  /* Hier stand: if(nochNichtOffen()) return false. Damit kam ein
+     Premium-Mitglied vor dem 1. November nicht in den Kalender. Jetzt
+     kommt es hinein und sieht dort seine Novemberstunden. */
   if(credits>0||passActive()) return true;
   if(istPremium()) return true;
   if(nurCommunity()) return false;
@@ -1466,7 +1517,12 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    was es ohne Sprechclub gar nicht gibt: der Wochenplan und die eigenen
    Stunden. Vorher standen hier 22 Ansichten — damit war der gesamte
    Lernbereich bis zum 1. November zu, obwohl er bezahlt und fertig ist. */
-VORVERKAUF_ZU=['kalender','stunden'];
+/* Frueher standen hier 'kalender' und 'stunden': wer im Vorverkauf
+   gekauft hatte, sah statt des Kalenders eine Sperrseite. Seit dem
+   17.10.2026 darf er buchen — der Kalender zeigt ihm nur die Stunden ab
+   seinem Starttag (nurErlaubteStunden). Die Liste bleibt stehen, falls
+   wieder ein Bereich vor einem Start zugehen soll. */
+VORVERKAUF_ZU=[];
 const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
 /* Diese beiden Ansichten bleiben auch gesperrten Altschuelern offen:
    die Materialien und der Stundenplan mit dem Material der Stunden,
@@ -2102,13 +2158,20 @@ function fmtTimeK(d){ return _berlinT.format(d); }
    natuerlich weiter nutzen. Dem den Kalender wegzunehmen waere
    schlicht Diebstahl an bezahlter Zeit.
    ============================================================ */
+/* Premium gekauft, der Club laeuft noch nicht. Das war bis zum
+   16.10.2026 der Grund, den Kalender ganz zu verstecken — daher die
+   Ausnahmen fuer Guthaben und schon gebuchte Stunden: ohne die waere
+   ein Bestandsschueler mit ausgesperrt gewesen.
+
+   Seit dem 17.10.2026 entscheidet diese Funktion nur noch, ob oben im
+   Kalender der Hinweis auf den 1. November steht. Der Kalender selbst
+   bleibt offen, und darum brauchen wir die Ausnahmen nicht mehr: der
+   Hinweis stimmt auch fuer jemanden, der schon eine Stunde gebucht
+   hat. */
 function premiumWartetAufStart(){
   try{
     if(istLeitung()) return false;              // Julia und die Lehrkraefte sehen alles
-    if(!istPremium() || scGestartet()) return false;
-    if(credits > 0) return false;
-    if(bookings && bookings.some(function(b){ return b.status === 'booked'; })) return false;
-    return true;
+    return istPremium() && !scGestartet();
   }catch(e){ return false; }
 }
 
@@ -2129,12 +2192,16 @@ function scTageText(){
   return tage ? 'noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') : '';
 }
 
+/* Der Text hat sich am 17.10.2026 gedreht: vorher "bis dahin gibt es
+   hier nichts zu buchen", jetzt "du kannst schon jetzt buchen". Der
+   Zaehler bleibt — er sagt, wann der Unterricht anfaengt, nicht, wann
+   das Buchen anfaengt. */
 function scStartKarte(){
   return '<div class="sc-start">'
     + '<span class="sc-ic" aria-hidden="true">🗓️</span>'
     + '<h2>Der LIVE-Unterricht startet am 1. November.</h2>'
-    + '<p>Bis dahin gibt es hier nichts zu buchen. Ab dem 1. November stehen alle Termine '
-    + 'an dieser Stelle — ' + SC_PLAN + ' — und du buchst so viele Stunden, '
+    + '<p>Buchen kannst du schon jetzt: unten stehen alle Termine ab dem 1. November — '
+    + SC_PLAN + '. Sichere dir die Stunden, die dir am besten passen — so viele, '
     + 'wie du möchtest, ohne Guthaben.</p>'
     + '<p class="sc-tage" id="scTage">' + scTageText() + '</p>'
     + '</div>';
@@ -2166,14 +2233,19 @@ function scTagesUhr(){
 }
 
 function renderKalender(){
-  if(premiumWartetAufStart()){
-    document.getElementById('v-kalender').innerHTML = meineStundenKarte() + scStartKarte();
-    scTagesUhr();
-    return;
-  }
-  clearTimeout(scUhr); scUhr = null;
+  /* Die Start-Karte stand hier ANSTELLE des Kalenders. Jetzt steht sie
+     darueber: der Hinweis auf den 1. November bleibt, der Kalender ist
+     offen. */
+  const wartet = premiumWartetAufStart();
+  if(!wartet){ clearTimeout(scUhr); scUhr = null; }
+  /* Und er fuehrt gleich in die richtige Woche: ohne das hier landet
+     ein Premium-Mitglied in der aktuellen Oktoberwoche, in der fuer ihn
+     keine einzige Stunde steht, und muesste sich erst vorwaerts
+     klicken. */
+  try{ const _g=kalGrenze(); if(kalWeek < _g) kalWeek = _g; }catch(e){}
   document.getElementById('v-kalender').innerHTML =
       meineStundenKarte()
+    + (wartet ? scStartKarte() : '')
     + '<div class="kal-trenner">'
     +   '<h2 data-i18n="kl_h1">Kalender</h2>'
     +   '<p data-i18n="kl_sub3">Hier buchst du deinen LIVE-Unterricht. Such dir eine Stunde aus, die zu deinem Niveau und deiner Woche passt.</p>'
@@ -2182,6 +2254,7 @@ function renderKalender(){
     + KAL_VIEWTOG()
     + '<div id="kalBody"><div class="empty">lädt…</div></div>';
   kalRefresh();
+  if(wartet) scTagesUhr();
 }
 
 /* Buchen kann, wer freie Stunden auf dem Konto hat oder ein laufendes Abo.
@@ -2197,10 +2270,14 @@ function darfBuchen(){
        fuer den ist der Kalender ohnehin zu (nochNichtOffen), und diese
        Zeile ist der zweite Riegel am Knopf selbst. */
     if(istLeitung()) return true;
-    if(nochNichtOffen()) return false;
     if(credits>0) return true;
-    // Premium-Sonderregel (buchen ohne Guthaben) gilt erst ab 01.11.2026.
-    if(scGestartet() && istPremium()) return true;
+    /* Premium bucht ohne Guthaben. Bis zum 16.10.2026 stand hier
+       zusaetzlich scGestartet() — die Sonderregel sollte erst ab dem
+       1. November greifen. Julia am 17.10.2026: sie duerfen JETZT
+       buchen, nur eben Stunden ab dem 1. November. Welche Stunden das
+       sind, entscheidet der Kalender (nurErlaubteStunden) und am Ende
+       die Datenbank (book_class gegen tier_ab). */
+    if(istPremium()) return true;
     return false;
   }catch(e){ return false; }
 }
@@ -2290,7 +2367,10 @@ async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
+  /* Hier wird aussortiert, was vor dem eigenen Starttag liegt. Eine
+     Stelle fuer alles, was danach kommt: Wochenraster, Monatsansicht
+     und kalBook greifen alle auf kalCache zu. */
+  const all=nurErlaubteStunden((data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; })); kalCache=all;
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
   const clubCount=list.length;
   if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
@@ -2471,7 +2551,7 @@ async function loadKalMonth(){
  var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
  var from=new Date(base.getFullYear(),base.getMonth(),1);var to=new Date(base.getFullYear(),base.getMonth()+1,1);
  var res=await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
- kalCache=(res.data||[]).map(function(c){if(c&&c.starts_at){c.starts_at=kalFixTs(c.starts_at);}return c;});
+ kalCache=nurErlaubteStunden((res.data||[]).map(function(c){if(c&&c.starts_at){c.starts_at=kalFixTs(c.starts_at);}return c;}));
  kalRenderMonth();
 }
 function kalRenderMonth(){
@@ -2538,6 +2618,12 @@ function setKalLevel(l){ kalLevel=l; kalRefresh(); }
 function kalGrenze(){
   var start=new Date(2026,5,29), jetzt=new Date();
   function mo(x){ x=new Date(x); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; }
+  /* Wer erst ab seinem Starttag Unterricht hat, kommt auch nicht
+     dahinter zurueck — dort stuende eine leere Woche, und die liest
+     sich wie ein Fehler. Diese Grenze ist gleichzeitig die Woche, in
+     der der Kalender aufgeht (renderKalender). */
+  var g=null; try{ g=stundenAb(); }catch(e){}
+  if(g) return Math.round((mo(g)-mo(jetzt))/6048e5);
   var bisStart=Math.round((mo(start)-mo(jetzt))/6048e5);
   /* Mindestens ein Vierteljahr zurück, bei Bedarf weiter bis zum Clubstart */
   return Math.min(bisStart, -13);
@@ -2554,22 +2640,33 @@ function kalBook(id){
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
   const sub=c?[esc(c.level),c.club_name?esc(c.club_name):'',c.teacher_name?esc(c.teacher_name):''].filter(Boolean).join(' · '):'';
   const when=start?fmt(start):'';
+  const gratis=ohneGuthaben(c&&c.starts_at);
   const card=document.getElementById('cfmCard');
   card.innerHTML=`<div class="ico">📅</div>
     <h3>Buchung bestätigen?</h3>
     <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
     <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
-    <p class="hint">Storno kostenlos bis 6 Stunden vorher.${ohneGuthaben()?'':' Dein Guthaben wird erst nach der Teilnahme abgezogen.'}</p>
+    <p class="hint">Storno kostenlos bis 6 Stunden vorher.${gratis?'':' Dein Guthaben wird erst nach der Teilnahme abgezogen.'}</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
   document.getElementById('cfmGo').onclick=()=>doBook(id);
   document.getElementById('cfmModal').classList.add('open');
 }
 /* Premium bucht ab dem Starttag ohne Abzug — dann darf im Bestaetigungs-
    fenster auch nichts von Guthaben stehen. */
-function ohneGuthaben(){
+/* Premium bucht ohne Abzug — aber nur Stunden ab dem Clubstart. Darum
+   braucht diese Frage die Stunde und nicht bloss den Tarif: die drei
+   Bestandsmitglieder mit Premium UND Guthaben zahlen eine Oktoberstunde
+   mit einer Stunde vom Konto und eine Novemberstunde gar nicht. Stand
+   bis zum 17.10.2026 nur der Tarif hier, versprach das Fenster beiden
+   Faellen dasselbe — und einem davon das Falsche. */
+function ohneGuthaben(startsAt){
   try{
-    if(!scGestartet()) return false;
-    return istPremium();
+    if(!istPremium()) return false;
+    if(startsAt){
+      const s = new Date(String(startsAt).replace(' ','T'));
+      if(!isNaN(s)) return s >= SC_START;
+    }
+    return scGestartet() || !!stundenAb();
   }catch(e){ return false; }
 }
 function closeCfm(){ document.getElementById('cfmModal').classList.remove('open'); }
@@ -2592,6 +2689,13 @@ async function doBook(id){
   const {data,error}=await sb.rpc('book_class',{p_class_id:id});
   if(error||!data||!data.ok){
     if(data&&data.error==='no_credits'){ showNoCredit(); return; }
+    /* Die Stunde liegt vor dem eigenen Starttag. Das sollte der Kalender
+       gar nicht erst anbieten (nurErlaubteStunden) — aber wenn doch, dann
+       mit dem Datum aus der Datenbank und nicht mit "fehlgeschlagen". */
+    if(data&&data.error==='mitgliedschaft_startet_spaeter'){
+      closeCfm(); toast('Deine Mitgliedschaft startet am '+(data.ab||'1.11.2026')+' — ab dann kannst du diese Stunde buchen.');
+      return;
+    }
     const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
     closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
     return;
