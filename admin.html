@@ -150,7 +150,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
         <input id="nTitle" placeholder="Titel, z.B. B1/B2 Unterricht" style="flex:2">
         <select id="nClub" title="Club"><option value="sprechclub">🗣️ Sprechclub</option><option value="grammatikclub">📐 Grammatikclub</option><option value="wortschatzclub">📚 Wortschatzclub</option><option value="ausspracheclub">🎧 Ausspracheclub</option></select>
         <select id="nLevel"><option>A2</option><option>B1/B2</option><option>B2/C1</option><option>ab B1</option></select>
-        <select id="nTeacher" title="Lehrer"><option value="">— Lehrer —</option></select>
+        <select id="nTeacher" title="Hauptlehrer"><option value="">— Hauptlehrer —</option></select>
+        <select id="nAssist" title="Assistenzlehrer (optional)"><option value="">— ohne Assistenz —</option></select>
       </div>
       <div class="formrow">
         <input id="nTopic" placeholder="Thema (optional)" style="flex:2">
@@ -1382,9 +1383,14 @@ async function loadTeachers(){
   TEACHERS = data || [];
   const sel = document.getElementById('nTeacher');
   if (sel) sel.innerHTML = teacherOptions('');
+  const selA = document.getElementById('nAssist');
+  if (selA) selA.innerHTML = assistOptions('');
 }
 function teacherOptions(selId){
-  return '<option value="">— Lehrer —</option>' + TEACHERS.filter(t=>t.active||t.id===selId).map(t=>`<option value="${t.id}" ${t.id===selId?'selected':''}>${esc(t.name)}</option>`).join('');
+  return '<option value="">— Hauptlehrer —</option>' + TEACHERS.filter(t=>t.active||t.id===selId).map(t=>`<option value="${t.id}" ${t.id===selId?'selected':''}>${esc(t.name)}</option>`).join('');
+}
+function assistOptions(selId){
+  return '<option value="">— ohne Assistenz —</option>' + TEACHERS.filter(t=>t.active||t.id===selId).map(t=>`<option value="${t.id}" ${t.id===selId?'selected':''}>${esc(t.name)}</option>`).join('');
 }
 function clubOptions(selSlug){
   return CLUBS.map(c=>`<option value="${c.slug}" ${c.slug===selSlug?'selected':''}>${c.name}</option>`).join('');
@@ -1744,6 +1750,7 @@ function renderKlassen(){
           </div>
           <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             ${c.teacher_id?`<span class="tchip" style="font-weight:700"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00;font-weight:700">⚠️ Lehrer fehlt</span>'}
+            ${c.assist_teacher_id?`<span class="tchip" style="font-weight:700;opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</span>`:''}
             <span class="pill" style="background:#fff;border:1.5px solid ${lc};color:${lc};font-weight:700">${esc(c.level)}</span>
             <span class="pill" style="background:var(--bg);color:#555">${clubLabel(c.club)}</span>
           </div>
@@ -1816,7 +1823,8 @@ function renderKlassen(){
       <div id="edit-${c.id}" style="display:none;margin-top:10px">
         <div class="formrow">
           <select id="eClub-${c.id}" style="flex:1">${clubOptions(c.club)}</select>
-          <select id="eTeacher-${c.id}" style="flex:1">${teacherOptions(c.teacher_id)}</select>
+          <select id="eTeacher-${c.id}" style="flex:1" title="Hauptlehrer">${teacherOptions(c.teacher_id)}</select>
+          <select id="eAssist-${c.id}" style="flex:1" title="Assistenzlehrer (optional)">${assistOptions(c.assist_teacher_id)}</select>
         </div>
         <div class="formrow"><input id="ePre-${c.id}" placeholder="Übungen VOR dem Unterricht (Link)" value="${c.material_pre||''}" style="flex:1"><input id="eLive-${c.id}" placeholder="Material IM Unterricht (Link)" value="${c.material_live||''}" style="flex:1"></div>
         <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
@@ -1849,7 +1857,7 @@ function renderKlassen(){
     const isToday=(k===todayKey);
     const dayCards=(byDay[k]||[]).map(c=>{
       const p=parts[c.id]||[]; const lc=LEVEL_COLOR[c.level]||'#6B7280'; const full=p.length>=c.capacity;
-      const tch=c.teacher_id?`<div class="klc-t" style="color:${teacherColor(c.teacher_id)}">👩‍🏫 ${esc(teacherName(c.teacher_id))}</div>`:`<div class="klc-t miss">⚠️ Lehrer fehlt</div>`;
+      const tch=(c.teacher_id?`<div class="klc-t" style="color:${teacherColor(c.teacher_id)}">👩‍🏫 ${esc(teacherName(c.teacher_id))}</div>`:`<div class="klc-t miss">⚠️ Lehrer fehlt</div>`)+(c.assist_teacher_id?`<div class="klc-t" style="color:${teacherColor(c.assist_teacher_id)};opacity:.85">🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</div>`:'');
       return `<button class="klcard ${klOpenId===c.id?'open':''}" style="border-left-color:${lc}" onclick="openKl('${c.id}')">
         <div class="klc-time">${timeFmt.format(new Date(c.starts_at))}</div>
         <div class="klc-title">${esc(c.title)}</div>
@@ -2052,6 +2060,7 @@ async function saveClass(id){
   const { error } = await sb.from('classes').update({
     club: document.getElementById('eClub-'+id).value,
     teacher_id: document.getElementById('eTeacher-'+id).value || null,
+    assist_teacher_id: (document.getElementById('eAssist-'+id)||{}).value || null,
     material_pre: document.getElementById('ePre-'+id).value.trim() || null,
     material_live: document.getElementById('eLive-'+id).value.trim() || null,
     material_post: document.getElementById('ePost-'+id).value.trim() || null,
@@ -2133,6 +2142,7 @@ async function createClass(){
     title: t, level: document.getElementById('nLevel').value,
     club: document.getElementById('nClub').value,
     teacher_id: document.getElementById('nTeacher').value || null,
+    assist_teacher_id: (document.getElementById('nAssist')||{}).value || null,
     topic: document.getElementById('nTopic').value.trim() || null,
     capacity: parseInt(document.getElementById('nCap').value||'20',10),
     zoom_link: document.getElementById('nZoom').value.trim() || null,
