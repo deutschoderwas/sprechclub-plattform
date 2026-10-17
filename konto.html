@@ -3749,10 +3749,17 @@ function aboGeld(a){
   else if(a.intervall==='week') wann = n===1?'in der Woche':('alle '+n+' Wochen');
   return (txt+' '+wann).trim();
 }
+/* Die Zeitzone muss mit. Ohne sie rechnet der Browser den Zeitpunkt in
+   SEINE Zeit um — und die Periodengrenzen bei Stripe liegen auf
+   Berliner Mitternacht. Fuer jemanden westlich von Berlin stand hier
+   deshalb der Vortag: "Abgebucht wird am 30. November" statt am
+   1. Dezember, beim Jahresabo "31. Oktober 2027" statt 1. November.
+   Aufgefallen am 17.10.2026 beim Durchrechnen der Abo-Karte auf einem
+   Rechner mit UTC — und Julias Leute sitzen in ueber 20 Laendern. */
 function aboDatum(sek){
   if(!sek) return '';
   const d=new Date(sek*1000);
-  return isNaN(d)?'':d.toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'});
+  return isNaN(d)?'':d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'});
 }
 function aboName(tier){
   if(tier==='premium'||tier==='premium_plus') return 'Premium';
@@ -3836,6 +3843,16 @@ function aboKarteHtml(d){
      Jemandem, der im Oktober 468 Euro bezahlt hat, "Testzeit"
      anzuzeigen, waere allerdings das Gegenteil von beruhigend. */
   const vorverkauf = (tier==='premium'||tier==='premium_plus') && a.status==='trialing';
+  /* Ab wann der Vertrag laeuft. Fuer alle, die im Vorverkauf gekauft
+     haben, ist das der 1. November (tier_ab am Profil) — NICHT der Tag
+     des Kaufs. Sie haben im Oktober bezahlt, die Laufzeit beginnt aber
+     mit dem Unterricht; genau deshalb wird im November nichts
+     abgebucht. Wer kein Startdatum hat, faellt auf den Beginn des Abos
+     bei Stripe zurueck. */
+  const vonD = (typeof startAb==='function') ? startAb() : null;
+  const von = vonD
+    ? vonD.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'})
+    : aboDatum(a.seit);
 
   let lage='läuft', lageK='ok';
   if(offen){ lage='Zahlung offen'; lageK='warn'; }
@@ -3855,14 +3872,20 @@ function aboKarteHtml(d){
   } else if(pausiert){
     h+='<p class="abo-zeile abo-warn">Dein Abo pausiert'+(a.pause_bis?(' bis zum '+aboDatum(a.pause_bis)):'')+'. In dieser Zeit wird nichts abgebucht.</p>';
   } else if(gekuendigt){
-    h+='<p class="abo-zeile abo-warn">Du hast gekündigt. Bis zum <b>'+esc(bis)+'</b> bleibt alles offen — danach endet dein Zugang zur Plattform.</p>';
+    /* Julia, 17.10.2026: "natuerlich wenn sie kuendigen, dann steht das
+       da auch, dass der vertrag von- laeuft und dass es gekuendigt wird
+       zum ...". Also beide Daten in einem Satz: ab wann der Vertrag
+       laeuft und wann Schluss ist. */
+    h+='<p class="abo-zeile abo-warn">'
+      +(von ? 'Dein Vertrag läuft vom <b>'+esc(von)+'</b> bis zum <b>'+esc(bis)+'</b>. ' : '')
+      +'Du hast gekündigt — bis dahin bleibt alles offen, danach endet dein Zugang zur Plattform.</p>';
   } else if(vorverkauf && bis){
     /* Julia, 17.10.2026: "ABO startet am 01.11 und Abbuchung erst am
        01.12 ... sie muessen im November aber nichts mehr bezahlen,
        bitte so einstellen bei allen premium Mitgliedern". Eingestellt
        ist es; hier steht es jetzt auch. Das Datum kommt live von
        Stripe, also stimmt es auch fuers Jahresabo (1.11.2027). */
-    h+='<p class="abo-zeile">Dein Unterricht startet am <b>1. November</b>. '
+    h+='<p class="abo-zeile">Dein Vertrag läuft ab dem <b>'+esc(von||'1. November 2026')+'</b>. '
       +'Abgebucht wird erst wieder am <b>'+esc(bis)+'</b> — bis dahin zahlst du nichts.</p>';
   } else if(bis){
     h+='<p class="abo-zeile">Verlängert sich automatisch am <b>'+esc(bis)+'</b>.</p>';
