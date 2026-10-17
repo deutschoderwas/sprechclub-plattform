@@ -142,7 +142,16 @@ export default async function handler(req, res) {
       const sollAktiv = hatAbo;
       const istAktiv = (p.status || '') === 'aktiv';
       if (sollAktiv && !istAktiv) {
-        if (!trocken) await sb.from('profiles').update({ status: 'aktiv' }).eq('id', p.id);
+        if (!trocken) {
+          const { error: aufErr } = await sb.from('profiles').update({ status: 'aktiv' }).eq('id', p.id);
+          if (aufErr) {
+            bericht.fehler.push({
+              name: p.name || p.email,
+              fehler: 'konnte nicht entsperren: ' + aufErr.message,
+            });
+            continue;
+          }
+        }
         bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status });
       } else if (!sollAktiv && istAktiv) {
         /* Kein laufendes Abo mehr: Status auf 'gekuendigt' statt
@@ -152,9 +161,25 @@ export default async function handler(req, res) {
            Was bleibt: die Materialien und das Material der gebuchten
            Stunden (RLS, siehe ist_altschueler()). */
         if (!trocken) {
-          await sb.from('profiles')
+          /* Der Fehler wird jetzt angesehen. supabase-js wirft nicht,
+             es gibt { error } zurueck — und das stand hier nirgends.
+             Folge, gesehen am 17.10.2026 bei einer Premium-Jahreskundin:
+             im zugang_log stand zweimal "gekuendigt", im Profil aber
+             weiter tier='premium' und status='aktiv'. Das Protokoll
+             behauptete etwas, das nie passiert ist, und niemand konnte
+             sehen, woran es lag. Geht die Aenderung schief, wird nichts
+             protokolliert — stattdessen steht sie im Bericht unter
+             'fehler'. */
+          const { error: sperrErr } = await sb.from('profiles')
             .update({ status: 'gekuendigt', tier: null, tier_ab: null })
             .eq('id', p.id);
+          if (sperrErr) {
+            bericht.fehler.push({
+              name: p.name || p.email,
+              fehler: 'konnte nicht auf gekuendigt setzen: ' + sperrErr.message,
+            });
+            continue;
+          }
           await sb.from('zugang_log').insert({
             user_id: p.id, email: p.email, aktion: 'gekuendigt',
             grund: 'kein laufendes Abo bei Stripe mehr'

@@ -1183,7 +1183,7 @@ function vorverkaufKarte(){
       <div style="flex:1;min-width:240px">
         <b style="font-size:19px">🎉 Dein LIVE-Unterricht startet am ${startText()}</b>
         <p class="muted" style="margin-top:5px">Danke, dass du von Anfang an dabei bist! ${prem
-          ? 'Deine Stunden stehen schon im Kalender — <b>buchen kannst du ab sofort</b>. Such dir die Termine aus, die dir passen; los geht es am ' + startText() + '.'
+          ? 'Deine Stunden stehen schon im Kalender — <b>buchen kannst du ab sofort</b>. Such dir die Termine aus, die dir passen; los geht es am ' + startText() + '. Abgebucht wird im November nichts mehr — du hast ja schon bezahlt.'
           : 'Deine Mitgliedschaft ist bezahlt und läuft ab dem ' + startText() + ' — du verlierst also keinen einzigen Tag.'}</p>
       </div>
     </div>
@@ -3829,12 +3829,19 @@ function aboKarteHtml(d){
   const gekuendigt = a.kuendigt_zum_ende;
   const pausiert   = a.pausiert;
   const offen      = a.status==='past_due' || a.status==='unpaid';
+  /* Premium im Vorverkauf steht bei Stripe auf "trialing" — nicht weil
+     jemand testet, sondern weil die Laufzeit auf den 1. November
+     geschoben wurde (laufzeitAbStart in api/stripe-webhook.js). Dieser
+     Kniff ist der Grund, warum im November nichts abgebucht wird.
+     Jemandem, der im Oktober 468 Euro bezahlt hat, "Testzeit"
+     anzuzeigen, waere allerdings das Gegenteil von beruhigend. */
+  const vorverkauf = (tier==='premium'||tier==='premium_plus') && a.status==='trialing';
 
   let lage='läuft', lageK='ok';
   if(offen){ lage='Zahlung offen'; lageK='warn'; }
   else if(pausiert){ lage='pausiert'; lageK='warn'; }
   else if(gekuendigt){ lage='gekündigt'; lageK='warn'; }
-  else if(a.status==='trialing'){ lage='Testzeit'; lageK='ok'; }
+  else if(a.status==='trialing'){ lage=vorverkauf?'läuft':'Testzeit'; lageK='ok'; }
 
   let h='<div class="abo-kopf"><span class="abo-abz">'+esc(a.produkt||name)+'</span>'
     +'<span class="abo-lage abo-lage-'+lageK+'">'+lage+'</span></div>';
@@ -3849,6 +3856,14 @@ function aboKarteHtml(d){
     h+='<p class="abo-zeile abo-warn">Dein Abo pausiert'+(a.pause_bis?(' bis zum '+aboDatum(a.pause_bis)):'')+'. In dieser Zeit wird nichts abgebucht.</p>';
   } else if(gekuendigt){
     h+='<p class="abo-zeile abo-warn">Du hast gekündigt. Bis zum <b>'+esc(bis)+'</b> bleibt alles offen — danach endet dein Zugang zur Plattform.</p>';
+  } else if(vorverkauf && bis){
+    /* Julia, 17.10.2026: "ABO startet am 01.11 und Abbuchung erst am
+       01.12 ... sie muessen im November aber nichts mehr bezahlen,
+       bitte so einstellen bei allen premium Mitgliedern". Eingestellt
+       ist es; hier steht es jetzt auch. Das Datum kommt live von
+       Stripe, also stimmt es auch fuers Jahresabo (1.11.2027). */
+    h+='<p class="abo-zeile">Dein Unterricht startet am <b>1. November</b>. '
+      +'Abgebucht wird erst wieder am <b>'+esc(bis)+'</b> — bis dahin zahlst du nichts.</p>';
   } else if(bis){
     h+='<p class="abo-zeile">Verlängert sich automatisch am <b>'+esc(bis)+'</b>.</p>';
   }
