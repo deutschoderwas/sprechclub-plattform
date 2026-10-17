@@ -1129,10 +1129,37 @@ function stundeErlaubt(startsAt){
   const s = new Date(String(startsAt||'').replace(' ','T'));
   return isNaN(s) ? true : s >= g;
 }
-function nurErlaubteStunden(liste){
-  if(!Array.isArray(liste)) return [];
-  if(!stundenAb()) return liste;
-  return liste.filter(function(c){ return stundeErlaubt(c && c.starts_at); });
+/* Julia, 17.10.2026, nach einem ersten Anlauf, der die Oktoberstunden
+   ganz versteckt hat: "Premium mitglieder und alte Schueler haben jetzt
+   ueberall zugriff auf den Kalender. Die Premium Schueler duerfen ERST
+   den Unterricht ab dem 01.11 buchen. Sie duerfen sich den anderen
+   unterricht ansehen aber sie duerfen es nicht buchen, da steht: Buche
+   den Unterricht ab dem 01.11."
+
+   Also wird nichts mehr aussortiert. Der ganze Kalender steht offen,
+   und eine Stunde vor dem eigenen Starttag traegt statt des
+   Buchen-Knopfes diesen Satz. Wer darauf tippt, bekommt das Fenster
+   "Dein Unterricht beginnt ab dem 1. November" (erstAbStart).
+   nurErlaubteStunden gibt es darum nicht mehr. */
+/* Kurz und in Julias Schreibweise: sie hat den Satz zweimal selbst
+   aufgeschrieben — "Buche den Unterricht ab dem 01.11" und "Dein
+   unterricht beginnt ab dem 01.11". Also steht genau das auf dem Knopf
+   und im Fenster, nicht "1. November". Die Zeitzone muss mit, sonst
+   rechnet der Browser den 1. November um Mitternacht auf den 31.10.
+   zurueck. */
+function startTextKurz(){
+  const g = stundenAb();
+  if(!g) return '01.11.';
+  try{ return g.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit'}); }
+  catch(e){ return '01.11.'; }
+}
+/* Die Woche, in der der eigene Unterricht anfaengt — fuer den Sprung
+   aus dem Fenster heraus. 0 ist die laufende Woche. */
+function startWoche(){
+  const g = stundenAb();
+  if(!g) return 0;
+  const mo = function(x){ x=new Date(x); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; };
+  return Math.round((mo(g)-mo(new Date()))/6048e5);
 }
 function tageBisStart(){ const d=startAb(); if(!d) return 0; return Math.max(0,Math.ceil((d-new Date())/86400000)); }
 function startText(){ const d=startAb(); return d? d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'}) : ''; }
@@ -1530,7 +1557,13 @@ const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard',
    Lernbereich, Community, Amanda. Die Datenbank sieht es genauso
    (RLS auf materials mit ist_altschueler(), und "Material sichtbar
    fuer Gebuchte" auf class_materials). */
-const ALTSCHUELER_OFFEN=['materialien','stunden'];
+/* 17.10.2026 dazugekommen: 'kalender'. Julia: "Premium mitglieder und
+   alte Schueler haben jetzt ueberall zugriff auf den Kalender."
+   Angesehen werden darf er also von allen; gebucht wird dort weiter nur
+   mit Guthaben ("Alte schueler duerfen wie immer bis zum 31.10 nur mit
+   guthaben buchen nach dem alten system"), und ohne Guthaben sagt das
+   Fenster genau das. */
+const ALTSCHUELER_OFFEN=['materialien','stunden','kalender'];
 function show(v){
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
@@ -2256,11 +2289,12 @@ function renderKalender(){
      offen. */
   const wartet = premiumWartetAufStart();
   if(!wartet){ clearTimeout(scUhr); scUhr = null; }
-  /* Und er fuehrt gleich in die richtige Woche: ohne das hier landet
-     ein Premium-Mitglied in der aktuellen Oktoberwoche, in der fuer ihn
-     keine einzige Stunde steht, und muesste sich erst vorwaerts
-     klicken. */
-  try{ const _g=kalGrenze(); if(kalWeek < _g) kalWeek = _g; }catch(e){}
+  /* Hier sprang der Kalender fuer Vorverkaufs-Mitglieder in die Woche
+     des Starttags, weil die Oktoberwochen fuer sie leer waren. Seit sie
+     den alten Unterricht sehen duerfen, sind sie nicht leer — also
+     bleibt der Kalender da, wo alle anderen auch anfangen: in dieser
+     Woche. In die Startwoche kommt man ueber das Fenster (zuStartWoche)
+     oder mit den Pfeilen. */
   document.getElementById('v-kalender').innerHTML =
       meineStundenKarte()
     + (wartet ? scStartKarte() : '')
@@ -2385,10 +2419,7 @@ async function loadKalender(){
   if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
   const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
   const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  /* Hier wird aussortiert, was vor dem eigenen Starttag liegt. Eine
-     Stelle fuer alles, was danach kommt: Wochenraster, Monatsansicht
-     und kalBook greifen alle auf kalCache zu. */
-  const all=nurErlaubteStunden((data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; })); kalCache=all;
+  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
   let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
   const clubCount=list.length;
   if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
@@ -2521,6 +2552,9 @@ function kalEv(c){
   /* Feiertage stehen mit Platzzahl 0 im Kalender — "ausgebucht" waere
      dort das falsche Wort. */
   else if((Number(c.capacity)||0)===0){ btn=`<span class="ev-btn off">kein Unterricht</span>`; }
+  /* Vor dem eigenen Starttag: ansehen ja, buchen nein. Der Satz steht
+     so da, wie Julia ihn geschrieben hat. */
+  else if(!stundeErlaubt(c.starts_at)){ btn=`<button class="ev-btn off" style="white-space:normal;line-height:1.25;text-align:left" onclick="erstAbStart()">Buche den Unterricht ab dem ${startTextKurz()}</button>`; }
   else if(free<=0 && !neuesSystem(c.starts_at)){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   const matBtn = (c.has_material && (isActive() || c.mine)) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
@@ -2538,7 +2572,13 @@ function kalEv(c){
      Die Oktoberstunden laufen noch nach dem alten System. Dort ist die
      Grenze echt — wer mit Guthaben bucht, wird bei 20 abgewiesen — und
      darum bleibt der Hinweis dort stehen. */
-  if(_cap>0 && !past && _free<=0 && !neuesSystem(c.starts_at)){
+  /* "ausgebucht" nur dort, wo es den Betrachter betrifft: beim alten
+     Unterricht UND nur, wenn er diese Stunde ueberhaupt buchen darf.
+     Einem Premium-Mitglied, das im Oktober sowieso nicht buchen kann,
+     die Platzlage hinzuschreiben, waere doppelt daneben — es sieht
+     keine Plaetze, und es hat ohnehin eine andere Meldung auf dem
+     Knopf. */
+  if(_cap>0 && !past && _free<=0 && !neuesSystem(c.starts_at) && stundeErlaubt(c.starts_at)){
     seats=`<div class="ev-seats full">ausgebucht</div>`;
   }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
@@ -2592,7 +2632,7 @@ async function loadKalMonth(){
  var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
  var from=new Date(base.getFullYear(),base.getMonth(),1);var to=new Date(base.getFullYear(),base.getMonth()+1,1);
  var res=await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
- kalCache=nurErlaubteStunden((res.data||[]).map(function(c){if(c&&c.starts_at){c.starts_at=kalFixTs(c.starts_at);}return c;}));
+ kalCache=(res.data||[]).map(function(c){if(c&&c.starts_at){c.starts_at=kalFixTs(c.starts_at);}return c;});
  kalRenderMonth();
 }
 function kalRenderMonth(){
@@ -2659,17 +2699,35 @@ function setKalLevel(l){ kalLevel=l; kalRefresh(); }
 function kalGrenze(){
   var start=new Date(2026,5,29), jetzt=new Date();
   function mo(x){ x=new Date(x); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; }
-  /* Wer erst ab seinem Starttag Unterricht hat, kommt auch nicht
-     dahinter zurueck — dort stuende eine leere Woche, und die liest
-     sich wie ein Fehler. Diese Grenze ist gleichzeitig die Woche, in
-     der der Kalender aufgeht (renderKalender). */
-  var g=null; try{ g=stundenAb(); }catch(e){}
-  if(g) return Math.round((mo(g)-mo(jetzt))/6048e5);
   var bisStart=Math.round((mo(start)-mo(jetzt))/6048e5);
   /* Mindestens ein Vierteljahr zurück, bei Bedarf weiter bis zum Clubstart */
   return Math.min(bisStart, -13);
 }
 function kalWeekChange(d){ var min=kalGrenze(); kalWeek+=d; if(kalWeek<min)kalWeek=min; loadKalender(); }
+/* Julia, 17.10.2026: "davor kommt ein pop up fenster: Dein unterricht
+   beginnt ab dem 01.11".
+
+   Dasselbe Fenster wie bei jeder anderen Meldung — eine Stelle, ein
+   Aussehen. Und es bleibt nicht bei der Auskunft: ein Knopf bringt
+   direkt in die Woche, in der der eigene Unterricht anfaengt. */
+window.erstAbStart = function(){
+  const card=document.getElementById('cfmCard'); if(!card) return;
+  card.innerHTML=`<div class="ico">🗓️</div>
+    <h3>Dein Unterricht beginnt ab dem ${startTextKurz()}</h3>
+    <p class="hint">Diese Stunde liegt davor — die gehört noch zum alten Unterricht.
+    Ansehen kannst du alles, buchen aber erst ab dem ${startTextKurz()}</p>
+    <p class="hint"><b>Vorbuchen geht schon jetzt:</b> such dir deine Stunden ab dem ${startTextKurz()} aus,
+    so viele du möchtest — ohne Guthaben.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button>
+    <button class="btn btn-primary" onclick="zuStartWoche()" style="flex:1">Stunden ansehen →</button></div>`;
+  document.getElementById('cfmModal').classList.add('open');
+};
+window.zuStartWoche = function(){
+  closeCfm();
+  kalView='woche'; kalMonth=0; kalWeek=startWoche();
+  try{ renderKalender(); }catch(e){ loadKalender(); }
+  const z=document.getElementById('v-kalender'); if(z) z.scrollIntoView({behavior:'smooth',block:'start'});
+};
 function kalBook(id){
   /* Frueher stand hier hart credits<1. Premium bucht ab 01.11.2026 aber
      ohne Guthaben — und wurde deshalb schon vom eigenen Knopf abgewiesen,
@@ -2677,6 +2735,10 @@ function kalBook(id){
      darfBuchen() kennt genau diese Regel. */
   if(!darfBuchen()){ showNoCredit(); return; }
   const c=kalCache.find(x=>String(x.id)===String(id));
+  /* Zweiter Riegel: der Knopf wird fuer eine Stunde vor dem Starttag
+     gar nicht erst gezeigt, aber eine Seite, die seit Mitternacht offen
+     steht, oder ein Aufruf aus der Monatsansicht koennte hier landen. */
+  if(c && !stundeErlaubt(c.starts_at)){ erstAbStart(); return; }
   const start=c?new Date(c.starts_at):null;
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
   /* Das Niveau stand hier mit in der Zeile. Julia, 17.10.2026: "auch
