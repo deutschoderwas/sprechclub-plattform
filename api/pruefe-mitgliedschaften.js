@@ -595,9 +595,31 @@ export default async function handler(req, res) {
           }
         }
 
+        /* Julia, 18.10.2026, zu dem einen Fall, den dieser Schritt
+           gefunden hat: "mouliota@hotmail.com (welches Abo hat sie?)".
+           Berechtigte Frage — und der Bericht sagte es nicht. Ohne die
+           Stufe kann sie das Konto nicht von Hand anlegen, und raten
+           soll hier niemand. Also steht jetzt dabei, was die Person
+           gekauft hat und was sie zahlt. */
+        const pos   = ab.items && ab.items.data && ab.items.data[0];
+        const preis = pos && pos.price;
+        const wdh   = (preis && preis.recurring) || {};
+        const geld  = (preis && preis.unit_amount != null)
+          ? (preis.unit_amount / 100).toFixed(2).replace('.', ',') + ' '
+            + String(preis.currency || 'eur').toUpperCase()
+          : null;
+        const md    = ab.metadata || {};
+
         bericht.zahlt_ohne_konto.push({
           email: mail || '(keine Adresse bei Stripe)',
           kunde, abo: ab.status, abo_id: ab.id,
+          tier:  md.tier || null,
+          plan:  md.plan || (preis && (preis.nickname || preis.lookup_key)) || null,
+          preis: geld,
+          takt:  wdh.interval ? ((wdh.interval_count > 1 ? wdh.interval_count + ' ' : '')
+                   + ({ month: 'Monat', year: 'Jahr', week: 'Woche', day: 'Tag' }[wdh.interval] || wdh.interval)) : null,
+          seit:  ab.start_date ? new Date(ab.start_date * 1000).toISOString().slice(0, 10) : null,
+          laeuft_bis: periodeEnde(ab) ? new Date(periodeEnde(ab)).toISOString().slice(0, 10) : null,
           hinweis: 'zahlt bei Stripe, hat bei uns aber weder Konto noch geparkten Kauf',
         });
       }
@@ -668,7 +690,7 @@ export default async function handler(req, res) {
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, Abo bei Stripe: ${x.abo}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
-      ((bericht.zahlt_ohne_konto || []).length ? `<p><b>⚠️ Zahlt bei Stripe, hat bei uns aber kein Konto:</b></p><ul>${bericht.zahlt_ohne_konto.map(x => `<li>${x.email} — Abo ${x.abo} (${x.abo_id})</li>`).join('')}</ul>` : '') +
+      ((bericht.zahlt_ohne_konto || []).length ? `<p><b>⚠️ Zahlt bei Stripe, hat bei uns aber kein Konto:</b></p><ul>${bericht.zahlt_ohne_konto.map(x => `<li><b>${x.email}</b> — ${x.tier || x.plan || 'Stufe unbekannt'}${x.preis ? ', ' + x.preis : ''}${x.takt ? ' pro ' + x.takt : ''}${x.seit ? ', seit ' + x.seit : ''}${x.laeuft_bis ? ', bezahlt bis ' + x.laeuft_bis : ''} <span style="color:#888">(${x.abo_id})</span></li>`).join('')}</ul>` : '') +
       ((bericht.zahlt_nicht_angemeldet || []).length ? `<p><b>Hat bezahlt, sich aber nie angemeldet:</b></p><ul>${bericht.zahlt_nicht_angemeldet.map(x => `<li>${x.email} — Abo ${x.abo}</li>`).join('')}</ul>` : '') +
       (bericht.unklar.length ? `<p><b>Unklar — Zugang bleibt offen, bitte bei Stripe nachsehen:</b></p><ul>${bericht.unklar.map(x => `<li>${x.name} (${x.email}) — ${x.hinweis}</li>`).join('')}</ul>` : '') +
       (bericht.ohne_stripe.length ? `<p><b>Ohne Stripe-Kunde — bitte selbst ansehen:</b></p><ul>${bericht.ohne_stripe.map(zeile).join('')}</ul>` : '') +
