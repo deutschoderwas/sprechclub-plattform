@@ -30,7 +30,35 @@ import { erinnerungLauf } from './_lead-erinnerung-lauf.js';
 const ARTEN = {
   lead_erinnerung: (sb, auftrag) => erinnerungLauf(sb, { senden: true, max: auftrag.max_mails || undefined }),
   lead_erinnerung_vorschau: (sb, auftrag) => erinnerungLauf(sb, { senden: false, max: auftrag.max_mails || undefined }),
+  /* Den Stripe-Abgleich ausserhalb der Nacht anstossen.
+
+     Julia, 18.10.2026, ueber eine Kundin, deren Profil den nie
+     bezahlten Kaufversuch spiegelt statt ihres echten Abos: "Aber toma
+     hat doch bezahlt, das was sie storniert hat das entfernen."
+
+     Richtigstellen kann das nur ein Blick zu Stripe — von Hand
+     eintragen hiesse Zahlen erfinden, die der naechste naechtliche
+     Lauf ohnehin ueberschreibt. /api/pruefe-mitgliedschaften verlangt
+     aber den internen Schluessel, und der gehoert auf den Server, nicht
+     in eine Unterhaltung. Also ruft der Lauf hier sich selbst auf und
+     nimmt den Schluessel aus der eigenen Umgebung: Julia sagt ein
+     Wort, eine Zeile in mail_auftraege, und der Abgleich laeuft.
+
+     Mit ?trocken=1 (art 'mitgliedschaften_vorschau') aendert er nichts
+     und sagt nur, was er taete. */
+  mitgliedschaften_pruefen:  (sb, auftrag, basis) => abgleichAnstossen(basis, false),
+  mitgliedschaften_vorschau: (sb, auftrag, basis) => abgleichAnstossen(basis, true),
 };
+
+async function abgleichAnstossen(basis, trocken) {
+  const url = basis + '/api/pruefe-mitgliedschaften' + (trocken ? '?trocken=1' : '');
+  const r = await fetch(url, {
+    headers: { 'x-intern': process.env.CRON_SECRET || '' },
+    signal: AbortSignal.timeout(250000),
+  });
+  const bericht = await r.json().catch(() => ({ ok: false, grund: 'antwort_unlesbar' }));
+  return { ok: r.ok && bericht && bericht.ok !== false, http: r.status, trocken, ...bericht };
+}
 
 /* Ein Lauf, der laenger als eine halbe Stunde auf 'laeuft' steht, ist
    abgestuerzt (Vercel beendet eine Funktion viel frueher). Den geben
@@ -72,9 +100,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, grund: 'unbekannte_art', art: auftrag.art });
   }
 
+  /* Die eigene Adresse — wortgleich mit api/daily.js, damit es nur eine
+     Schreibweise gibt. */
+  const basis = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+
   let bericht;
   try {
-    bericht = await lauf(sb, auftrag);
+    bericht = await lauf(sb, auftrag, basis);
   } catch (e) {
     bericht = { ok: false, grund: 'abgebrochen', fehlertext: String((e && e.message) || e).slice(0, 400) };
   }

@@ -46,3 +46,26 @@ create policy "Admin liest Mail-Auftraege" on public.mail_auftraege
   for select using (
     exists (select 1 from profiles p where p.id = auth.uid() and p.is_admin)
   );
+
+-- ------------------------------------------------------------
+-- 18.10.2026: zwei Auftragsarten dazu.
+--
+-- Julia ueber eine Kundin, deren Profil den nie bezahlten Kaufversuch
+-- spiegelt statt ihres echten, gekuendigten Jahresabos: "Aber toma hat
+-- doch bezahlt, das was sie storniert hat das entfernen."
+--
+-- Richtigstellen kann das nur ein Blick zu Stripe. Von Hand eintragen
+-- hiesse Zahlen erfinden, die der naechste naechtliche Lauf ohnehin
+-- ueberschreibt. /api/pruefe-mitgliedschaften verlangt aber den
+-- internen Schluessel — also stoesst ihn jetzt die Auftragstabelle an,
+-- die auf dem Server laeuft und den Schluessel aus ihrer eigenen
+-- Umgebung nimmt.
+--
+--   insert into mail_auftraege (art, grund, angelegt_von)
+--   values ('mitgliedschaften_pruefen', 'Abos mit Stripe abgleichen', 'Claude');
+--
+-- Nur nachsehen, nichts aendern:
+--   art = 'mitgliedschaften_vorschau'   (ruft den Lauf mit ?trocken=1)
+--
+-- Der Bericht landet wie bei jedem Auftrag in der Spalte bericht.
+-- ------------------------------------------------------------
