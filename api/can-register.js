@@ -90,13 +90,50 @@ export default async function handler(req, res) {
       const { data: da } = await sb.from('pending_purchases')
         .select('id').ilike('email', email).limit(1);
       if (!da || !da.length) {
+        /* HIER lag der Fehler, aufgefallen am 18.10.2026 an Susana und
+           drei weiteren: geschrieben wurde plan:'stripe_abo'.
+
+           Die Uebergabe bei der Registrierung (apply_pending_purchases
+           in der Datenbank) liest die Stufe aus genau diesem Feld — sie
+           sucht nach 'premium…', 'pp_…' oder 'community…'. 'stripe_abo'
+           passt auf nichts. Also bekam die Person KEINE Mitgliedschaft,
+           die Zeile wurde trotzdem als erledigt abgehakt, und im Admin
+           stand jemand, der gerade 49 Euro bezahlt hatte, als
+           "Registriert" ohne Zugang.
+
+           Die Stufe steht in den Metadaten der Subscription (tier,
+           plan) — dort hat sie api/create-checkout.js hineingeschrieben.
+           Erst dort nachsehen, dann beim Preisnamen. Und wer bezahlt
+           hat, soll auch aktiv werden: make_status. */
         let plan = null;
+        let stufe = '';
         try {
+          const md = abo.metadata || {};
+          stufe = String(md.tier || '').toLowerCase();
           const preis = abo.items && abo.items.data && abo.items.data[0] && abo.items.data[0].price;
-          plan = (preis && (preis.nickname || preis.lookup_key)) || null;
+          const ausPreis = (preis && (preis.nickname || preis.lookup_key)) || null;
+          plan = md.plan || ausPreis || null;
+          if (!stufe) {
+            const txt = String(plan || '').toLowerCase();
+            if (txt.includes('premiumplus') || txt.startsWith('pp_')) stufe = 'premiumplus';
+            else if (txt.includes('premium')) stufe = 'premium';
+            else if (txt.includes('community')) stufe = 'community';
+          }
         } catch (e) {}
+
+        /* Der Wert in 'plan' entscheidet ueber die Stufe. Steht dort
+           etwas, das die Uebergabe nicht lesen kann, schreiben wir
+           lieber die Stufe selbst hin als einen huebschen Produktnamen.
+           'premium_plus' und 'premiumplus' meinen dasselbe; die
+           Uebergabe kennt 'premiumplus' und 'pp_'. */
+        const lesbar = /^(premium|pp_|community)/i.test(String(plan || ''));
+        const planFuerUebergabe = lesbar
+          ? plan
+          : (stufe === 'premium_plus' ? 'premiumplus' : (stufe || 'stripe_abo'));
+
         await sb.from('pending_purchases').insert({
-          email, plan: plan || 'stripe_abo', stunden: 0, is_trial: abo.status === 'trialing',
+          email, plan: planFuerUebergabe, stunden: 0, is_trial: abo.status === 'trialing',
+          make_status: stufe ? 'aktiv' : null,
           applied: false, stripe_ref: abo.id
         });
       }

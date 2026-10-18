@@ -1403,7 +1403,7 @@ async function maybeStartNow(session){
 
 async function load(){
   const [{ data:prof }, { data:bk }, { data:cl }, { data:msg }, { data:rt }, { data:prog }, { data:chs }] = await Promise.all([
-    sb.from('profiles').select('credits,name,goal,target_level,level,stufe,native_language,pass_until,birthday,status,tier,tier_ab,is_admin,is_teacher').eq('id',user.id).single(),
+    sb.from('profiles').select('credits,name,goal,target_level,level,stufe,native_language,pass_until,birthday,status,tier,tier_ab,is_admin,is_teacher,abo_ende,abo_stripe_status,bezahlt_hinweis').eq('id',user.id).single(),
     sb.rpc('my_bookings'),
     sb.from('credit_log').select('*').order('created_at',{ascending:false}),
     sb.from('messages').select('*').order('created_at'),
@@ -1741,6 +1741,43 @@ function pruefeZugang(){
   const card  = document.getElementById('cfmCard');
   if (!modal || !card) { location.href = '/preise'; return; }
   const community = (profile && profile.tier) === 'community';
+
+  /* Abgelaufen ist etwas anderes als "noch nie etwas gekauft", und es
+     muss sich auch anders lesen. Julia, 18.10.2026: "danach Zugang
+     schließen, pop up bei denen, dass sie keinen Zugriff mehr haben
+     und ein neues Abo abschließen müssen."
+
+     Den Status 'gekuendigt' setzt der naechtliche Lauf erst NACH dem
+     Ablauf — wer zum Monatsende kuendigt, sieht dieses Fenster also
+     nicht, solange seine bezahlte Zeit laeuft. */
+  const abgelaufen = (profile && profile.status) === 'gekuendigt';
+  let bisTxt = '';
+  try {
+    if (abgelaufen && profile && profile.abo_ende) {
+      bisTxt = new Date(profile.abo_ende).toLocaleDateString('de-DE',
+        { timeZone:'Europe/Berlin', day:'numeric', month:'long', year:'numeric' });
+    }
+  } catch(e){}
+
+  if (abgelaufen) {
+    card.innerHTML =
+      '<div class="ico">⌛</div>' +
+      '<h3>Dein Zugang ist abgelaufen</h3>' +
+      '<p class="hint">Deine Mitgliedschaft ist ' + (bisTxt ? 'am <b>'+esc(bisTxt)+'</b> ' : '') +
+      'ausgelaufen. Für die Plattform brauchst du ein neues Abo. ' +
+      'Dein Fortschritt bleibt gespeichert — mit einer neuen Mitgliedschaft ist sofort alles wieder da.</p>' +
+      '<div class="acts">' +
+        '<button class="btn btn-ghost" onclick="closeCfm()">Später</button>' +
+        '<a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Neues Abo abschließen →</a>' +
+      '</div>';
+    modal.classList.add('open');
+    /* Kein Zwangssprung auf die Preisseite: wer bezahlt hat, behaelt
+       seine Materialien (ist_altschueler in der Datenbank), und die
+       soll er auch erreichen koennen. Die Plattform selbst ist ohnehin
+       zu — darum kuemmert sich has_full_access, nicht dieses Fenster. */
+    return;
+  }
+
   card.innerHTML =
     '<div class="ico">🔒</div>' +
     '<h3>Deine Mitgliedschaft ist nicht aktiv</h3>' +
@@ -3920,6 +3957,25 @@ function aboKarteHtml(d){
        Stripe, also stimmt es auch fuers Jahresabo (1.11.2027). */
     h+='<p class="abo-zeile">Dein Vertrag läuft ab dem <b>'+esc(von||'1. November 2026')+'</b>. '
       +'Abgebucht wird erst wieder am <b>'+esc(bis)+'</b> — bis dahin zahlst du nichts.</p>';
+  } else if(a.von_hand){
+    /* Von Hand eingetragen — Ueberweisung oder jemand anderes zahlt.
+       Julia, 18.10.2026: "Volha hat per Überweisung für ein ganzes Jahr
+       bezahlt (sie hat ein Jahresabo, da bitte dazuschreiben, dass die
+       nächste Zahlung am 01.11.2027 zu tätigen ist)" und "Arina wird von
+       der Schwester Ekaterina bezahlt ... Arina hat immer Zugang, sobald
+       Ekaterinas Abos weiterlaufen."
+
+       "Abbuchung" waere hier falsch: es wird nichts abgebucht. Bei
+       Volha ist es eine Ueberweisung, die sie selbst taetigen muss; bei
+       Arina zahlt ueberhaupt jemand anderes. */
+    if(a.zahler){
+      h+='<p class="abo-zeile">Deine Mitgliedschaft wird von <b>'+esc(a.zahler)+'</b> bezahlt. '
+        +'Sie läuft, solange das Abo läuft — du musst dich um nichts kümmern.</p>';
+    } else if(bis){
+      h+='<p class="abo-zeile">Bezahlt bis zum <b>'+esc(bis)+'</b>. '
+        +'Die nächste Zahlung ist am <b>'+esc(bis)+'</b> fällig.</p>';
+    }
+    if(a.hinweis) h+='<p class="abo-zeile muted">'+esc(a.hinweis)+'</p>';
   } else if(bis){
     /* Julia, 18.10.2026: "da muss stehen: Naechste Abbuchung am 01.12
        und dann wird spaeter stehen naechste Abbuchung am 01.01 usw."
@@ -3958,17 +4014,27 @@ function aboKarteHtml(d){
        Warteliste — nicht in einen Tarifwechsel bei Stripe. */
     h+='<button class="btn btn-primary" onclick="zeigeLiveUpgrade()">Auf Premium wechseln</button>';
   }
-  h+='<button class="btn btn-ghost" onclick="openPortal()">Rechnungen und Zahlungsmittel</button>';
-  if(!gekuendigt){
-    h+='<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">Kündigen</button>';
+  /* Wer von Hand eingetragen ist, liegt bei Stripe gar nicht — dort
+     gibt es fuer ihn weder Rechnungen noch einen Kuendigen-Knopf. Ein
+     Knopf, der ins Leere fuehrt, ist schlimmer als keiner. */
+  if(!a.von_hand){
+    h+='<button class="btn btn-ghost" onclick="openPortal()">Rechnungen und Zahlungsmittel</button>';
+    if(!gekuendigt){
+      h+='<button class="btn btn-ghost abo-weg" onclick="openPortal(\'kuendigen\')">Kündigen</button>';
+    }
   }
   h+='</div>';
 
   if(tier==='community' && !gekuendigt && !pausiert && !offen){
     h+='<p class="abo-fuss" style="border:none;padding-top:0;margin-top:2px">Ein Wechsel auf Premium ist ab dem <b>1. November</b> möglich — dann startet der LIVE-Sprechclub.</p>';
   }
-  h+='<p class="abo-fuss">Alle Änderungen laufen über unsere Zahlungsstelle Stripe — dort liegen deine Zahlungsdaten sicher, wir sehen sie nie. '
-    +'Eine Kündigung gilt immer zum Ende der bezahlten Zeit: bis dahin bleibt alles offen, danach endet der Zugang.</p>';
+  if(a.von_hand){
+    h+='<p class="abo-fuss">Diese Mitgliedschaft ist bei uns von Hand eingetragen — sie läuft nicht über Stripe. '
+      +'Wenn etwas nicht stimmt, schreib Julia einfach an: deutschoderwas@gmail.com.</p>';
+  } else {
+    h+='<p class="abo-fuss">Alle Änderungen laufen über unsere Zahlungsstelle Stripe — dort liegen deine Zahlungsdaten sicher, wir sehen sie nie. '
+      +'Eine Kündigung gilt immer zum Ende der bezahlten Zeit: bis dahin bleibt alles offen, danach endet der Zugang.</p>';
+  }
   return h;
 }
 

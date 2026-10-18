@@ -28,6 +28,7 @@
 // ============================================================
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { abschiedHtml, abschiedBetreff, abschiedDatum } from './_abschied-mail.js';
 
 const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
 // 'premiumplus' heisst die Stufe im Checkout, 'premium_plus' stand an
@@ -92,15 +93,30 @@ export default async function handler(req, res) {
 
   const { data: leute, error } = await sb
     .from('profiles')
-    .select('id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher')
+    .select('id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher,pass_until,abo_stripe_status,abo_ende,bezahlt_von,bezahlt_hinweis')
     .in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
 
-  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], fehler: [] };
+  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
+
+  const abschiedListe = [];
 
   for (const p of leute || []) {
     bericht.geprueft++;
     if (p.is_admin || p.is_teacher) continue;   // Team hat immer Zugang
+
+    /* Von Hand gesetzte Mitgliedschaften gehen Stripe nichts an.
+       Julia, 18.10.2026: "Volha hat per Überweisung für ein ganzes Jahr
+       bezahlt" und "Arina wird von der Schwester Ekaterina bezahlt".
+       Beide haben keine eigene Stripe-Kundennummer. Ohne diese Zeile
+       wuerde der Lauf sie unter ihrer E-Mail bei Stripe suchen, nichts
+       finden und sie Nacht fuer Nacht als Zweifelsfall melden — oder,
+       faende er zufaellig einen alten Kunden ohne Abo, sogar zusperren.
+       Sie werden weiter unten in Schritt 4d eigens behandelt. */
+    if (p.abo_stripe_status === 'von_hand' || p.bezahlt_von) {
+      bericht.von_hand.push({ name: p.name || p.email, email: p.email, hinweis: p.bezahlt_hinweis || '' });
+      continue;
+    }
 
     try {
       // --- 1. Kunde finden
@@ -169,8 +185,13 @@ export default async function handler(req, res) {
          Profil geschrieben (Periode bis 03.10.2027 statt bis zum Ende
          ihres echten Jahresabos) und sie Nacht fuer Nacht zum
          Abschalten vorgemerkt, obwohl sie bezahlt hatte. */
-      const jungstes = (laufend[0] || ausklingend[0] || alle[0]
-                        || (subs.data || [])[0]) || null;
+      /* Frueher stand hier als letzter Ausweg noch (subs.data||[])[0] —
+         also notfalls ein verworfener Kaufversuch. Genau das hat bei
+         Toma am 17.10.2026 eine Jahreslaufzeit bis 03.10.2027 ins
+         Profil geschrieben, die es nie gab, und Julia sah im Admin ein
+         gekuendigtes Jahresabo statt ihrer echten Zahlung. Lieber gar
+         keine Angabe als eine erfundene. */
+      const jungstes = (laufend[0] || ausklingend[0] || alle[0]) || null;
       const zeit = (t) => (t ? new Date(t * 1000).toISOString() : null);
       const abo = jungstes ? {
         abo_start:         zeit(jungstes.current_period_start),
@@ -183,7 +204,14 @@ export default async function handler(req, res) {
         abo_plan:          (jungstes.metadata && jungstes.metadata.plan) || null,
         abo_geprueft_am:   new Date().toISOString(),
       } : {
-        abo_stripe_status: 'kein_abo',
+        /* Nur verworfene Versuche? Dann sagen wir genau das — und
+           loeschen die alten Daten, damit im Admin nicht weiter eine
+           Laufzeit steht, die nie existiert hat. */
+        abo_start:         null,
+        abo_ende:          null,
+        abo_gekuendigt_am: null,
+        abo_plan:          null,
+        abo_stripe_status: (subs.data || []).length ? 'nur_verworfene_versuche' : 'kein_abo',
         abo_geprueft_am:   new Date().toISOString(),
       };
       if (!trocken) await sb.from('profiles').update(abo).eq('id', p.id);
@@ -198,7 +226,12 @@ export default async function handler(req, res) {
 
       // --- 4. Status angleichen
       const sollAktiv = hatAbo;
-      const istAktiv = (p.status || '') === 'aktiv';
+      /* Hier stand nur === 'aktiv'. Wer in Pause oder Urlaub stand, kam
+         also gar nicht erst in die Pruefung — und behielt den Zugang,
+         obwohl sein Abo abgelaufen war. has_full_access() in der
+         Datenbank laesst 'pause' und 'urlaub' durch, also zaehlt beides
+         als "hat Zugang" und muss genauso zugehen. */
+      const istAktiv = ['aktiv', 'pause', 'urlaub'].includes(p.status || '');
       if (sollAktiv && !istAktiv) {
         if (!trocken) {
           const { error: aufErr } = await sb.from('profiles').update({ status: 'aktiv' }).eq('id', p.id);
@@ -253,6 +286,12 @@ export default async function handler(req, res) {
           letztes_abo: (subs.data && subs.data[0] && subs.data[0].status) || 'keins',
           lief_bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
         });
+        /* Erst zumachen, dann verabschieden — und nur, wenn das Zumachen
+           auch wirklich geklappt hat. Die Mail geht nach dem Durchlauf
+           raus, damit ein haengender Mailserver nicht den ganzen
+           Abgleich ausbremst. */
+        abschiedListe.push({ id: p.id, name: p.name, email: p.email,
+                             tier: p.tier || '', bis: abo.abo_ende || null });
       } else if (!sollAktiv && istAktiv) {
         /* Hier landet, wer bei Stripe NUR verworfene Kaufversuche hat —
            sonst nichts. Das heisst nicht "hat nicht bezahlt", sondern
@@ -328,15 +367,237 @@ export default async function handler(req, res) {
     bericht.fehler.push({ name: 'alte Schueler', fehler: String((e && e.message) || e) });
   }
 
+  /* --- 4c. Bezahlt — und trotzdem nichts bekommen -----------------
+     Julia am 18.10.2026 ueber Susana: "Warum steht, dass Susana kein
+     Abo hat?" Sie hatte bezahlt. Vier Leute waren so.
+
+     Was passiert war: Wer kauft, BEVOR er ein Konto hat, landet in
+     pending_purchases. In die geparkte Zeile schrieb
+     api/can-register.js nur plan:'stripe_abo' — ohne die Stufe. Die
+     Uebergabe bei der Registrierung sucht nach 'premium…' oder
+     'community…', fand nichts, vergab nichts und hakte die Zeile
+     trotzdem als erledigt ab. Ergebnis: bezahlt, Konto da, keine
+     Mitgliedschaft, kein Zugang, keine Kaufbestaetigung — und im Admin
+     sahen sie aus wie Leute, die sich nur mal registriert haben.
+
+     can-register.js liest die Stufe jetzt aus Stripe. Dieser Schritt
+     hier ist das Netz darunter: Er schaut von der anderen Seite — wer
+     hat bei Stripe ein laufendes Abo, bei uns aber keine
+     Mitgliedschaft? — und traegt es nach. Damit faellt auch jede
+     kuenftige Variante dieses Fehlers innerhalb einer Nacht auf.
+
+     Die Schleife oben kann das nicht finden: sie laedt nur Profile,
+     die schon ein tier haben. Genau deshalb blieb es einen Tag lang
+     unsichtbar. */
+  bericht.nachgetragen = [];
+  try {
+    /* Nicht nach stripe_customer_id filtern: von den vier Betroffenen
+       am 18.10.2026 hatten DREI gar keine im Profil — can-register.js
+       traegt sie nur nach, wenn es den Kunden selbst gefunden hat.
+       Haetten wir hier auf die Kundennummer bestanden, waere das Netz
+       an genau den Leuten vorbeigegangen, fuer die es gebaut wurde.
+       Es sind eine Handvoll Profile; die Suche ueber die E-Mail kostet
+       nichts. */
+    const { data: ohne } = await sb.from('profiles')
+      .select('id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher')
+      .is('tier', null)
+      .in('status', ['registriert', 'probeschuler']);
+
+    for (const o of (ohne || [])) {
+      if (o.is_admin || o.is_teacher) continue;
+      try {
+        let kunde = o.stripe_customer_id || null;
+        if (!kunde && o.email) {
+          const treffer = await stripe.customers.list({ email: o.email, limit: 3 });
+          kunde = (treffer.data && treffer.data[0] && treffer.data[0].id) || null;
+          if (kunde && !trocken) await sb.from('profiles').update({ stripe_customer_id: kunde }).eq('id', o.id);
+        }
+        if (!kunde) continue;
+        const subs = await stripe.subscriptions.list({ customer: kunde, status: 'all', limit: 10 });
+        const echt = (subs.data || []).filter(x => !NIE_ZUSTANDE.includes(x.status));
+        const lebt = echt.find(x => LAEUFT.includes(x.status)) || echt.find(nochBezahlt);
+        if (!lebt) continue;
+
+        /* Welche Stufe? Erst die Metadaten des Abos, dann der Name des
+           Preises. Raten wir nicht — lieber melden. */
+        const md = lebt.metadata || {};
+        let stufe = String(md.tier || '').toLowerCase();
+        if (!stufe) {
+          const pr = lebt.items && lebt.items.data && lebt.items.data[0] && lebt.items.data[0].price;
+          const txt = String((pr && (pr.nickname || pr.lookup_key)) || md.plan || '').toLowerCase();
+          if (txt.includes('premiumplus') || txt.startsWith('pp_')) stufe = 'premiumplus';
+          else if (txt.includes('premium')) stufe = 'premium';
+          else if (txt.includes('community')) stufe = 'community';
+        }
+        if (!['community', 'premium', 'premiumplus', 'premium_plus'].includes(stufe)) {
+          bericht.unklar.push({
+            name: o.name || o.email, email: o.email,
+            gefunden: echt.map(x => x.status).join(', '),
+            hinweis: 'hat bezahlt, aber die Stufe steht nirgends — bitte von Hand setzen',
+          });
+          continue;
+        }
+
+        /* Premium startet am 1. November, Premium Plus am 1. Februar —
+           dieselbe Regel wie in apply_pending_purchases(). pass_until
+           oeffnet die Lernplattform sofort; gebucht wird ueber tier_ab. */
+        const start = stufe === 'premium' && Date.now() < Date.parse('2026-11-01T00:00:00+01:00')
+          ? '2026-11-01'
+          : (stufe === 'premiumplus' && Date.now() < Date.parse('2027-02-01T00:00:00+01:00') ? '2027-02-01' : null);
+        const bis = new Date(Math.max(Date.now(), start ? Date.parse(start + 'T00:00:00+01:00') : Date.now()) + 31 * 86400000);
+
+        if (!trocken) {
+          const { error: nErr } = await sb.from('profiles').update({
+            tier: stufe, tier_ab: start, status: 'aktiv', pass_until: bis.toISOString(),
+          }).eq('id', o.id);
+          if (nErr) { bericht.fehler.push({ name: o.name || o.email, fehler: 'nachtragen: ' + nErr.message }); continue; }
+          await sb.from('zugang_log').insert({
+            user_id: o.id, email: o.email, aktion: 'mitgliedschaft_nachgetragen',
+            grund: 'bei Stripe laeuft ' + lebt.id + ' (' + lebt.status + '), im Profil fehlte die Mitgliedschaft',
+            vorher: { status: o.status, tier: null },
+            nachher: { status: 'aktiv', tier: stufe, tier_ab: start },
+          }).then(() => {}, () => {});
+        }
+        bericht.nachgetragen.push({ name: o.name || o.email, email: o.email, tier: stufe, abo: lebt.status });
+      } catch (e) {
+        bericht.fehler.push({ name: o.name || o.email, fehler: 'nachtragen: ' + String((e && e.message) || e) });
+      }
+    }
+  } catch (e) {
+    bericht.fehler.push({ name: 'nachtragen', fehler: String((e && e.message) || e) });
+  }
+
+  /* --- 4d. Von Hand bezahlt --------------------------------------
+     Julia, 18.10.2026: "Volha hat per Überweisung für ein ganzes Jahr
+     bezahlt" und "Arina wird von der Schwester Ekaterina bezahlt
+     (Ekaterina hat 2 Abos abgeschlossen auf ihren Namen), Arina hat
+     immer Zugang, sobald Ekaterinas Abos weiterlaufen."
+
+     Zwei verschiedene Faelle:
+       bezahlt_von gesetzt  -> der Zugang haengt am Abo einer anderen
+                               Person. Laeuft deren Abo, laeuft auch
+                               dieser; hoert es auf, geht auch dieser zu.
+       abo_stripe_status    -> von Hand eingetragen, meist Ueberweisung.
+         = 'von_hand'          Niemand macht hier automatisch zu; Julia
+                               bekommt rechtzeitig eine Erinnerung. */
+  bericht.von_hand_geprueft = [];
+  try {
+    const { data: hand } = await sb.from('profiles')
+      .select('id,name,email,status,tier,pass_until,abo_ende,abo_stripe_status,bezahlt_von,bezahlt_hinweis')
+      .or('bezahlt_von.not.is.null,abo_stripe_status.eq.von_hand');
+
+    for (const h of (hand || [])) {
+      if (h.bezahlt_von) {
+        const { data: zahler } = await sb.from('profiles')
+          .select('id,name,email,status,tier,abo_ende,abo_stripe_status')
+          .eq('id', h.bezahlt_von).maybeSingle();
+        if (!zahler) {
+          bericht.fehler.push({ name: h.name || h.email, fehler: 'Zahler-Profil nicht gefunden' });
+          continue;
+        }
+        const zahlerLaeuft = ['aktiv', 'pause', 'urlaub'].includes(zahler.status || '') && !!zahler.tier;
+        /* Zugang so weit offen halten, wie der Zahler bezahlt hat, plus
+           einen Tag Luft — sonst faellt der Mitfahrer in der Stunde
+           zwischen Verlaengerung und naechtlichem Lauf heraus. */
+        const ziel = zahlerLaeuft && zahler.abo_ende
+          ? new Date(Date.parse(zahler.abo_ende) + 86400000).toISOString() : null;
+        const willStatus = zahlerLaeuft ? 'aktiv' : 'gekuendigt';
+        const aenderung = {};
+        if ((h.status || '') !== willStatus) aenderung.status = willStatus;
+        if (!zahlerLaeuft) { aenderung.tier = null; aenderung.tier_ab = null; }
+        else if (ziel && (!h.pass_until || Date.parse(h.pass_until) < Date.parse(ziel))) aenderung.pass_until = ziel;
+        if (Object.keys(aenderung).length) {
+          if (!trocken) {
+            const { error: hErr } = await sb.from('profiles').update(aenderung).eq('id', h.id);
+            if (hErr) { bericht.fehler.push({ name: h.name || h.email, fehler: 'mitbezahlt: ' + hErr.message }); continue; }
+          }
+          if (!zahlerLaeuft) {
+            bericht.gesperrt.push({ name: h.name || h.email, email: h.email,
+              letztes_abo: 'über ' + (zahler.name || zahler.email), lief_bis: String(zahler.abo_ende || '?').slice(0, 10) });
+            abschiedListe.push({ id: h.id, name: h.name, email: h.email, tier: h.tier || '', bis: zahler.abo_ende || null });
+          }
+        }
+        bericht.von_hand_geprueft.push({ name: h.name || h.email, ueber: zahler.name || zahler.email,
+          zahler_laeuft: zahlerLaeuft, bis: ziel ? ziel.slice(0, 10) : '—' });
+        continue;
+      }
+
+      // Ueberweisung & Co: nicht anfassen, nur rechtzeitig erinnern.
+      const endet = h.abo_ende ? Date.parse(h.abo_ende) : null;
+      const tage = endet ? Math.round((endet - Date.now()) / 86400000) : null;
+      bericht.von_hand_geprueft.push({ name: h.name || h.email, hinweis: h.bezahlt_hinweis || '',
+        laeuft_bis: h.abo_ende ? String(h.abo_ende).slice(0, 10) : '—', tage_rest: tage });
+      if (tage !== null && tage <= 14) {
+        (bericht.bald_faellig = bericht.bald_faellig || []).push({
+          name: h.name || h.email, email: h.email,
+          bis: String(h.abo_ende).slice(0, 10), tage_rest: tage,
+          hinweis: h.bezahlt_hinweis || 'von Hand gesetzte Mitgliedschaft',
+        });
+      }
+    }
+  } catch (e) {
+    bericht.fehler.push({ name: 'von Hand', fehler: String((e && e.message) || e) });
+  }
+
+  /* --- 4e. "Schade, dass du gehst" -------------------------------
+     Eine Mail pro Ablauf, nie zwei. Der Eintrag in email_log wird VOR
+     dem Senden geschrieben und bei einem Fehlschlag wieder entfernt —
+     dieselbe Reihenfolge wie bei der Lead-Erinnerung. Lieber eine Mail
+     zu wenig als zweimal "schade, dass du gehst" an denselben Menschen. */
+  if (!trocken && process.env.BREVO_API_KEY) {
+    for (const a of abschiedListe) {
+      try {
+        if (!a.email) continue;
+        const ref = 'abschied:' + String(a.bis || 'ohne').slice(0, 10);
+        const { data: schon } = await sb.from('email_log')
+          .select('id').eq('user_id', a.id).eq('kind', 'abschied').eq('ref', ref).maybeSingle();
+        if (schon) continue;
+
+        const { data: notiz } = await sb.from('email_log')
+          .insert({ user_id: a.id, kind: 'abschied', ref }).select('id').maybeSingle();
+
+        const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender: { name: 'Julia · deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+            replyTo: { email: 'deutschoderwas@gmail.com', name: 'Julia' },
+            to: [{ email: a.email, name: a.name || a.email }],
+            subject: abschiedBetreff(a.tier),
+            htmlContent: abschiedHtml(a.name, a.tier, abschiedDatum(a.bis)),
+          }),
+        });
+        if (!r.ok) {
+          if (notiz && notiz.id) await sb.from('email_log').delete().eq('id', notiz.id);
+          bericht.fehler.push({ name: a.name || a.email, fehler: 'Abschiedsmail: HTTP ' + r.status });
+          continue;
+        }
+        bericht.abschied_gesendet.push({ name: a.name || a.email, email: a.email, tier: a.tier || '—' });
+      } catch (e) {
+        bericht.fehler.push({ name: a.name || a.email, fehler: 'Abschiedsmail: ' + String((e && e.message) || e) });
+      }
+    }
+  } else if (trocken) {
+    bericht.abschied_gesendet = abschiedListe.map(a => ({ name: a.name || a.email, email: a.email, tier: a.tier || '—', hinweis: 'Probelauf — nichts verschickt' }));
+  }
+
   // --- 5. Julia Bescheid geben, wenn etwas passiert ist
-  const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length || bericht.fehler.length;
+  /* Julia, 18.10.2026: "ich bekomme IMMER EINE Mail, wenn ABO
+     abgelaufen ist." Also loest jeder geschlossene Zugang die Mail aus —
+     und die neuen Faelle (nachgetragen, bald faellig) genauso. */
+  const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
+    || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length;
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
     const zeile = (x) => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.letztes_abo ? ' — Abo: ' + x.letztes_abo : ''}${x.vorher ? ' — war: ' + x.vorher : ''}</li>`;
     const html =
       `<p>Der nächtliche Abgleich mit Stripe hat etwas gefunden.</p>` +
-      (bericht.gesperrt.length ? `<p><b>Zugang geschlossen (kein laufendes Abo mehr):</b></p><ul>${bericht.gesperrt.map(zeile).join('')}</ul>` : '') +
+      (bericht.gesperrt.length ? `<p><b>⛔ Zugang abgelaufen — Plattform ist für diese Leute zu:</b></p><ul>${bericht.gesperrt.map(x => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''} — bezahlt war bis ${x.lief_bis}</li>`).join('')}</ul>` : '') +
       (bericht.entsperrt.length ? `<p><b>Wieder geöffnet (Abo läuft doch):</b></p><ul>${bericht.entsperrt.map(zeile).join('')}</ul>` : '') +
       (bericht.archiviert.length ? `<p><b>Ins Archiv verschoben (alter Schüler ohne Guthaben):</b></p><ul>${bericht.archiviert.map(x => `<li>${x.name} (${x.email}) — letzte Guthaben-Bewegung: ${x.letzte_bewegung}</li>`).join('')}</ul>` : '') +
+      (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
+      ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, Abo bei Stripe: ${x.abo}</li>`).join('')}</ul>` : '') +
+      ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
+      (bericht.unklar.length ? `<p><b>Unklar — Zugang bleibt offen, bitte bei Stripe nachsehen:</b></p><ul>${bericht.unklar.map(x => `<li>${x.name} (${x.email}) — ${x.hinweis}</li>`).join('')}</ul>` : '') +
       (bericht.ohne_stripe.length ? `<p><b>Ohne Stripe-Kunde — bitte selbst ansehen:</b></p><ul>${bericht.ohne_stripe.map(zeile).join('')}</ul>` : '') +
       (bericht.fehler.length ? `<p><b>Fehler beim Prüfen:</b></p><ul>${bericht.fehler.map(x => `<li>${x.name}: ${x.fehler}</li>`).join('')}</ul>` : '') +
       `<p style="color:#666;font-size:13px">${bericht.geprueft} Mitgliedschaften geprüft.</p>`;
@@ -347,7 +608,11 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
           to: [{ email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' }],
-          subject: 'Mitgliedschaften: ' + bericht.gesperrt.length + ' geschlossen, ' + bericht.entsperrt.length + ' geöffnet, ' + bericht.archiviert.length + ' archiviert',
+          subject: (bericht.gesperrt.length ? '⛔ ' + bericht.gesperrt.length + ' Zugang abgelaufen' : 'Mitgliedschaften')
+            + ((bericht.nachgetragen || []).length ? ' · ' + bericht.nachgetragen.length + ' nachgetragen' : '')
+            + (bericht.entsperrt.length ? ' · ' + bericht.entsperrt.length + ' geöffnet' : '')
+            + (bericht.archiviert.length ? ' · ' + bericht.archiviert.length + ' archiviert' : '')
+            + ((bericht.bald_faellig || []).length ? ' · ' + bericht.bald_faellig.length + ' bald fällig' : ''),
           htmlContent: html
         })
       });

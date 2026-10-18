@@ -70,7 +70,7 @@ export default async function handler(req, res) {
     if (uErr || !user) return res.status(401).json({ error: 'not_authenticated' });
 
     const { data: prof } = await sb.from('profiles')
-      .select('stripe_customer_id,email,tier,tier_ab,status,pass_until,credits')
+      .select('stripe_customer_id,email,tier,tier_ab,status,pass_until,credits,abo_start,abo_ende,abo_stripe_status,abo_plan,bezahlt_von,bezahlt_hinweis')
       .eq('id', user.id).maybeSingle();
 
     const basis = {
@@ -80,6 +80,61 @@ export default async function handler(req, res) {
       pass_until: (prof && prof.pass_until) || null,
       guthaben: (prof && prof.credits) || 0
     };
+
+    /* Von Hand gesetzte Mitgliedschaften kennt Stripe nicht.
+       Julia, 18.10.2026: "Volha hat per Überweisung für ein ganzes Jahr
+       bezahlt (sie hat ein Jahresabo, da bitte dazuschreiben, dass die
+       nächste Zahlung am 01.11.2027 zu tätigen ist)" und "Arina wird von
+       der Schwester Ekaterina bezahlt ... Arina hat immer Zugang, sobald
+       Ekaterinas Abos weiterlaufen."
+
+       Ohne diesen Zweig fragt die Seite bei Stripe nach, findet nichts
+       und schreibt den beiden "Du hast gerade kein Abo" ins Konto —
+       obwohl die eine ein Jahr im Voraus ueberwiesen hat. */
+    async function vonHand() {
+      let ende = prof && prof.abo_ende ? Date.parse(prof.abo_ende) : null;
+      let hinweis = (prof && prof.bezahlt_hinweis) || '';
+      let zahler = null;
+
+      if (prof && prof.bezahlt_von) {
+        const { data: z } = await sb.from('profiles')
+          .select('name,abo_ende,status,tier').eq('id', prof.bezahlt_von).maybeSingle();
+        if (z) {
+          zahler = z.name || null;
+          if (z.abo_ende) ende = Date.parse(z.abo_ende);
+        }
+      }
+      if (!ende && !hinweis) return null;
+
+      return {
+        abo: {
+          id: null,
+          status: 'von_hand',
+          laeuft: !ende || ende > Date.now(),
+          kuendigt_zum_ende: false,
+          laeuft_bis: ende ? Math.round(ende / 1000) : null,
+          endet_am: null,
+          pausiert: false,
+          pause_bis: null,
+          seit: prof && prof.abo_start ? Math.round(Date.parse(prof.abo_start) / 1000) : null,
+          von_hand: true,
+          hinweis,
+          zahler,
+          betrag: null, waehrung: 'eur',
+          intervall: (prof && /jahr|year/i.test(String(prof.abo_plan || ''))) ? 'year' : null,
+          intervall_anzahl: 1,
+          produkt: null
+        },
+        /* Kuendigen laeuft bei Stripe — wer dort gar nicht liegt, hat
+           dort auch nichts zu klicken. */
+        portal: { kuendigen: false }
+      };
+    }
+
+    if (prof && (prof.abo_stripe_status === 'von_hand' || prof.bezahlt_von)) {
+      const h = await vonHand();
+      if (h) return res.status(200).json(Object.assign(h, basis));
+    }
 
     // Kundennummer holen — oder einmalig ueber die E-Mail finden und merken.
     let customerId = (prof && prof.stripe_customer_id) || null;

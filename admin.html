@@ -2467,14 +2467,14 @@ async function loadBewertungen(){
 
 let SCHUELER = [];
 function nameKey(p){ return (p.name && p.name.trim()) ? p.name.trim() : (p.email||''); }
-const STATUS_OPT = [['registriert','🆕 Registriert (kein Paket)'],['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['gekuendigt','🔚 Gekündigt (Abo abgelaufen)'],['beendet','⚪ Beendet'],['archiv','🗄️ Archiviert (ausgeblendet)']];
+const STATUS_OPT = [['registriert','🆕 Nur angemeldet (nichts gekauft)'],['aktiv','🟢 Aktiv'],['pause','⏸️ Pause'],['urlaub','🏖️ Urlaub'],['gekuendigt','🔚 Zugang abgelaufen'],['beendet','⚪ Beendet'],['archiv','🗄️ Archiviert (ausgeblendet)']];
 const STATUS_BG = { registriert:'#E5E7EB', aktiv:'#DCFCE7', pause:'#FEF3C7', urlaub:'#DBEAFE', gekuendigt:'#FFE4E4', beendet:'#F1F1F1', archiv:'#E8E2DA' };
 function todayMMDD(){ const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{}); return `${p.month}-${p.day}`; }
 function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; const [y,m,d]=p.birthday.split('-'); const isToday=p.birthday.slice(5)===todayMMDD(); return `${d}.${m}.${y}${isToday?' 🎂':''}`; }
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stufe,amanda_minuten,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stripe_customer_id,stufe,amanda_minuten,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am,bezahlt_von,bezahlt_hinweis').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -2535,8 +2535,8 @@ async function loadSchueler(){
         <option value="aktiv">nur Aktiv</option>
         <option value="pause">nur Pause</option>
         <option value="urlaub">nur Urlaub</option>
-        <option value="registriert">nur Registriert</option>
-        <option value="gekuendigt">nur Gekündigt</option>
+        <option value="registriert">nur angemeldet (nichts gekauft)</option>
+        <option value="gekuendigt">nur Zugang abgelaufen</option>
         <option value="beendet">nur Beendet</option>
         <option value="archiv">nur Archiviert</option>
       </select>
@@ -2593,8 +2593,13 @@ var GRUPPEN = {
   premium:     { kurz:'PREMIUM',       bg:'#FFE8B0', fg:'#7A5200' },
   community:   { kurz:'COMMUNITY',     bg:'#DFF6F8', fg:'#0F766E' },
   alt:         { kurz:'Alte Schüler',  bg:'#E2EBC9', fg:'#3F6212' },
-  registriert: { kurz:'Registriert',   bg:'#E5E7EB', fg:'#4B5563' },
-  gekuendigt:  { kurz:'GEKÜNDIGT',     bg:'#FFE4E4', fg:'#B30000' },
+  bezahlt_ohne:{ kurz:'⚠️ Bezahlt, ohne Zugang', bg:'#FFE1C2', fg:'#8A3B00' },
+  registriert: { kurz:'Nur angemeldet', bg:'#E5E7EB', fg:'#4B5563' },
+  /* Julia, 18.10.2026: "dass es im Admin bereich neben dem Schüler steht
+     (ZUGANG abgelaufen)". Vorher stand hier "GEKÜNDIGT" — und das sagt
+     nicht, woran man ist: wer zum Monatsende kündigt, ist noch drin.
+     Dieses Abzeichen heisst: Abo vorbei, Tür zu. */
+  gekuendigt:  { kurz:'ZUGANG ABGELAUFEN', bg:'#FFE4E4', fg:'#B30000' },
   beendet:     { kurz:'Beendet',       bg:'#F1F1F1', fg:'#6B7280' }
 };
 
@@ -2679,6 +2684,12 @@ function aboBlock(p){
   var hatDaten = !!(p.abo_stripe_status || p.abo_ende || p.abo_start);
   if (!istAbo && !hatDaten && p.status!=='gekuendigt') return '';
 
+  /* Von Hand eingetragen — Überweisung, Tausch, oder jemand anderes
+     zahlt. Julia, 18.10.2026 über Volha und Arina. Das muss ganz oben
+     stehen: wer diese Zeile nicht sieht, sucht die Zahlung in Stripe
+     und findet sie nie. */
+  var vonHand = p.abo_stripe_status === 'von_hand' || !!p.bezahlt_von;
+
   var z = [];
   var name = p.tier==='community' ? 'Community'
            : (p.tier ? 'Premium'
@@ -2706,10 +2717,15 @@ function aboBlock(p){
   if (p.status==='gekuendigt'){
     z.push(['Jetzt', '<b style="color:#B30000">Abo abgelaufen · kein Zugang</b> <span class="muted">Materialien bleiben sichtbar</span>']);
   }
+  if (vonHand && p.bezahlt_hinweis){
+    z.push(['Von Hand', '<b style="color:#8A3B00">'+esc(p.bezahlt_hinweis)+'</b>']);
+  }
   if (p.abo_stripe_status){
     var klar = { active:'läuft', trialing:'läuft', past_due:'Zahlung offen', canceled:'bei Stripe beendet',
                  unpaid:'nicht bezahlt', incomplete:'Kaufversuch, nicht abgeschlossen',
-                 incomplete_expired:'Kaufversuch verfallen — nie bezahlt', kein_abo:'kein Abo bei Stripe' };
+                 incomplete_expired:'Kaufversuch verfallen — nie bezahlt', kein_abo:'kein Abo bei Stripe',
+                 von_hand:'von Hand eingetragen — läuft nicht über Stripe',
+                 nur_verworfene_versuche:'nur verworfene Kaufversuche gefunden — bitte bei Stripe nachsehen' };
     var txt = klar[p.abo_stripe_status] || p.abo_stripe_status;
     /* Hier stand bei 'trialing' das Wort "Testphase", und das hat Julia
        am 18.10.2026 zu Recht gestolpert: "ich verstehe nicht, warum bei
@@ -2748,6 +2764,14 @@ function gruppeVon(p){
   if (p.tier === 'premium' || p.tier === 'premium_plus') return 'premium';
   if (p.tier === 'community') return 'community';
   if ((p.credits || 0) > 0 || passLaeuft(p)) return 'alt';
+  /* Bezahlt und trotzdem nichts bekommen. Aufgefallen am 18.10.2026 an
+     Susana: Kauf am 17.10., Konto eine Minute spaeter — und danach stand
+     sie als "Registriert" da, ohne Mitgliedschaft, ohne Zugang, ohne
+     Kaufbestaetigung. Vier Leute waren so. Wer eine Stripe-Kundennummer
+     hat, hat bezahlt; wer dann noch auf 'registriert' steht, bei dem ist
+     die Uebergabe steckengeblieben. Das darf nicht mehr aussehen wie
+     "hat sich nur mal angemeldet". */
+  if (st === 'registriert' && p.stripe_customer_id) return 'bezahlt_ohne';
   if (st === 'registriert' || st === 'probeschuler') return 'registriert';
   return 'alt';   /* aktiver Altschueler, Guthaben gerade aufgebraucht */
 }
@@ -2769,7 +2793,23 @@ function brauchtStunden(p){
   return true;
 }
 var SCHUELER_GRUPPE = 'alle';
-function setSchuelerGruppe(g){ SCHUELER_GRUPPE = g; renderSchuelerTable(); }
+function setSchuelerGruppe(g){
+  SCHUELER_GRUPPE = g;
+  /* Julia, 18.10.2026: "beendet wird nicht aufgemacht, gekündigt wird
+     nicht aufgemacht wird nicht sauber gefiltert."
+
+     Sie hatte recht, und der Grund stand direkt daneben: die
+     Status-Auswahl stand auf "Läuft (aktiv & Urlaub)", und beide Filter
+     wurden UND-verknuepft. Wer auf "Beendet" tippte, fragte damit nach
+     "beendet UND gleichzeitig aktiv" — es gibt niemanden, der beides
+     ist, also blieb die Tabelle leer. Es sah aus wie ein kaputter Knopf.
+
+     Jetzt ist die Gruppe der Chef: wer eine Gruppe waehlt, bekommt sie
+     ganz. Die Status-Auswahl daneben bleibt zum Nachschaerfen. */
+  var s = document.getElementById('schuelerStatus');
+  if (s) s.value = '';
+  renderSchuelerTable();
+}
 function zeichneGruppenPillen(){
   var box = document.getElementById('grpPills'); if(!box) return;
   var zaehler = {}; (SCHUELER||[]).forEach(function(p){ var g=gruppeVon(p); zaehler[g]=(zaehler[g]||0)+1; });
@@ -2778,7 +2818,13 @@ function zeichneGruppenPillen(){
     var an = SCHUELER_GRUPPE===g;
     var d = GRUPPEN[g];
     var txt = (g==='alle') ? 'Alle' : d.kurz;
-    var n = (g==='alle') ? (SCHUELER||[]).length : (zaehler[g]||0);
+    /* Die Zahl auf der Pille muss das sein, was nach dem Klick in der
+       Tabelle steht — sonst ist sie ein Versprechen, das die Tabelle
+       bricht. "Alle" laesst die Archivierten aus, genau wie die
+       Tabelle; bei "Beendet" sind sie mitgezaehlt und auch zu sehen. */
+    var n = (g==='alle')
+      ? (SCHUELER||[]).filter(function(x){ return (x.status||'')!=='archiv'; }).length
+      : (zaehler[g]||0);
     var bg = an ? (d?d.bg:'#1A1A1A') : '#fff';
     var fg = an ? (d?d.fg:'#fff') : '#5C5346';
     var rand = an ? (d?d.fg:'#1A1A1A') : '#E7DFCD';
@@ -2839,7 +2885,11 @@ function renderSchuelerTable(){
   const stf = document.getElementById('schuelerStatus')?.value||'';
   const lowOnly = document.getElementById('schuelerLowOnly')?.checked;
   let rows = SCHUELER.filter(p => !q || (p.name||'').toLowerCase().includes(q) || (p.email||'').toLowerCase().includes(q));
-  if (stf!=='archiv') rows = rows.filter(p => (p.status||'') !== 'archiv');
+  /* Archivierte sind normalerweise aus dem Weg. Nur: sie zaehlen zur
+     Gruppe "Beendet" — stand die Zahl auf der Pille bei 27 und die
+     Tabelle zeigte 7, war das genau die Unsauberkeit, die Julia
+     gesehen hat. Also: in dieser Gruppe sind sie sichtbar. */
+  if (stf!=='archiv' && SCHUELER_GRUPPE!=='beendet') rows = rows.filter(p => (p.status||'') !== 'archiv');
   if (stf==='laufend'){ rows = rows.filter(p => ['aktiv','urlaub'].includes(p.status||'aktiv')); }
   else if (stf){ rows = rows.filter(p => (p.status||'aktiv')===stf); }
   /* Gruppe und Status sind zwei verschiedene Fragen: WAS jemand ist und WIE es
