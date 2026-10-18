@@ -1713,6 +1713,25 @@ function renderLockedNachsetzen(v){
 function renderLocked(v){
   const label=LOCK_LABELS[v]||'Dieser Bereich';
   renderLockedNachsetzen(v);
+
+  /* Wer ein Abo hatte und dessen Zeit abgelaufen ist, braucht kein
+     "Stundenpaket" — das ist die Sprache fuer die alten Schueler und
+     saehe aus, als haetten wir vergessen, dass er bezahlt hat.
+     Julia, 18.10.2026: "pop up bei denen, dass sie keinen Zugriff mehr
+     haben und ein neues Abo abschließen müssen." */
+  if(profile && profile.status === 'gekuendigt'){
+    document.getElementById('v-'+v).innerHTML=
+      `<div class="pagehead"><h1>${label} ⌛</h1></div>
+       <div class="card" style="text-align:center;border:2px solid #E8B4B4;background:#FFFFFF;max-width:560px;margin:0 auto">
+         <div style="font-size:46px;line-height:1;margin-bottom:8px">⌛</div>
+         <h3 style="margin-bottom:8px">Dein Zugang ist abgelaufen</h3>
+         <p class="muted" style="margin-bottom:16px">Deine Mitgliedschaft ist zu Ende gelaufen. Mit einem neuen Abo ist sofort alles wieder da — dein Fortschritt ist gespeichert.</p>
+         <a class="btn btn-primary" href="/preise" style="text-decoration:none">Neues Abo abschließen →</a>
+       </div>`;
+    showLockPopup();
+    return;
+  }
+
   document.getElementById('v-'+v).innerHTML=
     `<div class="pagehead"><h1>${label} 🔒</h1></div>
      <div class="card" style="text-align:center;border:2px solid #f5b942;background:#FFFFFF;max-width:560px;margin:0 auto">
@@ -1725,6 +1744,14 @@ function renderLocked(v){
 }
 function showLockPopup(){
   const card=document.getElementById('cfmCard');
+  if(profile && profile.status === 'gekuendigt'){
+    card.innerHTML=`<div class="ico">⌛</div>
+      <h3>Dein Zugang ist abgelaufen</h3>
+      <p class="hint">Für die Plattform brauchst du ein neues Abo. Deine Materialien aus der Zeit, in der du dabei warst, bleiben dir erhalten.</p>
+      <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Neues Abo abschließen →</a></div>`;
+    document.getElementById('cfmModal').classList.add('open');
+    return;
+  }
   card.innerHTML=`<div class="ico">🎟️</div>
     <h3><span data-i18n="lk_h3">Such dir ein Stundenpaket aus</span></h3>
     <p class="hint" data-i18n="lp_hint">Mit einem Stundenpaket oder einer Probestunde schaltest du die ganze Plattform frei. Den Kalender kannst du dir natürlich frei anschauen. 😊</p>
