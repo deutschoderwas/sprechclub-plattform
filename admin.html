@@ -301,7 +301,7 @@ async function ladeStart(){
      als Fremdschluessel deklariert sein, und ein fehlendes Recht laesst nur
      eine Kachel blass werden statt die ganze Seite. */
   const antw = await Promise.all([
-    sb.from('classes').select('id,title,level,starts_at,teacher_id').gte('starts_at', iso(jetzt.getTime()-2*86400000)).lte('starts_at', iso(jetzt.getTime()+2*86400000)).eq('is_cancelled', false),
+    sb.from('classes').select('id,title,level,topic,starts_at,teacher_id').gte('starts_at', iso(jetzt.getTime()-2*86400000)).lte('starts_at', iso(jetzt.getTime()+2*86400000)).eq('is_cancelled', false),
     sb.from('classes').select('id,title,starts_at').gte('starts_at', vor21).lt('starts_at', iso(jetzt.getTime())).eq('is_cancelled', false),
     sb.from('classes').select('id,title,starts_at,material_pre,material_live').gt('starts_at', iso(jetzt.getTime())).lte('starts_at', in21).eq('is_cancelled', false),
     sb.from('class_notes').select('class_id,post_content'),
@@ -374,7 +374,7 @@ async function ladeStart(){
     html += '<div class="card"><h3 style="margin:0 0 8px">Heute</h3>'
       + heute.map(c => '<div style="border-top:1px solid var(--border);padding:7px 0;font-size:14px">'
           + '<b>' + ST_UHR.format(new Date(c.starts_at)) + ' Uhr</b> · ' + esc(c.title||'')
-          + (c.level ? ' <span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">' + esc(c.level) + '</span>' : '')
+          + (fokusLabel(c.topic) ? ' <span class="pill" style="background:#fff;border:1.5px solid '+fokusColor(c.topic)+';color:'+fokusColor(c.topic)+';font-weight:700">' + esc(fokusLabel(c.topic)) + '</span>' : '')
           + '</div>').join('')
       + '</div>';
   }
@@ -1378,6 +1378,16 @@ const CLUB_COLOR={sprechclub:'#7ED8EA',grammatikclub:'#DD0000',wortschatzclub:'#
 const CLUB_EMOJI={sprechclub:'🗣️',grammatikclub:'📐',wortschatzclub:'📚',ausspracheclub:'🎧'};
 // Niveau-Farben (Bänder klar unterscheidbar)
 const LEVEL_COLOR={'A2/B1':'#15803D','B1/B2':'#0891B2','B2/C1':'#7C3AED','ab A2':'#B45309','ab B1':'#BE185D','ab A2/B1':'#15803D'};
+/* Fokus (Kategorie) aus dem Thema ableiten – der erste Teil vor dem "·".
+   Niveaus zeigen wir nicht mehr; stattdessen sehen Lehrer den Fokus. */
+function fokusLabel(topic){ var st=String(topic||'').split('·'); return st.length>1 ? st[0].trim() : ''; }
+function fokusColor(topic){ var f=fokusLabel(topic).toLowerCase();
+  if(/grammatik/.test(f)) return '#2F7D32';
+  if(/wortschatz/.test(f)) return '#C07D06';
+  if(/sprechstunde|freies? sprechen/.test(f)) return '#0E8C86';
+  if(/spiel|quiz|rate/.test(f)) return '#D42A21';
+  if(/aussprache|phonetik/.test(f)) return '#B4541F';
+  return '#10627A'; }
 async function loadTeachers(){
   const { data } = await sb.from('teachers').select('*').order('sort_order');
   TEACHERS = data || [];
@@ -1607,7 +1617,7 @@ async function loadPlan(){
       <div class="prow ${miss?'pmiss':''}" style="margin-bottom:0;border-left-color:${miss?'#DD0000':col}">
         <span class="ptime">${fmtTime(d)}–${fmtTime(end)}</span>
         <span class="pill" style="background:${col};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)">${CLUB_EMOJI[c.club]||''} ${esc((c.club||'').replace('club',''))}</span>
-        <span class="pill">${esc(c.level||'')}</span>
+        ${fokusLabel(c.topic)?`<span class="pill" style="background:#fff;border:1.5px solid ${fokusColor(c.topic)};color:${fokusColor(c.topic)};font-weight:700">${esc(fokusLabel(c.topic))}</span>`:''}
         <span style="flex:1;min-width:130px"><b>${esc(c.title||'')}</b>${c.topic?` <span class="muted">· ${esc(c.topic)}</span>`:''}</span>
         ${teacherCell}
         <span class="muted" title="${names.join(', ')}">👥 ${p.length}/${c.capacity||0} ${freeHtml}${names.length?' · '+names.slice(0,3).join(', ')+(names.length>3?' …':''):''}</span>
@@ -1751,7 +1761,7 @@ function renderKlassen(){
           <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             ${c.teacher_id?`<span class="tchip" style="font-weight:700"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00;font-weight:700">⚠️ Lehrer fehlt</span>'}
             ${c.assist_teacher_id?`<span class="tchip" style="font-weight:700;opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</span>`:''}
-            <span class="pill" style="background:#fff;border:1.5px solid ${lc};color:${lc};font-weight:700">${esc(c.level)}</span>
+            ${fokusLabel(c.topic)?`<span class="pill" style="background:#fff;border:1.5px solid ${fokusColor(c.topic)};color:${fokusColor(c.topic)};font-weight:700">${esc(fokusLabel(c.topic))}</span>`:''}
             <span class="pill" style="background:var(--bg);color:#555">${clubLabel(c.club)}</span>
           </div>
           ${c.topic?`<div class="muted" style="margin-top:5px">📖 ${esc(c.topic)}</div>`:''}
@@ -1861,7 +1871,7 @@ function renderKlassen(){
       return `<button class="klcard ${klOpenId===c.id?'open':''}" style="border-left-color:${lc}" onclick="openKl('${c.id}')">
         <div class="klc-time">${timeFmt.format(new Date(c.starts_at))}</div>
         <div class="klc-title">${esc(c.title)}</div>
-        <div class="klc-lvl" style="color:${lc}">${esc(c.level)}</div>
+        <div class="klc-lvl" style="color:${fokusColor(c.topic)}">${esc(fokusLabel(c.topic))}</div>
         ${tch}
         <div class="klc-b ${full?'full':''}">${full?'🔒 Ausgebucht':'👥 '+p.length}</div>
       </button>`;
