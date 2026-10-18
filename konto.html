@@ -3888,7 +3888,16 @@ function aboKarteHtml(d){
     h+='<p class="abo-zeile">Dein Vertrag läuft ab dem <b>'+esc(von||'1. November 2026')+'</b>. '
       +'Abgebucht wird erst wieder am <b>'+esc(bis)+'</b> — bis dahin zahlst du nichts.</p>';
   } else if(bis){
-    h+='<p class="abo-zeile">Verlängert sich automatisch am <b>'+esc(bis)+'</b>.</p>';
+    /* Julia, 18.10.2026: "da muss stehen: Naechste Abbuchung am 01.12
+       und dann wird spaeter stehen naechste Abbuchung am 01.01 usw."
+
+       Den Satz im Vorverkauf hat sie so abgenommen, wie er oben steht.
+       Hier geht es um die Zeit DANACH: ab dem 1. Dezember laeuft das
+       Abo normal weiter, und dann stand hier "Verlaengert sich
+       automatisch am ..." — richtig, aber nicht die Auskunft, die man
+       sucht. laeuft_bis wandert mit jeder Abbuchung weiter, der Satz
+       stimmt also Monat fuer Monat von allein. */
+    h+='<p class="abo-zeile">Nächste Abbuchung am <b>'+esc(bis)+'</b>.</p>';
   }
 
   /* Was in der Mitgliedschaft steckt. */
