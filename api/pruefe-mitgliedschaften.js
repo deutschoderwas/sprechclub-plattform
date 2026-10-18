@@ -447,8 +447,20 @@ export default async function handler(req, res) {
         const bis = new Date(Math.max(Date.now(), start ? Date.parse(start + 'T00:00:00+01:00') : Date.now()) + 31 * 86400000);
 
         if (!trocken) {
+          /* Auch die Abo-Daten mitschreiben. Sonst stehen die
+             Nachgetragenen im Admin ohne Laufzeit da — Julia, 18.10.2026:
+             "haben alle, die ein Abo haben, auch Zugang? sind sie bei uns
+             im Admin-Bereich, sodass ich das nachverfolgen kann?" Vier
+             Leute standen genau so da: Mitgliedschaft ja, Laufzeit "—". */
+          const z = (t) => (t ? new Date(t * 1000).toISOString() : null);
           const { error: nErr } = await sb.from('profiles').update({
             tier: stufe, tier_ab: start, status: 'aktiv', pass_until: bis.toISOString(),
+            abo_start:         z(lebt.current_period_start),
+            abo_ende:          z(periodeEnde(lebt) ? periodeEnde(lebt) / 1000 : null),
+            abo_gekuendigt_am: z(lebt.canceled_at) || (lebt.cancel_at_period_end ? new Date().toISOString() : null),
+            abo_stripe_status: lebt.status || null,
+            abo_plan:          (lebt.metadata && lebt.metadata.plan) || null,
+            abo_geprueft_am:   new Date().toISOString(),
           }).eq('id', o.id);
           if (nErr) { bericht.fehler.push({ name: o.name || o.email, fehler: 'nachtragen: ' + nErr.message }); continue; }
           await sb.from('zugang_log').insert({
@@ -555,7 +567,19 @@ export default async function handler(req, res) {
      Wir aendern dabei nichts. Eine Zahlung einem Konto zuzuordnen,
      das es nicht gibt, kann nur ein Mensch. Es steht im Bericht, und
      Julia sieht es in ihrer Mail. */
+  /* Julia, 18.10.2026: "schau nochmal durch Stripe durch, wie viele
+     Menschen haben welches Abo, wir brauchen wirklich eine klare
+     Struktur ... Alles muss strukturiert und ordentlich angelegt
+     werden, damit nichts verloren geht."
+
+     Der Durchgang durch alle Stripe-Abos war ohnehin da — er zaehlt
+     jetzt beim Gehen mit. Eine Zeile pro Sorte (Stufe · Takt · Lage),
+     plus die Faelle, die man sonst nie sieht: zwei Abos auf einer
+     Kundennummer (Ekaterina zahlt fuer ihre Schwester mit), und
+     Kundennummern, die auf dasselbe Profil zeigen. */
   bericht.zahlt_ohne_konto = [];
+  const bestand = new Map();          // "Stufe|Takt|Lage" -> Anzahl
+  const proKunde = new Map();         // Kundennummer -> [Abo-Kurzform]
   try {
     let seite = await stripe.subscriptions.list({ status: 'all', limit: 100 });
     const gesehen = new Set();
@@ -578,7 +602,35 @@ export default async function handler(req, res) {
         if (!LAEUFT.includes(ab.status)) continue;
 
         const kunde = typeof ab.customer === 'string' ? ab.customer : (ab.customer && ab.customer.id);
-        if (!kunde || gesehen.has(kunde)) continue;
+        if (!kunde) continue;
+
+        /* --- mitzaehlen, BEVOR wir doppelte Kunden ueberspringen ---
+           Sonst faellt genau das Zweitabo unter den Tisch, um das es
+           geht. */
+        {
+          const pos   = ab.items && ab.items.data && ab.items.data[0];
+          const preis = pos && pos.price;
+          const wdh   = (preis && preis.recurring) || {};
+          const md    = ab.metadata || {};
+          let stufe = String(md.tier || '').toLowerCase();
+          if (!stufe) {
+            const txt = String(md.plan || (preis && (preis.nickname || preis.lookup_key)) || '').toLowerCase();
+            if (txt.includes('premiumplus') || txt.startsWith('pp_')) stufe = 'premiumplus';
+            else if (txt.includes('premium')) stufe = 'premium';
+            else if (txt.includes('community')) stufe = 'community';
+            else stufe = 'unbekannt';
+          }
+          const takt = { month: 'Monat', year: 'Jahr', week: 'Woche', day: 'Tag' }[wdh.interval] || '?';
+          const lage = ab.cancel_at_period_end ? 'gekündigt, läuft aus' : ab.status;
+          const schluessel = stufe + ' · ' + takt + ' · ' + lage;
+          bestand.set(schluessel, (bestand.get(schluessel) || 0) + 1);
+
+          const liste = proKunde.get(kunde) || [];
+          liste.push(stufe + '/' + takt + '/' + ab.status);
+          proKunde.set(kunde, liste);
+        }
+
+        if (gesehen.has(kunde)) continue;
         gesehen.add(kunde);
 
         /* Steht die Kundennummer schon an einem Profil, ist alles gut —
@@ -637,6 +689,27 @@ export default async function handler(req, res) {
       if (!seite.has_more) break;
       const letzte = seite.data[seite.data.length - 1];
       seite = await stripe.subscriptions.list({ status: 'all', limit: 100, starting_after: letzte.id });
+    }
+    /* Die Bestandsaufnahme sortiert ausgeben: Premium vor Community,
+       laufend vor auslaufend, und immer mit Zahl. */
+    bericht.bestand = [...bestand.entries()]
+      .map(([was, anzahl]) => ({ was, anzahl }))
+      .sort((a, b) => b.anzahl - a.anzahl || a.was.localeCompare(b.was));
+    bericht.abos_gesamt = [...bestand.values()].reduce((x, y) => x + y, 0);
+
+    /* Mehrere Abos auf einer Kundennummer — der Fall, den man sonst nie
+       sieht. Julia am 18.10.2026 ueber Ekaterina: "Ekaterina hat 2 Abos
+       abgeschlossen auf ihren Namen", eines davon fuer ihre Schwester. */
+    bericht.mehrfach_abos = [];
+    for (const [kunde, liste] of proKunde.entries()) {
+      if (liste.length < 2) continue;
+      let wer = null;
+      try {
+        const { data: prof } = await sb.from('profiles')
+          .select('name,email').eq('stripe_customer_id', kunde).maybeSingle();
+        if (prof) wer = (prof.name || prof.email);
+      } catch (e) { /* Name ist Beiwerk */ }
+      bericht.mehrfach_abos.push({ kunde, wer: wer || '(kein Profil mit dieser Kundennummer)', abos: liste });
     }
   } catch (e) {
     bericht.fehler.push({ name: 'gegenzaehlen', fehler: String((e && e.message) || e) });
@@ -706,6 +779,8 @@ export default async function handler(req, res) {
       (bericht.unklar.length ? `<p><b>Unklar — Zugang bleibt offen, bitte bei Stripe nachsehen:</b></p><ul>${bericht.unklar.map(x => `<li>${x.name} (${x.email}) — ${x.hinweis}</li>`).join('')}</ul>` : '') +
       (bericht.ohne_stripe.length ? `<p><b>Ohne Stripe-Kunde — bitte selbst ansehen:</b></p><ul>${bericht.ohne_stripe.map(zeile).join('')}</ul>` : '') +
       (bericht.fehler.length ? `<p><b>Fehler beim Prüfen:</b></p><ul>${bericht.fehler.map(x => `<li>${x.name}: ${x.fehler}</li>`).join('')}</ul>` : '') +
+      ((bericht.bestand || []).length ? `<p><b>Bestand bei Stripe — ${bericht.abos_gesamt} Abos:</b></p><ul>${bericht.bestand.map(x => `<li>${x.anzahl}× ${x.was}</li>`).join('')}</ul>` : '') +
+      ((bericht.mehrfach_abos || []).length ? `<p><b>Mehrere Abos auf einer Kundennummer:</b></p><ul>${bericht.mehrfach_abos.map(x => `<li>${x.wer} — ${x.abos.join(' + ')}</li>`).join('')}</ul>` : '') +
       `<p style="color:#666;font-size:13px">${bericht.geprueft} Mitgliedschaften geprüft.</p>`;
     try {
       await fetch('https://api.brevo.com/v3/smtp/email', {

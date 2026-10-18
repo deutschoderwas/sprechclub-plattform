@@ -2528,6 +2528,7 @@ async function loadSchueler(){
         <option value="credits">Guthaben aufsteigend</option>
         <option value="credits-desc">Guthaben absteigend</option>
         <option value="bday">Geburtstag (Monat/Tag)</option>
+        <option value="ende">Abo-Ende (nächstes zuerst)</option>
       </select>
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
         <option value="laufend" selected>Läuft (aktiv &amp; Urlaub)</option>
@@ -2593,6 +2594,17 @@ var GRUPPEN = {
   premium:     { kurz:'PREMIUM',       bg:'#FFE8B0', fg:'#7A5200' },
   community:   { kurz:'COMMUNITY',     bg:'#DFF6F8', fg:'#0F766E' },
   alt:         { kurz:'Alte Schüler',  bg:'#E2EBC9', fg:'#3F6212' },
+  /* Julia, 18.10.2026: "wenn sie kündigen, steht es auch bei mir im
+     Admin, wer kündigt?"
+
+     Stand heute: nein. Wer kündigt, läuft bis zum Periodenende weiter
+     und stand damit bis zuletzt unter PREMIUM oder COMMUNITY — nicht
+     falsch, aber als Gruppe unsichtbar. Erst wenn der Zugang zugeht,
+     springt er auf "ZUGANG ABGELAUFEN", und dann ist er weg.
+
+     Dazwischen liegen oft vier Wochen, in denen man ihn noch erreichen
+     kann. Genau dafür ist diese Pille da. */
+  geht:        { kurz:'⏳ Kündigt, läuft aus', bg:'#FFF1C2', fg:'#7A5200' },
   bezahlt_ohne:{ kurz:'⚠️ Bezahlt, ohne Zugang', bg:'#FFE1C2', fg:'#8A3B00' },
   registriert: { kurz:'Nur angemeldet', bg:'#E5E7EB', fg:'#4B5563' },
   /* Julia, 18.10.2026: "dass es im Admin bereich neben dem Schüler steht
@@ -2761,6 +2773,11 @@ function gruppeVon(p){
      PREMIUM, obwohl das Abo abgelaufen ist. */
   if (st === 'gekuendigt') return 'gekuendigt';
   if (st === 'beendet' || st === 'archiv' || st === 'geloescht' || st === 'inaktiv') return 'beendet';
+  /* Hat gekündigt, läuft aber noch: eigene Gruppe. Das Datum steht in
+     der Zeile daneben, damit man sieht, wie viel Zeit noch bleibt.
+     Von Hand gesetzte Mitgliedschaften sind hier ausgenommen —
+     abo_gekuendigt_am bedeutet bei ihnen nichts. */
+  if (p.tier && p.abo_gekuendigt_am && p.abo_stripe_status !== 'von_hand') return 'geht';
   if (p.tier === 'premium' || p.tier === 'premium_plus') return 'premium';
   if (p.tier === 'community') return 'community';
   if ((p.credits || 0) > 0 || passLaeuft(p)) return 'alt';
@@ -2908,6 +2925,10 @@ function renderSchuelerTable(){
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
   else if (mode==='credits-desc') rows.sort((a,b)=> b.credits-a.credits || nameKey(a).localeCompare(nameKey(b),'de'));
   else if (mode==='bday') rows.sort((a,b)=> (a.birthday?a.birthday.slice(5):'zz').localeCompare(b.birthday?b.birthday.slice(5):'zz') || nameKey(a).localeCompare(nameKey(b),'de'));
+  /* Wer läuft als Nächstes aus? Die Frage stellt sich bei Kündigungen
+     und bei von Hand bezahlten Jahresabos gleichermaßen. Ohne Datum
+     ganz nach hinten. */
+  else if (mode==='ende') rows.sort((a,b)=> String(a.abo_ende||'9999').localeCompare(String(b.abo_ende||'9999')) || nameKey(a).localeCompare(nameKey(b),'de'));
   else rows.sort((a,b)=> nameKey(a).localeCompare(nameKey(b),'de',{sensitivity:'base'}));
   const low = SCHUELER.filter(p=>brauchtStunden(p) && p.credits<=1).length;
   const mitAbo = SCHUELER.filter(p=>OHNE_STUNDEN.indexOf(p.tier)>=0).length;
@@ -2943,7 +2964,7 @@ function renderSchuelerTable(){
       <td><b>${esc(p.name||'–')}</b>${staff?' <span class="pill">Team</span>':''}${tierBadge(p)}</td>
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
-      <td>${statusLabel(st)}${p.alt_schueler?' <span class="pill" style="background:#EFEAE1;color:#5b5b5b;font-weight:800">Alte Schüler</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
+      <td>${statusLabel(st)}${(gruppeVon(p)==='geht'&&p.abo_ende)?` <span class="pill" style="background:#FFF1C2;color:#7A5200;font-weight:800">bis ${dt(p.abo_ende)}</span>`:''}${p.alt_schueler?' <span class="pill" style="background:#EFEAE1;color:#5b5b5b;font-weight:800">Alte Schüler</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
       <td>${brauchtStunden(p)
         ? `<b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}`
         : `<span class="muted" style="font-size:12px" title="Zahlt monatlich für die Plattform und bucht keine Einzelstunden">nicht nötig</span>`}</td>
