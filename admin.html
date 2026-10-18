@@ -2634,8 +2634,13 @@ function aboBlock(p){
 
   if (p.abo_start || p.abo_ende){
     var vorbei = p.status==='gekuendigt';
+    /* Bei Premium ist der Beginn der Mitgliedschaft NICHT der Tag des
+       Kaufs, sondern tier_ab (1. November). Die Stripe-Periode faengt
+       beim Kauf im Oktober an — das nebeneinander zu zeigen, ohne es zu
+       sagen, liest sich wie ein Widerspruch. */
+    var beginn = (p.tier_ab && !vorbei) ? dt(p.tier_ab) : dt(p.abo_start);
     z.push([vorbei ? 'Lief' : 'Läuft',
-      p.abo_start ? (dt(p.abo_start) + ' – ' + (dt(p.abo_ende)||'?')) : ('bis ' + dt(p.abo_ende))]);
+      beginn ? (beginn + ' – ' + (dt(p.abo_ende)||'?')) : ('bis ' + dt(p.abo_ende))]);
   }
   if (p.tier_ab){
     var spaeter = new Date(p.tier_ab) > new Date();
@@ -2649,9 +2654,24 @@ function aboBlock(p){
     z.push(['Jetzt', '<b style="color:#B30000">Abo abgelaufen · kein Zugang</b> <span class="muted">Materialien bleiben sichtbar</span>']);
   }
   if (p.abo_stripe_status){
-    var klar = { active:'läuft', trialing:'Testphase', past_due:'Zahlung offen', canceled:'bei Stripe beendet',
-                 unpaid:'nicht bezahlt', incomplete:'nicht abgeschlossen', kein_abo:'kein Abo bei Stripe' };
-    z.push(['Bei Stripe', esc(klar[p.abo_stripe_status] || p.abo_stripe_status)]);
+    var klar = { active:'läuft', trialing:'läuft', past_due:'Zahlung offen', canceled:'bei Stripe beendet',
+                 unpaid:'nicht bezahlt', incomplete:'Kaufversuch, nicht abgeschlossen',
+                 incomplete_expired:'Kaufversuch verfallen — nie bezahlt', kein_abo:'kein Abo bei Stripe' };
+    var txt = klar[p.abo_stripe_status] || p.abo_stripe_status;
+    /* Hier stand bei 'trialing' das Wort "Testphase", und das hat Julia
+       am 18.10.2026 zu Recht gestolpert: "ich verstehe nicht, warum bei
+       einigen AKTIV und bei einigen TESTZEITRAUM steht."
+
+       Es ist keine Testphase. Premium bezahlt im Oktober, der Unterricht
+       startet aber erst am 1. November — und damit im November nichts
+       abgebucht wird, parkt laufzeitAbStart() das Abo bei Stripe bis
+       dahin in einer Trial-Phase. Das ist der Kniff, nicht der Tarif.
+       Darum steht hier jetzt dasselbe wie bei den anderen: es laeuft —
+       und dazu, wann zum ersten Mal abgebucht wird. */
+    if (p.abo_stripe_status === 'trialing' && p.abo_ende){
+      txt = 'läuft · erste Abbuchung am ' + dt(p.abo_ende);
+    }
+    z.push(['Zahlung', esc(txt)]);
   }
   z.push(['Zuletzt geprüft', p.abo_geprueft_am
     ? dt(p.abo_geprueft_am)

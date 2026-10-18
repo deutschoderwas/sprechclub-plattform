@@ -42,6 +42,36 @@ const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
 const ARCHIV_NACH_TAGEN = 14;
 const LAEUFT = ['active', 'trialing', 'past_due'];   // past_due: Zahlung hakt, Abo lebt noch
 
+/* Ein Abo, das nie zustande kam. Stripe legt die Subscription beim
+   Kaufversuch an und verwirft sie nach 23 Stunden, wenn die erste
+   Zahlung nicht durchgeht ('incomplete' -> 'incomplete_expired').
+   Kommerziell hat es nie existiert, und es darf vor allem nicht als
+   "das Abo dieses Kunden" ins Profil geschrieben werden. */
+const NIE_ZUSTANDE = ['incomplete', 'incomplete_expired'];
+
+function periodeEnde(s) {
+  const e = s && (s.current_period_end
+    || (s.items && s.items.data && s.items.data[0] && s.items.data[0].current_period_end));
+  return e ? e * 1000 : null;
+}
+
+/* Gekuendigt, aber bis zum Periodenende bezahlt — der Zugang bleibt.
+   Julia am 18.10.2026 ueber eine Jahreskundin, die gekuendigt hat:
+   "sie hat ja trotzdem den Zugang bis zum 01.11.2027".
+
+   Wer zum Periodenende kuendigt, steht bei Stripe weiter auf 'active'
+   und faellt unter LAEUFT. Wer dagegen sofort kuendigt, steht sofort
+   auf 'canceled' — und genau der wurde hier bisher behandelt, als
+   haette er nie bezahlt. Bei einem Jahresabo heisst das: bis zu elf
+   bezahlte Monate weggenommen, ueber Nacht und ohne Nachfrage.
+   Derselbe Gedanke steckt schon im Webhook (nochGueltig in
+   api/stripe-webhook.js) — hier hat er gefehlt. */
+function nochBezahlt(s) {
+  if (!s || NIE_ZUSTANDE.includes(s.status)) return false;
+  const ende = periodeEnde(s);
+  return !!ende && ende > Date.now();
+}
+
 export default async function handler(req, res) {
   const geheim = process.env.CRON_SECRET || '';
   const kopf = req.headers['x-intern'] || '';
@@ -92,8 +122,11 @@ export default async function handler(req, res) {
 
       // --- 2. Abos ansehen
       const subs = await stripe.subscriptions.list({ customer: kunde, status: 'all', limit: 10 });
-      const laufend = (subs.data || []).filter(s => LAEUFT.includes(s.status));
-      const hatAbo = laufend.length > 0;
+      const alle = (subs.data || []).filter(s => !NIE_ZUSTANDE.includes(s.status));
+      const laufend = alle.filter(s => LAEUFT.includes(s.status));
+      /* Gekuendigt, Periode laeuft aber noch: zaehlt als Zugang. */
+      const ausklingend = alle.filter(s => !LAEUFT.includes(s.status) && nochBezahlt(s));
+      const hatAbo = laufend.length > 0 || ausklingend.length > 0;
 
       // --- 3. userId nachtragen, damit der Webhook künftig greift
       for (const s of laufend) {
@@ -113,7 +146,15 @@ export default async function handler(req, res) {
          konnte in der Schuelerliste also nicht sehen, wer wann
          auslaeuft. Jetzt steht es im Profil und wird hier jede Nacht
          aufgefrischt. */
-      const jungstes = (laufend[0] || (subs.data || [])[0]) || null;
+      /* Welches Abo ins Profil gespiegelt wird, in dieser Reihenfolge:
+         ein laufendes, sonst ein gekuendigtes mit bezahlter Restzeit,
+         sonst irgendein echtes. Nie ein verworfener Kaufversuch — der
+         hat am 17.10.2026 bei einer Kundin die falschen Daten ins
+         Profil geschrieben (Periode bis 03.10.2027 statt bis zum Ende
+         ihres echten Jahresabos) und sie Nacht fuer Nacht zum
+         Abschalten vorgemerkt, obwohl sie bezahlt hatte. */
+      const jungstes = (laufend[0] || ausklingend[0] || alle[0]
+                        || (subs.data || [])[0]) || null;
       const zeit = (t) => (t ? new Date(t * 1000).toISOString() : null);
       const abo = jungstes ? {
         abo_start:         zeit(jungstes.current_period_start),
@@ -131,7 +172,8 @@ export default async function handler(req, res) {
       };
       if (!trocken) await sb.from('profiles').update(abo).eq('id', p.id);
 
-      if (jungstes && jungstes.cancel_at_period_end && LAEUFT.includes(jungstes.status)) {
+      if (jungstes && (jungstes.cancel_at_period_end || ausklingend.includes(jungstes))
+          && (LAEUFT.includes(jungstes.status) || nochBezahlt(jungstes))) {
         bericht.gekuendigt_laeuft_aus.push({
           name: p.name || p.email, email: p.email,
           bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
