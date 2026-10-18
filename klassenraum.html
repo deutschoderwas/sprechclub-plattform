@@ -225,6 +225,9 @@
   .bo-legend .lvbadge{ font-size:.68rem; }
   .bo-list{ margin-top:4px; }
   .bo-p .bo-nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bo-lvset{ font-size:.78rem; padding:2px 4px; border:1px solid var(--rahmen); border-radius:7px; background:#fff; cursor:pointer; }
+  .bo-lvset:disabled{ opacity:.5; cursor:wait; }
+  .bo-hint.bo-ohne{ color:#8A6D00; background:#FFF6D6; border-radius:8px; padding:5px 8px; }
   .bo-niv{ background:var(--tuerkis) !important; color:var(--auf-tuerkis) !important; border-color:var(--tuerkis) !important; }
   .bo-grp.mixed{ outline:2px dashed #E8A13A; }
   .bo-grp-h .lvtag{ font-size:.7rem; font-weight:700; color:var(--weich); }
@@ -1151,6 +1154,43 @@
   function boLv(id){ return window._boLevels ? window._boLevels[id] : null; }
   function boLvText(id){ const m=String(boLv(id)||'').toUpperCase().match(/[ABC][12](?:\s*\/\s*[ABC][12])?/); return m?m[0].replace(/\s+/g,''):'–'; }
   function boBadge(id){ const m=BO_BANDS[boBand(boLv(id))]; return `<span class="lvbadge ${m.cls}" title="${m.label}">${boLvText(id)}</span>`; }
+  /* Julia, 18.10.2026: "ganz wichtig, dass JEDER ein Niveau bei sich
+     eintraegt ... so dass die Lehrer die Schueler zusammentun koennen
+     je nach Niveau" — "oder der Lehrer kann es auch selbst per hand
+     machen."
+
+     Von den 77 Konten mit Zugang hatten 23 ueberhaupt kein Niveau; die
+     landen beim Zuteilen im Rest-Band und lassen sich nicht sinnvoll
+     gruppieren. Hier kann die Lehrkraft es in einem Zug nachtragen —
+     waehrend der Stunde, ohne den Raum zu verlassen.
+     Die Datenbank laesst das nur fuer Lehrkraefte und Admins zu
+     (niveau_setzen), und sie nimmt nur A1 bis C2 an. */
+  const BO_NIVEAUS = ['A1','A2','B1','B2','C1','C2'];
+  function boNiveauWahl(id){
+    const jetzt = String(boLv(id)||'').toUpperCase();
+    const treffer = BO_NIVEAUS.find(n => jetzt.startsWith(n)) || '';
+    return '<select class="bo-lvset" title="Niveau setzen" onchange="boNiveauSetzen(\''+id+'\', this.value, this)">'
+      + '<option value="">–</option>'
+      + BO_NIVEAUS.map(n => '<option value="'+n+'"'+(n===treffer?' selected':'')+'>'+n+'</option>').join('')
+      + '</select>';
+  }
+  window.boNiveauSetzen = async function(id, wert, el){
+    if(!sb) return;
+    const vorher = window._boLevels ? window._boLevels[id] : null;
+    if(el) el.disabled = true;
+    try{
+      const { error } = await sb.rpc('niveau_setzen', { p_user_id: id, p_level: wert || null });
+      if(error) throw error;
+      window._boLevels[id] = wert || null;
+      boRenderTeacher();
+    }catch(e){
+      /* Zurueck auf den alten Stand, damit die Anzeige nichts
+         behauptet, was nicht gespeichert wurde. */
+      window._boLevels[id] = vorher;
+      if(el){ el.disabled = false; el.value = String(vorher||'').slice(0,2); }
+      alert('Das Niveau konnte nicht gespeichert werden: ' + ((e && e.message) || 'unbekannt'));
+    }
+  };
   function boLegendHtml(){ return `<div class="bo-legend"><span class="lvbadge lv-g">A2/B1</span><span class="lvbadge lv-b">B1/B2</span><span class="lvbadge lv-n">B2/C1</span><span class="lvbadge lv-x">kein Test</span></div>`; }
   // Stufen der anwesenden Schueler:innen aus den Profilen nachladen (einmal pro Person) und Panel neu zeichnen.
   async function boLoadLevels(){
@@ -1231,12 +1271,14 @@
     const nGroups=assigned.length ? new Set(assigned).size : 0;
     const size=esc(window._boSize||2);
     let html=`<div class="bo-hint">👥 ${n} ${n===1?'Person':'Personen'} im Raum</div>`;
+    const ohne = ppl.filter(pp => boBand(boLv(pp.id)) === 'x').length;
+    if(ohne) html += `<div class="bo-hint bo-ohne">⚠️ ${ohne} ${ohne===1?'Person hat':'Personen haben'} kein Niveau — beim Zuteilen landen sie im Rest. Trag es unten rechts nach.</div>`;
     html+=boLegendHtml();
     html+=`<div class="bo-row"><label>Gruppe à</label><input id="bo-size" type="number" min="2" max="8" value="${size}"><button class="bo-niv" onclick="boNiveau()">🎯 Nach Niveau</button><button onclick="boZufall()">🎲 Zufällig</button></div>`;
     if(!n){ html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>'; body.innerHTML=html; return; }
     const sorted=[...ppl].sort((a,b)=>{ const d=BO_ORDER.indexOf(boBand(boLv(a.id)))-BO_ORDER.indexOf(boBand(boLv(b.id))); return d!==0?d:String(a.name).localeCompare(String(b.name)); });
     html+='<div class="bo-list">';
-    sorted.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p">${boBadge(pp.id)}<span class="bo-nm">${esc(pp.name)}</span><input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" title="Gruppen-Nr." onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
+    sorted.forEach(pp=>{ const cur=window._boAssign[pp.id]||''; html+=`<div class="bo-p">${boBadge(pp.id)}<span class="bo-nm">${esc(pp.name)}</span>${boNiveauWahl(pp.id)}<input type="number" min="1" max="12" value="${esc(cur)}" placeholder="–" title="Gruppen-Nr." onchange="boSet('${esc(pp.id)}',this.value)"></div>`; });
     html+='</div>';
     if(nGroups) html+=`<div class="bo-hint">➜ <b>${nGroups} Gruppen</b> vorbereitet — jetzt starten:</div>`;
     html+=`<div class="bo-row"><button class="bo-start" onclick="boStart()">▶️ Gruppen starten</button></div>`;

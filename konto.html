@@ -38,6 +38,10 @@ a{color:inherit}
 .shell{display:flex;min-height:100vh}
 .sidebar{width:236px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;text-decoration:none;color:var(--secondary);padding:6px 8px 16px}
+.me-abz{display:flex;align-items:center;gap:7px;margin:-8px 8px 14px;padding:7px 11px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.25}
+.me-abz .mz-n{font-size:11.5px;font-weight:700;opacity:.85;display:block}
+.me-abz.mz-prem{background:linear-gradient(135deg,#FFF3C4,#FFE08A);color:#6B4E00;border:1px solid #F0CF6B}
+.me-abz.mz-comm{background:#E6F8FC;color:#0F5C6B;border:1px solid #BEE7F0}
 .brand img{width:36px;height:36px;border-radius:50%;object-fit:cover}
 .navlink{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:12px;text-decoration:none;color:var(--text-soft);font-weight:600;font-size:14px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit}
 .navlink .ic{font-size:17px;width:22px;text-align:center}
@@ -554,6 +558,10 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 <div class="shell">
   <aside class="sidebar">
     <a href="index.html" class="brand"><img src="logo.PNG" onerror="this.style.display='none'"><span>deutschoderwas&nbsp;club</span></a>
+    <!-- Julia, 18.10.2026: "koenntest du den Mitgliedern ein zeichen
+         geben? Premium oder community. ganz wichtig." Gefuellt von
+         abzeichenZeichnen() bei jedem Ansichtswechsel. -->
+    <div id="meAbz" class="me-abz" hidden></div>
 
     <button class="cl-buch" onclick="return bucheStunde(event)">🗓️ <span data-i18n="k_book3">Sprechclub buchen</span></button>
 
@@ -1626,6 +1634,29 @@ const SPRECHCLUB_ZU = ['kalender','stunden'];
 function abosHaben(){
   try{ return istPremium() && !(credits > 0); }catch(e){ return false; }
 }
+/* Das Abzeichen unter dem Logo: Premium oder Community, auf jeder
+   Seite sichtbar. Julia, 18.10.2026: "ganz wichtig."
+
+   Darunter steht das eigene Niveau — das braucht sie im Klassenraum
+   zum Gruppieren, und wer keins hat, sieht hier den Hinweis und kann
+   es mit einem Klick nachtragen. */
+function abzeichenZeichnen(){
+  const el=document.getElementById('meAbz'); if(!el) return;
+  const tier=(profile&&profile.tier)||'';
+  const niv=((profile&&(profile.level||profile.stufe||profile.target_level))||'').toUpperCase().slice(0,2);
+  let art=null;
+  if(istLeitung()) art={cls:'mz-prem', ic:'🎓', txt:(profile&&profile.is_admin)?'Leitung':'Lehrkraft'};
+  else if(tier==='premium'||tier==='premium_plus'||tier==='premiumplus') art={cls:'mz-prem', ic:'👑', txt:'Premium'};
+  else if(tier==='community') art={cls:'mz-comm', ic:'💬', txt:'Community'};
+  if(!art){ el.hidden=true; el.className='me-abz'; return; }
+  el.hidden=false;
+  el.className='me-abz '+art.cls;
+  el.innerHTML='<span>'+art.ic+'</span><span>'+art.txt
+    + (istLeitung() ? '' :
+       '<span class="mz-n">'+(niv ? 'Niveau '+esc(niv)
+         : '<a href="#profil" onclick="go(\'profil\');return false" style="color:inherit;text-decoration:underline">Niveau eintragen →</a>')+'</span>')
+    + '</span>';
+}
 function sprechclubMarkieren(){
   var zu = false;
   try{ zu = nurCommunity(); }catch(e){}
@@ -1638,6 +1669,7 @@ function sprechclubMarkieren(){
       b.style.display = weg ? 'none' : '';
     });
   }catch(e){}
+  try{ abzeichenZeichnen(); }catch(e){}
 }
 
 function renderSprechclubZu(v){
