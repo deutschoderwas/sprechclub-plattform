@@ -539,6 +539,76 @@ export default async function handler(req, res) {
     bericht.fehler.push({ name: 'von Hand', fehler: String((e && e.message) || e) });
   }
 
+  /* --- 4f. Von der anderen Seite zaehlen --------------------------
+     Julia am 18.10.2026, mit einem Link auf ihre Stripe-Zahlungen:
+     "schau mal, überprüfe, ob du tatsächlich alle Leute hast in der
+     Liste, die bezahlt haben."
+
+     Schritt 4c fragt "wer hat ein Konto, aber keine Mitgliedschaft?".
+     Diese Frage hier ist die andere Haelfte: "wer zahlt bei Stripe,
+     ohne dass es ihn bei uns ueberhaupt gibt?" — jemand, dessen
+     Registrierung nie ankam, oder der mit einer anderen Adresse
+     bezahlt hat als der, mit der er sich angemeldet hat. Von hier aus
+     kann man diesen Menschen sonst nicht sehen: in profiles steht er
+     nicht, und in pending_purchases auch nicht.
+
+     Wir aendern dabei nichts. Eine Zahlung einem Konto zuzuordnen,
+     das es nicht gibt, kann nur ein Mensch. Es steht im Bericht, und
+     Julia sieht es in ihrer Mail. */
+  bericht.zahlt_ohne_konto = [];
+  try {
+    let seite = await stripe.subscriptions.list({ status: 'all', limit: 100 });
+    const gesehen = new Set();
+    let runden = 0;
+    while (seite && runden < 10) {
+      runden++;
+      for (const ab of (seite.data || [])) {
+        if (NIE_ZUSTANDE.includes(ab.status)) continue;
+        if (!LAEUFT.includes(ab.status) && !nochBezahlt(ab)) continue;
+
+        const kunde = typeof ab.customer === 'string' ? ab.customer : (ab.customer && ab.customer.id);
+        if (!kunde || gesehen.has(kunde)) continue;
+        gesehen.add(kunde);
+
+        /* Steht die Kundennummer schon an einem Profil, ist alles gut —
+           das ist der Normalfall und kostet keine weitere Abfrage. */
+        const { data: mitNummer } = await sb.from('profiles')
+          .select('id').eq('stripe_customer_id', kunde).limit(1);
+        if (mitNummer && mitNummer.length) continue;
+
+        let mail = null;
+        try { const k = await stripe.customers.retrieve(kunde); mail = (k && k.email) || null; }
+        catch (e) { /* geloeschter Kunde — dann bleibt nur die Nummer */ }
+
+        if (mail) {
+          const { data: perMail } = await sb.from('profiles')
+            .select('id').ilike('email', mail).limit(1);
+          if (perMail && perMail.length) continue;
+          const { data: geparkt } = await sb.from('pending_purchases')
+            .select('id').ilike('email', mail).limit(1);
+          if (geparkt && geparkt.length) {
+            (bericht.zahlt_nicht_angemeldet = bericht.zahlt_nicht_angemeldet || []).push({
+              email: mail, abo: ab.status,
+              hinweis: 'hat bezahlt, sich aber nie angemeldet — die Einladung liegt vor',
+            });
+            continue;
+          }
+        }
+
+        bericht.zahlt_ohne_konto.push({
+          email: mail || '(keine Adresse bei Stripe)',
+          kunde, abo: ab.status, abo_id: ab.id,
+          hinweis: 'zahlt bei Stripe, hat bei uns aber weder Konto noch geparkten Kauf',
+        });
+      }
+      if (!seite.has_more) break;
+      const letzte = seite.data[seite.data.length - 1];
+      seite = await stripe.subscriptions.list({ status: 'all', limit: 100, starting_after: letzte.id });
+    }
+  } catch (e) {
+    bericht.fehler.push({ name: 'gegenzaehlen', fehler: String((e && e.message) || e) });
+  }
+
   /* --- 4e. "Schade, dass du gehst" -------------------------------
      Eine Mail pro Ablauf, nie zwei. Der Eintrag in email_log wird VOR
      dem Senden geschrieben und bei einem Fehlschlag wieder entfernt —
@@ -586,7 +656,8 @@ export default async function handler(req, res) {
      abgelaufen ist." Also loest jeder geschlossene Zugang die Mail aus —
      und die neuen Faelle (nachgetragen, bald faellig) genauso. */
   const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
-    || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length;
+    || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length
+    || (bericht.zahlt_ohne_konto || []).length;
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
     const zeile = (x) => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.letztes_abo ? ' — Abo: ' + x.letztes_abo : ''}${x.vorher ? ' — war: ' + x.vorher : ''}</li>`;
     const html =
@@ -597,6 +668,8 @@ export default async function handler(req, res) {
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, Abo bei Stripe: ${x.abo}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
+      ((bericht.zahlt_ohne_konto || []).length ? `<p><b>⚠️ Zahlt bei Stripe, hat bei uns aber kein Konto:</b></p><ul>${bericht.zahlt_ohne_konto.map(x => `<li>${x.email} — Abo ${x.abo} (${x.abo_id})</li>`).join('')}</ul>` : '') +
+      ((bericht.zahlt_nicht_angemeldet || []).length ? `<p><b>Hat bezahlt, sich aber nie angemeldet:</b></p><ul>${bericht.zahlt_nicht_angemeldet.map(x => `<li>${x.email} — Abo ${x.abo}</li>`).join('')}</ul>` : '') +
       (bericht.unklar.length ? `<p><b>Unklar — Zugang bleibt offen, bitte bei Stripe nachsehen:</b></p><ul>${bericht.unklar.map(x => `<li>${x.name} (${x.email}) — ${x.hinweis}</li>`).join('')}</ul>` : '') +
       (bericht.ohne_stripe.length ? `<p><b>Ohne Stripe-Kunde — bitte selbst ansehen:</b></p><ul>${bericht.ohne_stripe.map(zeile).join('')}</ul>` : '') +
       (bericht.fehler.length ? `<p><b>Fehler beim Prüfen:</b></p><ul>${bericht.fehler.map(x => `<li>${x.name}: ${x.fehler}</li>`).join('')}</ul>` : '') +
