@@ -1299,6 +1299,98 @@ function leadPostPille(l){
     + art + ' ' + wann + mehr + '</span>';
 }
 
+/* ---------- Der Haken: "WhatsApp ist raus" ----------
+   Schreibt den Zeitpunkt ins Lead, nicht nur ein Ja. Der Haken schaltet
+   sofort um und springt zurueck, wenn das Speichern schiefgeht — sonst
+   sieht Julia einen gruenen Haken fuer etwas, das nie ankam. */
+window.leadWhatsapp = async function(id, box){
+  const an = !!box.checked;
+  box.disabled = true;
+  try{
+    const { error } = await sb.from('leads')
+      .update({ whatsapp_at: an ? new Date().toISOString() : null }).eq('id', id);
+    if(error) throw error;
+    const l = (LEADS||[]).find(function(x){ return x.id===id; });
+    if(l) l.whatsapp_at = an ? new Date().toISOString() : null;
+    renderLeads();
+  }catch(e){
+    box.checked = !an;
+    box.disabled = false;
+    alert('Konnte nicht gespeichert werden: ' + (e && e.message || e));
+  }
+};
+
+/* ---------- Was ist mit diesem Menschen passiert? ----------
+   Julia, 18.10.2026: "die ganze Mail-Historie, was genau gesendet wurde,
+   auch durch Anklicken anzeigen ... alles muss ersichtlich sein, was
+   genau unternommen wurde, wann und was genau."
+
+   Also ein Verlauf, nicht nur eine Pille mit dem letzten Datum: jede
+   Mail mit Betreff, Weg und Zeitpunkt, der volle Text aufklappbar, dazu
+   die Wegmarken des Leads selbst — eingetragen, Willkommensmail,
+   WhatsApp, kontaktiert. Alles untereinander, neueste zuerst. */
+window.leadVerlauf = function(id){
+  const l = (LEADS||[]).find(function(x){ return x.id===id; });
+  if(!l) return;
+  const mails = (LEAD_POST[String(l.email||'').toLowerCase()] || []).slice();
+
+  /* Die Wegmarken des Leads und die Mails in EINE Zeitleiste. */
+  const punkte = [];
+  const dazu = (wann, titel, farbe, text) => {
+    if(!wann) return;
+    punkte.push({ wann: new Date(wann), titel, farbe, text: text || '' });
+  };
+  dazu(l.created_at, '📋 Hat sich in die Warteliste eingetragen', '#0F766E',
+       [l.tarif ? 'Tarifwunsch: ' + l.tarif : '', l.niveau ? 'Niveau: ' + l.niveau : '',
+        l.schwierigkeiten ? 'Wo es hakt: ' + l.schwierigkeiten : '', l.mehr || '']
+         .filter(Boolean).join('\n'));
+  dazu(l.mail_at, '✉️ Willkommensmail ist rausgegangen', '#1A4E79', '');
+  dazu(l.whatsapp_at, '💬 WhatsApp geschickt (von Hand eingetragen)', '#15803D', '');
+  dazu(l.kontaktiert_at, '📞 Als kontaktiert markiert', '#8A6608', l.notiz || '');
+
+  mails.forEach(function(m){
+    const art = m.weg==='erinnerung' ? '📣 Erinnerungsmail'
+              : (m.weg==='entwurf' ? '✍️ Entwurf' : '✉️ Persönliche Mail');
+    dazu(m.gesendet_at, art + (m.betreff ? ' — ' + m.betreff : ''),
+         m.fehler ? '#B3241C' : '#1A4E79',
+         (m.fehler ? 'FEHLER: ' + m.fehler + '\n\n' : '') + (m.text || '(kein Text gespeichert)'));
+  });
+
+  punkte.sort(function(a,b){ return b.wann - a.wann; });
+
+  const zeilen = punkte.length ? punkte.map(function(p, i){
+    const hatText = !!String(p.text||'').trim();
+    return '<div style="border-left:3px solid '+p.farbe+';padding:0 0 14px 14px;position:relative">'
+      + '<div style="position:absolute;left:-7px;top:3px;width:11px;height:11px;border-radius:50%;background:'+p.farbe+'"></div>'
+      + '<div class="muted" style="font-size:12.5px">'+LEAD_FMT.format(p.wann)+'</div>'
+      + '<div style="font-weight:700;margin:1px 0 3px">'+esc(p.titel)+'</div>'
+      + (hatText
+          ? '<button onclick="var d=document.getElementById(\'vl'+i+'\');d.style.display=d.style.display===\'none\'?\'block\':\'none\'" '
+            + 'style="border:1px solid #ccc;background:#fff;border-radius:7px;padding:3px 9px;font-size:12px;cursor:pointer;font-weight:600">'
+            + 'Inhalt anzeigen</button>'
+            + '<pre id="vl'+i+'" style="display:none;white-space:pre-wrap;word-break:break-word;background:#FAF7F0;'
+            + 'border:1px solid #EFE6D5;border-radius:10px;padding:11px 13px;margin:7px 0 0;font:13px/1.6 Inter,sans-serif;'
+            + 'max-height:320px;overflow:auto">'+esc(p.text)+'</pre>'
+          : '')
+      + '</div>';
+  }).join('') : '<div class="muted">Für diesen Menschen ist noch nichts vermerkt.</div>';
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;'
+    + 'align-items:flex-start;justify-content:center;padding:28px 14px;overflow:auto';
+  ov.innerHTML = '<div style="background:#fff;border-radius:18px;max-width:640px;width:100%;padding:22px 24px">'
+    + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">'
+    + '<b style="font-size:17px">Verlauf — '+esc(l.name||l.email)+'</b></div>'
+    + '<div class="muted" style="font-size:13px;margin-bottom:16px">'+esc(l.email||'')
+    + (l.whatsapp ? ' · '+esc(l.whatsapp) : '')+'</div>'
+    + zeilen
+    + '<div style="display:flex;justify-content:flex-end;margin-top:18px">'
+    + '<button class="btn btn-primary" id="vlZu">Schließen</button></div></div>';
+  ov.onclick = function(e){ if(e.target===ov) ov.remove(); };
+  document.body.appendChild(ov);
+  ov.querySelector('#vlZu').onclick = function(){ ov.remove(); };
+};
+
 /* Dieselbe Pruefung wie auf dem Server: ohne @, mit Leerzeichen oder
    ohne Endung wird eine Adresse nie zustellbar. */
 function leadAdresseOk(mail){
