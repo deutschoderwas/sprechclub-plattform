@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     .in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
 
-  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], ohne_stripe: [], fehler: [] };
+  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], fehler: [] };
 
   for (const p of leute || []) {
     bericht.geprueft++;
@@ -211,7 +211,8 @@ export default async function handler(req, res) {
           }
         }
         bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status });
-      } else if (!sollAktiv && istAktiv) {
+      } else if (!sollAktiv && istAktiv
+                 && !(alle.length === 0 && (subs.data || []).length > 0)) {
         /* Kein laufendes Abo mehr: Status auf 'gekuendigt' statt
            'inaktiv', damit Julia in der Liste nachvollziehen kann,
            warum jemand weg ist. Und das Abzeichen faellt weg — wer
@@ -251,6 +252,27 @@ export default async function handler(req, res) {
           email: p.email,
           letztes_abo: (subs.data && subs.data[0] && subs.data[0].status) || 'keins',
           lief_bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
+        });
+      } else if (!sollAktiv && istAktiv) {
+        /* Hier landet, wer bei Stripe NUR verworfene Kaufversuche hat —
+           sonst nichts. Das heisst nicht "hat nicht bezahlt", sondern
+           "wir sehen es von hier aus nicht".
+
+           Aufgefallen am 18.10.2026 an einer Jahreskundin: zwei
+           bezahlte Rechnungen vom 3.10., aber unter ihrer
+           Kundennummer liegt nur ein Versuch, den Stripe nach 23
+           Stunden verworfen hat. Vermutlich ist das Geld unter einer
+           zweiten Kundennummer gelandet. Der Lauf hatte sie deshalb
+           Nacht fuer Nacht zum Abschalten vorgemerkt.
+
+           Jemandem den bezahlten Zugang wegzunehmen, weil wir seine
+           Zahlung nicht finden, ist der teuerste Fehler, den dieser Job
+           machen kann. Also: stehen lassen und Julia sagen. */
+        (bericht.unklar = bericht.unklar || []).push({
+          name: p.name || p.email,
+          email: p.email,
+          gefunden: (subs.data || []).map((x) => x.status).join(', '),
+          hinweis: 'nur verworfene Kaufversuche gefunden — Zugang bleibt, bitte bei Stripe nachsehen',
         });
       }
     } catch (e) {
