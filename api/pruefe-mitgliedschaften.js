@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     .in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
 
-  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], ohne_stripe: [], fehler: [] };
+  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], ohne_stripe: [], fehler: [] };
 
   for (const p of leute || []) {
     bericht.geprueft++;
@@ -129,14 +129,30 @@ export default async function handler(req, res) {
       const hatAbo = laufend.length > 0 || ausklingend.length > 0;
 
       // --- 3. userId nachtragen, damit der Webhook künftig greift
+      //        und die irrefuehrende Stundenzahl entfernen
       for (const s of laufend) {
-        if (!s.metadata || !s.metadata.userId) {
+        const mdFehlt   = !s.metadata || !s.metadata.userId;
+        /* Julia, 18.10.2026, mit einem Bildschirmfoto aus Stripe: "warum
+           8 Stunden???? Wir haben keine Abos mehr mit 8 Stunden. Wir
+           haben nur Unlimited Premium."
+
+           Neue Kaeufe tragen die Zahl seit heute nicht mehr ein
+           (api/create-checkout.js). Die 31 Abos, die es schon gibt,
+           tragen sie aber weiter — und Julia sieht sie jedes Mal, wenn
+           sie eine Zahlung aufmacht. Bei Stripe loescht ein leerer
+           String einen Metadaten-Schluessel; genau das passiert hier.
+           Die alten Stundenpaesse behalten ihre Zahl, dort ist sie
+           echt. */
+        const stundenWeg = !!(p.tier && s.metadata && s.metadata.stunden);
+        if (mdFehlt || stundenWeg) {
           if (!trocken) {
-            await stripe.subscriptions.update(s.id, {
-              metadata: { ...(s.metadata || {}), userId: p.id, tier: p.tier }
-            });
+            const patch = { ...(s.metadata || {}) };
+            if (mdFehlt)   { patch.userId = p.id; patch.tier = p.tier; }
+            if (stundenWeg) patch.stunden = '';     // leerer String = Schluessel loeschen
+            await stripe.subscriptions.update(s.id, { metadata: patch });
           }
-          bericht.userid_nachgetragen.push(p.name || p.email);
+          if (mdFehlt)    bericht.userid_nachgetragen.push(p.name || p.email);
+          if (stundenWeg) (bericht.stunden_entfernt = bericht.stunden_entfernt || []).push(p.name || p.email);
         }
       }
 

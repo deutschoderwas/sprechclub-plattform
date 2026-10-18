@@ -228,6 +228,25 @@ async function sendPaymentMail(sub, inv) {
     const abo = /premium/.test(tier);
     const community = tier === 'community';
     const abDatum = tier === 'premiumplus' ? '1. Februar 2027' : '1. November 2026';
+    /* Julia, 18.10.2026: "die Leute haben keine bestaetigung, dass sie
+       erst am 01.12 zahlen muessen. Ich will nicht, dass ihnen im
+       November Geld abgebucht wird."
+
+       Abgebucht wird im November auch nichts — laufzeitAbStart() hat
+       die Laufzeit auf den 1. November geschoben, die erste Abbuchung
+       liegt damit beim Monatsabo auf dem 1. Dezember 2026 und beim
+       Jahresabo auf dem 1. November 2027. Schwarz auf weiss stand das
+       aber nirgends. Jetzt steht es in der Kaufbestaetigung, mit dem
+       echten Datum aus der Subscription statt einer Behauptung. */
+    const naechsteAbbuchung = (() => {
+      const sek = (sub && (sub.trial_end || sub.current_period_end
+        || (sub.items && sub.items.data && sub.items.data[0] && sub.items.data[0].current_period_end))) || null;
+      if (!sek) return '';
+      try {
+        return new Date(sek * 1000).toLocaleDateString('de-DE',
+          { timeZone: 'Europe/Berlin', day: 'numeric', month: 'long', year: 'numeric' });
+      } catch (e) { return ''; }
+    })();
     /* 16.10.2026: Hier stand "if (!userId || (!stunden && !abo)) return".
        Community hat stunden:0 und faellt nicht unter /premium/ - jedes
        Community-Mitglied stand nach dem Kauf also ohne ein Wort da.
@@ -254,6 +273,7 @@ async function sendPaymentMail(sub, inv) {
           <tr><td style="padding:16px 18px">
             <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#128197; Dein Unterricht startet am ${abDatum}</div>
             <div style="font-size:15px;line-height:1.55;color:#06403A">Ab dann buchst du so viele Stunden, wie du willst &ndash; ohne Guthaben, ohne Limit. Deine Pl&auml;tze kannst du dir <b>schon jetzt</b> im Stundenplan reservieren.</div>
+            ${naechsteAbbuchung ? `<div style="font-size:15px;line-height:1.55;color:#06403A;margin-top:10px;padding-top:10px;border-top:1px solid rgba(6,64,58,.18)">Bezahlt hast du schon &ndash; <b>im November wird nichts abgebucht</b>. Das n&auml;chste Mal erst am <b>${naechsteAbbuchung}</b>.</div>` : ''}
           </td></tr></table>`
       : (community
       ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">

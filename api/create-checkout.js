@@ -328,7 +328,27 @@ export default async function handler(req, res) {
       } catch (e) { console.error('trial-check', e); }
 
       const zugangAb = plan.tier ? startDatum(plan.tier) : null;
-      const subData = { metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) } };
+      /* Julia am 18.10.2026, mit einem Bildschirmfoto aus Stripe:
+         "Das hier z.B warum 8 Stunden???? Wir haben keine Abos mehr mit
+         8 Stunden. Wir haben nur Unlimited Premium."
+
+         Sie hatte recht, und das Feld war schon einmal teuer: aus
+         demselben stunden:8 sind am 13.10.2026 27 Kaufbestaetigungen
+         mit "8 LIVE-Stunden" entstanden. Bei einer Mitgliedschaft
+         bedeutet die Zahl NICHTS — sie wird weder fuer Guthaben
+         (grant bucht bei einem Abo 0) noch fuer Amanda (das haengt an
+         profiles.amanda_minuten) noch fuer den Plattformzugang
+         (pass_until kommt aus den Datumsrechnungen) gebraucht. Sie
+         stand nur da und behauptete etwas.
+
+         Also steht sie bei Mitgliedschaften gar nicht mehr in den
+         Metadaten. Die alten Stundenpaesse behalten sie, dort ist sie
+         echt. */
+      const istMitgliedschaft = !!plan.tier;
+      const metaBasis = { userId, plan: id, tier: plan.tier || '',
+                          zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) };
+      if (!istMitgliedschaft) metaBasis.stunden = String(plan.stunden);
+      const subData = { metadata: { ...metaBasis } };
       if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
 
       /* Der Rueckfall, falls einem Plan die Beschreibung fehlt. Fuer eine
@@ -362,7 +382,7 @@ export default async function handler(req, res) {
           },
         }],
         subscription_data: subData,
-        metadata: { userId, plan: id, stunden: String(plan.stunden), tier: plan.tier || '', kind: 'abo', trial: trialDays > 0 ? '1' : '0', zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) },
+        metadata: { ...metaBasis, kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
       });
     } else {
       // Einmalkauf (Spar Pass)
