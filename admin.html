@@ -925,15 +925,18 @@ async function loadLeads(){
   LEAD_KONTO={};
   try{
     const { data:kk } = await sb.from('profiles')
-      .select('email,tier,status,created_at,is_admin,is_teacher').limit(3000);
+      .select('email,tier,status,created_at,is_admin,is_teacher,credits,pass_until,abo_ende').limit(3000);
     (kk||[]).forEach(function(k){
       const key=String(k.email||'').toLowerCase().trim();
       if(key) LEAD_KONTO[key]=k;
     });
   }catch(e){}
   try{
+    /* Julia, 18.10.2026: "die ganze Mail-Historie, was genau gesendet
+       wurde, auch durch Anklicken anzeigen, damit ich es nachverfolgen
+       kann." Also den Text mitladen, nicht nur den Betreff. */
     const { data:post } = await sb.from('lead_mails')
-      .select('email,weg,betreff,gesendet_at')
+      .select('email,weg,betreff,text,fehler,gesendet_at')
       .order('gesendet_at',{ascending:false})
       .limit(2000);
     (post||[]).forEach(function(m){
@@ -954,7 +957,9 @@ function leadRows(){
   if(LEAD_FILTER==='offen') return LEADS.filter(l=>['neu','kontaktiert','probestunde','adresse_pruefen'].includes(l.status));
   if(LEAD_FILTER==='alle') return LEADS;
   if(LEAD_FILTER==='mitabo')     return LEADS.filter(l=>{ const k=leadKonto(l); return !!(k && k.tier); });
-  if(LEAD_FILTER==='registriert')return LEADS.filter(l=>{ const k=leadKonto(l); return !!k && !k.tier; });
+  if(LEAD_FILTER==='registriert')return LEADS.filter(l=>leadLage(l)==='nurangemeldet');
+  if(LEAD_FILTER==='altschueler')return LEADS.filter(l=>leadLage(l)==='alt');
+  if(LEAD_FILTER==='abgelaufen') return LEADS.filter(l=>leadLage(l)==='abgelaufen');
   if(LEAD_FILTER==='ohnekonto')  return LEADS.filter(l=>!leadKonto(l));
   return LEADS.filter(l=>l.status===LEAD_FILTER);
 }
@@ -966,9 +971,10 @@ function renderLeads(){
   host.innerHTML=`
   <div class="card" style="background:#F4FBFA;border:1px solid #cde">
     <b>📋 Leads aus der Warteliste</b>
-    <span class="muted" style="margin-left:8px">${LEADS.length} gesamt · ${LEADS.filter(l=>l.mail_at).length} haben die Willkommensmail · ${LEADS.filter(l=>!l.mail_at).length} noch nicht · <b>${LEADS.filter(l=>{const k=leadKonto(l); return !!(k&&k.tier);}).length} mit Abo</b> · ${LEADS.filter(l=>{const k=leadKonto(l); return !!k&&!k.tier;}).length} registriert ohne Abo · ${LEADS.filter(l=>!leadKonto(l)).length} ohne Konto</span>
+    <span class="muted" style="margin-left:8px">${new Set((LEADS||[]).map(l=>String(l.email||'').toLowerCase().trim())).size} Menschen in der Warteliste · ${LEADS.filter(l=>!l.mail_at).length} ohne Willkommensmail<br>
+      <b>${leadZaehl('abo')} haben ein Abo</b> · ${leadZaehl('alt')} alte Schüler mit Guthaben · ${leadZaehl('abgelaufen')} Abo abgelaufen · ${leadZaehl('nurangemeldet')} nur angemeldet, nichts gekauft · ${leadZaehl('weg')} beendet/archiviert · ${leadZaehl('ohnekonto')} noch kein Konto</span>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-      ${knopf('offen','🔥 Offen')}${knopf('ohnemail','✉️ ohne Mail')}${knopf('mitabo','🎉 hat Abo')}${knopf('registriert','👤 registriert, kein Abo')}${knopf('ohnekonto','🕗 noch kein Konto')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
+      ${knopf('offen','🔥 Offen')}${knopf('ohnemail','✉️ ohne Mail')}${knopf('mitabo','🎉 hat Abo')}${knopf('altschueler','🎒 Alte Schüler')}${knopf('abgelaufen','⌛ Abo abgelaufen')}${knopf('registriert','👤 nur angemeldet')}${knopf('ohnekonto','🕗 noch kein Konto')}${knopf('neu','🆕 Neu')}${knopf('kontaktiert','✉️ Kontaktiert')}${knopf('probestunde','🎟️ Probestunde')}${knopf('gewonnen','🎉 Gewonnen')}${knopf('abgelehnt','⚪ Abgelehnt')}${knopf('alle','Alle')}
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
@@ -1015,12 +1021,66 @@ function leadKarte(l){
       <input id="ln_${l.id}" value="${esc(l.notiz||'')}" placeholder="Notiz (z.B. am 22.8. angeschrieben)" style="flex:1;min-width:200px;padding:7px 10px;border:1px solid #ccc;border-radius:8px">
       <button class="btn btn-primary" onclick="leadSave('${l.id}')">💾 Speichern</button>
     </div>
+    <!-- Julia, 18.10.2026: "WhatsApp geschickt oder nicht. Wenn ich
+         selbst die WhatsApp geschickt habe, dann muss da ein Haken
+         ankreuzbar sein, damit wir wissen, dass eine WhatsApp raus ist.
+         ... Also alles muss ersichtlich sein, was genau unternommen
+         wurde, wann und was genau."
+         Der Haken schreibt das Datum, nicht nur ein Ja — sonst weiss
+         man in drei Wochen, DASS etwas war, aber nicht wann. -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:14px;font-weight:600;
+                    background:${l.whatsapp_at?'#DCFCE7':'#F7F7F7'};border:1px solid ${l.whatsapp_at?'#8FD4A8':'#ddd'};
+                    border-radius:10px;padding:7px 12px">
+        <input type="checkbox" ${l.whatsapp_at?'checked':''} onchange="leadWhatsapp('${l.id}', this)"
+               style="width:17px;height:17px;cursor:pointer">
+        💬 WhatsApp geschickt${l.whatsapp_at?` <span class="muted" style="font-weight:600">am ${LEAD_FMT.format(new Date(l.whatsapp_at))}</span>`:''}
+      </label>
+      <button class="btn btn-ghost" style="font-size:13px;padding:8px 13px" onclick="leadVerlauf('${l.id}')">📜 Verlauf ansehen</button>
+    </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
       ${(l.mail_at || !leadAdresseOk(l.email)) ? '' : `<button class="btn" style="background:#10627A;color:#fff;font-weight:800;font-size:13px;padding:8px 14px" onclick="leadMail('${l.id}', this)">✉️ Willkommensmail schicken</button>`}
       <button class="btn btn-ghost" style="font-size:13px;padding:8px 13px" onclick="leadAntwort('${l.id}')">✍️ Persönlich antworten</button>
       ${l.mail_at ? `<span class="muted" style="font-size:12.5px">Die Willkommensmail ist raus — persönlich antworten geht trotzdem.</span>` : ''}
     </div>
   </div>`;
+}
+
+/* In welcher Lage ist dieser Mensch?
+   Julia, 18.10.2026, vor der Leads-Uebersicht: "Was heißt 9 registriert
+   OHNE Abo???"
+
+   Zu Recht gefragt. Hinter den neun standen drei ganz verschiedene
+   Sorten Mensch, alle unter demselben Etikett:
+     · drei, deren Abo gerade abgelaufen war (sie HATTEN eins),
+     · drei alte Schueler mit 2, 18 und 28 Stunden Guthaben — also
+       zahlende Kundinnen des alten Systems,
+     · eine Archivierte und eine, die sich nur angemeldet hat.
+   "Registriert ohne Abo" stimmte fuer keine von ihnen wirklich.
+
+   Zwei von den neun waren ausserdem Doppelungen: Mari und Nedhal
+   stehen zweimal in der Warteliste. Gezaehlt werden jetzt Menschen,
+   nicht Zeilen. */
+function leadLage(l){
+  const k = leadKonto(l);
+  if(!k) return 'ohnekonto';
+  if(k.is_admin || k.is_teacher) return 'team';
+  if(k.tier) return 'abo';
+  if(k.status === 'gekuendigt') return 'abgelaufen';
+  if((k.credits||0) > 0) return 'alt';
+  try{ if(k.pass_until && new Date(k.pass_until) > new Date()) return 'alt'; }catch(e){}
+  if(['archiv','beendet','inaktiv','geloescht'].indexOf(k.status) >= 0) return 'weg';
+  return 'nurangemeldet';
+}
+/* Menschen, nicht Zeilen: die Warteliste enthaelt dieselbe Adresse
+   mehrfach, wenn jemand sich zweimal eingetragen hat. */
+function leadZaehl(lage){
+  const gesehen = new Set();
+  (LEADS||[]).forEach(function(l){
+    if(leadLage(l) !== lage) return;
+    gesehen.add(String(l.email||'').toLowerCase().trim());
+  });
+  return gesehen.size;
 }
 
 /* Das Konto zu einem Lead — ueber die Adresse, klein geschrieben.
@@ -1039,7 +1099,11 @@ function leadKontoPille(l){
     const wann = k.created_at ? (' · seit '+LEAD_FMT.format(new Date(k.created_at))) : '';
     return '<span class="pill" style="background:#DCFCE7;color:#15803D;font-weight:800" title="Hat ein Abo'+esc(wann)+'">🎉 '+esc(name)+'</span>';
   }
-  return '<span class="pill" style="background:#FEF3C7;color:#8A6608;font-weight:700" title="Konto angelegt, aber kein Abo">👤 registriert</span>';
+  const lage = leadLage(l);
+  if(lage === 'abgelaufen') return '<span class="pill" style="background:#FFE4E4;color:#B30000;font-weight:800" title="Hatte ein Abo, es ist abgelaufen">⌛ Abo abgelaufen</span>';
+  if(lage === 'alt') return '<span class="pill" style="background:#E2EBC9;color:#3F6212;font-weight:800" title="Alter Schüler mit Guthaben">🎒 '+(k.credits||0)+' Stunden</span>';
+  if(lage === 'weg') return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700">🗄️ beendet</span>';
+  return '<span class="pill" style="background:#FEF3C7;color:#8A6608;font-weight:700" title="Konto angelegt, aber nie etwas gekauft">👤 nur angemeldet</span>';
 }
 
 /* Ob jemand schon geschrieben wurde, stand bisher nur in der Tabelle.
