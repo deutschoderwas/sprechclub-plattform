@@ -564,7 +564,18 @@ export default async function handler(req, res) {
       runden++;
       for (const ab of (seite.data || [])) {
         if (NIE_ZUSTANDE.includes(ab.status)) continue;
-        if (!LAEUFT.includes(ab.status) && !nochBezahlt(ab)) continue;
+        /* Nur WIRKLICH laufende Abos. Ein gekuendigtes, das noch bis zum
+           Periodenende bezahlt ist, zaehlt ueberall sonst als "hat
+           Zugang" — hier nicht: fuer jemanden ohne Konto, der gerade
+           ausläuft, legt niemand mehr ein Konto an.
+
+           Julia am 18.10.2026 ueber den einen Fall, den dieser Schritt
+           gefunden hatte: "Cristina Mouliota hat ihr Geld zurückbekommen,
+           rausschmeißen." Sie hat das Abo bei Stripe gekuendigt — es
+           stand danach auf 'canceled', die bezahlte Periode lief aber
+           noch, und der Bericht haette sie trotzdem jede Nacht weiter
+           gemeldet. Erledigt ist erledigt. */
+        if (!LAEUFT.includes(ab.status)) continue;
 
         const kunde = typeof ab.customer === 'string' ? ab.customer : (ab.customer && ab.customer.id);
         if (!kunde || gesehen.has(kunde)) continue;
