@@ -284,7 +284,7 @@
     var k = el('hbClub'); if (!k) return;
     k.innerHTML = '<div class="hb-club">'
       + '<div class="hb-club-t">'
-      +   '<span class="hb-kick">Sprechclub · live mit Julia</span>'
+      +   '<span class="hb-kick">Sprechclub · live mit einem Lehrer</span>'
       +   '<b id="hbClubTitel">Live-Unterricht in kleinen Gruppen</b>'
       +   '<small id="hbClubZeit">Feste Themen, echte Menschen, jede Woche neu.</small>'
       + '</div>'
