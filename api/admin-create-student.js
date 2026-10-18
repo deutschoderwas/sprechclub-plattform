@@ -1,5 +1,18 @@
 // Schüler als Admin selbst anlegen.
-// POST { name, email, credits?, birthday? } + Authorization: Bearer <Admin-Access-Token>
+// POST { name, email, credits?, birthday?, art? } + Authorization: Bearer <Admin-Access-Token>
+//
+// art: 'premium' | 'community' | 'alt'   (fehlt art, bleibt es wie frueher: 'alt')
+//
+// Julia, 18.10.2026: "wenn ich neuen Schueler anlegen moechte per hand
+// muss ich auswaehlen ob es premium community oder alte schueler ist"
+// und, als Anlass: "ich moechte einen Schueler anlegen, der per
+// ueberweisung premium bezahlt hat."
+//
+// Wer per Ueberweisung zahlt, hat keinen Kunden bei Stripe. Der
+// naechtliche Abgleich (api/pruefe-mitgliedschaften.js) laesst solche
+// Profile unangetastet — er traegt sie in 'ohne_stripe' ein und geht
+// weiter. Ein von Hand gesetztes Premium wird also nicht ueber Nacht
+// wieder abgeschaltet.
 // 1) prüft, dass der Aufrufer Admin ist
 // 2) legt den Auth-User an (oder findet bestehenden)
 // 3) schreibt/aktualisiert das Profil (Name, Guthaben, Geburtstag, Status 'aktiv')
@@ -10,7 +23,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
 
   const token = (req.headers.authorization || '').replace('Bearer ', '');
-  let { name, email, credits, birthday } = req.body || {};
+  let { name, email, credits, birthday, art } = req.body || {};
+  art = ['premium', 'community', 'alt'].includes(String(art || '')) ? String(art) : 'alt';
   email = (email || '').trim().toLowerCase();
   name = (name || '').trim();
   credits = Number.isFinite(+credits) ? Math.max(0, parseInt(credits, 10)) : 0;
@@ -46,6 +60,27 @@ export default async function handler(req, res) {
     // NEUER Schüler: voll anlegen (Status aktiv, Guthaben wie eingegeben)
     const prof = { id: userId, email, name: name || null, credits, status: 'aktiv' };
     if (birthday) prof.birthday = birthday;
+    /* Die Mitgliedschaft wie bei einem Kauf setzen — nur eben ohne
+       Stripe. tier_ab entscheidet, ab wann gebucht werden darf
+       (book_class vergleicht es mit dem Datum DER STUNDE); vor dem
+       Start ist das der 1. November, danach gilt es sofort.
+       pass_until oeffnet die Lernplattform — grosszuegig gesetzt, weil
+       bei einer Ueberweisung niemand monatlich nachtraegt; Julia
+       korrigiert es in der Schuelerkarte, wenn jemand aufhoert. */
+    if (art === 'premium' || art === 'community') {
+      const START = Date.parse('2026-11-01T00:00:00+01:00');
+      prof.tier = art;
+      if (art === 'premium' && Date.now() < START) prof.tier_ab = '2026-11-01';
+      const bis = new Date(Math.max(Date.now(), START));
+      bis.setDate(bis.getDate() + 31);
+      prof.pass_until = bis.toISOString();
+    } else {
+      /* Alte Schueler: kein Tarif, sie buchen ueber ihr Guthaben.
+         Julia, 18.10.2026: "ab dem 01.11 gibt es dann eh keine ALTE
+         schueler mehr" — die Einstellung verschwindet im Formular
+         von selbst, sobald der Club laeuft. */
+      prof.alt_schueler = true;
+    }
     const { error: pErr } = await sb.from('profiles').upsert(prof, { onConflict: 'id' });
     if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });
     // Startguthaben protokollieren, damit das Guthabenprotokoll spaeter aufgeht.
@@ -62,6 +97,24 @@ export default async function handler(req, res) {
     const patch = {};
     if (name) patch.name = name;
     if (birthday) patch.birthday = birthday;
+    /* Bei einem bestehenden Konto wird weiter nichts ueberschrieben —
+       mit einer Ausnahme: wer gerade per Ueberweisung bezahlt hat,
+       soll seine Mitgliedschaft auch bekommen. Ein BESTEHENDES Premium
+       wird dabei nie zu Community zurueckgestuft. */
+    if (art === 'premium' || art === 'community') {
+      const { data: alt0 } = await sb.from('profiles').select('tier,pass_until').eq('id', userId).maybeSingle();
+      const hatPremium = /premium/.test(String((alt0 && alt0.tier) || ''));
+      if (!(hatPremium && art === 'community')) {
+        const START = Date.parse('2026-11-01T00:00:00+01:00');
+        patch.tier = art;
+        patch.status = 'aktiv';
+        if (art === 'premium' && Date.now() < START) patch.tier_ab = '2026-11-01';
+        const bis = new Date(Math.max(Date.now(), START));
+        bis.setDate(bis.getDate() + 31);
+        const jetzt = alt0 && alt0.pass_until ? new Date(alt0.pass_until) : null;
+        patch.pass_until = (jetzt && jetzt > bis) ? jetzt.toISOString() : bis.toISOString();
+      }
+    }
     if (Object.keys(patch).length) {
       const { error: pErr } = await sb.from('profiles').update(patch).eq('id', userId);
       if (pErr) return res.status(500).json({ error: 'profile_failed', detail: pErr.message });

@@ -2483,10 +2483,25 @@ async function loadSchueler(){
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
         <div class="field" style="margin:0"><label>Name</label><input id="newName" placeholder="Vor- und Nachname"></div>
         <div class="field" style="margin:0"><label>E-Mail *</label><input id="newEmail" type="email" placeholder="mail@beispiel.de"></div>
-        <div class="field" style="margin:0;max-width:120px"><label>Guthaben</label><input id="newCredits" type="number" min="0" value="0"></div>
+        <!-- Julia, 18.10.2026: "wenn ich neuen Schueler anlegen moechte
+             per hand muss ich auswaehlen ob es premium community oder
+             alte schueler ist" — Anlass: "ich moechte einen Schueler
+             anlegen, der per ueberweisung premium bezahlt hat."
+             "Alte Schüler" blendet sich am 1. November selbst aus:
+             "ab dem 01.11 gibt es dann eh keine ALTE schueler mehr ...
+             da wird es entweder community oder Premium geben". -->
+        <div class="field" style="margin:0"><label>Mitgliedschaft *</label>
+          <select id="newArt" onchange="newArtWechsel()">
+            <option value="premium">👑 Premium</option>
+            <option value="community">💬 Community</option>
+            <option value="alt" id="newArtAlt">🎒 Alter Schüler (Guthaben)</option>
+          </select>
+        </div>
+        <div class="field" style="margin:0;max-width:120px" id="newCreditsFeld"><label>Guthaben</label><input id="newCredits" type="number" min="0" value="0"></div>
         <div class="field" style="margin:0"><label>Geburtstag</label><input id="newBday" type="date"></div>
         <button class="btn" id="btnCreate" onclick="createStudent()" style="background:#7ED8EA;color:#062;font-weight:800">Anlegen & einladen</button>
       </div>
+      <div class="muted" id="newArtHinweis" style="margin-top:8px"></div>
       <div class="muted" id="createMsg" style="margin-top:8px"></div>
     </div>
     <div style="background:#FFF6DC;border:1px solid #F0DFA0;border-radius:14px;padding:13px 15px;margin-bottom:14px">
@@ -2528,6 +2543,26 @@ async function loadSchueler(){
       <label class="muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
         <input type="checkbox" id="schuelerLowOnly" onchange="renderSchuelerTable()"> nur ≤ 1 Stunde
       </label>
+      <!-- Julia, 18.10.2026: "Hier im Admin haben wir keine einheitliche
+           und klaren filter ... Da muss es auch ein haken geben dass ich
+           Emails schicken kann an diejenigen wo ich den filter anwende"
+           und "diese filter sind ueberfluessig".
+
+           Es gab zwei Filterleisten nebeneinander, die sich
+           widersprachen: oben die Gruppen (115 Leute, Premium/Community/
+           Alte Schueler) und darunter eine zweite Kiste mit eigener
+           Einteilung und eigener Zahl (91). Die zweite ist weg; ihre
+           zwei brauchbaren Teile — Niveau und "Mail an diese Auswahl" —
+           stehen jetzt hier, an derselben Leiste wie alles andere. -->
+      <select id="schuelerNiveau" onchange="renderSchuelerTable()" title="Nach Niveau filtern">
+        <option value="">Jedes Niveau</option>
+        <option value="A1">A1</option><option value="A2">A2</option>
+        <option value="B1">B1</option><option value="B2">B2</option>
+        <option value="C1">C1</option><option value="C2">C2</option>
+        <option value="__ohne">ohne Niveau</option>
+      </select>
+      <button class="btn" id="btnGrpMail" onclick="gruppenMail()"
+        style="background:#0E7C8C;color:#fff;font-weight:800">✉️ Mail an diese Auswahl</button>
       <span class="muted" id="schuelerInfo"></span>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
@@ -2536,6 +2571,14 @@ async function loadSchueler(){
     </div>
     <div id="schuelerTable"></div>`;
   renderSchuelerTable();
+  /* "Alte Schüler" verschwindet aus der Auswahl, sobald der Club
+     laeuft — Julias Regel, die sich selbst anwendet. */
+  try{
+    if(new Date() >= new Date('2026-11-01T00:00:00+01:00')){
+      var _oa=document.getElementById('newArtAlt'); if(_oa) _oa.remove();
+    }
+    newArtWechsel();
+  }catch(e){}
 }
 /* ---------- Eine Gruppe pro Schueler, sichtbar als Abzeichen ----------
    Frueher stand bei fast jedem "Aktiv" - ein Wort, das nichts unterscheidet.
@@ -2745,6 +2788,50 @@ function zeichneGruppenPillen(){
       + txt + ' <span style="opacity:.7;font-weight:600">' + n + '</span></button>';
   }).join('');
 }
+var SCHUELER_SICHTBAR = [];
+/* Schreibt an genau die Leute, die gerade in der Tabelle stehen —
+   Gruppe, Status, Niveau, Suche, alles schon angewendet. Julia,
+   18.10.2026: "Da muss es auch ein haken geben dass ich Emails
+   schicken kann an diejenigen wo ich den filter anwende."
+   Team-Konten bleiben aussen vor; eine Rundmail an sich selbst und
+   die Lehrkraefte ist nie gemeint. */
+window.gruppenMail = async function(){
+  var arr = (SCHUELER_SICHTBAR||[]).filter(function(p){ return !p.is_admin && !p.is_teacher; });
+  if(!arr.length) return alert('In dieser Auswahl ist niemand.');
+  var wer = (typeof SCHUELER_GRUPPE!=='undefined' && SCHUELER_GRUPPE!=='alle' && GRUPPEN[SCHUELER_GRUPPE])
+    ? GRUPPEN[SCHUELER_GRUPPE].kurz : 'der aktuellen Auswahl';
+  var ov=document.createElement('div');
+  ov.id='grpMailOv';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10001;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 12px';
+  ov.onclick=function(e){ if(e.target===ov) ov.remove(); };
+  ov.innerHTML='<div style="background:#fff;max-width:580px;width:100%;border-radius:16px;padding:20px">'
+    + '<b style="font-size:17px">✉️ Nachricht an '+arr.length+' '+(arr.length===1?'Person':'Personen')+'</b>'
+    + '<p class="muted" style="margin:6px 0 2px">Geht an <b>'+esc(wer)+'</b> — genau an die, die gerade in der Tabelle stehen.</p>'
+    + '<p class="muted" style="margin:0 0 10px;font-size:12.5px">'+arr.slice(0,6).map(function(x){return esc(x.name||x.email);}).join(', ')+(arr.length>6?' und '+(arr.length-6)+' weitere':'')+'</p>'
+    + '<textarea id="grpMailMsg" placeholder="Deine Nachricht …" style="width:100%;min-height:130px;padding:11px;border:1px solid #ccc;border-radius:10px;font-size:14px"></textarea>'
+    + '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">'
+    +   '<button onclick="document.getElementById(\'grpMailOv\').remove()" style="border:1px solid #ccc;background:#fff;border-radius:9px;padding:9px 15px;cursor:pointer">Abbrechen</button>'
+    +   '<button id="grpMailGo" style="border:none;background:#0E7C8C;color:#fff;border-radius:9px;padding:9px 18px;cursor:pointer;font-weight:800">An '+arr.length+' senden</button>'
+    + '</div></div>';
+  document.body.appendChild(ov);
+  document.getElementById('grpMailGo').onclick=async function(){
+    var txt=(document.getElementById('grpMailMsg').value||'').trim();
+    if(!txt) return alert('Bitte eine Nachricht schreiben.');
+    if(!confirm('An '+arr.length+' '+(arr.length===1?'Person':'Personen')+' senden?')) return;
+    this.disabled=true; this.textContent='sendet …';
+    try{
+      var sess=await sb.auth.getSession();
+      var tok=(sess&&sess.data&&sess.data.session)?sess.data.session.access_token:'';
+      try{ await sb.from('messages').insert(arr.map(function(x){ return { user_id:x.id, sender:'teacher', body:txt }; })); }catch(e){}
+      var r=await fetch('/api/notify-message',{ method:'POST',
+        headers:{'Content-Type':'application/json', Authorization:'Bearer '+tok},
+        body: JSON.stringify({ user_ids: arr.map(function(x){ return x.id; }), preview: txt }) });
+      var j=await r.json().catch(function(){ return {}; });
+      alert('Gesendet an '+((j&&j.sent)||0)+' von '+arr.length+'.');
+      ov.remove();
+    }catch(e){ alert('Fehler: '+(e&&e.message||e)); this.disabled=false; this.textContent='An '+arr.length+' senden'; }
+  };
+};
 function renderSchuelerTable(){
   zeichneGruppenPillen();
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
@@ -2760,6 +2847,13 @@ function renderSchuelerTable(){
      "alle Premium, auch die in Pause" gar nicht erst hinschreiben. */
   if (SCHUELER_GRUPPE !== 'alle') rows = rows.filter(p => gruppeVon(p) === SCHUELER_GRUPPE);
   if (lowOnly) rows = rows.filter(p => brauchtStunden(p) && p.credits<=1);
+  /* Niveau: level, sonst stufe, sonst Zielniveau — dieselbe Reihenfolge
+     wie im Klassenraum, damit beide dasselbe meinen. */
+  const nf = document.getElementById('schuelerNiveau')?.value || '';
+  if (nf) rows = rows.filter(p => {
+    const n = String(p.level || p.stufe || p.target_level || '').toUpperCase();
+    return nf === '__ohne' ? !n : n.startsWith(nf);
+  });
   rows = [...rows];
   if (mode==='credits') rows.sort((a,b)=> a.credits-b.credits || nameKey(a).localeCompare(nameKey(b),'de'));
   else if (mode==='credits-desc') rows.sort((a,b)=> b.credits-a.credits || nameKey(a).localeCompare(nameKey(b),'de'));
@@ -2768,6 +2862,16 @@ function renderSchuelerTable(){
   const low = SCHUELER.filter(p=>brauchtStunden(p) && p.credits<=1).length;
   const mitAbo = SCHUELER.filter(p=>OHNE_STUNDEN.indexOf(p.tier)>=0).length;
   const bdayToday = SCHUELER.filter(p=>p.birthday && p.birthday.slice(5)===todayMMDD()).length;
+  /* Was hier sichtbar ist, ist genau das, was der Mail-Knopf trifft —
+     eine Liste, eine Zahl, keine zweite Rechnung daneben. */
+  SCHUELER_SICHTBAR = rows;
+  const mb = document.getElementById('btnGrpMail');
+  if (mb) {
+    const echte = rows.filter(p => !p.is_admin && !p.is_teacher);
+    mb.textContent = '✉️ Mail an diese Auswahl (' + echte.length + ')';
+    mb.disabled = echte.length === 0;
+    mb.style.opacity = echte.length ? '1' : '.5';
+  }
   const info = document.getElementById('schuelerInfo');
   if (info) info.textContent = `${rows.length} von ${SCHUELER.length} · ${low} Live-Schüler mit ≤ 1 Stunde · ${mitAbo} mit Mitgliedschaft${bdayToday?` · 🎂 ${bdayToday} heute Geburtstag`:''}`;
   const byName = (mode==='name');
@@ -3281,16 +3385,32 @@ async function saveCardCredits(id){
   });
 }
 
+/* Was die gewaehlte Mitgliedschaft bedeutet — damit beim Anlegen
+   niemand raten muss, was gleich passiert. Guthaben gibt es nur beim
+   alten Modell; Premium und Community buchen ueber die Mitgliedschaft. */
+window.newArtWechsel = function(){
+  var sel=document.getElementById('newArt'); if(!sel) return;
+  var art=sel.value;
+  var feld=document.getElementById('newCreditsFeld');
+  if(feld) feld.style.display = (art==='alt') ? '' : 'none';
+  var h=document.getElementById('newArtHinweis');
+  if(h) h.innerHTML = art==='premium'
+    ? '👑 <b>Premium</b> — voller Zugang, unbegrenzt buchen ab dem 1. November. Kein Stripe-Abo: bei Überweisung richtig, es wird nie automatisch abgebucht und der nächtliche Abgleich fasst das Konto nicht an.'
+    : (art==='community'
+      ? '💬 <b>Community</b> — die ganze Lernplattform, aber <b>kein</b> LIVE-Unterricht.'
+      : '🎒 <b>Alter Schüler</b> — kein Tarif, bucht über sein Guthaben. Ab dem 1. November gibt es diese Art nicht mehr.');
+};
 async function createStudent(){
   const name=(document.getElementById('newName').value||'').trim();
   const email=(document.getElementById('newEmail').value||'').trim();
-  const credits=parseInt(document.getElementById('newCredits').value||'0',10)||0;
+  const art=(document.getElementById('newArt')||{}).value||'alt';
+  const credits=(art==='alt') ? (parseInt(document.getElementById('newCredits').value||'0',10)||0) : 0;
   const birthday=document.getElementById('newBday').value||null;
   const msg=document.getElementById('createMsg');
   if(!email||!email.includes('@')){ if(msg) msg.textContent='⚠️ Bitte eine gültige E-Mail eingeben.'; return; }
   const btn=document.getElementById('btnCreate'); if(btn){ btn.disabled=true; btn.textContent='⏳ Lege an …'; }
   try{
-    const r=await fetch('/api/admin-create-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({name,email,credits,birthday}) });
+    const r=await fetch('/api/admin-create-student',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+await authToken()}, body:JSON.stringify({name,email,credits,birthday,art}) });
     const j=await r.json().catch(()=>({}));
     if(j&&j.ok){
       if(msg) msg.innerHTML = `✅ ${esc(name||email)} angelegt.${j.existed?' (E-Mail existierte schon – Profil aktualisiert)':''} ${j.mailed?'📧 Einladungs-Mail verschickt.':'⚠️ Mail nicht verschickt (Brevo prüfen).'}`;
@@ -3412,7 +3532,29 @@ window.jkMail=function(){var sel=document.getElementById('jkStud');if(!sel||!sel
 window.jkSetStatus=async function(){var sel=document.getElementById('jkStud');var st=document.getElementById('jkStatus');if(!sel||!sel.value)return alert('Bitte Schueler waehlen.');var v=st.value;try{await sb.from('profiles').update({status:v}).eq('id',sel.value);var s=getList().find(function(x){return x.id===sel.value;});if(s)s.status=v;alert('Status gesetzt: '+(v||'kein paket'));applyView();}catch(e){alert('Fehler: '+e.message);}};
 function studOptions(){return realStudents().slice().sort(function(a,b){return (a.name||'').localeCompare(b.name||'');}).map(function(s){return '<option value="'+s.id+'">'+esc3(s.name||s.email)+' ('+(s.credits||0)+'h'+(s.level?', '+s.level:'')+')</option>';}).join('');}
 function bar(){function mk(v,l){var on=QF===v;return '<button class="jkqf" data-v="'+v+'" onclick="jkSetQF(&#39;'+v+'&#39;)" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:'+(on?'#DD0000':'#fff')+';color:'+(on?'#fff':'#333')+'">'+l+'</button>';}return '<div class="card" id="jkBar" style="margin:14px 0;background:#F4FBFA;border:1px solid #cde"><b>\uD83D\uDD0E Filter</b> <span id="jkFilterCount" class="muted" style="margin-left:8px"></span><div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0">'+mk('alle','Alle')+mk('alt','ALTE SCHÜLER')+mk('aktiv','\uD83D\uDFE2 AKTIV')+mk('community','\uD83D\uDCAC COMMUNITY')+mk('urlaub','\uD83C\uDF34 URLAUB')+mk('beendet','\uD83D\uDD34 BEENDET')+mk('kein','\u26AA KEIN PAKET')+mk('archiv','\uD83D\uDDC4\uFE0F ARCHIV')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><label>Niveau: <select onchange="jkSetNiv(this.value)" style="padding:6px"><option value="">Alle</option>'+LEV.map(function(l){return '<option value="'+l+'">'+l+'</option>';}).join('')+'</select></label> <button onclick="jkMailGroup()" style="border:none;border-radius:8px;padding:7px 14px;cursor:pointer;background:#DD0000;color:#fff;font-weight:700;margin-left:10px">✉️ Mail an diese Auswahl</button></div><hr style="border:none;border-top:1px solid #e5e5e5;margin:10px 0"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><select id="jkStud" style="padding:6px;min-width:220px"><option value="">\u2013 Schueler waehlen \u2013</option>'+studOptions()+'</select><button onclick="jkMail()" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:#fff">\u2709\uFE0F E-Mail schreiben</button><select id="jkStatus" style="padding:6px"><option value="aktiv">aktiv</option><option value="urlaub">urlaub</option><option value="pause">pause</option><option value="beendet">beendet</option><option value="archiv">\uD83D\uDDC4\uFE0F archivieren (ausblenden)</option><option value="">kein paket (leer)</option></select><button onclick="jkSetStatus()" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:#fff">\uD83D\uDCBE Status setzen</button></div></div>';}
-function inject(){var tbl=document.getElementById('schuelerTable');if(!tbl)return;var h=document.getElementById('jkBarHost');if(!(h&&h.parentNode===tbl.parentNode&&h.nextElementSibling===tbl)){var olds=document.querySelectorAll('#jkBarHost');for(var i=0;i<olds.length;i++)olds[i].remove();h=document.createElement('div');h.id='jkBarHost';tbl.parentNode.insertBefore(h,tbl);h.innerHTML=bar()+'<div id="jkList" style="display:none;margin-bottom:12px"></div>';}applyView();}
+/* Julia, 18.10.2026: "diese filter sind ueberfluessig."
+
+   Hier wurde eine ZWEITE Filterleiste unter die Tabelle geschoben, mit
+   eigener Einteilung (ALTE SCHUELER / AKTIV / COMMUNITY / URLAUB /
+   BEENDET / KEIN PAKET / ARCHIV), eigener Zaehlung (91 statt 115) und
+   einer eigenen Liste, die die richtige Tabelle verdeckte. Daneben
+   stand die echte Gruppenleiste — zwei Wahrheiten auf einem Bildschirm.
+
+   Die Leiste ist weg. Was an ihr gut war, steht jetzt oben in der
+   richtigen Werkzeugleiste: das Niveau und "Mail an diese Auswahl",
+   und beides rechnet mit genau den Zeilen, die man sieht. Was sie
+   sonst noch konnte — einen einzelnen Schueler waehlen, ihm schreiben,
+   seinen Status setzen — kann die Schuelerkarte besser; ein Klick auf
+   die Zeile oeffnet sie.
+
+   Die Funktion bleibt als leere Huelle stehen, weil sie an mehreren
+   Stellen aufgerufen wird; sie raeumt jetzt nur noch Reste weg. */
+function inject(){
+  var olds=document.querySelectorAll('#jkBarHost');
+  for(var i=0;i<olds.length;i++) olds[i].remove();
+  var tbl=document.getElementById('schuelerTable');
+  if(tbl) tbl.style.display='';
+}
 async function jkInbox(){var cont=document.getElementById('nachrichten');if(!cont)return;var res=await sb.from('messages').select('*, profiles(name,email)').order('created_at',{ascending:false});var msgs=res.data||[];var by={};msgs.forEach(function(m){var u=m.user_id;if(!by[u])by[u]={p:m.profiles||{},msgs:[]};by[u].msgs.push(m);});window.NACHR_BYUSER=by;var ids=Object.keys(by).sort(function(a,b){return new Date(by[b].msgs[0].created_at)-new Date(by[a].msgs[0].created_at);});if(!ids.length){cont.innerHTML='<div class="card muted">Noch keine Nachrichten von Schuelern.</div>';return;}cont.innerHTML='<div class="card" style="padding:0;overflow:hidden">'+ids.map(function(uid){var tt=by[uid];var last=tt.msgs[0];var unread=tt.msgs.filter(function(m){return m.sender==='student'&&!m.read;}).length;var snip=esc3((last.body||'').slice(0,60));var who=last.sender==='student'?'':'Du: ';var nm=esc3(tt.p&&tt.p.name?tt.p.name:'-');var ini=((tt.p&&tt.p.name?tt.p.name.trim().charAt(0):'?')||'?').toUpperCase();return '<div onclick="jkOpenChat(&#39;'+uid+'&#39;)" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #eee;cursor:pointer;background:'+(unread?'#FFFBEC':'#fff')+'"><div style="width:38px;height:38px;border-radius:50%;background:#0aa;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800">'+esc3(ini)+'</div><div style="flex:1;min-width:0"><div style="font-weight:700">'+nm+(unread?' <span style="background:#DD0000;color:#fff;border-radius:999px;padding:1px 7px;font-size:11px">'+unread+'</span>':'')+'</div><div class="muted" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+who+snip+'</div></div><div class="muted" style="font-size:12px">'+new Date(last.created_at).toLocaleDateString('de-DE')+'</div></div>';}).join('')+'</div>';}
 window.jkInbox=jkInbox;
 window.jkOpenChat=async function(uid){var res=await sb.from('messages').select('*, profiles(name,email)').eq('user_id',uid).order('created_at',{ascending:true});var msgs=res.data||[];var p=(msgs.length&&msgs[0].profiles)||((window.NACHR_BYUSER||{})[uid]||{}).p||{};try{var un=msgs.filter(function(m){return m.sender==='student'&&!m.read;}).map(function(m){return m.id;});if(un.length)await sb.from('messages').update({read:true}).in('id',un);}catch(e){}var bubbles=msgs.map(function(m){var stu=m.sender==='student';return '<div style="align-self:'+(stu?'flex-start':'flex-end')+';max-width:80%;background:'+(stu?'#fff':'#0aa')+';color:'+(stu?'#222':'#fff')+';border:1px solid #ddd;border-radius:14px;padding:8px 12px;font-size:14px">'+esc3(m.body)+'<br><span style="font-size:11px;opacity:.6">'+(stu?'Schueler':'du')+' \u00b7 '+new Date(m.created_at).toLocaleDateString('de-DE')+'</span></div>';}).join('');var cont=document.getElementById('nachrichten');cont.innerHTML='<button class="btn btn-ghost" onclick="jkInbox()" style="margin-bottom:10px">\u2190 Alle Chats</button><div class="card"><b>\uD83D\uDC64 '+esc3(p.name||'-')+' <span class="muted" style="font-weight:400">'+esc3(p.email||'')+'</span></b><div style="margin:10px 0;display:flex;flex-direction:column;gap:6px">'+(bubbles||'<span class="muted">Noch keine Nachrichten.</span>')+'</div><div style="display:flex;gap:6px"><input id="jkReply-'+uid+'" placeholder="Antwort schreiben\u2026" style="flex:1;padding:8px" onkeydown="if(event.key===&#39;Enter&#39;)jkSendReply(&#39;'+uid+'&#39;)"><button class="btn btn-primary" onclick="jkSendReply(&#39;'+uid+'&#39;)">Senden</button></div></div>';};
