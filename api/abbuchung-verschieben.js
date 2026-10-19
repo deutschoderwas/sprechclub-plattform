@@ -36,10 +36,21 @@ import { createClient } from '@supabase/supabase-js';
 const LAEUFT = ['active', 'trialing', 'past_due'];
 const PREMIUM = ['premium', 'premiumplus', 'premium_plus'];
 
-/* Der 1. Dezember 2026, 00:00 deutscher Zeit. Als feste Zahl, nicht
-   gerechnet: ein Datum, das um Mitternacht kippt, darf nicht davon
-   abhaengen, wo der Server gerade steht. */
-const ZIEL = Math.floor(Date.parse('2026-12-01T00:00:00+01:00') / 1000);
+/* Julia, 19.10.2026, als Regel fuer alle: "JEDER der vor dem 01.11 ein
+   Abo kauft zahlt erst wieder am 01.12!!! (wenn Jahr dann erst am
+   01.11.2027)"
+
+   Zwei Ziele also, je nach Takt. Als feste Zahlen, nicht gerechnet: ein
+   Datum, das um Mitternacht kippt, darf nicht davon abhaengen, wo der
+   Server gerade steht. */
+const ZIEL_MONAT = Math.floor(Date.parse('2026-12-01T00:00:00+01:00') / 1000);
+const ZIEL_JAHR  = Math.floor(Date.parse('2027-11-01T00:00:00+01:00') / 1000);
+
+/* Die Regel gilt fuer alle, die VOR dem Start gekauft haben. Wer spaeter
+   kauft, zahlt ganz normal nach seinem eigenen Rhythmus — deshalb diese
+   Grenze. Ohne sie wuerde der Lauf im Dezember noch Abos anfassen, die
+   niemanden etwas angehen. */
+const VOR_DEM_START = Math.floor(Date.parse('2026-11-01T00:00:00+01:00') / 1000);
 
 function periodeEnde(s) {
   const e = s && (s.current_period_end
@@ -62,7 +73,7 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  const bericht = { trocken, geprueft: 0, verschoben: [], unveraendert: [], fehler: [] };
+  const bericht = { trocken, geprueft: 0, verschoben: [], unveraendert: [], uebersprungen: [], fehler: [] };
   const alsDatum = (sek) => new Date(sek * 1000).toISOString().slice(0, 10);
 
   try {
@@ -87,31 +98,57 @@ export default async function handler(req, res) {
           const ende = periodeEnde(s);
           if (!ende) continue;
 
+          /* Wer erst nach dem 1. November gekauft hat, faellt nicht unter
+             die Regel — der zahlt nach seinem eigenen Rhythmus. */
+          const begonnen = s.start_date || s.created || null;
+          if (begonnen && begonnen >= VOR_DEM_START) {
+            bericht.uebersprungen.push({
+              name: p.name || p.email, abo: s.id,
+              grund: 'erst nach dem 01.11. gekauft — die Regel gilt nur fuer den Vorverkauf',
+            });
+            continue;
+          }
+
+          /* Monat oder Jahr? Danach richtet sich das Ziel. */
+          const pos  = s.items && s.items.data && s.items.data[0];
+          const takt = (pos && pos.price && pos.price.recurring && pos.price.recurring.interval) || null;
+          if (takt !== 'month' && takt !== 'year') {
+            bericht.uebersprungen.push({
+              name: p.name || p.email, abo: s.id,
+              grund: 'Takt nicht erkennbar (' + (takt || 'keiner') + ') — lieber nichts anfassen',
+            });
+            continue;
+          }
+          const ziel = takt === 'year' ? ZIEL_JAHR : ZIEL_MONAT;
+
           /* Nur nach hinten, nie nach vorne. */
-          if (ende >= ZIEL) {
+          if (ende >= ziel) {
             bericht.unveraendert.push({
-              name: p.name || p.email, email: p.email,
-              abo: s.id, zahlt_am: alsDatum(ende), grund: 'liegt schon am/nach dem 01.12.',
+              name: p.name || p.email, email: p.email, abo: s.id,
+              zahlt_am: alsDatum(ende),
+              grund: 'liegt schon am/nach dem ' + alsDatum(ziel),
             });
             continue;
           }
 
           if (!trocken) {
             await stripe.subscriptions.update(s.id, {
-              trial_end: ZIEL,
+              trial_end: ziel,
               proration_behavior: 'none',
             });
             await sb.from('zugang_log').insert({
               user_id: p.id, email: p.email, aktion: 'abbuchung_verschoben',
-              grund: 'erste Abbuchung von ' + alsDatum(ende) + ' auf 2026-12-01 — im November zahlt niemand',
+              grund: 'erste Abbuchung von ' + alsDatum(ende) + ' auf ' + alsDatum(ziel)
+                     + ' — wer vor dem 01.11. kauft, zahlt erst dann wieder',
               vorher:  { abo: s.id, zahlt_am: alsDatum(ende), status: s.status },
-              nachher: { abo: s.id, zahlt_am: '2026-12-01', status: 'trialing' },
+              nachher: { abo: s.id, zahlt_am: alsDatum(ziel), status: 'trialing' },
             }).then(() => {}, () => {});
           }
 
           bericht.verschoben.push({
             name: p.name || p.email, email: p.email, abo: s.id,
-            vorher: alsDatum(ende), nachher: '2026-12-01',
+            takt: takt === 'year' ? 'Jahresabo' : 'Monatsabo',
+            vorher: alsDatum(ende), nachher: alsDatum(ziel),
             betrag: (s.items && s.items.data && s.items.data[0] && s.items.data[0].price
                      && s.items.data[0].price.unit_amount != null)
               ? (s.items.data[0].price.unit_amount / 100).toFixed(2).replace('.', ',') + ' EUR' : null,
