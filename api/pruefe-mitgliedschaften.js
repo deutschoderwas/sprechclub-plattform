@@ -470,7 +470,22 @@ export default async function handler(req, res) {
             nachher: { status: 'aktiv', tier: stufe, tier_ab: start },
           }).then(() => {}, () => {});
         }
-        bericht.nachgetragen.push({ name: o.name || o.email, email: o.email, tier: stufe, abo: lebt.status });
+        /* Julia, 19.10.2026, zu den drei Nachgetragenen: "Welches Abo
+           haben sie? Monats- oder Jahresabo?" Stand nicht im Bericht —
+           und ohne das kann sie nicht sagen, wann bei ihnen wieder
+           abgebucht wird. */
+        const nPos   = lebt.items && lebt.items.data && lebt.items.data[0];
+        const nPreis = nPos && nPos.price;
+        const nWdh   = (nPreis && nPreis.recurring) || {};
+        bericht.nachgetragen.push({
+          name: o.name || o.email, email: o.email, tier: stufe, abo: lebt.status,
+          takt: { month: 'Monatsabo', year: 'Jahresabo', week: 'Wochenabo', day: 'Tagesabo' }[nWdh.interval] || '?',
+          plan: (lebt.metadata && lebt.metadata.plan) || (nPreis && (nPreis.nickname || nPreis.lookup_key)) || null,
+          preis: (nPreis && nPreis.unit_amount != null)
+            ? (nPreis.unit_amount / 100).toFixed(2).replace('.', ',') + ' ' + String(nPreis.currency || 'eur').toUpperCase()
+            : null,
+          naechste_zahlung: periodeEnde(lebt) ? new Date(periodeEnde(lebt)).toISOString().slice(0, 10) : null,
+        });
       } catch (e) {
         bericht.fehler.push({ name: o.name || o.email, fehler: 'nachtragen: ' + String((e && e.message) || e) });
       }
@@ -772,7 +787,7 @@ export default async function handler(req, res) {
       (bericht.entsperrt.length ? `<p><b>Wieder geöffnet (Abo läuft doch):</b></p><ul>${bericht.entsperrt.map(zeile).join('')}</ul>` : '') +
       (bericht.archiviert.length ? `<p><b>Ins Archiv verschoben (alter Schüler ohne Guthaben):</b></p><ul>${bericht.archiviert.map(x => `<li>${x.name} (${x.email}) — letzte Guthaben-Bewegung: ${x.letzte_bewegung}</li>`).join('')}</ul>` : '') +
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
-      ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, Abo bei Stripe: ${x.abo}</li>`).join('')}</ul>` : '') +
+      ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, ${x.takt}${x.preis ? ', ' + x.preis : ''}${x.naechste_zahlung ? ', nächste Zahlung ' + x.naechste_zahlung : ''}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
       ((bericht.zahlt_ohne_konto || []).length ? `<p><b>⚠️ Zahlt bei Stripe, hat bei uns aber kein Konto:</b></p><ul>${bericht.zahlt_ohne_konto.map(x => `<li><b>${x.email}</b> — ${x.tier || x.plan || 'Stufe unbekannt'}${x.preis ? ', ' + x.preis : ''}${x.takt ? ' pro ' + x.takt : ''}${x.seit ? ', seit ' + x.seit : ''}${x.laeuft_bis ? ', bezahlt bis ' + x.laeuft_bis : ''} <span style="color:#888">(${x.abo_id})</span></li>`).join('')}</ul>` : '') +
       ((bericht.zahlt_nicht_angemeldet || []).length ? `<p><b>Hat bezahlt, sich aber nie angemeldet:</b></p><ul>${bericht.zahlt_nicht_angemeldet.map(x => `<li>${x.email} — Abo ${x.abo}</li>`).join('')}</ul>` : '') +
