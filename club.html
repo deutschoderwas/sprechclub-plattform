@@ -667,6 +667,8 @@ function wartelisteSchalten(){
                        'Warteliste ein, ich melde mich, sobald wieder ein Platz frei ist.';
   var z = document.getElementById('hZeile');
   if (z) z.textContent = 'T\u00e4glich sprechen \u00b7 monatlich k\u00fcndbar';
+  /* Die Preise neu zeichnen, jetzt mit normal === true. */
+  setzeTakt(TAKT);
 
   var wl = document.getElementById('wl'); if (wl) wl.classList.add('an');
 }
@@ -718,7 +720,6 @@ function wartelisteSenden(){
                         '<a href="mailto:deutschoderwas@gmail.com" style="color:#DD0000">deutschoderwas@gmail.com</a>.';
   });
 }
-wartelisteSchalten();
 
 
 function zumPreis(){ document.getElementById('preis').scrollIntoView({behavior:'smooth', block:'start'}); }
@@ -738,6 +739,12 @@ function setzeTakt(was){
   /* Verglichen wird immer gegen den regulären Monatspreis von 99 €
      — derselbe Vergleich wie auf /sprechclub und /preise. */
   var REGULAER = 99;
+  /* Ab dem 1.11. verlangt Stripe den Normalpreis: api/create-checkout.js
+     schaltet in aktuellerPlan() auf 99 € im Monat bzw. 999 € im Jahr
+     (rund 83 € pro Monat). Die Seite MUSS dieselbe Zahl zeigen — eine
+     Seite, die 49 € verspricht, während 99 € abgebucht werden, ist
+     schlimmer als gar keine Seite. */
+  var normal = new Date() >= START;
   function altZeile(proMonat, jahrGesamt){
     var proz = Math.floor((1 - proMonat / REGULAER) * 100);
     return 'statt <s>' + REGULAER + ' \u20ac</s> im Monat'
@@ -745,18 +752,23 @@ function setzeTakt(was){
          + (jahrGesamt ? '<br>einmal im Jahr abgerechnet: ' + jahrGesamt + ' \u20ac' : '');
   }
   if(was==='jahr'){
-    z.innerHTML = '468 €<small id="pTakt"> / Jahr</small>';
-    j.textContent = 'Das sind 39 € im Monat — 1,28 € am Tag.';
+    z.innerHTML = (normal ? '999 €' : '468 €') + '<small id="pTakt"> / Jahr</small>';
+    j.textContent = normal
+      ? 'Das sind rund 83 € im Monat — 2,74 € am Tag.'
+      : 'Das sind 39 € im Monat — 1,28 € am Tag.';
     alt.innerHTML = altZeile(39, 0);
     document.getElementById('pZahltag').innerHTML =
       'Du zahlst heute einmal — die <b>nächste Zahlung ist erst am 1. November 2027</b>.';
-    sp.hidden=false; sp.textContent='Du sparst 120 € — zweieinhalb Monate geschenkt';
+    /* 12 × 99 € = 1188 € gegen 999 € im Jahresabo. */
+    sp.hidden=false;
+    sp.textContent = normal ? 'Du sparst 189 € gegenüber dem Monatsabo'
+                            : 'Du sparst 120 € — zweieinhalb Monate geschenkt';
     f.textContent='Jahresmitgliedschaft, 12 Monate.';
     document.getElementById('cZahl').innerHTML = '144 €<small> / Jahr</small>';
     document.getElementById('cJe').textContent = 'Das sind 12 € im Monat. Sofort nutzbar, ohne Sprechclub.';
   } else {
-    z.innerHTML = '49 €<small id="pTakt"> / Monat</small>';
-    j.textContent = 'Das sind 1,63 € am Tag.';
+    z.innerHTML = (normal ? '99 €' : '49 €') + '<small id="pTakt"> / Monat</small>';
+    j.textContent = normal ? 'Das sind 3,30 € am Tag.' : 'Das sind 1,63 € am Tag.';
     alt.innerHTML = altZeile(49, 0);
     document.getElementById('pZahltag').innerHTML =
       'Du zahlst heute einmal — die <b>nächste Zahlung ist erst am 1. Dezember</b>.';
@@ -798,6 +810,9 @@ async function kaufen(stufe){
   knopf.disabled=false; knopf.textContent=alt;
 }
 function melden(t){ var m=document.getElementById('meldung'); if(m) m.textContent=t; }
+
+/* Ganz zum Schluss, wenn TAKT und setzeTakt stehen. */
+wartelisteSchalten();
 </script>
 </body>
 </html>
