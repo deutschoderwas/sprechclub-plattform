@@ -100,8 +100,13 @@
   window.ubRaum = ubRaum;
 
   /* ---------- Wie viel gibt es hier, und wie viel ist geschafft? ---------- */
+  /* 19.10.2026: Hier stand nur level. Die Stufe aus dem Niveautest und
+     die selbst angegebene stehen beide in profiles.stufe — level ist
+     die alte Spalte und bei den meisten leer. */
   function meinNiveau() {
-    try { return (window.profile && window.profile.level) || ''; } catch (e) { return ''; }
+    try {
+      return (window.profile && (window.profile.stufe || window.profile.level)) || '';
+    } catch (e) { return ''; }
   }
   function themenVon(raum) {
     var out = [];

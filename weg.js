@@ -55,10 +55,20 @@
 
   /* Die gemerkte Stufe: erst das Profil, dann der Lernbereich, dann
      der Niveautest. Steht nirgends etwas, fangen wir bei A1 an —
-     nicht in der Mitte. */
+     nicht in der Mitte.
+
+     19.10.2026: "das Profil" hiess hier nur level und target_level.
+     Der Niveautest schreibt sein Ergebnis aber ueber stufe_setzen
+     nach profiles.stufe, und wer seine Stufe im Profil selbst angibt,
+     landet ebenfalls dort. level ist die alte Spalte. stufe steht
+     jetzt vorn; target_level bleibt hinten, das ist das Ziel und
+     nicht der Stand. */
   function meineStufe() {
     var n = '';
-    try { n = (window.profile && (window.profile.level || window.profile.target_level)) || ''; } catch (e) {}
+    try {
+      n = (window.profile && (window.profile.stufe || window.profile.level
+                              || window.profile.target_level)) || '';
+    } catch (e) {}
     if (!n) { try { n = (window.lsGet && window.lsGet('niveau', '')) || ''; } catch (e) {} }
     if (!n) {
       try { var t = JSON.parse(localStorage.getItem('dow_niveautest') || 'null'); if (t && t.stufe) n = t.stufe; } catch (e) {}

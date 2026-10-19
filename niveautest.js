@@ -414,7 +414,12 @@
         stufe: stufe, prozent: (R && R.overallPct) || null, am: new Date().toISOString()
       }));
       if (window.lsSet) { try { window.lsSet('niveau', stufe); } catch (e) {} }
-      if (window.profile) window.profile.level = stufe;
+      /* inDatenbank() schreibt gleich ueber stufe_setzen nach
+         profiles.stufe. Im Speicher wurde hier aber level gesetzt —
+         also ein anderes Feld als das gespeicherte. Wer den Test
+         machte, sah bis zum naechsten Neuladen weiter die alte
+         Einstufung. Jetzt beides. */
+      if (window.profile) { window.profile.stufe = stufe; window.profile.level = stufe; }
     } catch (e) {}
     inDatenbank(R);
   }
