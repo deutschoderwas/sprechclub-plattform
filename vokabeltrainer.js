@@ -151,10 +151,22 @@
   /* Steht im Profil keine Stufe, wird die genommen, die der
      Lernbereich gemerkt hat oder die der Niveautest ergab. Vorher
      fiel das immer auf A1 zurück — ein C1-Lerner bekam die
-     A1-Wörter zuerst. */
+     A1-Wörter zuerst.
+
+     19.10.2026: Genau das passierte trotzdem weiter. Gelesen wurden
+     nur level und target_level — die Stufe aus dem Niveautest bzw.
+     aus der eigenen Angabe steht aber in profiles.stufe, und die
+     stand hier nicht. Aksana hatte B2 angegeben und bekam A1-Wörter;
+     bei 23 aktiven Mitgliedern ist stufe die EINZIGE gesetzte Angabe.
+     stufe steht jetzt vorn: sie ist die jüngste und genaueste.
+     target_level bleibt ganz hinten — das ist das Ziel, nicht der
+     Stand. */
   function meinNiveau() {
     var n = '';
-    try { n = (window.profile && (window.profile.level || window.profile.target_level)) || ''; } catch (e) {}
+    try {
+      n = (window.profile && (window.profile.stufe || window.profile.level
+                              || window.profile.target_level)) || '';
+    } catch (e) {}
     if (!n) { try { n = (window.lsGet && window.lsGet('niveau', '')) || ''; } catch (e) {} }
     if (!n) {
       try { var t = JSON.parse(localStorage.getItem('dow_niveautest') || 'null'); if (t && t.stufe) n = t.stufe; } catch (e) {}
