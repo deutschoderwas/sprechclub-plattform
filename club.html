@@ -49,6 +49,12 @@ img{max-width:100%;display:block}
 
 /* ---------- Hero ---------- */
 .hero{padding:10px 0 40px}
+.oben-zeile{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.preis-chip{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;
+            border-radius:999px;padding:9px 15px;font:700 14px/1 var(--text);white-space:nowrap}
+.preis-chip s{opacity:.55;font-weight:600}
+.preis-chip i{font-style:normal;background:var(--gold);color:var(--ink);border-radius:999px;
+              padding:4px 8px;font-size:12.5px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#EAF7F4;color:var(--tuerkis-t);
          border:1px solid #C9E9E2;
          border-radius:999px;padding:7px 15px;font:700 12.5px/1 var(--text);
@@ -279,6 +285,77 @@ footer a{color:#C9C5BF}
   .kleb .knopf{font-size:16px;padding:16px 18px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============================================================
+   BEWEGUNG
+   Julia, 19.10.: "mit bewegungen, mit animationen" — und einen
+   Satz vorher: "bitte achte darauf, dass alles funktioniert".
+
+   Beides zusammen heisst: nichts darf unsichtbar anfangen und
+   darauf warten, dass JavaScript es wieder hervorholt. Wenn ein
+   Skript klemmt, ein Browser alt ist oder jemand Bewegung
+   abgeschaltet hat, waere die Seite sonst leer.
+
+   Deshalb: ohne die Klasse .anim am <html> ist ALLES sichtbar.
+   Die Klasse setzt das Skript selbst, als Erstes. Dazu laeuft ein
+   Sicherheitsnetz: nach 2,5 Sekunden wird alles eingeblendet,
+   egal was der Beobachter gemacht hat.
+   ============================================================ */
+@keyframes aufsteigen{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes schweben{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes pulsring{0%{box-shadow:0 0 0 0 rgba(45,212,191,.45)}70%{box-shadow:0 0 0 16px rgba(45,212,191,0)}100%{box-shadow:0 0 0 0 rgba(45,212,191,0)}}
+@keyframes wolke{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(3%,-4%) scale(1.06)}66%{transform:translate(-3%,3%) scale(.96)}}
+
+/* Hero-Einzug: laeuft beim Laden, nicht beim Scrollen. */
+html.anim .hero-in > *{animation:aufsteigen .72s cubic-bezier(.22,.9,.3,1) both}
+html.anim .hero-in > *:nth-child(1){animation-delay:.03s}
+html.anim .hero-in > *:nth-child(2){animation-delay:.10s}
+html.anim .hero-in > *:nth-child(3){animation-delay:.17s}
+html.anim .hero-in > *:nth-child(4){animation-delay:.24s}
+html.anim .hero-in > *:nth-child(5){animation-delay:.31s}
+html.anim .hero-in > *:nth-child(6){animation-delay:.38s}
+html.anim .hero-in > *:nth-child(7){animation-delay:.45s}
+html.anim .hero-bild{animation:aufsteigen .9s cubic-bezier(.22,.9,.3,1) .2s both}
+
+/* Beim Scrollen: erst sichtbar machen, wenn der Abschnitt kommt. */
+html.anim .zeig{opacity:0;transform:translateY(20px)}
+html.anim .zeig.da{opacity:1;transform:none;
+  transition:opacity .65s cubic-bezier(.22,.9,.3,1),transform .65s cubic-bezier(.22,.9,.3,1)}
+html.anim .zeig.v2.da{transition-delay:.08s}
+html.anim .zeig.v3.da{transition-delay:.16s}
+html.anim .zeig.v4.da{transition-delay:.24s}
+
+/* Weiche Tuerkiswolke hinter dem Hero — der einzige grosse Effekt. */
+.hero{position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;z-index:0;top:-28%;right:-14%;width:62vw;height:62vw;
+  max-width:760px;max-height:760px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 35%,rgba(45,212,191,.20),rgba(45,212,191,0) 65%)}
+html.anim .hero:before{animation:wolke 22s ease-in-out infinite}
+.hero > .wrap{position:relative;z-index:1}
+
+/* Anfassen soll sich anfuehlen wie anfassen. */
+.knopf{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.knopf:hover{transform:translateY(-2px)}
+.knopf:active{transform:translateY(0)}
+html.anim .knopf.gross.angebot{animation:pulsring 3.2s ease-out 1.6s infinite}
+.knopf.gross.angebot:hover{animation:none}
+.pkarte,.ptag,.karte,.stimme{transition:transform .22s ease,box-shadow .22s ease}
+.pkarte:hover,.karte:hover,.stimme:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(16,40,38,.09)}
+.ptag:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(16,40,38,.08)}
+.ptag span{transition:transform .18s ease}
+.ptag:hover span{transform:scale(1.03)}
+html.anim .cbox b{display:block;transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+html.anim .cbox.tick b{transform:scale(1.14)}
+.stimme{position:relative}
+
+/* Wer Bewegung abgestellt hat, bekommt keine. Punkt. */
+@media (prefers-reduced-motion:reduce){
+  html.anim .hero-in > *,html.anim .hero-bild{animation:none!important}
+  html.anim .zeig{opacity:1!important;transform:none!important}
+  html.anim .hero:before,html.anim .knopf.gross.angebot{animation:none!important}
+  .knopf:hover,.pkarte:hover,.karte:hover,.stimme:hover,.ptag:hover{transform:none}
+}
+
 </style>
 </head>
 <body>
@@ -295,8 +372,11 @@ footer a{color:#C9C5BF}
      können. -->
 <section class="hero">
   <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow" id="hEyebrow">🗣 Sprechclub-Start: <b>1. November</b></div>
+    <div class="hero-in">
+      <div class="oben-zeile">
+        <div class="eyebrow" id="hEyebrow">🗣 Sprechclub-Start: <b>1. November</b></div>
+        <div class="preis-chip" id="hChip">49 € <s>99 €</s> <i>−50 %</i></div>
+      </div>
       <h1>Du verstehst alles.<br>Nur <span class="hl">sprechen</span> traust du dich nicht.</h1>
       <p class="unter">Im Sprechclub redest du <b>jeden Tag</b> mit echten Menschen Deutsch.
         Kleine Gruppen, nach Niveau sortiert, und immer jemand dabei, der dich verbessert.
@@ -716,10 +796,18 @@ function countdown(){
   var d = START - new Date();
   if (d <= 0){ el.innerHTML = '<div class="cbox" style="min-width:auto;padding:11px 18px"><b>Es läuft!</b><span>Der Club ist offen</span></div>'; return; }
   var t = Math.floor(d/86400000), s = Math.floor(d/3600000)%24, m = Math.floor(d/60000)%60;
-  el.innerHTML =
-    '<div class="cbox"><b>'+t+'</b><span>Tage</span></div>' +
-    '<div class="cbox"><b>'+s+'</b><span>Stunden</span></div>' +
-    '<div class="cbox"><b>'+m+'</b><span>Minuten</span></div>';
+  var neu = '<div class="cbox"><b>'+t+'</b><span>Tage</span></div>' +
+            '<div class="cbox"><b>'+s+'</b><span>Stunden</span></div>' +
+            '<div class="cbox"><b>'+m+'</b><span>Minuten</span></div>';
+  if (el.innerHTML === neu) return;          /* nichts blinken lassen, was gleich blieb */
+  el.innerHTML = neu;
+  /* Kurz anspringen lassen. Nur wenn Bewegung ueberhaupt an ist. */
+  if (document.documentElement.classList.contains('anim')) {
+    [].slice.call(el.querySelectorAll('.cbox')).forEach(function (k) {
+      k.classList.add('tick');
+      setTimeout(function () { k.classList.remove('tick'); }, 320);
+    });
+  }
 }
 countdown(); setInterval(countdown, 30000);
 
@@ -739,8 +827,10 @@ countdown(); setInterval(countdown, 30000);
 function wartelisteSchalten(){
   if (new Date() < START) return;          /* vor dem 1.11. passiert nichts */
 
+  /* hChip gehoert dazu: der Preis-Chip ganz oben behauptet den Rabatt,
+     und den gibt es ab dem 1.11. nicht mehr. */
   var weg = ['hUnter','hCountLabel','count','pFahne','pAlt','pDauer',
-             'pZahltag','novKasten','eUnter'];
+             'pZahltag','novKasten','eUnter','hChip'];
   weg.forEach(function(id){
     var el = document.getElementById(id); if (el) el.style.display = 'none';
   });
@@ -898,6 +988,47 @@ function melden(t){ var m=document.getElementById('meldung'); if(m) m.textConten
 
 /* Ganz zum Schluss, wenn TAKT und setzeTakt stehen. */
 wartelisteSchalten();
+
+/* ---------- Bewegung einschalten ----------
+   Erst hier wird .anim gesetzt. Vorher ist die Seite vollstaendig
+   sichtbar — wer kein JavaScript hat oder bei wem etwas klemmt,
+   sieht trotzdem alles. */
+(function(){
+  var W = document.documentElement;
+  var ruhig = false;
+  try { ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  if (ruhig || !('IntersectionObserver' in window)) return;   /* gar nicht erst anfangen */
+  W.classList.add('anim');
+
+  /* Abschnitte zum Einblenden vormerken: alles, was nicht im Hero steht. */
+  var ziele = [].slice.call(document.querySelectorAll(
+    'section:not(.hero) .ende, section:not(.hero) .schmal, .karte, .pkarte, .ptag, .stimme, .schritt, .nov, .wl, .plan, .preis-grid'
+  ));
+  ziele.forEach(function(el, i){
+    el.classList.add('zeig');
+    var k = i % 4; if (k) el.classList.add('v' + (k + 1));
+  });
+
+  function alleZeigen(){ ziele.forEach(function(el){ el.classList.add('da'); }); }
+
+  var beo = new IntersectionObserver(function(eintraege){
+    eintraege.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('da'); beo.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.04 });
+
+  ziele.forEach(function(el){
+    /* Was beim Laden schon im Bild steht, sofort zeigen. */
+    var r = el.getBoundingClientRect();
+    if (r.top < (window.innerHeight || 800)) { el.classList.add('da'); return; }
+    beo.observe(el);
+  });
+
+  /* Sicherheitsnetz: nach 2,5 Sekunden ist alles da, komme was wolle. */
+  setTimeout(alleZeigen, 2500);
+  window.addEventListener('pagehide', alleZeigen);
+})();
+
 </script>
 </body>
 </html>
