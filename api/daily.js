@@ -10,7 +10,18 @@ export default async function handler(req, res) {
   // freischalten?alle=1 ist das Sicherheitsnetz: Wer bezahlt hat und
   // trotzdem nicht bestätigt ist, kommt hier hinein. Niemand soll je
   // wieder tagelang vor der Tür stehen, obwohl das Geld geflossen ist.
-  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1'];
+  /* Julia, 19.10.2026: "bei allen zukünftigen Käufen die bis zum 01.11
+     eingehen da auch so machen" — gemeint ist: wer vor dem Start kauft,
+     zahlt erst am 01.12. wieder (Jahresabo am 01.11.2027).
+
+     Im Normalfall erledigt das die Kasse selbst (laufzeitAbStart im
+     Webhook). Dieser Lauf ist das Netz darunter: Faellt der Webhook
+     wieder aus — er war vom 16. bis zum 19.10. tot, ohne dass es jemand
+     merkte —, zieht der naechtliche Lauf die Abbuchung spaetestens am
+     naechsten Morgen gerade. Er verschiebt ausschliesslich nach hinten
+     und fasst nur Kaeufe von vor dem 1. November an; danach laeuft er
+     ins Leere. */
+  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }

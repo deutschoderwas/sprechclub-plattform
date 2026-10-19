@@ -88,6 +88,7 @@ export default async function handler(req, res) {
   }
 
   const trocken = String(req.query?.trocken || '') === '1';
+  const basisUrl = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -772,16 +773,55 @@ export default async function handler(req, res) {
     bericht.abschied_gesendet = abschiedListe.map(a => ({ name: a.name || a.email, email: a.email, tier: a.tier || '—', hinweis: 'Probelauf — nichts verschickt' }));
   }
 
+  /* --- 4g. Lebt der Webhook? ----------------------------------------
+     Vom 16. bis zum 19.10.2026 war /api/stripe-webhook tot: eine Zeile
+     Muell am Dateiende, die Datei liess sich nicht laden. Drei Tage
+     lang lief jede Stripe-Meldung ins Leere — keine Kaufbestaetigung,
+     keine Mitgliedschaft, kein Parken der ersten Abbuchung. Gemerkt hat
+     es niemand, weil niemand hingesehen hat.
+
+     Diese Probe sieht hin. Ein Aufruf ohne gueltige Unterschrift MUSS
+     mit 400 abgewiesen werden — dann lebt die Datei und prueft. Kommt
+     500 oder 404 zurueck, ist sie kaputt, und Julia erfaehrt es am
+     naechsten Morgen statt nach drei Tagen. */
+  try {
+    const probe = await fetch(basisUrl + '/api/stripe-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(20000),
+    });
+    bericht.webhook = { http: probe.status, lebt: probe.status === 400 };
+    if (probe.status !== 400) {
+      bericht.fehler.push({
+        name: 'STRIPE-WEBHOOK',
+        fehler: 'Der Webhook antwortet mit ' + probe.status + ' statt 400. '
+              + 'Solange das so ist, kommt KEIN Kauf mehr bei uns an: keine Bestaetigungsmail, '
+              + 'keine Mitgliedschaft, keine Abbuchung zum richtigen Termin.',
+      });
+    }
+  } catch (e) {
+    bericht.webhook = { lebt: false, fehler: String((e && e.message) || e) };
+    bericht.fehler.push({ name: 'STRIPE-WEBHOOK', fehler: 'nicht erreichbar: ' + String((e && e.message) || e) });
+  }
+
   // --- 5. Julia Bescheid geben, wenn etwas passiert ist
   /* Julia, 18.10.2026: "ich bekomme IMMER EINE Mail, wenn ABO
      abgelaufen ist." Also loest jeder geschlossene Zugang die Mail aus —
      und die neuen Faelle (nachgetragen, bald faellig) genauso. */
   const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
     || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length
-    || (bericht.zahlt_ohne_konto || []).length;
+    || (bericht.zahlt_ohne_konto || []).length
+    || (bericht.webhook && bericht.webhook.lebt === false);
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
     const zeile = (x) => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.letztes_abo ? ' — Abo: ' + x.letztes_abo : ''}${x.vorher ? ' — war: ' + x.vorher : ''}</li>`;
     const html =
+      ((bericht.webhook && bericht.webhook.lebt === false)
+        ? `<p style="background:#FDECEA;border:2px solid #D42A21;border-radius:10px;padding:14px 16px">
+             <b style="color:#B3241C;font-size:16px">⛔ Der Stripe-Webhook ist kaputt.</b><br>
+             Solange das so ist, kommt kein Kauf mehr bei uns an — keine Bestätigungsmail, keine
+             Mitgliedschaft, keine Abbuchung zum richtigen Termin. Das muss heute repariert werden.</p>`
+        : '') +
       `<p>Der nächtliche Abgleich mit Stripe hat etwas gefunden.</p>` +
       (bericht.gesperrt.length ? `<p><b>⛔ Zugang abgelaufen — Plattform ist für diese Leute zu:</b></p><ul>${bericht.gesperrt.map(x => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''} — bezahlt war bis ${x.lief_bis}</li>`).join('')}</ul>` : '') +
       (bericht.entsperrt.length ? `<p><b>Wieder geöffnet (Abo läuft doch):</b></p><ul>${bericht.entsperrt.map(zeile).join('')}</ul>` : '') +
