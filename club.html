@@ -172,6 +172,16 @@ h2{font-size:clamp(1.65rem,4vw,2.4rem);font-weight:700;line-height:1.16;letter-s
 .pliste li{display:flex;gap:11px;align-items:flex-start;padding:7px 0;font-size:15.5px}
 .pliste .h{color:var(--tuerkis-d);font-weight:700;flex:0 0 auto}
 .pfuss{font-size:13.5px;color:var(--weich);margin-top:14px;text-align:center}
+.pfahne{display:inline-block;background:var(--rot);color:#fff;font:700 12px/1 var(--text);
+        letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border-radius:7px;
+        margin-bottom:13px}
+.palt{font-size:15px;color:var(--weich);margin:2px 0 6px}
+.palt s{opacity:.75}
+.minus{display:inline-block;background:var(--gold);color:var(--ink);font:700 12.5px/1 var(--text);
+       padding:6px 9px;border-radius:6px;margin-left:8px;vertical-align:1px}
+.pdauer{font:600 14.5px/1.5 var(--text);color:var(--ink);margin:10px 0 2px}
+.countlabel{font:700 12px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;
+            color:var(--rot);margin-top:26px}
 .knopf.leise{background:#fff;color:var(--ink);border:1.5px solid var(--ink);box-shadow:none;
              font-size:15.5px;padding:15px 24px}
 .knopf.leise:hover{background:var(--ink);color:#fff}
@@ -242,10 +252,11 @@ footer a{color:#C9C5BF}
 
       <div class="knopf-zeile">
         <button class="knopf gross" onclick="zumPreis()">Jetzt Platz sichern →</button>
-        <div class="unterknopf">Monatlich kündbar · ab 1,63 € am Tag</div>
+        <div class="unterknopf">Startpreis <b>49 €</b> statt <s>99 €</s> im Monat · monatlich kündbar</div>
       </div>
 
-      <div class="count" id="count" aria-label="Countdown bis zum Start"></div>
+      <div class="countlabel">Startpreis endet in</div>
+      <div class="count" id="count" aria-label="Countdown bis zum Ende des Startpreises"></div>
 
       <div class="trust">
         <div class="trust-el">
@@ -442,8 +453,9 @@ footer a{color:#C9C5BF}
     <div class="ende schmal" style="margin:0 auto">
       <span class="vor">Dein Platz</span>
       <h2>Ein Preis. Alles drin. Monatlich kündbar.</h2>
-      <p class="nach-h2">Der Sprechclub startet am 1. November — wer jetzt dabei ist, hat seinen Platz sicher.
-        Die Community-Mitgliedschaft kannst du <b>ab sofort</b> nutzen.</p>
+      <p class="nach-h2">Bis zum <b>31. Oktober</b> gilt der Startpreis — und er bleibt dir dauerhaft erhalten,
+        solange du dabei bist. Der Sprechclub startet am 1. November; die Community kannst du
+        <b>ab sofort</b> nutzen.</p>
     </div>
 
     <div style="text-align:center">
@@ -456,10 +468,13 @@ footer a{color:#C9C5BF}
     <div class="preis-grid">
       <div class="pkarte haupt">
         <div class="pband">Der Sprechclub</div>
+        <div class="pfahne">Startpreis · nur bis 31. Oktober</div>
         <div class="pname">👑 Premium</div>
         <div class="pzahl" id="pZahl">49 €<small id="pTakt">/ Monat</small></div>
+        <div class="palt" id="pAlt">statt <s>99 €</s> im Monat<span class="minus">−50 %</span></div>
         <div class="pje" id="pJe">Das sind 1,63 € am Tag.</div>
         <div class="pspar" id="pSpar" hidden></div>
+        <div class="pdauer">Dieser Preis bleibt für dich dauerhaft.</div>
         <ul class="pliste">
           <li><span class="h">✓</span><div><b>Unbegrenzt LIVE sprechen</b> — täglich Mo bis So, so oft du willst</div></li>
           <li><span class="h">✓</span><div>Kleine Gruppen nach Niveau, A1 bis C1</div></li>
@@ -561,7 +576,7 @@ footer a{color:#C9C5BF}
 
 <div class="kleb">
   <button class="knopf" onclick="zumPreis()">Jetzt Platz sichern →</button>
-  <div class="zeile">Start am 1. November · monatlich kündbar</div>
+  <div class="zeile">Startpreis nur bis 31. Oktober · monatlich kündbar</div>
 </div>
 
 <script>
@@ -593,10 +608,20 @@ function setzeTakt(was){
   document.getElementById('bJ').classList.toggle('an', was==='jahr');
   var z=document.getElementById('pZahl'), t=document.getElementById('pTakt'),
       j=document.getElementById('pJe'), sp=document.getElementById('pSpar'),
-      f=document.getElementById('pFuss');
+      f=document.getElementById('pFuss'), alt=document.getElementById('pAlt');
+  /* Verglichen wird immer gegen den regulären Monatspreis von 99 €
+     — derselbe Vergleich wie auf /sprechclub und /preise. */
+  var REGULAER = 99;
+  function altZeile(proMonat, jahrGesamt){
+    var proz = Math.floor((1 - proMonat / REGULAER) * 100);
+    return 'statt <s>' + REGULAER + ' \u20ac</s> im Monat'
+         + '<span class="minus">\u2212' + proz + ' %</span>'
+         + (jahrGesamt ? '<br>einmal im Jahr abgerechnet: ' + jahrGesamt + ' \u20ac' : '');
+  }
   if(was==='jahr'){
     z.innerHTML = '468 €<small id="pTakt"> / Jahr</small>';
     j.textContent = 'Das sind 39 € im Monat — 1,28 € am Tag.';
+    alt.innerHTML = altZeile(39, 0);
     sp.hidden=false; sp.textContent='Du sparst 120 € — zweieinhalb Monate geschenkt';
     f.textContent='Jahresmitgliedschaft, 12 Monate.';
     document.getElementById('cZahl').innerHTML = '144 €<small> / Jahr</small>';
@@ -604,6 +629,7 @@ function setzeTakt(was){
   } else {
     z.innerHTML = '49 €<small id="pTakt"> / Monat</small>';
     j.textContent = 'Das sind 1,63 € am Tag.';
+    alt.innerHTML = altZeile(49, 0);
     sp.hidden=true;
     f.textContent='Monatlich kündbar. Keine Mindestlaufzeit.';
     document.getElementById('cZahl').innerHTML = '16 €<small> / Monat</small>';
