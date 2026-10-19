@@ -48,7 +48,26 @@ const ARTEN = {
      und sagt nur, was er taete. */
   mitgliedschaften_pruefen:  (sb, auftrag, basis) => abgleichAnstossen(basis, false),
   mitgliedschaften_vorschau: (sb, auftrag, basis) => abgleichAnstossen(basis, true),
+
+  /* "Im November zahlt niemand." Vier Kaeufe vom 17./18.10. sind am
+     Webhook vorbeigelaufen und wuerden am 17. November abgebucht.
+     Julia, 19.10.2026: "Ne, Susanna naechste Zahlung am 01.12 und
+     Alona auch am 01.12!!!!" — siehe api/abbuchung-verschieben.js. */
+  abbuchung_verschieben: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/abbuchung-verschieben', false),
+  abbuchung_vorschau:    (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/abbuchung-verschieben', true),
 };
+
+/* Einen eigenen Endpunkt mit dem internen Schluessel aufrufen. Der
+   Schluessel steht in der Umgebung des Servers und bleibt dort —
+   deshalb ruft der Lauf sich selbst auf, statt ihn irgendwo
+   hineinzureichen. */
+async function endpunktAnstossen(basis, pfad, trocken) {
+  const url = basis + pfad + (trocken ? '?trocken=1' : '');
+  const r = await fetch(url, { headers: { 'x-intern': process.env.CRON_SECRET || '' },
+                               signal: AbortSignal.timeout(250000) });
+  const bericht = await r.json().catch(() => ({ ok: false, grund: 'antwort_unlesbar' }));
+  return { ok: r.ok && bericht && bericht.ok !== false, http: r.status, ...bericht };
+}
 
 async function abgleichAnstossen(basis, trocken) {
   const url = basis + '/api/pruefe-mitgliedschaften' + (trocken ? '?trocken=1' : '');
