@@ -180,6 +180,18 @@ h2{font-size:clamp(1.65rem,4vw,2.4rem);font-weight:700;line-height:1.16;letter-s
 .minus{display:inline-block;background:var(--gold);color:var(--ink);font:700 12.5px/1 var(--text);
        padding:6px 9px;border-radius:6px;margin-left:8px;vertical-align:1px}
 .pdauer{font:600 14.5px/1.5 var(--text);color:var(--ink);margin:10px 0 2px}
+.wl{display:none;background:var(--papier);border:2px solid var(--tuerkis);border-radius:22px;
+    padding:clamp(22px,4vw,32px);margin:26px auto 0;max-width:560px;color:var(--ink)}
+.wl.an{display:block}
+.wl h3{font:700 clamp(1.3rem,3vw,1.7rem)/1.25 var(--kopf);margin:0 0 8px;color:var(--ink)}
+.wl p{font-size:15.5px;line-height:1.65;color:var(--weich);margin:0 0 18px}
+.wl label{display:block;font:600 13.5px/1 var(--text);margin:0 0 6px;color:var(--ink)}
+.wl input,.wl select{width:100%;box-sizing:border-box;border:1px solid var(--rand);border-radius:12px;
+    padding:13px 14px;font:400 16px/1.2 var(--text);background:#fff;color:var(--ink);margin-bottom:14px}
+.wl input:focus,.wl select:focus{outline:2px solid var(--tuerkis);outline-offset:1px}
+.wl .fuss{font-size:13px;color:var(--weich);text-align:center;margin:12px 0 0}
+.wl .danke{display:none;text-align:center;padding:10px 0;color:var(--ink);font-size:15.5px;line-height:1.65}
+.wl .danke b{display:block;font:700 1.35rem/1.3 var(--kopf);margin-bottom:8px;color:var(--ink)}
 .pzahltag{background:var(--tuerkis-soft);color:var(--tuerkis-t);border-radius:12px;
           padding:13px 15px;font:600 14.5px/1.5 var(--text);text-align:center;
           margin:20px 0 14px}
@@ -247,7 +259,7 @@ footer a{color:#C9C5BF}
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">🗣 Sprechclub-Start: <b>1. November</b></div>
+      <div class="eyebrow" id="hEyebrow">🗣 Sprechclub-Start: <b>1. November</b></div>
       <h1>Du verstehst alles.<br>Nur <span class="hl">sprechen</span> traust du dich nicht.</h1>
       <p class="unter">Im Sprechclub sprichst du <b>jeden Tag</b> mit echten Menschen Deutsch —
         in kleinen Gruppen auf deinem Niveau, mit einem Lehrer, der dich live verbessert.
@@ -255,11 +267,11 @@ footer a{color:#C9C5BF}
 
       <div class="knopf-zeile">
         <button class="knopf gross" onclick="zumPreis()">Sofort anmelden →</button>
-        <div class="unterknopf">Startpreis <b>49 €</b> statt <s>99 €</s> im Monat · monatlich kündbar<br>
+        <div class="unterknopf" id="hUnter">Startpreis <b>49 €</b> statt <s>99 €</s> im Monat · monatlich kündbar<br>
           <b>Die nächste Zahlung ist erst am 1. Dezember.</b></div>
       </div>
 
-      <div class="countlabel">Startpreis endet in</div>
+      <div class="countlabel" id="hCountLabel">Startpreis endet in</div>
       <div class="count" id="count" aria-label="Countdown bis zum Ende des Startpreises"></div>
 
       <div class="trust">
@@ -457,7 +469,7 @@ footer a{color:#C9C5BF}
     <div class="ende schmal" style="margin:0 auto">
       <span class="vor">Dein Platz</span>
       <h2>Ein Preis. Alles drin. Monatlich kündbar.</h2>
-      <p class="nach-h2">Bis zum <b>31. Oktober</b> gilt der Startpreis — und er bleibt dir dauerhaft erhalten,
+      <p class="nach-h2" id="pVor">Bis zum <b>31. Oktober</b> gilt der Startpreis — und er bleibt dir dauerhaft erhalten,
         solange du dabei bist. Der Sprechclub startet am 1. November; die Community kannst du
         <b>ab sofort</b> nutzen.</p>
     </div>
@@ -472,13 +484,13 @@ footer a{color:#C9C5BF}
     <div class="preis-grid">
       <div class="pkarte haupt">
         <div class="pband">Der Sprechclub</div>
-        <div class="pfahne">Startpreis · nur bis 31. Oktober</div>
+        <div class="pfahne" id="pFahne">Startpreis · nur bis 31. Oktober</div>
         <div class="pname">👑 Premium</div>
         <div class="pzahl" id="pZahl">49 €<small id="pTakt">/ Monat</small></div>
         <div class="palt" id="pAlt">statt <s>99 €</s> im Monat<span class="minus">−50 %</span></div>
         <div class="pje" id="pJe">Das sind 1,63 € am Tag.</div>
         <div class="pspar" id="pSpar" hidden></div>
-        <div class="pdauer">Dieser Preis bleibt für dich dauerhaft.</div>
+        <div class="pdauer" id="pDauer">Dieser Preis bleibt für dich dauerhaft.</div>
         <ul class="pliste">
           <li><span class="h">✓</span><div><b>Unbegrenzt LIVE sprechen</b> — täglich Mo bis So, so oft du willst</div></li>
           <li><span class="h">✓</span><div>Kleine Gruppen nach Niveau, A1 bis C1</div></li>
@@ -509,7 +521,34 @@ footer a{color:#C9C5BF}
       </div>
     </div>
 
-    <div class="nov">
+    <!-- Ab dem 1. November: wer nicht sofort kaufen will, traegt sich ein.
+         Vorher ist der Kasten zu — das macht wartelisteSchalten() unten. -->
+    <div class="wl" id="wl">
+      <div id="wlForm">
+        <h3>Kein Platz mehr frei? Trag dich ein.</h3>
+        <p>Die Gruppen sind nach Niveau sortiert und klein. Wenn in deiner
+           gerade nichts frei ist, schreibe ich dir, sobald ein Platz aufgeht —
+           und du bist die Erste, die es erfährt.</p>
+        <label for="wlName">Dein Vorname</label>
+        <input id="wlName" type="text" autocomplete="given-name" placeholder="Maria">
+        <label for="wlMail">Deine E-Mail</label>
+        <input id="wlMail" type="email" autocomplete="email" placeholder="maria@beispiel.de">
+        <label for="wlNiveau">Dein Niveau (wenn du es weißt)</label>
+        <select id="wlNiveau">
+          <option value="">Weiß ich noch nicht</option>
+          <option>A1</option><option>A2</option><option>B1</option>
+          <option>B2</option><option>C1</option>
+        </select>
+        <button class="knopf gross" onclick="wartelisteSenden()" id="wlKnopf">Auf die Warteliste →</button>
+        <div class="fuss" id="wlHinweis">Kostenlos und unverbindlich. Du kannst dich jederzeit abmelden.</div>
+      </div>
+      <div class="danke" id="wlDanke">
+        <b>Du stehst drauf 💛</b>
+        Ich melde mich bei dir, sobald in deiner Gruppe ein Platz frei wird.
+      </div>
+    </div>
+
+    <div class="nov" id="novKasten">
       <b>Gut zu wissen:</b> Die <b>Community startet sofort</b> — Plattform, Kurse und Amanda sind
       direkt nach dem Kauf offen. Nur die <b>Sprechclub-Stunden in Premium beginnen am 1. November</b>;
       vorbuchen kannst du sie ab sofort. Und bei beiden: <b>im November wird dir nichts abgebucht</b>.
@@ -566,7 +605,7 @@ footer a{color:#C9C5BF}
       oder in zwei Wochen zum ersten Mal auf Deutsch erzählen, wie dein Tag war.</p>
     <div style="margin-top:28px">
       <button class="knopf gross" onclick="zumPreis()">Sofort anmelden →</button>
-      <div class="unterknopf">Monatlich kündbar · im November wird nichts abgebucht</div>
+      <div class="unterknopf" id="eUnter">Monatlich kündbar · im November wird nichts abgebucht</div>
     </div>
   </div>
 </section>
@@ -581,7 +620,7 @@ footer a{color:#C9C5BF}
 
 <div class="kleb">
   <button class="knopf" onclick="zumPreis()">Sofort anmelden →</button>
-  <div class="zeile">Nächste Zahlung erst am 1. Dezember · Startpreis nur bis 31. Oktober</div>
+  <div class="zeile" id="hZeile">Nächste Zahlung erst am 1. Dezember · Startpreis nur bis 31. Oktober</div>
 </div>
 
 <script>
@@ -599,6 +638,89 @@ function countdown(){
     '<div class="cbox"><b>'+m+'</b><span>Minuten</span></div>';
 }
 countdown(); setInterval(countdown, 30000);
+
+/* ---------- Ab dem 1. November ----------
+   Zwei Dinge passieren an diesem Tag von selbst, ohne dass jemand die
+   Datei anfassen muss:
+
+   1. Die Wartelisten-Karte geht auf. Wer dann kommt, kann immer noch
+      kaufen — der Knopf bleibt. Aber wer zoegert, weil seine Gruppe
+      voll sein koennte, hinterlaesst wenigstens seine Adresse.
+
+   2. Alles, was den Startpreis verspricht, verschwindet. Am 1. November
+      waere "nur bis 31. Oktober" und "naechste Zahlung erst am
+      1. Dezember" schlicht gelogen, und eine Verkaufsseite, die luegt,
+      verliert mehr als sie gewinnt. Die Preise selbst ruehren wir nicht
+      an — die stehen im Checkout, nicht hier. */
+function wartelisteSchalten(){
+  if (new Date() < START) return;          /* vor dem 1.11. passiert nichts */
+
+  var weg = ['hUnter','hCountLabel','count','pFahne','pAlt','pDauer',
+             'pZahltag','novKasten','eUnter'];
+  weg.forEach(function(id){
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+
+  var e = document.getElementById('hEyebrow');
+  if (e) e.innerHTML = '\u{1F5E3} T\u00e4glich live \u00b7 <b>Mo bis So</b>';
+  var v = document.getElementById('pVor');
+  if (v) v.innerHTML = 'Der Sprechclub l\u00e4uft. Du kannst jederzeit einsteigen \u2014 ' +
+                       'oder dich eintragen, wenn in deiner Gruppe gerade nichts frei ist.';
+  var z = document.getElementById('hZeile');
+  if (z) z.textContent = 'T\u00e4glich sprechen \u00b7 monatlich k\u00fcndbar';
+
+  var wl = document.getElementById('wl'); if (wl) wl.classList.add('an');
+}
+
+/* Die Eintragung geht an denselben Endpunkt wie die alte Warteliste:
+   /api/waitlist schreibt in die leads-Tabelle (Admin-Bereich), legt den
+   Kontakt in Brevo an und schickt Julia Bescheid. Nichts Neues bauen,
+   was es schon gibt. */
+function wartelisteSenden(){
+  var name   = (document.getElementById('wlName').value || '').trim();
+  var mail   = (document.getElementById('wlMail').value || '').trim();
+  var niveau = document.getElementById('wlNiveau').value || '';
+  var hinweis = document.getElementById('wlHinweis');
+  var knopf   = document.getElementById('wlKnopf');
+
+  if (!name){ hinweis.textContent = 'Wie hei\u00dft du?'; hinweis.style.color = '#DD0000';
+              document.getElementById('wlName').focus(); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){
+    hinweis.textContent = 'Die E-Mail-Adresse stimmt noch nicht.'; hinweis.style.color = '#DD0000';
+    document.getElementById('wlMail').focus(); return; }
+
+  knopf.disabled = true; knopf.textContent = 'Einen Moment \u2026';
+  hinweis.style.color = ''; hinweis.textContent = 'Kostenlos und unverbindlich.';
+
+  fetch('/api/waitlist', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name: name, email: mail, niveau: niveau,
+                           tarif: 'Sprechclub (Premium)', quelle: 'warteliste' })
+  })
+  .then(function(r){ return r.json().catch(function(){ return {}; }); })
+  .then(function(a){
+    /* gespeichert ist das, worauf es ankommt: der Eintrag in der Liste.
+       Ob Julias Benachrichtigungsmail durchging, ist nicht das Problem
+       der Person vor dem Bildschirm. */
+    if (a && (a.gespeichert || a.ok)){
+      document.getElementById('wlForm').style.display = 'none';
+      document.getElementById('wlDanke').style.display = 'block';
+    } else {
+      knopf.disabled = false; knopf.textContent = 'Auf die Warteliste \u2192';
+      hinweis.style.color = '#DD0000';
+      hinweis.innerHTML = 'Das hat gerade nicht geklappt. Schreib mir einfach an ' +
+                          '<a href="mailto:deutschoderwas@gmail.com" style="color:#DD0000">deutschoderwas@gmail.com</a>.';
+    }
+  })
+  .catch(function(){
+    knopf.disabled = false; knopf.textContent = 'Auf die Warteliste \u2192';
+    hinweis.style.color = '#DD0000';
+    hinweis.innerHTML = 'Das hat gerade nicht geklappt. Schreib mir einfach an ' +
+                        '<a href="mailto:deutschoderwas@gmail.com" style="color:#DD0000">deutschoderwas@gmail.com</a>.';
+  });
+}
+wartelisteSchalten();
+
 
 function zumPreis(){ document.getElementById('preis').scrollIntoView({behavior:'smooth', block:'start'}); }
 
