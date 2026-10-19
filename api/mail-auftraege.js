@@ -55,6 +55,12 @@ const ARTEN = {
      Alona auch am 01.12!!!!" — siehe api/abbuchung-verschieben.js. */
   abbuchung_verschieben: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/abbuchung-verschieben', false),
   abbuchung_vorschau:    (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/abbuchung-verschieben', true),
+
+  /* Die Kaufbestaetigung nachschicken, die der tote Webhook verschluckt
+     hat. Julia, 19.10.2026: "dann kannst du denen die neue Mail
+     schicken, dass wir einen technischen Fehler hatten." */
+  nachzuegler_mail:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', false),
+  nachzuegler_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', true),
 };
 
 /* Einen eigenen Endpunkt mit dem internen Schluessel aufrufen. Der
