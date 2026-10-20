@@ -2419,6 +2419,64 @@ html.rmk .nend .mark{transition:background-size .65s cubic-bezier(.2,.7,.3,1),co
    kuerzeren Karte eine leere Flaeche bis zum Knopf. */
 #preise .np-grid{align-items:start!important}
 #preise .np-kaufen{margin-top:20px!important;padding-top:0!important}
+
+/* ============================================================
+   PREISE: SPRECHCLUB GROSS, COMMUNITY KLEIN
+   Julia, 20.10.: "Bei den Preisen den Sprechclub groß machen und
+   community ganz klein, so dass Sprechclub mehr gebucht wird und
+   sofort gesehen wird" — und "die Seite, wo die Preise sind, etwas
+   schöner und moderner im selben Design wie die erste Seite".
+
+   Bisher standen beide Karten gleich breit nebeneinander, und die
+   Community stand sogar links, also zuerst. Wer von links nach
+   rechts liest, sah die 16 € zuerst.
+
+   Jetzt: Sprechclub links und doppelt so breit, Community rechts als
+   schmale Nebenkarte. Die Reihenfolge im Quelltext bleibt wie sie
+   ist (order), damit die bestehenden :first-child-Regeln für die
+   Community weiter greifen.
+   ============================================================ */
+@media(min-width:921px){
+  #preise .np-grid{grid-template-columns:1.75fr .85fr;max-width:940px;align-items:start;gap:26px}
+  #preise .np-card.np-feat{order:-1;transform:none}   /* Groesse macht jetzt die Spalte */
+  #preise .np-card.np-feat{padding:34px 32px 28px}
+  #preise .np-card.np-feat .np-name{font-size:26px}
+  #preise .np-card.np-feat .np-num{font-size:52px}
+  #preise .np-card.np-feat .np-hero{margin-top:22px}
+
+  /* Die Community wird zur Nebenkarte: kleiner, ruhiger, ohne Drang. */
+  #preise .np-grid > .np-card:first-child{padding:20px 18px 18px}
+  #preise .np-grid > .np-card:first-child .np-name{font-size:16px}
+  #preise .np-grid > .np-card:first-child .np-num{font-size:26px}
+  #preise .np-grid > .np-card:first-child .np-tag,
+  #preise .np-grid > .np-card:first-child .np-total{font-size:12.5px}
+  #preise .np-grid > .np-card:first-child .btn{font-size:14px;padding:11px 14px}
+}
+
+/* ---------- moderner, im Ton der Startseite ---------- */
+#preise .np-card{border-radius:22px;transition:transform .2s ease,box-shadow .2s ease;
+                 box-shadow:0 2px 8px rgba(16,40,38,.05)}
+#preise .np-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(16,40,38,.10)}
+#preise .np-card.np-feat{box-shadow:0 18px 44px rgba(221,0,0,.10)}
+#preise .np-card.np-feat:hover{box-shadow:0 24px 54px rgba(221,0,0,.14)}
+#preise .np-incl{border-radius:22px;box-shadow:0 2px 8px rgba(16,40,38,.05)}
+#preise .np-item .c{background:#CFF9F0}
+#preise .np-cta-wrap .btn{transition:transform .18s ease}
+#preise .np-cta-wrap .btn:hover{transform:translateY(-2px)}
+
+/* ---------- Hero-Bild etwas nach vorn ---------- */
+/* Julia: "Das Bild vom Klassenzimmer bisschen nach vorn schieben".
+   Nichts war abgeschnitten (nachgemessen) — es war schlicht zu
+   klein. Die Bildspalte bekommt mehr Breite, der Text etwas
+   weniger. */
+@media(min-width:981px){
+  .rhero-in{grid-template-columns:.95fr 1.12fr;gap:46px}
+  .rhero-img{box-shadow:0 38px 80px rgba(0,0,0,.34)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #preise .np-card:hover,#preise .np-cta-wrap .btn:hover{transform:none}
+}
 </style>
 </body>
 </html>
