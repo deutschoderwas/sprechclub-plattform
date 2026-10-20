@@ -2496,6 +2496,22 @@ html.rmk .nend .mark{transition:background-size .65s cubic-bezier(.2,.7,.3,1),co
 /* Am Handy stehen die Karten untereinander, Sprechclub oben (order:-1).
    Die Community bleibt auch hier die ruhigere der beiden. */
 @media(max-width:920px){
+  /* Julia, 20.10.: "dass der sprechclub preis immer zuerst kommt".
+     In der Karte stand bisher Name, dann der Beschreibungstext, dann
+     erst der Preis — am Handy scrollt man also an der Zahl vorbei.
+     Jetzt: Name, Preis, danach der Text.
+     .np-kl traegt Name und Text in einem gemeinsamen Kasten; mit
+     display:contents faellt dieser Kasten weg, dann lassen sich Name
+     und Text einzeln einsortieren. Nur in der Sprechclub-Karte — in
+     der Community soll der kleine Preis gerade nicht nach vorn. */
+  #preise .np-card.np-feat .np-kopf{display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;gap:0!important}
+  #preise .np-card.np-feat .np-kl{display:contents!important}
+  #preise .np-card.np-feat .np-name{order:1}
+  #preise .np-card.np-feat .np-kr{order:2;width:100%}
+  #preise .np-card.np-feat .np-kr .np-hero{margin-top:8px!important}
+  #preise .np-card.np-feat .np-tag{order:3;margin-top:16px!important}
+
   #preise .np-grid>.np-card:first-child{padding:20px 18px 18px!important;
     border:1px solid var(--pz-linie)!important;background:#FBFDFD!important;
     box-shadow:none!important}
