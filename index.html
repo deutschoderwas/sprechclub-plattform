@@ -1050,7 +1050,7 @@ ist. Komm so oft du willst: kein Guthaben, keine Obergrenze, keiner zählt mit.<
 <p data-i18n="nb32">Regelmäßig neue Folgen für A2, B1, B2 und C1. Ganz entspannt hören — ohne Werbung, mit Text zum Mitlesen.</p>
 <a class="btn btn-kauf btn-lg rpod-btn" href="podcast.html" onclick="return podcastTor(event)" data-i18n="nb33">Folgen anhören</a>
 </div>
-<div class="rpod-liste reveal">
+<div class="rpod-liste reveal" id="podListe">
 <div class="rpod-kopf" data-i18n="nb34">Zuletzt erschienen</div>
 <a class="rfolge" href="podcast.html" onclick="return podcastTor(event)"><span class="rniv rniv-a2">A2</span><span class="rtit">Wenn das Handy still bleibt</span><span class="rmin">4:07</span></a>
 <a class="rfolge" href="podcast.html" onclick="return podcastTor(event)"><span class="rniv rniv-b1">B1</span><span class="rtit">Jeder Fünfte — und keiner redet darüber</span><span class="rmin">5:06</span></a>
@@ -2897,6 +2897,89 @@ html.dow-an .an-rein.da{opacity:1;transform:none}
   /* Sicherheitsnetz: Was nach 2,5 Sekunden noch unsichtbar ist,
      wird sichtbar. Lieber ohne Bewegung als unsichtbar. */
   setTimeout(function(){ ziele.forEach(zeigen); }, 2500);
+})();
+</script>
+<!-- ============================================================
+     PODCAST — die Liste haelt sich selbst aktuell
+
+     Julia, 20.10.: "hier auch immer wieder aktualisieren mit
+     thumbnail".
+
+     Die vier Folgen standen fest im HTML. Ein Abschnitt, der
+     "Regelmaessig neue Folgen" verspricht und dann die von
+     vorletztem Monat zeigt, arbeitet gegen sich selbst.
+
+     Jetzt kommen sie aus /api/podcast-neu — je die neueste Folge
+     fuer A2, B1, B2 und C1, mit dem Bild aus dem Verzeichnis.
+
+     Wichtig: die vier festen Zeilen bleiben im HTML stehen. Geht
+     der Abruf schief, sieht man weiter vier echte Folgen statt
+     einer leeren Karte. Ersetzt wird erst, wenn wirklich etwas
+     zurueckkommt.
+     ============================================================ -->
+<style id="podStil">
+.rpod-liste .rfolge{position:relative}
+/* Das Verschieben nach rechts kam von einer aelteren Regel. Mit
+   Bild in der Zeile ruckelt das; ein kurzer Schub wirkt ruhiger. */
+.rpod-liste .rfolge:hover{padding-left:14px;transform:translateX(4px)}
+.rpod-liste .rfolge{transition:background .18s ease, transform .22s cubic-bezier(.22,.8,.26,1)}
+.rbild{position:relative;flex:0 0 auto;width:46px;height:46px;border-radius:12px;
+  overflow:hidden;background:#EFF6F5;display:block}
+.rbild img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .4s cubic-bezier(.22,.8,.26,1)}
+.rfolge:hover .rbild img{transform:scale(1.09)}
+.rbild .rplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(6,49,56,.44);opacity:0;transition:opacity .22s ease}
+.rbild .rplay::before{content:'';border-style:solid;border-width:6px 0 6px 10px;
+  border-color:transparent transparent transparent #fff;margin-left:3px}
+.rfolge:hover .rbild .rplay{opacity:1}
+.rfolge.podneu{animation:podRein .5s cubic-bezier(.22,.8,.26,1) both}
+@keyframes podRein{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .rfolge.podneu{animation:none}
+  .rpod-liste .rfolge:hover{transform:none}
+  .rfolge:hover .rbild img{transform:none}
+}
+@media(max-width:560px){.rbild{width:40px;height:40px;border-radius:10px}}
+</style>
+<script>
+(function(){
+  var liste = document.getElementById('podListe');
+  if (!liste) return;
+  if (!/^https?:$/.test(location.protocol)) return;
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  var NIV = { 'A2':'rniv-a2', 'B1':'rniv-b1', 'B2':'rniv-b2', 'C1':'rniv-c1' };
+
+  fetch('/api/podcast-neu').then(function(r){ return r.json(); }).then(function(d){
+    var f = (d && d.folgen) || [];
+    if (f.length < 2) return;   /* lieber die festen Zeilen behalten */
+
+    var alt = liste.querySelectorAll('.rfolge');
+    for (var i = 0; i < alt.length; i++) alt[i].parentNode.removeChild(alt[i]);
+
+    f.forEach(function(e, i){
+      var a = document.createElement('a');
+      a.className = 'rfolge podneu';
+      a.href = 'podcast.html';
+      a.style.animationDelay = (i * 0.07) + 's';
+      a.onclick = function(ev){ return (window.podcastTor ? podcastTor(ev) : true); };
+      a.innerHTML =
+        (e.bild
+          ? '<span class="rbild"><img src="' + esc(e.bild) + '" alt="" width="46" height="46" '
+            + 'loading="lazy" decoding="async" onerror="this.style.display=\'none\'">'
+            + '<i class="rplay"></i></span>'
+          : '')
+        + '<span class="rniv ' + (NIV[e.level] || 'rniv-a2') + '">' + esc(e.level) + '</span>'
+        + '<span class="rtit">' + esc(e.titel) + '</span>'
+        + '<span class="rmin">' + esc(e.dauer) + '</span>';
+      liste.appendChild(a);
+    });
+  }).catch(function(){ /* feste Zeilen bleiben stehen */ });
 })();
 </script>
 </body>
