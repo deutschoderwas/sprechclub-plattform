@@ -2262,7 +2262,7 @@ if(!rm&&matchMedia('(hover:hover) and (pointer:fine)').matches){r.addEventListen
 r.addEventListener('mouseenter',function(){r.classList.add('paused')});r.addEventListener('mouseleave',function(){r.classList.remove('paused');r.style.transform=''})}
 r.addEventListener('animationend',function(e){if(e.target===r)r.style.animation='none'});document.addEventListener('visibilitychange',function(){document.hidden?clearInterval(t):run()});run()})();</script>
 <style id="sparStil">
-#preise .np-grid.np-breit .np-card.np-feat{border:2.5px solid #DD0000!important;background:#FFFCF5!important;box-shadow:4px 5px 0 rgba(221,0,0,.12)!important}
+#preise .np-grid.np-breit .np-card.np-feat{border:2.5px solid #DD0000!important;background:#fff!important;box-shadow:4px 5px 0 rgba(221,0,0,.12)!important}
 #preise .np-card.np-feat .np-name{color:#161616!important}
 #preise .np-card.np-feat .np-badge.np-badge-spar{background:#DD0000!important;color:#fff!important}
 #preise .np-card.np-feat .np-num{font-size:clamp(44px,5.2vw,54px)!important;color:#161616!important;letter-spacing:-1.5px}
@@ -2436,21 +2436,75 @@ html.rmk .nend .mark{transition:background-size .65s cubic-bezier(.2,.7,.3,1),co
    ist (order), damit die bestehenden :first-child-Regeln für die
    Community weiter greifen.
    ============================================================ */
-@media(min-width:921px){
-  #preise .np-grid{grid-template-columns:1.75fr .85fr;max-width:940px;align-items:start;gap:26px}
-  #preise .np-card.np-feat{order:-1;transform:none}   /* Groesse macht jetzt die Spalte */
-  #preise .np-card.np-feat{padding:34px 32px 28px}
-  #preise .np-card.np-feat .np-name{font-size:26px}
-  #preise .np-card.np-feat .np-num{font-size:52px}
-  #preise .np-card.np-feat .np-hero{margin-top:22px}
+/* ---------- heller Grund wie oben auf der Startseite ---------- */
+#preise.warm-sec{background:linear-gradient(180deg,#FFFFFF 0%,#F3FAF9 100%)!important;
+  border-top:1px solid #E3EBEA!important;border-bottom:1px solid #E3EBEA!important}
+#preise{--pz-linie:#E3EBEA;--pz-linie-h:#EDF4F3;
+  --pz-tinte:#1A1A1A;--pz-tinte2:#4C5A5C;--pz-tinte3:#7A8A8C}
 
-  /* Die Community wird zur Nebenkarte: kleiner, ruhiger, ohne Drang. */
-  #preise .np-grid > .np-card:first-child{padding:20px 18px 18px}
-  #preise .np-grid > .np-card:first-child .np-name{font-size:16px}
-  #preise .np-grid > .np-card:first-child .np-num{font-size:26px}
-  #preise .np-grid > .np-card:first-child .np-tag,
-  #preise .np-grid > .np-card:first-child .np-total{font-size:12.5px}
-  #preise .np-grid > .np-card:first-child .btn{font-size:14px;padding:11px 14px}
+/* Das Faehnchen der Community bleibt ueberall das leisere. */
+#preise .np-grid>.np-card:first-child .np-badge{font-size:10px!important;
+  padding:4px 10px!important;left:16px!important;background:var(--pz-tinte3)!important}
+
+@media(min-width:921px){
+  /* .np-breit setzt 1fr 1fr mit !important — darum hier auch !important,
+     sonst bleiben beide Karten gleich breit. */
+  #preise .np-grid.np-breit{grid-template-columns:1.9fr .88fr!important;
+    max-width:1010px!important;gap:22px!important;align-items:start!important}
+  #preise .np-card.np-feat{order:-1}
+
+  /* ---- Sprechclub: gross. Zwei Spalten Vorteile, damit die Breite traegt. ---- */
+  #preise .np-grid>.np-card.np-feat{padding:36px 34px 30px!important}
+  #preise .np-card.np-feat .np-name{font-size:2rem!important}
+  #preise .np-card.np-feat .np-tag{font-size:1.04rem}
+  #preise .np-card.np-feat .np-hero{margin-top:18px}
+  #preise .np-card.np-feat .np-num{font-size:4rem!important}
+  #preise .np-card.np-feat .np-liste.np-zwei-sp{grid-template-columns:1fr 1fr!important;
+    gap:12px 24px!important}
+  #preise .np-card.np-feat .np-liste li{font-size:1.01rem!important}
+  #preise .np-card.np-feat .np-btn{font-size:17.5px!important;padding:17px 24px!important}
+  #preise .np-grid>.np-card.np-feat:hover{transform:translateY(-3px)!important}
+
+  /* ---- Community: Nebenkarte. Leise, klein, ohne Drang. ---- */
+  #preise .np-grid>.np-card:first-child{padding:18px 17px 16px!important;
+    border:1px solid var(--pz-linie)!important;background:#FBFDFD!important;
+    box-shadow:none!important}
+  #preise .np-grid>.np-card:first-child:hover{transform:none!important;
+    box-shadow:0 6px 18px rgba(16,40,38,.07)!important}
+  #preise .np-grid>.np-card:first-child .np-name{font-size:1.02rem!important}
+  #preise .np-grid>.np-card:first-child .np-tag{font-size:.82rem;margin-top:2px}
+  #preise .np-grid>.np-card:first-child .np-hero{margin-top:10px!important}
+  #preise .np-grid>.np-card:first-child .np-num{font-size:1.55rem!important}
+  #preise .np-grid>.np-card:first-child .np-unit{font-size:.78rem}
+  #preise .np-grid>.np-card:first-child .np-total{font-size:.74rem;margin-top:3px}
+  #preise .np-grid>.np-card:first-child .np-trenn{margin-top:12px}
+  #preise .np-grid>.np-card:first-child .np-liste.np-zwei-sp{gap:7px!important;
+    margin-top:11px!important}
+  #preise .np-grid>.np-card:first-child .np-liste li{font-size:.82rem!important;
+    padding-left:14px!important;line-height:1.45}
+  #preise .np-grid>.np-card:first-child .np-liste li::before{width:5px!important;
+    height:5px!important;top:.5em;background:var(--pz-tinte3)!important}
+  #preise .np-grid>.np-card:first-child .np-kaufen{margin-top:13px!important}
+  #preise .np-grid>.np-card:first-child .np-btn{font-size:13.5px!important;
+    padding:10px 14px!important;background:#fff!important;color:var(--pz-tinte)!important;
+    border:1.5px solid var(--pz-linie)!important;box-shadow:none!important}
+  #preise .np-grid>.np-card:first-child .np-btn:hover{background:#F2F8F7!important;
+    border-color:var(--pz-tuerkis)!important;color:var(--pz-tuerkis)!important}
+  #preise .np-grid>.np-card:first-child .np-fein{font-size:.72rem}
+}
+
+/* Am Handy stehen die Karten untereinander, Sprechclub oben (order:-1).
+   Die Community bleibt auch hier die ruhigere der beiden. */
+@media(max-width:920px){
+  #preise .np-grid>.np-card:first-child{padding:20px 18px 18px!important;
+    border:1px solid var(--pz-linie)!important;background:#FBFDFD!important;
+    box-shadow:none!important}
+  #preise .np-grid>.np-card:first-child .np-name{font-size:1.15rem!important}
+  #preise .np-grid>.np-card:first-child .np-num{font-size:1.8rem!important}
+  #preise .np-grid>.np-card:first-child .np-liste li{font-size:.88rem!important}
+  #preise .np-grid>.np-card:first-child .np-btn{background:#fff!important;
+    color:var(--pz-tinte)!important;border:1.5px solid var(--pz-linie)!important;
+    box-shadow:none!important}
 }
 
 /* ---------- moderner, im Ton der Startseite ---------- */
