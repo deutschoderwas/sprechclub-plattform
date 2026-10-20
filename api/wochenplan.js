@@ -85,6 +85,21 @@ export default async function handler(req, res) {
   const tage = Math.min(28, Math.max(1, Number(req.query && req.query.tage) || 7));
   const bis = new Date(Date.now() + tage * 24 * 60 * 60 * 1000).toISOString();
 
+  /* ?ab=2026-11-01 — fruehestens ab diesem Tag.
+     Die Startseite zeigt den Plan ab dem Clubstart, nicht die
+     Uebergangswoche davor: dort laufen noch die alten Zeiten
+     (17:30, 18:30, 19:30), und an mehreren Tagen steht noch kein
+     Thema. Wer heute liest, soll die Woche sehen, in die er
+     einsteigt. Liegt das Datum in der Vergangenheit, zaehlt
+     einfach wieder "ab jetzt" — die Angabe erledigt sich von
+     selbst, sobald der 1. November vorbei ist. */
+  let von = new Date().toISOString();
+  const abRoh = req.query && req.query.ab;
+  if (abRoh && /^\d{4}-\d{2}-\d{2}$/.test(String(abRoh))) {
+    const ab = new Date(String(abRoh) + 'T00:00:00+01:00').toISOString();
+    if (ab > von) von = ab;
+  }
+
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY,
     { auth: { persistSession: false } });
 
@@ -92,7 +107,7 @@ export default async function handler(req, res) {
     const { data: stunden, error } = await sb
       .from('classes')
       .select('id, starts_at, title, level, capacity, topic, teacher_id')
-      .gt('starts_at', new Date().toISOString())
+      .gt('starts_at', von)
       .lt('starts_at', bis)
       .eq('is_cancelled', false)
       .order('starts_at', { ascending: true })
