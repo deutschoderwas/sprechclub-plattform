@@ -831,6 +831,152 @@ document.documentElement.setAttribute('data-ph',
 </ul>
 </div>
 </section>
+<!-- ============ WOCHENPLAN (oeffentlich) ============
+     Julia, 20.10.: "Bitte den Wochenplan allgemein auch auf die
+     Webseite veroeffentlichen als Beispiel, was euch im Sprechclub
+     erwartet, neue Themen woechentlich."
+
+     Die Termine kommen live aus /api/wochenplan, nicht von Hand
+     abgeschrieben. Genau daran ist der Plan auf der Sprechclub-Seite
+     gescheitert: Dort standen Uhrzeiten, die es ab November gar
+     nicht mehr gibt. Was hier steht, steht so auch im Kalender der
+     Mitglieder.
+
+     Oeffentlich sind nur Tag, Uhrzeit, Art, Thema und der Vorname
+     der Lehrkraft. Keine Raumlinks, kein Material, keine
+     Teilnehmer — das bleibt hinter der Anmeldung.
+
+     Kommt nichts zurueck, bleibt der Abschnitt unsichtbar. Eine
+     leere Tabelle kostet mehr Vertrauen, als der Plan einbringt.
+     ============================================================ -->
+<style id="wpStil">
+.rwp{background:linear-gradient(180deg,#FFFFFF 0%,#F3FAF9 100%);
+     border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:74px 0}
+.rwp .wp-kopf{text-align:center;max-width:720px;margin:0 auto 30px}
+.rwp .wp-kopf h2{font-family:'Space Grotesk',Georgia,serif;font-weight:700;
+  font-size:clamp(1.8rem,4.2vw,2.5rem);line-height:1.14;margin:10px 0 0;text-wrap:balance}
+.rwp .wp-sub{color:var(--soft);margin:12px auto 0;max-width:56ch;font-size:1.02rem;line-height:1.6}
+.wp-gitter{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:start}
+.wp-tag{min-width:0}
+.wp-tag h3{font-family:'Space Grotesk',Georgia,serif;font-size:15px;font-weight:700;
+  margin:0 0 10px;color:var(--ink);line-height:1.2}
+.wp-tag h3 small{display:block;font-weight:500;font-size:12.5px;color:var(--soft);margin-top:3px}
+.wp-karte{background:#fff;border:1px solid var(--line);border-left:4px solid var(--wpf);
+  border-radius:14px;padding:12px 12px 12px 13px;margin-bottom:10px;
+  box-shadow:0 2px 8px rgba(16,40,38,.05);animation:wpRein .45s ease both}
+.wp-zeit{font-family:'Space Grotesk',Georgia,serif;font-weight:700;font-size:18px;
+  color:var(--wpf);line-height:1}
+.wp-art{display:inline-block;margin-top:8px;font-size:9.5px;font-weight:800;letter-spacing:.02em;
+  text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--wpb);color:var(--wpf)}
+@media(max-width:900px){.wp-art{font-size:10.5px;letter-spacing:.05em;padding:3px 9px}}
+.wp-thema{font-weight:700;font-size:14.5px;line-height:1.32;margin-top:8px;color:var(--ink);
+  overflow-wrap:anywhere}
+.wp-wer{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:12.5px;color:var(--soft)}
+.wp-punkt{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.wp-fuss{text-align:center;color:var(--soft);font-size:14.5px;margin:24px auto 0;max-width:62ch;line-height:1.6}
+.wp-cta{text-align:center;margin-top:18px}
+.wp-wisch{display:none}
+@keyframes wpRein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.wp-karte{animation:none}}
+/* Am Handy passen keine sieben Spalten nebeneinander. Statt alles
+   untereinander zu stapeln (dann scrollt man ewig) wischt man hier
+   seitlich durch die Tage — der Plan bleibt als Woche lesbar. */
+@media(max-width:900px){
+  .rwp{padding:56px 0}
+  .wp-gitter{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;
+    padding:0 16px 10px;margin:0 -16px;-webkit-overflow-scrolling:touch}
+  .wp-tag{flex:0 0 76%;max-width:290px;scroll-snap-align:start}
+  .wp-wisch{display:block;text-align:center;color:var(--soft);font-size:12.5px;margin-top:6px}
+}
+</style>
+<section class="rwp" id="wochenplan" style="display:none">
+<div class="wrap">
+<div class="wp-kopf">
+<span class="reyebrow rgold">Jede Woche neue Themen</span>
+<h2>Das erwartet dich im Sprechclub</h2>
+<p class="wp-sub">Jede Stunde dauert 60 Minuten, alle Zeiten sind deutsche Zeit (Berlin).
+Du suchst dir aus, wann du kommst — und wie oft.</p>
+</div>
+<div class="wp-gitter" id="wpGitter"></div>
+<span class="wp-wisch">← zum Wischen →</span>
+<p class="wp-fuss" id="wpFuss"></p>
+<div class="wp-cta"><button type="button" class="btn btn-kauf" onclick="zuPreisen()">👑 Platz im Sprechclub sichern</button></div>
+</div>
+</section>
+<script>
+/* Wochenplan holen und zeichnen. Schlaegt irgendetwas fehl, bleibt
+   der Abschnitt aus — lieber gar kein Plan als ein falscher. */
+(function(){
+  var abschnitt = document.getElementById('wochenplan');
+  var gitter    = document.getElementById('wpGitter');
+  if (!abschnitt || !gitter) return;
+  if (!/^https?:$/.test(location.protocol)) return;
+
+  var FARBEN = {
+    grammatik:  { f:'#2F7D32', b:'#E7F3E8' },
+    wortschatz: { f:'#9A6B10', b:'#FCF1DA' },
+    standard:   { f:'#1C6E86', b:'#E6F2F6' }
+  };
+  function farbe(art){
+    var a = String(art || '').toLowerCase();
+    if (a.indexOf('grammatik')   >= 0) return FARBEN.grammatik;
+    if (a.indexOf('wortschatz')  >= 0) return FARBEN.wortschatz;
+    return FARBEN.standard;
+  }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  fetch('/api/wochenplan?tage=14').then(function(r){ return r.json(); }).then(function(d){
+    var alle = (d && d.termine) || [];
+
+    /* Nur beschriftete Stunden. Eintraege ohne Thema sind im
+       Kalender noch Platzhalter ("Teil 1") — die sagen jemandem
+       von aussen nichts. Testtermine ebenfalls raus. */
+    var t = alle.filter(function(e){
+      return e && e.thema && !/^test/i.test(String(e.titel || ''));
+    });
+    if (t.length < 3) return;
+
+    var folge = [], nach = {};
+    t.forEach(function(e){
+      var s = e.tag + '|' + e.datum;
+      if (!nach[s]) { nach[s] = []; folge.push(s); }
+      nach[s].push(e);
+    });
+    folge = folge.slice(0, 7);
+
+    gitter.innerHTML = folge.map(function(s, i){
+      var teile = s.split('|');
+      return '<div class="wp-tag"><h3>' + esc(teile[0])
+        + '<small>' + esc(teile[1]) + '</small></h3>'
+        + nach[s].map(function(e, j){
+            var c = farbe(e.art);
+            return '<div class="wp-karte" style="--wpf:' + c.f + ';--wpb:' + c.b
+              + ';animation-delay:' + Math.min(0.5, (i * 2 + j) * 0.04) + 's">'
+              + '<div class="wp-zeit">' + esc(e.zeit) + '</div>'
+              + (e.art ? '<span class="wp-art">' + esc(e.art) + '</span>' : '')
+              + '<div class="wp-thema">' + esc(e.thema) + '</div>'
+              + (e.lehrer
+                  ? '<div class="wp-wer"><span class="wp-punkt" style="background:'
+                    + esc(e.lehrer_farbe || '#9AA5A7') + '"></span>' + esc(e.lehrer) + '</div>'
+                  : '')
+              + '</div>';
+          }).join('')
+        + '</div>';
+    }).join('');
+
+    var fuss = document.getElementById('wpFuss');
+    if (fuss) fuss.textContent = 'Das sind die nächsten Tage — jede Woche kommen neue Themen dazu. '
+      + 'Komm so oft du willst: kein Guthaben, keine Obergrenze, keiner zählt mit.';
+
+    abschnitt.style.display = '';
+  }).catch(function(){ /* Abschnitt bleibt aus. */ });
+})();
+</script>
+
 <!-- PODCAST -->
 <section class="rpod" id="podcast">
 <div class="wrap rpod-in">

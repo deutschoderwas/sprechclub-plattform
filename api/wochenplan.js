@@ -48,6 +48,26 @@ function inBerlin(iso) {
   };
 }
 
+/* topic steht in der Datenbank als "Art · Thema", zum Beispiel
+   "Wortschatzfokus · Im Restaurant: Suchbild, Wo?/Wohin? & Tabu".
+   Fuer einen Aushang reicht der Teil vor dem Doppelpunkt — der Rest
+   sind Uebungsnamen, die ohne Zusammenhang nichts sagen.
+   Steht gar keine Art davor, ist der Eintrag noch nicht beschriftet
+   ("Teil 1"); dann gibt es kein Thema zurueck und die Seite laesst
+   die Stunde weg, statt eine leere Karte zu zeigen. */
+function teile(topic, titel) {
+  const roh = String(topic || '').trim();
+  if (!roh) return { art: '', thema: '' };
+  const i = roh.indexOf('\u00b7');
+  if (i < 0) return { art: '', thema: '' };
+  const art = roh.slice(0, i).trim();
+  let thema = roh.slice(i + 1).trim();
+  const d = thema.indexOf(':');
+  if (d > 0) thema = thema.slice(0, d).trim();
+  if (!thema) thema = String(titel || '').trim();
+  return { art, thema };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -71,12 +91,24 @@ export default async function handler(req, res) {
   try {
     const { data: stunden, error } = await sb
       .from('classes')
-      .select('id, starts_at, title, level, capacity')
+      .select('id, starts_at, title, level, capacity, topic, teacher_id')
       .gt('starts_at', new Date().toISOString())
       .lt('starts_at', bis)
+      .eq('is_cancelled', false)
       .order('starts_at', { ascending: true })
       .limit(120);
     if (error) throw error;
+
+    /* Namen der Lehrkraefte. Julia wollte sie auf der Startseite
+       sehen: "Lehrernamen zeigen" — es sind Vornamen, die ohnehin
+       im Team-Abschnitt stehen. Mehr als Name und Farbe geht hier
+       nicht heraus. */
+    const lehrer = {};
+    const lids = [...new Set((stunden || []).map(s => s.teacher_id).filter(Boolean))];
+    if (lids.length) {
+      const { data: tn } = await sb.from('teachers').select('id, name, color').in('id', lids);
+      (tn || []).forEach(t => { lehrer[t.id] = { name: t.name || '', farbe: t.color || '' }; });
+    }
 
     /* Freie Plaetze: eine Abfrage fuer alle Stunden statt eine pro
        Stunde. Bei vierzig Terminen sind das vierzig Abfragen
@@ -92,10 +124,16 @@ export default async function handler(req, res) {
     const termine = (stunden || []).map(s => {
       const z = inBerlin(s.starts_at);
       const plaetze = Number(s.capacity || 0);
+      const g = teile(s.topic, s.title);
+      const l = lehrer[s.teacher_id] || {};
       return {
         tag: TAGE[z.tagNr], tag_kurz: KURZ[z.tagNr], datum: z.datum, zeit: z.zeit,
         titel: s.title || 'Sprechclub',
         niveau: s.level || '',
+        art: g.art,
+        thema: g.thema,
+        lehrer: l.name || '',
+        lehrer_farbe: l.farbe || '',
         plaetze,
         frei: Math.max(0, plaetze - (belegt[s.id] || 0))
       };
