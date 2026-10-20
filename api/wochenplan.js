@@ -9,9 +9,11 @@
 //  und die Teilnehmer nicht sehen.
 //
 //  Dieser Endpunkt gibt deshalb nur das heraus, was auf einem
-//  Aushang stehen duerfte: Tag, Uhrzeit, Titel, Niveau und wie
-//  viele Plaetze noch frei sind. Keine Links, keine Namen, keine
-//  Kennungen.
+//  Aushang stehen duerfte: Tag, Uhrzeit, Rubrik (Freie
+//  Sprechstunde / Grammatikfokus / Wortschatzfokus), Vorname der
+//  Lehrkraft und wie viele Plaetze noch frei sind. Keine Links,
+//  keine Teilnehmer, keine Kennungen — und seit dem 20.10. auch
+//  nicht mehr das genaue Thema der Stunde.
 //
 //  Warum ueberhaupt live statt fest ins HTML geschrieben: Der
 //  Plan aendert sich. Eine Tabelle im HTML stimmt nach drei
@@ -22,7 +24,10 @@
 //  GET /api/wochenplan?tage=14    -> laenger, hoechstens 28
 //
 //  Antwort: { ok, stand, termine: [{ tag, tag_kurz, datum, zeit,
-//             titel, niveau, plaetze, frei }] }
+//             titel, niveau, art, lehrer, lehrer_farbe, plaetze,
+//             frei }] }
+//  art ist leer, wenn die Stunde im Kalender noch nicht
+//  beschriftet ist ("Teil 1"). Die Seite laesst solche Stunden weg.
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
 
@@ -145,8 +150,13 @@ export default async function handler(req, res) {
         tag: TAGE[z.tagNr], tag_kurz: KURZ[z.tagNr], datum: z.datum, zeit: z.zeit,
         titel: s.title || 'Sprechclub',
         niveau: s.level || '',
+        /* Julia, 20.10.: "bitte nicht das genaue Thema sondern nur
+           die Rubriken also Fokus". Das Thema wird deshalb hier
+           gar nicht erst herausgegeben — nicht nur ausgeblendet.
+           Eine oeffentliche Schnittstelle, aus der man den
+           Themenplan trotzdem auslesen kann, waere kein
+           Zurueckhalten, sondern nur ein Vorhang. */
         art: g.art,
-        thema: g.thema,
         lehrer: l.name || '',
         lehrer_farbe: l.farbe || '',
         plaetze,
