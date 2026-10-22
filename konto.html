@@ -1725,7 +1725,7 @@ function renderLocked(v){
        <div class="card" style="text-align:center;border:2px solid #E8B4B4;background:#FFFFFF;max-width:560px;margin:0 auto">
          <div style="font-size:46px;line-height:1;margin-bottom:8px">⌛</div>
          <h3 style="margin-bottom:8px">Dein Zugang ist abgelaufen</h3>
-         <p class="muted" style="margin-bottom:16px">Deine Mitgliedschaft ist zu Ende gelaufen. Mit einem neuen Abo ist sofort alles wieder da — dein Fortschritt ist gespeichert.</p>
+         <p class="muted" style="margin-bottom:16px">Deine Mitgliedschaft ist zu Ende gelaufen. ${ABO_TEXT} Deine Materialien bleiben dir erhalten.</p>
          <a class="btn btn-primary" href="/preise" style="text-decoration:none">Neues Abo abschließen →</a>
        </div>`;
     showLockPopup();
@@ -1760,7 +1760,7 @@ function showLockPopup(){
   if(profile && profile.status === 'gekuendigt'){
     card.innerHTML=`<div class="ico">⌛</div>
       <h3>Dein Zugang ist abgelaufen</h3>
-      <p class="hint">Für die Plattform brauchst du ein neues Abo. Deine Materialien aus der Zeit, in der du dabei warst, bleiben dir erhalten.</p>
+      <p class="hint">${ABO_TEXT} Deine Materialien aus der Zeit, in der du dabei warst, bleiben dir erhalten.</p>
       <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Neues Abo abschließen →</a></div>`;
     document.getElementById('cfmModal').classList.add('open');
     return;
@@ -1812,8 +1812,8 @@ function pruefeZugang(){
       '<div class="ico">⌛</div>' +
       '<h3>Dein Zugang ist abgelaufen</h3>' +
       '<p class="hint">Deine Mitgliedschaft ist ' + (bisTxt ? 'am <b>'+esc(bisTxt)+'</b> ' : '') +
-      'ausgelaufen. Für die Plattform brauchst du ein neues Abo. ' +
-      'Dein Fortschritt bleibt gespeichert — mit einer neuen Mitgliedschaft ist sofort alles wieder da.</p>' +
+      'ausgelaufen. ' + ABO_TEXT + ' ' +
+      'Deine Materialien aus deiner Zeit bei uns bleiben dir erhalten, und mit einem neuen Abo ist sofort alles wieder da.</p>' +
       '<div class="acts">' +
         '<button class="btn btn-ghost" onclick="closeCfm()">Später</button>' +
         '<a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Neues Abo abschließen →</a>' +
@@ -2086,6 +2086,20 @@ function ohneAbo(){
 }
 var ABO_TITEL = 'Dafür brauchst du ein Abo';
 var ABO_TEXT  = 'Um im Sprechclub mitzumachen und die Lernplattform zu benutzen, brauchst du ein aktives Abo.';
+
+/* Julia, 22.10.2026: "das bekommen alle, deren Zugang abgelaufen ist
+   oder wenn keine Zahlung zustande gekommen ist oder sonstiges (nur
+   wenn AKTIVES Abo und Premium Mitglied, dann läuft alles einwandfrei,
+   oder die alten Schüler)."
+
+   Darum steht derselbe Satz jetzt auch im Fenster fuer 'gekuendigt'.
+   Was dort zusaetzlich stehen bleibt: dass die Materialien aus der
+   bezahlten Zeit erhalten bleiben. Das ist Julias Regel vom 12. und
+   18.10. und faellt nicht weg, nur weil der Hinweis vereinheitlicht
+   wird — es ist eine Zusatzinformation, kein anderer Grund.
+
+   Wer ein aktives Abo hat oder als alter Schueler noch Guthaben,
+   sieht dieses Fenster ohnehin nie: isActive() ist dann true. */
 
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
