@@ -41,7 +41,21 @@ const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
 // betrifft nur das Verschieben ins Archiv, damit niemand ueber Nacht
 // aus Julias Listen verschwindet, nur weil gerade die Stunden alle sind.
 const ARCHIV_NACH_TAGEN = 14;
-const LAEUFT = ['active', 'trialing', 'past_due'];   // past_due: Zahlung hakt, Abo lebt noch
+/* Julia, 22.10.2026: "bei denen Die Zahlung storniert wurde und nicht
+   durchgegangen ist bitte diesen Leuten KEINEN Zugang geben ... Sobald
+   eine Zahlung nicht durchgeht oder etwas da ist dann bitte nicht
+   durchgehen."
+
+   Darum steht 'past_due' hier nicht mehr drin. Vorher galt: Zahlung
+   hakt, Abo lebt noch, Zugang bleibt. Ab jetzt zaehlt nur, ob das Geld
+   da ist. Faellt eine Abbuchung aus, setzt Stripe das Abo auf
+   'past_due', der naechtliche Lauf sperrt am naechsten Morgen.
+
+   Das ist bewusst streng. Geht die Zahlung beim Wiederholungsversuch
+   doch noch durch, steht das Abo wieder auf 'active' und derselbe Lauf
+   macht den Zugang von allein wieder auf (siehe bericht.entsperrt) —
+   niemand muss von Hand nachhelfen. */
+const LAEUFT = ['active', 'trialing'];
 
 /* Ein Abo, das nie zustande kam. Stripe legt die Subscription beim
    Kaufversuch an und verwirft sie nach 23 Stunden, wenn die erste
@@ -67,8 +81,16 @@ function periodeEnde(s) {
    bezahlte Monate weggenommen, ueber Nacht und ohne Nachfrage.
    Derselbe Gedanke steckt schon im Webhook (nochGueltig in
    api/stripe-webhook.js) — hier hat er gefehlt. */
+/* Zustaende, in denen das Geld NICHT angekommen ist. Sie duerfen auch
+   ueber die Restlaufzeit keinen Zugang mehr tragen: Bei 'past_due' und
+   'unpaid' laeuft die bezahlte Periode zwar formal noch, bezahlt wurde
+   sie aber nicht. Ohne diese Liste waere die Aenderung oben wirkungslos
+   — ein past_due-Abo waere einfach von LAEUFT nach "klingt aus"
+   gerutscht und haette den Zugang behalten. */
+const NICHT_BEZAHLT = ['incomplete', 'incomplete_expired', 'past_due', 'unpaid'];
+
 function nochBezahlt(s) {
-  if (!s || NIE_ZUSTANDE.includes(s.status)) return false;
+  if (!s || NICHT_BEZAHLT.includes(s.status)) return false;
   const ende = periodeEnde(s);
   return !!ende && ende > Date.now();
 }
