@@ -16,9 +16,15 @@
 //      Datenbank oder Profil mit echtem Zugang. Das ist der schnelle,
 //      normale Weg.
 //   2. Sagt die Nein, wird STRIPE SELBST gefragt: Gibt es zu dieser
-//      Adresse einen Kunden mit laufendem Abo (active, trialing oder
-//      past_due)? Dann darf er rein — Stripe ist die Wahrheit, nicht
-//      unsere Kopie.
+//      Adresse einen Kunden mit laufendem Abo (active oder trialing)?
+//      Dann darf er rein — Stripe ist die Wahrheit, nicht unsere Kopie.
+//
+//      'past_due' zaehlt seit dem 22.10.2026 NICHT mehr dazu. Julia:
+//      "Sobald eine Zahlung nicht durchgeht ... bitte nicht
+//      durchgehen." Sonst waere hier die Hintertuer zu der Regel
+//      geblieben, die in pruefe-mitgliedschaften gerade zugemacht
+//      wurde: Wer registriert ist, bekommt ueber die nachgetragene
+//      Kaufzeile eine Stufe — und damit Zugang.
 //   3. Findet Stripe eines, wird die fehlende Zeile in
 //      pending_purchases NACHGETRAGEN. Damit heilt sich die Kopie
 //      selbst und der Rest der Plattform sieht den Kauf auch.
@@ -37,7 +43,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-const LAEUFT = ['active', 'trialing', 'past_due'];
+const LAEUFT = ['active', 'trialing'];
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
