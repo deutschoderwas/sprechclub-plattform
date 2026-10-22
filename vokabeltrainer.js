@@ -9,6 +9,18 @@
   'use strict';
 
   var POOL = [], BEKANNT = {}, STAND = {};
+  /* Julia, 20.10.2026: "Bei den Woertern moechte ich eh, dass wir das
+     irgendwie so organisieren, dass sie auch mal nach Thema und Niveau
+     sortiert werden und man diese dann immer wieder mit Beispielsaetzen
+     ueben kann (auch fachspezifische)."
+
+     Bisher entschied allein die Tagesrunde, was drankommt. Wer gezielt
+     "Beim Arzt" oder "Bewerbung" ueben wollte, konnte das nicht. Diese
+     beiden Merker tragen die Auswahl zwischen zwei Zeichnungen der
+     Startseite; THEMEN haelt die zuletzt gezeigte Liste, damit der
+     Klick nur eine Nummer uebergeben muss und kein Thema mit
+     Anfuehrungszeichen durch ein onclick-Attribut gefaedelt wird. */
+  var NIVEAU_FILTER = '', THEMEN = [];
   var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false, SERIE = {};
   var ZIEL_VORGABE = [10, 15, 25, 40];
 
@@ -714,6 +726,33 @@
       .slice(0, 8);
   }
 
+  /* Alle Woerter nach Thema buendeln, auf Wunsch nur ein Niveau.
+     Jedes Wort im Pool hat einen Beispielsatz (nachgezaehlt: 1043 von
+     1043), darum ist jedes Thema auch wirklich uebbar. */
+  function themenNach(niveau) {
+    var g = {};
+    alleWoerter().forEach(function (v) {
+      if (niveau && v.niveau !== niveau) return;
+      var nm = v.thema || v.kurs || 'Ohne Thema';
+      if (!g[nm]) g[nm] = { nm: nm, n: 0, sitzt: 0, neu: 0, woerter: [] };
+      g[nm].n++;
+      g[nm].woerter.push(v);
+      if (stufeVon(v) >= 4) g[nm].sitzt++;
+      if (!BEKANNT[v.id]) g[nm].neu++;
+    });
+    return Object.keys(g).map(function (k) { return g[k]; })
+      .sort(function (a, b) { return a.nm.localeCompare(b.nm, 'de'); });
+  }
+
+  /* Welche Niveaus kommen ueberhaupt vor, und mit wie vielen Woertern?
+     Nur die zeigen wir als Knopf — eine leere Stufe waere eine
+     Sackgasse. */
+  function niveauZaehlung() {
+    var z = {};
+    alleWoerter().forEach(function (v) { var n = v.niveau || ''; if (n) z[n] = (z[n] || 0) + 1; });
+    return STUFEN.filter(function (n) { return z[n]; }).map(function (n) { return { n: n, anzahl: z[n] }; });
+  }
+
   function vpZahl(n, wort1, wort2) {
     return n + ' ' + (n === 1 ? wort1 : wort2);
   }
@@ -780,6 +819,39 @@
         + '<div><b>' + vpZahl(aerger.length, 'Wort ärgert dich', 'Wörter ärgern dich') + '</b>'
         + '<span>Die hast du öfter falsch als richtig gehabt. Zehn Minuten, dann sind sie weg.</span></div>'
         + '<button class="vp-b" type="button" onclick="__vtAerger()">Die üben</button></div></section>';
+    }
+
+    /* ---------- 3b  Nach Thema und Niveau ---------- */
+    THEMEN = themenNach(NIVEAU_FILTER);
+    var niv = niveauZaehlung();
+    if (THEMEN.length) {
+      h += '<section class="vp-teil"><header><h3>Üb, was du willst</h3>'
+        + '<p>Such dir ein Thema aus — zu jedem Wort gibt es einen Beispielsatz. '
+        + 'Du kannst ein Thema so oft wiederholen, wie du magst.</p></header>';
+
+      h += '<div class="vp-niv">'
+        + '<button type="button" class="vp-nchip' + (NIVEAU_FILTER ? '' : ' an') + '" onclick="__vtNiveau(\'\')">Alle</button>';
+      niv.forEach(function (x) {
+        h += '<button type="button" class="vp-nchip' + (NIVEAU_FILTER === x.n ? ' an' : '') + '"'
+          + ' onclick="__vtNiveau(\'' + x.n + '\')">' + x.n + ' <i>' + x.anzahl + '</i></button>';
+      });
+      h += '</div>';
+
+      h += '<div class="vp-themen">';
+      THEMEN.forEach(function (t, i) {
+        var pr = t.n ? Math.round((t.sitzt / t.n) * 100) : 0;
+        h += '<button class="vp-thema" type="button" onclick="__vtThema(' + i + ')">'
+          + '<b>' + esc(t.nm) + '</b>'
+          + '<span class="z">' + vpZahl(t.n, 'Wort', 'Wörter')
+          + (t.sitzt ? ' · ' + t.sitzt + ' sitzen' : (t.neu === t.n ? ' · noch ganz neu' : '')) + '</span>'
+          + '<span class="bal"><i style="width:' + pr + '%"></i></span>'
+          + '</button>';
+      });
+      h += '</div>';
+      if (NIVEAU_FILTER) {
+        h += '<p class="vp-fuss">' + vpZahl(THEMEN.length, 'Thema', 'Themen') + ' auf ' + esc(NIVEAU_FILTER) + '.</p>';
+      }
+      h += '</section>';
     }
 
     /* ---------- 4  Woher die Woerter kommen ---------- */
@@ -1247,6 +1319,32 @@
     if (!RUNDE.length) return;
     zeichne();
   };
+  /* Niveau umstellen: nur merken und die Startseite neu zeichnen.
+     Nichts wird geladen, die Woerter liegen laengst im Speicher. */
+  window.__vtNiveau = function (n) {
+    NIVEAU_FILTER = n || '';
+    try { window.renderVokabeln(); } catch (e) {}
+    try {
+      var el = document.querySelector('#v-vokabeln .vp-niv');
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: 'center' });
+    } catch (e) {}
+  };
+
+  /* Ein Thema ueben. Die Nummer zeigt in die Liste, die beim letzten
+     Zeichnen entstanden ist — so muss kein Thementitel durch ein
+     onclick-Attribut, und Namen mit Anfuehrungszeichen oder Apostroph
+     koennen nichts kaputt machen. */
+  window.__vtThema = function (i) {
+    var t = THEMEN[i];
+    if (!t || !t.woerter.length) return;
+    /* Was noch nicht sitzt, zuerst — sonst uebt man beim zweiten
+       Durchgang wieder die Woerter, die man laengst kann. */
+    var w = t.woerter.slice().sort(function (a, b) { return stufeVon(a) - stufeVon(b); });
+    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    if (!RUNDE.length) return;
+    zeichne();
+  };
+
   window.__vtAerger = function () {
     var w = alleWoerter().filter(aergertMich);
     if (!w.length) return;
