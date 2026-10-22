@@ -1732,6 +1732,19 @@ function renderLocked(v){
     return;
   }
 
+  if(ohneAbo()){
+    document.getElementById('v-'+v).innerHTML=
+      `<div class="pagehead"><h1>${label} 🔒</h1></div>
+       <div class="card" style="text-align:center;border:2px solid #f5b942;background:#FFFFFF;max-width:560px;margin:0 auto">
+         <div style="font-size:46px;line-height:1;margin-bottom:8px">🔒</div>
+         <h3 style="margin-bottom:8px">${ABO_TITEL}</h3>
+         <p class="muted" style="margin-bottom:16px">${ABO_TEXT}</p>
+         <a class="btn btn-primary" href="/preise" style="text-decoration:none">Abo abschließen →</a>
+       </div>`;
+    showLockPopup();
+    return;
+  }
+
   document.getElementById('v-'+v).innerHTML=
     `<div class="pagehead"><h1>${label} 🔒</h1></div>
      <div class="card" style="text-align:center;border:2px solid #f5b942;background:#FFFFFF;max-width:560px;margin:0 auto">
@@ -1749,6 +1762,14 @@ function showLockPopup(){
       <h3>Dein Zugang ist abgelaufen</h3>
       <p class="hint">Für die Plattform brauchst du ein neues Abo. Deine Materialien aus der Zeit, in der du dabei warst, bleiben dir erhalten.</p>
       <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Neues Abo abschließen →</a></div>`;
+    document.getElementById('cfmModal').classList.add('open');
+    return;
+  }
+  if(ohneAbo()){
+    card.innerHTML=`<div class="ico">🔒</div>
+      <h3>${ABO_TITEL}</h3>
+      <p class="hint">${ABO_TEXT}</p>
+      <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Schließen</button><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Abo abschließen →</a></div>`;
     document.getElementById('cfmModal').classList.add('open');
     return;
   }
@@ -1802,6 +1823,23 @@ function pruefeZugang(){
        seine Materialien (ist_altschueler in der Datenbank), und die
        soll er auch erreichen koennen. Die Plattform selbst ist ohnehin
        zu — darum kuemmert sich has_full_access, nicht dieses Fenster. */
+    return;
+  }
+
+  /* Ohne Abo: Fenster zeigen, aber NICHT nach zwoelf Sekunden auf die
+     Preisseite werfen. Julia will, dass diese Leute angemeldet bleiben
+     und den Hinweis immer wieder sehen, statt aus der Plattform zu
+     fliegen. */
+  if (ohneAbo()) {
+    card.innerHTML =
+      '<div class="ico">🔒</div>' +
+      '<h3>' + ABO_TITEL + '</h3>' +
+      '<p class="hint">' + ABO_TEXT + ' Dein Konto bleibt bestehen — sobald du ein Abo abschließt, ist alles sofort wieder da.</p>' +
+      '<div class="acts">' +
+        '<button class="btn btn-ghost" onclick="closeCfm()">Schließen</button>' +
+        '<a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Abo abschließen →</a>' +
+      '</div>';
+    modal.classList.add('open');
     return;
   }
 
@@ -2025,6 +2063,30 @@ function istAltschueler(){
   }
   catch(e){ return false; }
 }
+/* Wer gar kein Abo (mehr) hat — zurueckerstattet, angefochten, vom
+   naechtlichen Lauf ins Archiv geschoben.
+
+   Julia, 22.10.2026 ueber Anna: "du kannst auch bei Anna den Zugang
+   lassen, aber sie sieht nichts mehr, da taucht immer wieder ein Pop
+   up auf, dass sie ein Abo braucht, um im Sprechclub mitzumachen und
+   die Lernplattform zu benutzen."
+
+   Das ist etwas anderes als die beiden Faelle, die es hier schon gab:
+     'gekuendigt'  — hat bezahlt, Zeit ist abgelaufen, Materialien
+                     bleiben ihm ("Dein Zugang ist abgelaufen")
+     Altschueler   — Guthaben alle ("Such dir ein Stundenpaket aus")
+   Diese Gruppe hier hat nichts davon: kein Guthaben, kein Abo, keine
+   Materialien. Sie soll sich anmelden koennen und ueberall denselben
+   Hinweis sehen. */
+function ohneAbo(){
+  try {
+    var st = (profile && profile.status) || '';
+    return ['archiv','beendet','inaktiv','geloescht'].indexOf(st) >= 0;
+  } catch(e){ return false; }
+}
+var ABO_TITEL = 'Dafür brauchst du ein Abo';
+var ABO_TEXT  = 'Um im Sprechclub mitzumachen und die Lernplattform zu benutzen, brauchst du ein aktives Abo.';
+
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
     <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
