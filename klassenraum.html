@@ -138,6 +138,15 @@
   .am-reihe textarea{flex:1; resize:none; border:1px solid var(--rahmen); border-radius:12px; padding:8px 10px; font-family:'Inter'; font-size:.9rem; line-height:1.4;}
   .am-send{border:none; background:var(--tuerkis); color:var(--auf-tuerkis); border-radius:12px; padding:9px 14px; font-family:'Inter'; font-weight:800; font-size:.85rem; cursor:pointer;}
   .am-send:disabled{opacity:.5; cursor:default;}
+  .am-img{flex:0 0 auto; width:44px; height:44px; border-radius:999px; border:1px solid var(--rahmen); background:#fff; font-size:1.05rem; cursor:pointer; line-height:1;}
+  .am-img:hover{border-color:var(--tuerkis);}
+  /* Bild-Vorschau ueber dem Eingabefeld, bevor es abgeschickt wird. */
+  .am-bildchip{display:inline-flex; align-items:center; gap:8px; background:var(--creme); border:1px solid var(--rahmen); border-radius:12px; padding:5px 6px 5px 5px; margin:0 0 7px; max-width:100%;}
+  .am-bildchip img{width:40px; height:40px; border-radius:8px; object-fit:cover; flex:0 0 auto;}
+  .am-bildchip button{border:none; background:transparent; cursor:pointer; font-size:1rem; line-height:1; color:var(--weich); padding:2px 6px;}
+  .am-bildchip button:hover{color:var(--anthrazit);}
+  /* Bild in der eigenen Nachrichtenblase. */
+  .am-m .am-bubble-bild{display:block; max-width:160px; width:100%; border-radius:10px; margin-top:6px;}
   .sh-close{position:absolute; top:8px; right:8px; width:34px; height:34px; border:none; border-radius:999px; background:transparent; cursor:pointer; font-size:1.1rem; color:var(--weich); line-height:1; z-index:2;}
   .sh-close:hover{background:#F3F4F6; color:var(--anthrazit);}
   .am-panel h4{padding-right:34px;}
@@ -1650,10 +1659,16 @@
     if(!ziel.childNodes.length) ziel.textContent=text;
     return ziel;
   }
-  function amandaMsg(wer,text,still){
+  function amandaMsg(wer,text,still,bild){
     const log=document.getElementById('am-log'); if(!log) return;
     const d=document.createElement('div'); d.className='am-m '+(wer==='bot'?'bot':'du');
     if(wer==='bot') amandaMalen(d,text); else d.textContent=text;
+    /* Hat der Schueler ein Foto mitgeschickt, zeigen wir es klein in
+       seiner eigenen Blase — so sieht er, was Amanda analysiert. */
+    if(wer!=='bot' && bild){
+      const img=document.createElement('img'); img.className='am-bubble-bild'; img.src=bild; img.alt='Angehängtes Foto';
+      d.appendChild(img);
+    }
     log.appendChild(d); log.scrollTop=log.scrollHeight;
     /* Was Amanda im Unterricht erklaert, soll der Schueler spaeter
        nachlesen koennen — es landet in seiner Mitschrift. */
@@ -1667,11 +1682,55 @@
     feld.value=anfang; feld.focus();
     try{ feld.setSelectionRange(feld.value.length, feld.value.length); }catch(e){}
   }
+  /* ---- Ein Foto an Amanda schicken ----
+     Der Schueler fotografiert z. B. seine Aufgabe oder einen
+     Screenshot. Wir verkleinern das Bild im Browser (lange Seite
+     max. 1280px) und schicken es als JPEG-Daten-URL mit. */
+  function amandaBildGewaehlt(input){
+    const datei = input && input.files && input.files[0];
+    input.value=''; // damit dasselbe Bild erneut gewaehlt werden kann
+    if(!datei) return;
+    const leser=new FileReader();
+    leser.onload=function(){
+      const bild=new Image();
+      bild.onload=function(){
+        let b=bild.width, h=bild.height;
+        const max=1280;
+        if(b>max || h>max){ const f=max/Math.max(b,h); b=Math.round(b*f); h=Math.round(h*f); }
+        const c=document.createElement('canvas'); c.width=b; c.height=h;
+        c.getContext('2d').drawImage(bild,0,0,b,h);
+        try{ window._amBild=c.toDataURL('image/jpeg',0.8); }
+        catch(e){ window._amBild=String(leser.result||''); }
+        amandaBildChip();
+      };
+      bild.onerror=function(){ amandaMsg('bot','Dieses Bild konnte ich leider nicht laden. Versuch es bitte mit einem anderen Foto.'); };
+      bild.src=String(leser.result||'');
+    };
+    leser.onerror=function(){ amandaMsg('bot','Das Bild kam nicht an. Versuch es bitte noch einmal.'); };
+    leser.readAsDataURL(datei);
+  }
+  function amandaBildChip(){
+    const chip=document.getElementById('am-bildchip'); if(!chip) return;
+    if(window._amBild){
+      chip.innerHTML='';
+      const img=document.createElement('img'); img.src=window._amBild; img.alt='Angehängtes Foto';
+      const x=document.createElement('button'); x.type='button'; x.setAttribute('aria-label','Foto entfernen'); x.title='Foto entfernen'; x.innerHTML='&#10005;';
+      x.onclick=amandaBildWeg;
+      chip.appendChild(img); chip.appendChild(x);
+      chip.style.display='inline-flex';
+    } else { chip.innerHTML=''; chip.style.display='none'; }
+  }
+  function amandaBildWeg(){ window._amBild=null; amandaBildChip(); }
+
   async function amandaSend(){
     const feld=document.getElementById('am-in'); if(!feld) return;
-    const frage=(feld.value||'').trim(); if(!frage || window._amLaeuft) return;
+    const frage=(feld.value||'').trim();
+    const bild=window._amBild||null;
+    if((!frage && !bild) || window._amLaeuft) return;
     feld.value='';
-    amandaMsg('du',frage); window._amVerlauf.push({wer:'du',text:frage});
+    amandaMsg('du',frage,false,bild); window._amVerlauf.push({wer:'du',text:frage});
+    // Bild aus dem Eingabebereich loeschen (Verlauf bleibt reiner Text)
+    window._amBild=null; amandaBildChip();
     window._amLaeuft=true;
     const btn=document.getElementById('am-send'); if(btn) btn.disabled=true;
     const log=document.getElementById('am-log');
@@ -1680,7 +1739,7 @@
     const kopf={'Content-Type':'application/json'};
     try{ const { data:{ session } }=await sb.auth.getSession(); if(session) kopf.Authorization='Bearer '+session.access_token; }catch(e){}
     try{
-      const r=await fetch('/api/support-chat',{ method:'POST', headers:kopf, body: JSON.stringify({ verlauf: window._amVerlauf.slice(-12), seite:'unterricht' }) });
+      const r=await fetch('/api/support-chat',{ method:'POST', headers:kopf, body: JSON.stringify({ verlauf: window._amVerlauf.slice(-12), seite:'unterricht', bild: bild || undefined }) });
       const j=await r.json(); warte.remove();
       const text=(j && j.text) || 'Da ist gerade etwas schiefgegangen. Frag mich bitte gleich noch einmal.';
       amandaMsg('bot',text); window._amVerlauf.push({wer:'bot',text});
@@ -2275,8 +2334,11 @@
     <button type="button" onclick="amandaVorlage('Sag mir ein Beispiel mit ')">Beispiel bitte</button>
   </div>
   <div id="am-log" class="am-log"></div>
+  <div id="am-bildchip" class="am-bildchip" style="display:none;"></div>
   <div class="am-reihe">
     <button id="am-mik" class="am-mik" type="button" onclick="amandaMikro()" aria-label="Frage sprechen" title="Frage sprechen">&#127908;</button>
+    <button id="am-img" class="am-img" type="button" onclick="document.getElementById('am-file').click()" aria-label="Foto anhängen" title="Foto anhängen">&#128247;</button>
+    <input type="file" accept="image/*" id="am-file" style="display:none" onchange="amandaBildGewaehlt(this)">
     <textarea id="am-in" rows="2" placeholder="Tippen — oder auf das Mikrofon und sprechen …"></textarea>
     <button id="am-send" class="am-send" onclick="amandaSend()">Fragen</button>
   </div>

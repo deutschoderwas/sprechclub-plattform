@@ -25,7 +25,8 @@ WAS DU BEANTWORTEST — ohne Ausnahme:
 
 WIE DU ANTWORTEST:
 - RECHTSCHREIBUNG, und das ist keine Kleinigkeit: Du schreibst IMMER echte Umlaute und ß — ä, ö, ü, Ä, Ö, Ü, ß. Niemals „ae", „oe", „ue" oder „ss" als Ersatz. Achtung: diese Anweisung hier ist aus technischen Gründen stellenweise ohne Umlaute geschrieben („fuer", „Schueler"). Das ist KEIN Vorbild für dich. Deine Schüler lernen Deutsch an deiner Schreibweise — wer bei dir „Woerter" liest, schreibt es morgen selbst so.
-- Auf DEUTSCH. Immer. Auch wenn die Frage auf Englisch, Russisch, Tuerkisch oder sonst einer Sprache kommt, antwortest du auf Deutsch — einfach genug, dass man es versteht. Nur wenn jemand ausdruecklich um eine Uebersetzung bittet oder sichtbar gar nichts versteht, setzt du EIN Wort in Klammern in seiner Sprache dazu.
+- Deutsch zuerst — das ist der Lernweg: Du erklaerst IMMER zuerst auf einfachem Deutsch. ABER du verstehst jede Sprache. Wenn jemand in seiner Muttersprache schreibt, ausdruecklich darum bittet oder dein Deutsch sichtbar nicht versteht, darfst du ihm in GENAU dieser Sprache helfen — kurz erklaeren oder uebersetzen — und gehst danach wieder ins Deutsche zurueck. Die Sprache erkennst du aus dem, was er schreibt. Ziel: Er versteht es sicher UND lernt trotzdem Deutsch.
+- Bilder: Wenn ein Bild mitgeschickt wird, schau es dir genau an und hilf konkret damit — lies den Text darauf, korrigiere eine Uebung, erklaere ein Foto, ein Schild oder einen Screenshot. Beziehe dich auf das, was wirklich zu sehen ist, und erfinde nichts dazu.
 - Einfaches, klares Deutsch, etwa B1. Kurze Hauptsaetze. Keine Schachtelsaetze, keine seltenen Woerter ohne Erklaerung. Diese Menschen lernen gerade Deutsch — dein Deutsch ist ihr Vorbild.
 - Kurz: zwei bis fuenf Saetze. Wer mehr will, fragt nach.
 - Warm und direkt, so wie Julia schreibt. Kein Werbeton, keine Floskeln, kein „Gerne helfe ich Ihnen weiter".
@@ -171,6 +172,37 @@ function zeichenGeradeZiehen(t) {
     .trim();
 }
 
+// Nachrichten für Anthropic bauen. Ist ein Bild dabei (data-URL), wird es
+// als Vision-Block an die LETZTE Nutzer-Nachricht gehängt (Claude kann sehen).
+function baueNachrichten(verlauf, bild) {
+  const msgs = verlauf
+    .map(z => ({ role: z.wer === 'bot' ? 'assistant' : 'user', content: String(z.text || '').slice(0, 900) }))
+    .filter(m => m.content);
+  if (bild && typeof bild === 'string') {
+    const m = bild.match(/^data:(image\/(?:png|jpe?g|gif|webp));base64,([A-Za-z0-9+/=]+)$/);
+    if (m && m[2].length < 8000000) {
+      for (let i = msgs.length - 1; i >= 0; i--) {
+        if (msgs[i].role === 'user') {
+          const t = msgs[i].content || 'Bitte schau dir das Bild an und hilf mir.';
+          msgs[i].content = [
+            { type: 'image', source: { type: 'base64', media_type: m[1], data: m[2] } },
+            { type: 'text', text: t },
+          ];
+          break;
+        }
+      }
+      // Kein Text-Turn vorhanden? Dann einen eigenen Bild-Turn anlegen.
+      if (!msgs.some(x => Array.isArray(x.content))) {
+        msgs.push({ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: m[1], data: m[2] } },
+          { type: 'text', text: 'Bitte schau dir das Bild an und hilf mir.' },
+        ] });
+      }
+    }
+  }
+  return msgs;
+}
+
 async function mailAnJulia({ frage, antwort, name, email, seite, angemeldet }) {
   if (!process.env.BREVO_API_KEY) return false;
   const an = process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com';
@@ -215,7 +247,7 @@ export default async function handler(req, res) {
   if (!Array.isArray(verlauf)) verlauf = [];
   verlauf = verlauf.slice(-12);
   const frage = [...verlauf].reverse().find(z => z.wer !== 'bot')?.text || '';
-  if (!String(frage).trim()) return res.status(400).json({ error: 'keine_frage' });
+  if (!String(frage).trim() && !(req.body && req.body.bild)) return res.status(400).json({ error: 'keine_frage' });
 
   // Angemeldete Person erkennen — dann kennen wir Name, Adresse und Guthaben
   let angemeldet = false, guthaben = null;
@@ -252,9 +284,7 @@ export default async function handler(req, res) {
         model: MODELL,
         max_tokens: imUnterricht ? 320 : (zusammenfassen ? 700 : 900),
         system: system(kontext, imUnterricht, zusammenfassen),
-        messages: verlauf
-          .map(z => ({ role: z.wer === 'bot' ? 'assistant' : 'user', content: String(z.text || '').slice(0, 900) }))
-          .filter(m => m.content),
+        messages: baueNachrichten(verlauf, req.body && req.body.bild),
       }),
     });
     if (r.ok) {

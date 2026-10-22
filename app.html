@@ -534,6 +534,13 @@ mark.m{background:linear-gradient(180deg,transparent 52%,#FFE59A 52%);color:inhe
 .ch-rund:active{transform:scale(.92)}
 .ch-mi{background:var(--pink-soft);color:var(--pink);border:1px solid #F5CFE0}
 .ch-mi.laeuft{background:var(--pink);color:#fff;animation:pul 1.15s ease-in-out infinite}
+.ch-bi{background:var(--pink-soft);color:var(--pink);border:1px solid #F5CFE0}
+.am-bildchip{position:relative;display:inline-block;margin-bottom:9px}
+.am-bildchip img{max-width:120px;max-height:120px;border-radius:12px;border:1px solid var(--line);display:block}
+.am-bildchip .weg{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;
+  background:var(--ink);color:#fff;border:none;font-size:13px;line-height:22px;text-align:center;
+  cursor:pointer;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+img.bl-bild{max-width:160px;border-radius:12px;display:block;margin-top:6px}
 .ch-ab{background:var(--tq);color:#fff;box-shadow:0 3px 0 var(--tq-d)}
 .ch-ab:active{transform:translateY(2px);box-shadow:0 1px 0 var(--tq-d)}
 .ch-ab[disabled]{background:#E4E0D7;color:#A9A399;box-shadow:0 3px 0 #D3CEC4}
@@ -1678,11 +1685,15 @@ function amandaFrei(thema){
     +'<button class="ch-runter" id="chRunter" onclick="chatNachUnten()">↓</button></div>'
 
     +'<div class="ch-fuss"><div id="amVor" class="chips" style="margin-bottom:9px;display:none"></div>'
+    +'<div id="amBildChip" class="am-bildchip" style="display:none"></div>'
     +'<div class="ch-ein">'
     +'<button class="ch-rund ch-mi" id="amMi" onclick="amandaMikro(this)">🎤</button>'
+    +'<button class="ch-rund ch-bi" id="amBi" onclick="amandaBildWaehlen()" title="Foto anhängen">📷</button>'
+    +'<input type="file" id="amBildEin" accept="image/*" style="display:none" onchange="amandaBildGewaehlt(this)">'
     +'<textarea id="amEin" rows="1" placeholder="Schreib oder sprich auf Deutsch …"></textarea>'
     +'<button class="ch-rund ch-ab" id="amAb" disabled onclick="amandaSenden()">➤</button></div></div>';
 
+  AM_BILD = null;
   window.chatEingabe($('amEin'), $('amAb'), amandaSenden);
   amandaAntwortHolen();
 }
@@ -1749,10 +1760,61 @@ function amandaVorschlagNehmen(t){
   e.value = t; e.dispatchEvent(new Event('input')); e.focus();
 }
 
+/* ---------- Bild anhängen (für Amandas Bildanalyse) ---------- */
+var AM_BILD = null;   // data-URL des gewählten Bildes, oder null
+
+function amandaBildWaehlen(){ var i = $('amBildEin'); if(i) i.click(); }
+
+function amandaBildGewaehlt(input){
+  var f = input && input.files && input.files[0];
+  input.value = '';                       // erlaubt, dasselbe Bild erneut zu wählen
+  if(!f) return;
+  if(!/^image\//.test(f.type)){ toast('Bitte ein Bild auswählen.'); return; }
+  var leser = new FileReader();
+  leser.onload = function(){
+    var bild = new Image();
+    bild.onload = function(){
+      var max = 1280, w = bild.width, h = bild.height;
+      if(w > h){ if(w > max){ h = Math.round(h * max / w); w = max; } }
+      else     { if(h > max){ w = Math.round(w * max / h); h = max; } }
+      try{
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(bild, 0, 0, w, h);
+        AM_BILD = c.toDataURL('image/jpeg', 0.8);
+      }catch(err){
+        AM_BILD = leser.result;            // Notfall: Original behalten
+      }
+      amandaBildChipZeigen();
+    };
+    bild.onerror = function(){ toast('Das Bild konnte nicht gelesen werden.'); };
+    bild.src = leser.result;
+  };
+  leser.onerror = function(){ toast('Das Bild konnte nicht gelesen werden.'); };
+  leser.readAsDataURL(f);
+}
+
+function amandaBildChipZeigen(){
+  var chip = $('amBildChip'); if(!chip) return;
+  if(!AM_BILD){ chip.style.display='none'; chip.innerHTML=''; return; }
+  chip.style.display = 'inline-block';
+  chip.innerHTML = '<img src="'+AM_BILD+'" alt="Anhang">'
+    + '<button class="weg" onclick="amandaBildWeg()" title="Entfernen">✕</button>';
+  var ab = $('amAb'); if(ab) ab.disabled = false;   // Senden auch nur mit Bild erlauben
+}
+
+function amandaBildWeg(){
+  AM_BILD = null;
+  amandaBildChipZeigen();
+  var e = $('amEin'), ab = $('amAb');
+  if(ab) ab.disabled = !(e && (e.value||'').trim());
+}
+
 async function amandaSenden(){
   var e = $('amEin'); if(!e) return;
   var t = (e.value||'').trim();
-  if(!t) return;
+  var bild = AM_BILD;
+  if(!t && !bild) return;
 
   /* Das Feld wird sofort leer — auch dann, wenn Amanda gerade noch
      antwortet. Vorher stand hier eine Sperre: wer zweimal kurz
@@ -1762,8 +1824,15 @@ async function amandaSenden(){
   window.chatLeeren(e, $('amAb'));
   amandaVorschlaege([]);
 
+  /* Das Bild wandert in die Warteschlange für die nächste Anfrage;
+     im Verlauf steht nur der Text (keine data-URL mitschleppen). */
+  AM.bildPending = bild || null;
+  AM_BILD = null;
+  amandaBildChipZeigen();
+
   AM.verlauf.push({ wer:'du', text:t });
-  window.chatAnhaengen(window.chatBlase({ wer:'ich', text:t, zeit:window.chatZeit() }), true);
+  var eigenHtml = esc(t) + (bild ? '<img class="bl-bild" src="'+bild+'" alt="Anhang">' : '');
+  window.chatAnhaengen(window.chatBlase({ wer:'ich', html:eigenHtml, zeit:window.chatZeit() }), true);
   punkte(6,'app');
 
   if(AM.laeuft){ AM.wartet = true; return; }
@@ -1786,12 +1855,16 @@ async function amandaAntwortHolen(){
   if(stopp) wache = setTimeout(function(){ try{ stopp.abort(); }catch(err){} }, 45000);
   function wacheAus(){ if(wache){ clearTimeout(wache); wache = null; } }
 
+  /* Das wartende Bild wird genau einmal mitgeschickt und dann geleert. */
+  var bildMit = AM.bildPending || undefined;
+  AM.bildPending = null;
+
   try{
     var sess = await sb.auth.getSession();
     var r = await fetch((window.__API__||'') + '/api/amanda-chat', {
       method:'POST',
       headers:{ 'content-type':'application/json', authorization:'Bearer '+sess.data.session.access_token },
-      body: JSON.stringify({ verlauf:AM.verlauf, level:S.stufe, l1:L1, thema:AM.thema }),
+      body: JSON.stringify({ verlauf:AM.verlauf, level:S.stufe, l1:L1, thema:AM.thema, bild:bildMit }),
       signal: stopp ? stopp.signal : undefined
     });
     wacheAus();

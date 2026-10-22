@@ -15,6 +15,7 @@
 
   var verlauf = [], offen = false, laeuft = false, adresse = '';
   var rec = null, brocken = [], nimmtAuf = false;
+  var bild = '';   /* angehängtes Foto als data-URL, wird mitgeschickt */
 
   function amandaBild(pose) {
     return window.AmandaBild ? window.AmandaBild(pose) : ('amanda/amanda-' + (pose || 'hallo') + '.webp');
@@ -76,10 +77,18 @@
     '.hc-fuss textarea:focus,.hc-fuss input:focus{outline:none;border-color:var(--tuerkis-dunkel,#10627A);',
     'box-shadow:0 0 0 3px var(--tuerkis-hauch,#E6F8FC)}',
     '.hc-reihe{display:flex;gap:7px;align-items:flex-end}',
-    '.hc-mik,.hc-send{border:0;border-radius:50px;cursor:pointer;font-family:inherit;font-weight:700;flex:none}',
-    '.hc-mik{width:42px;height:42px;border:1.5px solid var(--linie,#E7ECEE);background:var(--creme,#F6F9FA);',
+    '.hc-mik,.hc-foto,.hc-send{border:0;border-radius:50px;cursor:pointer;font-family:inherit;font-weight:700;flex:none}',
+    '.hc-mik,.hc-foto{width:42px;height:42px;border:1.5px solid var(--linie,#E7ECEE);background:var(--creme,#F6F9FA);',
     'font-size:18px;line-height:1;padding:0;color:var(--tinte,#14181B)}',
-    '.hc-mik:hover{border-color:var(--tuerkis-dunkel,#10627A)}',
+    '.hc-mik:hover,.hc-foto:hover{border-color:var(--tuerkis-dunkel,#10627A)}',
+    /* Vorschau-Chip über dem Eingabefeld */
+    '.hc-chip{position:relative;display:inline-block;margin-bottom:7px}',
+    '.hc-chip img{max-width:84px;max-height:84px;border-radius:12px;border:1.5px solid var(--linie,#E7ECEE);display:block}',
+    '.hc-chip button{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;',
+    'border:1.5px solid var(--tinte,#14181B);background:var(--karte,#FFFFFF);color:var(--tinte,#14181B);',
+    'font-size:14px;line-height:1;cursor:pointer;padding:0;box-shadow:1px 1px 0 rgba(32,33,31,.22)}',
+    /* Foto in der eigenen Nachrichtenblase */
+    '.hc-m img.hc-anhang{max-width:150px;border-radius:12px;display:block;margin-top:6px}',
     '.hc-mik.an{background:var(--rot,#D42A21);border-color:var(--rot,#D42A21);color:#fff;animation:hcPuls 1s infinite}',
     '@keyframes hcPuls{50%{opacity:.55}}',
     '.hc-send{background:var(--rot,#D42A21);color:#fff;padding:10px 17px;font-size:14.5px}',
@@ -120,8 +129,11 @@
     '<div class="hc-lauf" id="hcLauf"></div>' +
     '<div class="hc-fuss">' +
     '<input id="hcMail" type="email" placeholder="Deine E-Mail — damit Julia antworten kann" autocomplete="email">' +
+    '<div id="hcChip"></div>' +
+    '<input id="hcDatei" type="file" accept="image/*" style="display:none">' +
     '<div class="hc-reihe">' +
     '<button class="hc-mik" id="hcMik" type="button" aria-label="Sprachnachricht aufnehmen">&#127908;</button>' +
+    '<button class="hc-foto" id="hcFoto" type="button" aria-label="Foto anhängen">&#128247;</button>' +
     '<textarea id="hcText" rows="2" placeholder="Deine Frage — tippen oder sprechen …"></textarea>' +
     '<button class="hc-send" id="hcSend" type="button">Senden</button></div>' +
     '<div class="hc-hin">Amanda antwortet sofort. Wenn nur Julia helfen kann, gibt Amanda es an sie weiter.</div></div>';
@@ -136,6 +148,8 @@
     box.querySelector('.hc-zu').onclick = umschalten;
     box.querySelector('#hcSend').onclick = senden;
     box.querySelector('#hcMik').onclick = mikro;
+    box.querySelector('#hcFoto').onclick = function () { box.querySelector('#hcDatei').click(); };
+    box.querySelector('#hcDatei').addEventListener('change', fotoGewaehlt);
     box.querySelector('#hcText').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); senden(); }
     });
@@ -349,12 +363,63 @@
     });
   }
 
+  /* ---------- Foto anhängen ---------- */
+  function fotoGewaehlt(e) {
+    var datei = e.target && e.target.files && e.target.files[0];
+    e.target.value = '';           /* dieselbe Datei erneut wählbar machen */
+    if (!datei || !/^image\//.test(datei.type)) return;
+    var leser = new FileReader();
+    leser.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1280, w = img.width, h = img.height;
+        if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+        else if (h >= w && h > max) { w = Math.round(w * max / h); h = max; }
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        try { bild = c.toDataURL('image/jpeg', 0.8); }
+        catch (err) { bild = String(leser.result || ''); }
+        chipZeigen();
+      };
+      img.onerror = function () {
+        bild = String(leser.result || '');
+        if (bild) chipZeigen();
+      };
+      img.src = String(leser.result || '');
+    };
+    leser.readAsDataURL(datei);
+  }
+
+  function chipZeigen() {
+    var ziel = box.querySelector('#hcChip');
+    if (!ziel) return;
+    ziel.innerHTML = '';
+    if (!bild) return;
+    var wrap = el('div', 'hc-chip');
+    var v = new Image();
+    v.src = bild; v.alt = '';
+    var x = el('button', '');
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Foto entfernen');
+    x.innerHTML = '&times;';
+    x.onclick = fotoWeg;
+    wrap.appendChild(v); wrap.appendChild(x);
+    ziel.appendChild(wrap);
+  }
+
+  function fotoWeg() {
+    bild = '';
+    var ziel = box.querySelector('#hcChip');
+    if (ziel) ziel.innerHTML = '';
+  }
+
   /* ---------- Senden ---------- */
   async function senden() {
     if (laeuft) return;
     var feldT = box.querySelector('#hcText'), feldM = box.querySelector('#hcMail');
     var frage = (feldT.value || '').trim();
-    if (!frage) return;
+    if (!frage && !bild) return;
     if (feldM && feldM.style.display !== 'none') {
       adresse = (feldM.value || '').trim();
       if (!adresse || adresse.indexOf('@') < 1) {
@@ -367,7 +432,16 @@
       }
     }
     feldT.value = '';
-    zeigen('du', frage);
+    var fotoJetzt = bild;          /* das aktuell angehängte Foto mitnehmen */
+    fotoWeg();                     /* Chip + Vorschau sofort leeren */
+
+    var meine = zeigen('du', frage || '📷 Foto');
+    if (fotoJetzt && meine) {
+      var vorschau = new Image();
+      vorschau.className = 'hc-anhang';
+      vorschau.src = fotoJetzt; vorschau.alt = '';
+      meine.appendChild(vorschau);
+    }
 
     laeuft = true;
     box.querySelector('#hcSend').disabled = true;
@@ -386,7 +460,8 @@
         body: JSON.stringify({
           verlauf: verlauf.slice(-12),
           email: adresse || undefined,
-          seite: location.pathname
+          seite: location.pathname,
+          bild: fotoJetzt || undefined
         })
       });
       var j = await r.json();

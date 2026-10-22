@@ -52,7 +52,8 @@ SO SPRICHST DU:
 - Du passt dich dem Niveau an: A1 und A2 sehr einfache Hauptsätze, B1 und B2 normale Alltagssprache, C1 darf anspruchsvoll sein. Deine Erklärung bleibt immer eine Stufe einfacher als das, was du erklärst.
 - Schwere Wörter erklärst du gleich in Klammern mit einem einfachen Wort dahinter.
 - Du lobst echt, nicht floskelhaft. Kein „Super!" ohne Grund.
-- Du sprichst NUR Deutsch${l1 && SPRACHEN[l1] ? `. Nur wenn die Person gar nicht weiterweiß und ausdrücklich fragt, darfst du ein einzelnes Wort auf ${SPRACHEN[l1]} in Klammern dazusetzen` : ''}.
+- Deutsch zuerst — das ist der Lernweg: Du erklärst immer zuerst auf einfachem Deutsch. Aber du verstehst jede Sprache. Wenn die Person in ihrer Muttersprache schreibt${l1 && SPRACHEN[l1] ? ` (${SPRACHEN[l1]})` : ''}, ausdrücklich darum bittet oder dein Deutsch sichtbar nicht versteht, darfst du ihr in genau dieser Sprache kurz helfen oder übersetzen — und gehst danach wieder ins Deutsche zurück. Ziel: Sie versteht es sicher und lernt trotzdem Deutsch.
+- Bilder: Wenn ein Bild mitgeschickt wird, schau es dir genau an und hilf konkret damit — lies den Text darauf, korrigiere eine Übung, erklär ein Foto oder ein Schild. Beziehe dich auf das, was wirklich zu sehen ist.
 - Keine Emojis am Satzanfang, höchstens eines am Ende und auch das selten.
 - Du erwähnst nie, dass du eine KI bist. Du redest einfach.
 
@@ -109,7 +110,7 @@ export default async function handler(req, res) {
     return res.status(402).json({ error: 'kein_zugang' });
   }
 
-  let { verlauf, level, l1, thema } = req.body || {};
+  let { verlauf, level, l1, thema, bild } = req.body || {};
   if (!Array.isArray(verlauf)) verlauf = [];
   // Nur die letzten 16 Beitraege — das reicht fuer den Faden und bleibt guenstig
   verlauf = verlauf.slice(-16);
@@ -129,6 +130,23 @@ export default async function handler(req, res) {
     messages.push({ role: 'user', content: '(Die Person hat das Gespraech gerade geoeffnet und noch nichts gesagt. Begruesse sie kurz und stelle eine leichte Einstiegsfrage.)' });
   }
   if (messages[0].role === 'assistant') messages.shift();
+
+  // Bild (data-URL) an die letzte Nutzer-Nachricht hängen → Claude kann es sehen.
+  if (bild && typeof bild === 'string') {
+    const mm = bild.match(/^data:(image\/(?:png|jpe?g|gif|webp));base64,([A-Za-z0-9+/=]+)$/);
+    if (mm && mm[2].length < 8000000) {
+      for (let i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === 'user') {
+          const t = typeof messages[i].content === 'string' ? messages[i].content : '';
+          messages[i].content = [
+            { type: 'image', source: { type: 'base64', media_type: mm[1], data: mm[2] } },
+            { type: 'text', text: t || 'Bitte schau dir das Bild an und hilf mir.' },
+          ];
+          break;
+        }
+      }
+    }
+  }
 
   let out;
   try {
