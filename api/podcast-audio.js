@@ -204,6 +204,18 @@ ${text}
 }
 
 // ---------------------------------------------------------------
+//  Ist die Stimme tot — oder nur diese eine Folge kaputt?
+//  401 = Schlüssel ungültig oder Abo weg (subscription_required),
+//  402 = nicht bezahlt, 403/429 mit quota = Kontingent aufgebraucht.
+//  Der Vermerk wird auch von generate-podcast.js gelesen.
+// ---------------------------------------------------------------
+const STIMME_TOT = 'STIMME_TOT';
+function stimmeTot(status, text) {
+  if (status === 401 || status === 402) return true;
+  return (status === 403 || status === 429) && /quota|subscription|credits|payment/i.test(text || '');
+}
+
+// ---------------------------------------------------------------
 //  Handler
 // ---------------------------------------------------------------
 export default async function handler(req, res) {
@@ -281,7 +293,21 @@ export default async function handler(req, res) {
         })
       }
     );
-    if (!r.ok) throw new Error('ElevenLabs ' + r.status + ' ' + (await r.text()).slice(0, 300));
+    if (!r.ok) {
+      const antwort = (await r.text()).slice(0, 300);
+      /* Stimme tot: Abo abgelaufen, Kontingent leer oder Schlüssel ungültig.
+         Dann liegt es NICHT an dieser Folge. Bis 23.10.2026 wurde sie trotzdem
+         auf „fehler“ gesetzt — so ist jeden Tag eine fertige Folge verbrannt,
+         die nach dem Bezahlen nie nachgeholt worden wäre. Jetzt bleibt sie
+         Entwurf, bekommt nur den Vermerk STIMME_TOT, und der Generator sieht
+         daran, dass er keine neuen Entwürfe stapeln soll. */
+      if (stimmeTot(r.status, antwort)) {
+        await db.from('podcasts').update({ fehler: STIMME_TOT + ': ElevenLabs ' + r.status + ' ' + antwort.slice(0, 200) }).eq('id', folge.id);
+        return res.status(503).json({ error: 'stimme_tot', status: r.status, id: folge.id,
+          info: 'ElevenLabs nimmt keine Aufträge an. Folge bleibt Entwurf und wird nachgeholt, sobald die Stimme wieder geht.' });
+      }
+      throw new Error('ElevenLabs ' + r.status + ' ' + antwort);
+    }
     const j = await r.json();
 
     const mp3 = Buffer.from(j.audio_base64, 'base64');

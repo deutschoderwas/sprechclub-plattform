@@ -319,6 +319,26 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, info: 'Tag ist schon vollständig', datum });
     }
 
+    /* Ist die Stimme tot? podcast-audio.js vermerkt das am Entwurf
+       (fehler beginnt mit STIMME_TOT). Dann keine neuen Skripte schreiben:
+       Ab dem 10.10.2026 sind so 29 Entwürfe ohne Ton liegen geblieben, und
+       jeder kostet Claude-Guthaben. Stattdessen nur den Audioschritt
+       anstoßen — geht die Stimme wieder, holt er die Folgen der letzten
+       drei Tage nach. Sind die vermerkten Entwürfe älter als drei Tage,
+       wird wieder ein Tag geschrieben; das ist zugleich der Testlauf, ob
+       die Stimme zurück ist. Erzwingen geht mit ?trotzdem=1. */
+    const fenster = new Date(Date.now() - 3 * 86400000).toISOString().slice(0, 10);
+    const { data: tot } = await db.from('podcasts').select('id,fehler')
+      .eq('status', 'entwurf').like('fehler', 'STIMME_TOT%').gte('datum', fenster).limit(1);
+    if (tot && tot.length && !(req.query && req.query.trotzdem)) {
+      await weiterAnAudio();
+      return res.status(503).json({
+        ok: false, error: 'stimme_tot', datum,
+        info: 'Die Vorlesestimme nimmt keine Aufträge an. Keine neuen Entwürfe geschrieben.',
+        letzter_befund: String(tot[0].fehler || '').slice(0, 200)
+      });
+    }
+
     const { thema, quelle, hintergrund } = await themaFinden(db, datum, quelleHeute);
 
     // Alle fehlenden Niveaus gleichzeitig schreiben lassen — das spart Zeit.
