@@ -40,7 +40,12 @@ const BUCKET  = 'podcast';
 const STIMME  = process.env.ELEVEN_VOICE_JULIA || process.env.ELEVEN_VOICE_F || '';
 const MODELL  = process.env.ELEVEN_MODEL || 'eleven_multilingual_v2';
 
-const TEMPO = { A2: 0.88, B1: 0.94, B2: 1.0, C1: 1.0 };
+/* Es muss klar Julia sein. Deshalb wird ihre Stimme NICHT mehr gebremst:
+   Jede Abweichung von 1.0 verfremdet einen Professional Voice Clone hörbar
+   (ElevenLabs: extreme Werte schaden der Qualität). Langsamer für A2 wird
+   es über kürzere Sätze im Skript (generate-podcast.js, LAENGE.satz).
+   Wer A2 doch bremsen will: hier 0.95 eintragen, nicht tiefer. */
+const TEMPO = { A2: 1.0, B1: 1.0, B2: 1.0, C1: 1.0 };
 
 // Die Farben der Niveau-Punkte auf der Podcast-Seite.
 const FARBE = {
@@ -283,10 +288,21 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           text: roh,
           model_id: MODELL,
+          /* So nah an Julia wie möglich (Stand 23.10.2026, nach der
+             ElevenLabs-Anleitung für Klone):
+             - style 0: „Stil-Übertreibung“ legt eine Interpretation über
+               die Stimme und macht sie instabiler — ElevenLabs rät, ihn
+               immer auf 0 zu lassen. Vorher 0.25.
+             - similarity 0.92: so dicht am Original wie möglich. Geht nur,
+               weil der Profi-Klon aus sauberen Aufnahmen trainiert ist;
+               bei verrauschtem Material würde man Rauschen mitkopieren.
+             - stability 0.5: der empfohlene Ausgangswert. Darunter wird
+               es unberechenbar, darüber monoton.
+             - speaker boost an: zieht den Klang zusätzlich zum Original. */
           voice_settings: {
-            stability: 0.45,
-            similarity_boost: 0.85,
-            style: 0.25,
+            stability: 0.5,
+            similarity_boost: 0.92,
+            style: 0,
             use_speaker_boost: true,
             speed: TEMPO[folge.level] || 1.0
           }
