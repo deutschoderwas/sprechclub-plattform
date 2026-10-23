@@ -2,8 +2,9 @@
    dialog-stufen.js — drei Stufen pro Gespräch
 
    Julia, 23.10.2026: "Nicht einfach frei, sondern es müssten auch
-   Übungsdialoge geben, wo man das mitlesen kann — zumindest auf
-   dem A1-B1 Niveau."
+   Übungsdialoge geben, wo man das mitlesen kann." Und danach:
+   "Noch robuster, noch besser. Auch das Niveau anpassen und
+   erweitern. Auch mal die Umgangssprache hinzufügen."
 
    Bisher gab es pro Situation nur eine Stufe: Amanda sagt etwas,
    du antwortest frei. Für A1 und A2 ist das ein Sprung ins kalte
@@ -13,18 +14,26 @@
    Jetzt sind es drei:
 
      1. Mitlesen     Das ganze Gespräch steht da, beide Seiten.
-                     Jede Zeile lässt sich antippen und anhören,
-                     oder man lässt alles am Stück vorlesen.
-     2. Mitsprechen  Dasselbe Gespräch, aber du übernimmst eine
-                     Rolle. Amandas Zeilen werden gesprochen,
-                     deine stehen da und du liest sie laut vor.
+                     Jede Zeile antippen zum Hören, oder alles am
+                     Stück vorlesen — normal oder langsam.
+     2. Mitsprechen  Du übernimmst eine Rolle und kannst sie
+                     tauschen. Die andere Seite wird gesprochen,
+                     deine Zeile steht da und du liest sie laut.
      3. Frei sprechen  Genau wie bisher — Hinweise statt Text.
 
    WOHER DER TEXT KOMMT: aus nichts Neuem. In jedem Schritt steht
    schon beides — was Amanda sagt (`amanda`) und eine Musterantwort
    (`beispiel`). Zusammengelesen ergibt das den vollständigen
-   Dialog. Alle 130 Situationen haben in jedem Schritt eine
-   Musterantwort, keine einzige Lücke.
+   Dialog.
+
+   NEU UND FREIWILLIG — wer die Felder nicht hat, verliert nichts:
+     klartext         Standarddeutsch zu Amandas Zeile
+     beispielKlartext Standarddeutsch zur Musterantwort
+     woerter          [{w:"platt", b:"müde"}] — kurze Worterklärungen
+   Hat ein Schritt davon etwas, erscheint unter der Zeile ein
+   Knopf „Klartext" und darunter die Worterklärungen. Genau das
+   fehlt bei Umgangssprache: man liest „Joa, geht so" und weiß
+   nicht, dass das „einigermaßen" heißt.
 
    EINBAU: eine Zeile in konto.html, NACH lernen.js. Die Datei
    fasst lernen.js nicht an, sondern legt sich nur davor: Stufe 3
@@ -40,21 +49,39 @@
     .replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]); }); }
   function el(id){ return document.getElementById(id); }
 
-  /* Dieselbe Stimme wie im freien Gespräch: wenn die Plattform eine
-     eigene hat, die; sonst die des Browsers. */
+  /* ---------- Stimme ----------
+     Zwei Fallen, die beide schon dafür gesorgt haben, dass
+     Vorleseschleifen hängen bleiben: speechSynthesis meldet auf
+     dem Handy manchmal nie `onend`, und eine fremde Stimme ruft
+     den Rückruf vielleicht gar nicht. Deshalb läuft zu jedem
+     Satz eine Reißleine mit, die nach der erwarteten Sprechdauer
+     weitermacht. Jeder Rückruf feuert höchstens einmal. */
+  var TEMPO = 1;           // 1 = normal, .72 = langsam
+  var laufendeStimme = 0;  // Nummer der laufenden Ausgabe
+
   function sprich(text, fertig){
-    if (!text) { if (fertig) fertig(); return; }
+    var meine = ++laufendeStimme;
+    var raus = false;
+    function schluss(){
+      if (raus || meine !== laufendeStimme) return;
+      raus = true; if (fertig) fertig();
+    }
+    if (!text) { schluss(); return; }
+    /* Reißleine: grob 80 ms je Zeichen bei normalem Tempo, plus Luft. */
+    var dauer = Math.min(30000, 1400 + String(text).length * 80 / TEMPO);
+    setTimeout(schluss, dauer);
     try {
-      if (window.sagen) return window.sagen(text, { rolle:'amanda', fertig:fertig });
-      if (!window.speechSynthesis) { if (fertig) fertig(); return; }
+      if (window.sagen) { window.sagen(text, { rolle:'amanda', tempo:TEMPO, fertig:schluss }); return; }
+      if (!window.speechSynthesis) { schluss(); return; }
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'de-DE'; u.rate = .95;
-      if (fertig) u.onend = fertig;
+      u.lang = 'de-DE'; u.rate = .97 * TEMPO;
+      u.onend = schluss; u.onerror = schluss;
       speechSynthesis.speak(u);
-    } catch (e) { if (fertig) fertig(); }
+    } catch (e) { schluss(); }
   }
   function stille(){
+    laufendeStimme++;   // alle laufenden Rückrufe verfallen
     try {
       if (window.stimmeStopp) return window.stimmeStopp();
       if (window.speechSynthesis) speechSynthesis.cancel();
@@ -82,8 +109,11 @@
   function skript(d){
     var z = [];
     (d.schritte || []).forEach(function (s, i) {
-      if (s.amanda)  z.push({ wer:'am', text:String(s.amanda), i:i });
-      if (s.beispiel) z.push({ wer:'du', text:String(s.beispiel), i:i, hinweis:s.hinweis||'' });
+      if (s.amanda) z.push({ wer:'am', text:String(s.amanda), i:i,
+        klar:s.klartext || '', woerter:null });
+      if (s.beispiel) z.push({ wer:'du', text:String(s.beispiel), i:i,
+        klar:s.beispielKlartext || '', hinweis:s.hinweis || '',
+        woerter:(s.woerter && s.woerter.length) ? s.woerter : null });
     });
     return z;
   }
@@ -95,7 +125,7 @@
     st.id = 'dsStil';
     st.textContent = [
 '.ds-ov{position:fixed;inset:0;z-index:10050;background:rgba(20,24,27,.55);',
-'  display:flex;align-items:flex-end;justify-content:center;',
+'  display:none;align-items:flex-end;justify-content:center;',
 '  font-family:Inter,system-ui,-apple-system,sans-serif}',
 '.ds-ov.auf{display:flex}',
 '@media(min-width:760px){.ds-ov{align-items:center;padding:28px}}',
@@ -118,48 +148,67 @@
 '  padding:16px 16px calc(18px + env(safe-area-inset-bottom));',
 '  -webkit-overflow-scrolling:touch;overflow-anchor:none}',
 '.ds-fuss{flex:0 0 auto;padding:10px 14px calc(12px + env(safe-area-inset-bottom));',
-'  border-top:1px solid #F1ECE2;background:#fff;display:flex;gap:9px;align-items:center}',
+'  border-top:1px solid #F1ECE2;background:#fff;display:flex;gap:9px;align-items:center;flex-wrap:wrap}',
 
 /* Startkarte */
 '.ds-ort{background:#F6F1E6;border-radius:13px;padding:11px 13px;font-size:13.5px;',
-'  color:#5C5347;line-height:1.5;margin-bottom:16px}',
+'  color:#5C5347;line-height:1.5;margin-bottom:14px}',
+'.ds-umg{display:inline-flex;align-items:center;gap:6px;background:#FDF3D6;color:#7A6418;',
+'  border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;margin-bottom:14px}',
 '.ds-stufe{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;',
 '  background:#fff;border:1px solid #EFEAE0;border-radius:15px;padding:13px 14px;',
 '  margin-bottom:10px;cursor:pointer;font-family:inherit;',
 '  transition:border-color .15s ease,box-shadow .15s ease}',
 '.ds-stufe:active{border-color:#39CCE3;box-shadow:0 0 0 3px rgba(57,204,227,.16)}',
+'.ds-stufe > span:last-child{min-width:0;flex:1}',
 '.ds-nr{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:#E6F8FC;color:#10627A;',
 '  font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}',
 '.ds-stufe.fertig .ds-nr{background:#10627A;color:#fff}',
-'.ds-stufe > span:last-child{min-width:0;flex:1}',
 '.ds-stufe .t{display:block;font-weight:700;font-size:14.5px;color:#14181B;line-height:1.3}',
 '.ds-stufe .u{display:block;font-size:12.5px;color:#7A838A;line-height:1.45;margin-top:3px}',
 
 /* Gesprächszeilen */
-'.ds-z{display:flex;gap:9px;margin:0 0 11px;align-items:flex-end}',
+'.ds-paar{margin:0 0 11px}',
+'.ds-z{display:flex;gap:9px;align-items:flex-end}',
 '.ds-z.du{flex-direction:row-reverse}',
 '.ds-av{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:#10627A;color:#fff;',
 '  font-size:13px;display:flex;align-items:center;justify-content:center;overflow:hidden}',
 '.ds-z.du .ds-av{background:#10627A;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.2px}',
-'.ds-av img{width:100%;height:100%;object-fit:cover}',
 '.ds-bb{max-width:78%;background:#fff;border:1px solid #EFEAE0;border-radius:15px 15px 15px 5px;',
 '  padding:9px 12px;font-size:15px;line-height:1.5;color:#14181B;cursor:pointer;',
-'  transition:background .15s ease,border-color .15s ease}',
+'  transition:border-color .15s ease}',
 '.ds-z.du .ds-bb{background:#E9F6FA;border-color:#CDEAF2;border-radius:15px 15px 5px 15px}',
 '.ds-z.jetzt .ds-bb{border-color:#39CCE3;box-shadow:0 0 0 3px rgba(57,204,227,.2)}',
-'.ds-z.wartet .ds-bb{color:transparent;background:#F2EEE6;border-style:dashed;user-select:none}',
 '.ds-rolle{font-size:10.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;',
-'  color:#9AA2A8;margin:0 0 3px}',
+'  color:#9AA2A8;margin:0 0 8px}',
 '.ds-tipp{font-size:12.5px;color:#8A7F6C;background:#FDF7E6;border-radius:10px;',
-'  padding:7px 11px;margin:0 0 11px 37px;line-height:1.45}',
-'.ds-z.du + .ds-tipp{margin:0 37px 11px 0;text-align:right}',
+'  padding:7px 11px;margin:0 0 7px 37px;line-height:1.45}',
+'.ds-paar.du .ds-tipp{margin:0 37px 7px 0;text-align:right}',
+
+/* Klartext und Worterklärungen */
+'.ds-klarK{display:inline-flex;align-items:center;gap:4px;border:none;background:#F3EFE7;',
+'  color:#6B7278;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:700;',
+'  font-family:inherit;cursor:pointer;margin:5px 0 0 37px}',
+'.ds-paar.du .ds-klarK{margin:5px 37px 0 0}',
+'.ds-klar{display:none;font-size:13.5px;color:#4F5A61;background:#F2F8FA;border-left:3px solid #9FDDEC;',
+'  border-radius:0 10px 10px 0;padding:8px 11px;margin:6px 0 0 37px;line-height:1.5}',
+'.ds-paar.du .ds-klar{margin:6px 37px 0 0;border-left:none;border-right:3px solid #9FDDEC;',
+'  border-radius:10px 0 0 10px;text-align:right}',
+'.ds-klar.auf{display:block}',
+'.ds-klar b{color:#10627A;font-weight:700}',
+'.ds-woerter{display:none;margin:6px 0 0 37px;font-size:12.5px;line-height:1.6;color:#5C5347}',
+'.ds-paar.du .ds-woerter{margin:6px 37px 0 0;text-align:right}',
+'.ds-woerter.auf{display:block}',
+'.ds-woerter i{font-style:normal;font-weight:700;color:#14181B}',
 
 /* Knöpfe */
 '.ds-k{border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:14px;',
 '  padding:11px 18px;cursor:pointer;line-height:1.2}',
-'.ds-k.voll{flex:1 1 auto;background:linear-gradient(145deg,#39CCE3,#10627A);color:#fff;',
+'.ds-k.voll{flex:1 1 150px;background:linear-gradient(145deg,#39CCE3,#10627A);color:#fff;',
 '  box-shadow:0 5px 14px rgba(16,98,122,.3)}',
 '.ds-k.still{background:#F3EFE7;color:#4A5257;flex:0 0 auto}',
+'.ds-k.klein{font-size:12.5px;padding:8px 13px}',
+'.ds-k.an{background:#10627A;color:#fff}',
 '.ds-k:disabled{opacity:.45;cursor:default;box-shadow:none}',
 '.ds-fertig{text-align:center;padding:18px 6px 4px}',
 '.ds-fertig .h{font-family:"Space Grotesk",Inter,sans-serif;font-size:17px;color:#14181B;',
@@ -170,8 +219,8 @@
     document.head.appendChild(st);
   }
 
-  /* ---------- Hülle ---------- */
-  var G = null;   // {d, skript, stufe, pos, laeuft}
+  /* ---------- Zustand ---------- */
+  var G = null;   /* {d, skript, stufe, pos, laeuft, rolle} */
 
   function ovBauen(){
     if (el('dsOv')) return;
@@ -189,13 +238,21 @@
     o.addEventListener('click', function (ev) { if (ev.target === o) zu(); });
     el('dsX').addEventListener('click', zu);
     document.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Escape' && el('dsOv') && el('dsOv').classList.contains('auf')) zu();
+      var auf = el('dsOv') && el('dsOv').classList.contains('auf');
+      if (!auf) return;
+      if (ev.key === 'Escape') { ev.preventDefault(); return zu(); }
+      /* Leertaste und Eingabe bedienen den Hauptknopf — man muss
+         beim Mitsprechen nicht zwischen Text und Knopf zielen. */
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        var h = el('dsHaupt');
+        if (h && !h.disabled) { ev.preventDefault(); h.click(); }
+      }
     });
   }
 
   function auf(d){
     stil(); ovBauen();
-    G = { d:d, skript:skript(d), stufe:null, pos:0, laeuft:false };
+    G = { d:d, skript:skript(d), stufe:null, pos:0, laeuft:false, rolle:'du' };
     el('dsEm').textContent = d.em || '💬';
     el('dsTitel').textContent = d.titel || 'Gespräch';
     el('dsLvl').textContent = (d.lvl || '') + (d.dauer ? ' · ' + d.dauer : '');
@@ -211,9 +268,17 @@
     G = null;
   }
 
+  /* ---------- Hat das Gespräch Umgangssprache? ---------- */
+  function hatKlartext(d){
+    return (d.schritte || []).some(function (s) {
+      return s.klartext || s.beispielKlartext || (s.woerter && s.woerter.length);
+    });
+  }
+
   /* ---------- Stufe 0: die Wahl ---------- */
   function wahl(){
     if (!G) return;
+    stille();
     var d = G.d, id = d.id;
     var stufen = [
       ['lesen', 'Mitlesen', 'Das ganze Gespräch steht da — beide Seiten. Tipp eine Zeile an, um sie zu hören.'],
@@ -221,6 +286,7 @@
       ['frei',  'Frei sprechen', 'Nur noch Hinweise, kein Text. Antworte mit eigenen Worten.']
     ];
     el('dsKoerper').innerHTML =
+      (hatKlartext(d) ? '<div class="ds-umg">🗣 So wird wirklich gesprochen — mit Klartext</div>' : '') +
       (d.ort ? '<div class="ds-ort">' + E(d.ort) + '</div>' : '') +
       stufen.map(function (s, i) {
         var fertig = s[0] !== 'frei' && geschafft(id, s[0]);
@@ -246,14 +312,52 @@
     return mitsprechen();
   }
 
-  /* ---------- Zeile zeichnen ---------- */
-  function zeileHtml(z, i, verdeckt){
+  /* ---------- Eine Zeile samt Klartext ---------- */
+  function wer(z){ return z.wer === 'du' ? 'du' : 'am'; }
+  function avatar(z){
+    return z.wer === 'du' ? 'Du' : E(G.d.em || 'A');
+  }
+  function paarHtml(z, i, mitHinweis){
     var du = z.wer === 'du';
-    var av = du ? 'Du' : (G.d.em || 'A');
-    return '<div class="ds-z ' + (du ? 'du' : 'am') + (verdeckt ? ' wartet' : '') + '" data-z="' + i + '">' +
-        '<span class="ds-av">' + (du ? 'Du' : E(av)) + '</span>' +
-        '<span class="ds-bb">' + E(z.text) + '</span>' +
-      '</div>';
+    var h = '<div class="ds-paar ' + wer(z) + '" data-p="' + i + '">';
+    if (mitHinweis && z.hinweis) h += '<div class="ds-tipp">' + E(z.hinweis) + '</div>';
+    h += '<div class="ds-z ' + wer(z) + '" data-z="' + i + '">' +
+           '<span class="ds-av">' + (du ? 'Du' : E(G.d.em || 'A')) + '</span>' +
+           '<span class="ds-bb">' + E(z.text) + '</span>' +
+         '</div>';
+    if (z.klar || z.woerter) {
+      h += '<button class="ds-klarK" type="button" data-klar="' + i + '">Klartext</button>';
+      if (z.klar) h += '<div class="ds-klar" data-klarbox="' + i + '"><b>Auf Standarddeutsch:</b> ' + E(z.klar) + '</div>';
+      if (z.woerter) h += '<div class="ds-woerter" data-klarbox="' + i + '">' +
+        z.woerter.map(function (w) { return '<i>' + E(w.w) + '</i> — ' + E(w.b); }).join('<br>') + '</div>';
+    }
+    return h + '</div>';
+  }
+
+  function klarSchalten(i){
+    var k = el('dsKoerper'); if (!k) return;
+    var auf = false;
+    Array.prototype.forEach.call(k.querySelectorAll('[data-klarbox="' + i + '"]'), function (b) {
+      b.classList.toggle('auf'); auf = b.classList.contains('auf');
+    });
+    var kn = k.querySelector('[data-klar="' + i + '"]');
+    if (kn) kn.classList.toggle('an', auf);
+  }
+
+  function zeileHoeren(i){
+    if (!G) return;
+    var z = G.skript[i]; if (!z) return;
+    halt();
+    hervor(i);
+    sprich(z.text, function () { hervor(-1); });
+  }
+
+  function koerperKlick(ev){
+    var t = ev.target; if (!t.closest) return;
+    var kb = t.closest('[data-klar]');
+    if (kb) { ev.stopPropagation(); return klarSchalten(+kb.getAttribute('data-klar')); }
+    var r = t.closest('[data-z]');
+    if (r) return zeileHoeren(+r.getAttribute('data-z'));
   }
 
   /* ---------- Stufe 1: Mitlesen ---------- */
@@ -261,61 +365,78 @@
     if (!G) return;
     var k = el('dsKoerper');
     k.innerHTML =
-      '<div class="ds-rolle">Das ganze Gespräch</div>' +
-      G.skript.map(function (z, i) { return zeileHtml(z, i, false); }).join('');
-    k.onclick = function (ev) {
-      var r = ev.target.closest && ev.target.closest('[data-z]');
-      if (!r) return;
-      var z = G.skript[+r.getAttribute('data-z')]; if (!z) return;
-      halt();
-      hervor(+r.getAttribute('data-z'));
-      sprich(z.text, function () { hervor(-1); });
-    };
-    el('dsFuss').innerHTML =
-      '<button class="ds-k voll" id="dsPlay" type="button">▶ Alles vorlesen</button>' +
-      '<button class="ds-k still" id="dsZurueck" type="button">Zurück</button>';
-    el('dsZurueck').onclick = function () { halt(); wahl(); };
-    el('dsPlay').onclick = function () { G.laeuft ? halt() : vorlesen(0); };
+      '<div class="ds-rolle">Das ganze Gespräch — tipp eine Zeile an, um sie zu hören</div>' +
+      G.skript.map(function (z, i) { return paarHtml(z, i, false); }).join('');
+    k.onclick = koerperKlick;
+    fussLesen();
     merken(G.d.id, 'lesen');
+  }
+
+  function fussLesen(){
+    el('dsFuss').innerHTML =
+      '<button class="ds-k voll" id="dsHaupt" type="button">▶ Alles vorlesen</button>' +
+      '<button class="ds-k still klein" id="dsTempo" type="button">' +
+        (TEMPO < 1 ? 'Langsam ✓' : 'Langsam') + '</button>' +
+      '<button class="ds-k still klein" id="dsZurueck" type="button">Zurück</button>';
+    el('dsZurueck').onclick = function () { halt(); wahl(); };
+    el('dsHaupt').onclick = function () { G && G.laeuft ? halt() : vorlesen(0); };
+    el('dsTempo').onclick = function () {
+      TEMPO = TEMPO < 1 ? 1 : .72;
+      var lief = G && G.laeuft; halt();
+      el('dsTempo').textContent = TEMPO < 1 ? 'Langsam ✓' : 'Langsam';
+      el('dsTempo').classList.toggle('an', TEMPO < 1);
+      if (lief) vorlesen(0);
+    };
+    el('dsTempo').classList.toggle('an', TEMPO < 1);
   }
 
   function hervor(i){
     var k = el('dsKoerper'); if (!k) return;
-    Array.prototype.forEach.call(k.querySelectorAll('.ds-z'), function (r) { r.classList.remove('jetzt'); });
+    Array.prototype.forEach.call(k.querySelectorAll('.ds-z.jetzt'), function (r) { r.classList.remove('jetzt'); });
     if (i < 0) return;
     var r = k.querySelector('[data-z="' + i + '"]');
-    if (r) { r.classList.add('jetzt'); r.scrollIntoView({ block:'nearest' }); }
+    if (r) { r.classList.add('jetzt'); try { r.scrollIntoView({ block:'nearest' }); } catch (e) {} }
   }
 
   function halt(){
+    stille();
     if (!G) return;
-    G.laeuft = false; stille(); hervor(-1);
-    var p = el('dsPlay'); if (p) p.innerHTML = '▶ Alles vorlesen';
+    G.laeuft = false; hervor(-1);
+    var p = el('dsHaupt');
+    if (p && G.stufe === 'lesen') p.innerHTML = '▶ Alles vorlesen';
   }
 
   function vorlesen(i){
     if (!G) return;
     if (i >= G.skript.length) { halt(); return; }
     G.laeuft = true;
-    var p = el('dsPlay'); if (p) p.innerHTML = '⏸ Anhalten';
+    var p = el('dsHaupt'); if (p) p.innerHTML = '⏸ Anhalten';
     hervor(i);
     sprich(G.skript[i].text, function () {
       if (!G || !G.laeuft) return;
-      setTimeout(function () { if (G && G.laeuft) vorlesen(i + 1); }, 320);
+      setTimeout(function () { if (G && G.laeuft) vorlesen(i + 1); }, 300);
     });
   }
 
-  /* ---------- Stufe 2: Mitsprechen ---------- */
+  /* ---------- Stufe 2: Mitsprechen ----------
+     G.rolle sagt, welche Seite DU liest. Tauschen ist wichtig:
+     wer immer nur antwortet, übt nie das Fragen. */
   function mitsprechen(){
     if (!G) return;
-    el('dsKoerper').innerHTML = '<div class="ds-rolle">Du bist dran, wenn die Blase blau wird</div>';
-    el('dsKoerper').onclick = null;
-    el('dsFuss').innerHTML =
-      '<button class="ds-k voll" id="dsWeiter" type="button">Los geht’s</button>' +
-      '<button class="ds-k still" id="dsZurueck" type="button">Zurück</button>';
-    el('dsZurueck').onclick = function () { halt(); wahl(); };
-    el('dsWeiter').onclick = schritt;
     G.pos = 0;
+    el('dsKoerper').innerHTML =
+      '<div class="ds-rolle">Du liest: ' +
+      (G.rolle === 'du' ? 'die blauen Zeilen' : 'die weißen Zeilen') + '</div>';
+    el('dsKoerper').onclick = koerperKlick;
+    el('dsFuss').innerHTML =
+      '<button class="ds-k voll" id="dsHaupt" type="button">Los geht’s</button>' +
+      '<button class="ds-k still klein" id="dsTausch" type="button">Rolle tauschen</button>' +
+      '<button class="ds-k still klein" id="dsZurueck" type="button">Zurück</button>';
+    el('dsZurueck').onclick = function () { halt(); wahl(); };
+    el('dsTausch').onclick = function () {
+      halt(); G.rolle = (G.rolle === 'du') ? 'am' : 'du'; mitsprechen();
+    };
+    el('dsHaupt').onclick = schritt;
   }
 
   function anhaengen(html){
@@ -327,37 +448,38 @@
   }
 
   function schritt(){
-    if (!G) return;
-    var w = el('dsWeiter');
+    if (!G || G.stufe !== 'mit') return;
+    var h = el('dsHaupt');
     if (G.pos >= G.skript.length) return mitFertig();
     var z = G.skript[G.pos], i = G.pos;
     G.pos++;
 
-    if (z.wer === 'am') {
-      /* Amanda spricht — der Text steht trotzdem da, damit man mitliest. */
-      var r = anhaengen(zeileHtml(z, i, false));
-      if (r) r.classList.add('jetzt');
-      if (w) { w.disabled = true; w.innerHTML = '…'; }
+    var meine = (wer(z) === G.rolle);
+    anhaengen(paarHtml(z, i, !meine ? false : true));
+    var zeile = el('dsKoerper').querySelector('[data-z="' + i + '"]');
+
+    if (!meine) {
+      /* Die andere Seite spricht — der Text steht trotzdem da. */
+      if (zeile) zeile.classList.add('jetzt');
+      if (h) { h.disabled = true; h.innerHTML = '…'; }
       sprich(z.text, function () {
-        if (!G) return;
-        if (r) r.classList.remove('jetzt');
-        /* Steht als Nächstes deine Zeile, zeigen wir sie gleich mit an. */
-        if (G.skript[G.pos] && G.skript[G.pos].wer === 'du') return schritt();
-        if (w) { w.disabled = false; w.innerHTML = 'Weiter'; }
+        if (!G || G.stufe !== 'mit') return;
+        if (zeile) zeile.classList.remove('jetzt');
+        var n = G.skript[G.pos];
+        if (n && wer(n) === G.rolle) return schritt();   /* gleich deine Zeile zeigen */
+        if (h) { h.disabled = false; h.innerHTML = 'Weiter'; h.onclick = schritt; }
       });
       return;
     }
 
     /* Deine Zeile: hinstellen, laut vorlesen lassen, dann weiter. */
-    if (z.hinweis) anhaengen('<div class="ds-tipp">' + E(z.hinweis) + '</div>');
-    var rd = anhaengen(zeileHtml(z, i, false));
-    if (rd) rd.classList.add('jetzt');
-    if (w) {
-      w.disabled = false;
-      w.innerHTML = 'Gelesen — weiter';
-      w.onclick = function () {
-        if (rd) rd.classList.remove('jetzt');
-        w.onclick = schritt;
+    if (zeile) zeile.classList.add('jetzt');
+    if (h) {
+      h.disabled = false;
+      h.innerHTML = 'Gelesen — weiter';
+      h.onclick = function () {
+        if (zeile) zeile.classList.remove('jetzt');
+        h.onclick = schritt;
         schritt();
       };
     }
@@ -367,9 +489,10 @@
     if (!G) return;
     merken(G.d.id, 'mit');
     anhaengen('<div class="ds-fertig"><div class="h">Durch — gut gemacht.</div>' +
-      '<div class="p">Jetzt dasselbe Gespräch ohne Text: Amanda fragt, du antwortest mit eigenen Worten.</div></div>');
-    var w = el('dsWeiter');
-    if (w) { w.disabled = false; w.innerHTML = 'Frei sprechen'; w.onclick = function () { starte('frei'); }; }
+      '<div class="p">Tausch die Rolle, oder nimm dasselbe Gespräch ohne Text: ' +
+      'Amanda fragt, du antwortest mit eigenen Worten.</div></div>');
+    var h = el('dsHaupt');
+    if (h) { h.disabled = false; h.innerHTML = 'Frei sprechen'; h.onclick = function () { starte('frei'); }; }
   }
 
   /* ---------- Stufe 3: das alte Gespräch, unverändert ---------- */
@@ -396,12 +519,9 @@
   }
 
   if (!einhaengen()) {
-    /* lernen.js ist noch nicht geladen — kurz warten, dann aufgeben. */
     var n = 0;
-    var t = setInterval(function () {
-      if (einhaengen() || ++n > 40) clearInterval(t);
-    }, 250);
+    var t = setInterval(function () { if (einhaengen() || ++n > 40) clearInterval(t); }, 250);
   }
 
-  window.DLGSTUFEN = { auf:auf, zu:zu, skript:skript };
+  window.DLGSTUFEN = { auf:auf, zu:zu, skript:skript, hatKlartext:hatKlartext };
 })();
