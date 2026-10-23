@@ -67,12 +67,30 @@
       raus = true; if (fertig) fertig();
     }
     if (!text) { schluss(); return; }
-    /* Reißleine: grob 80 ms je Zeichen bei normalem Tempo, plus Luft. */
-    var dauer = Math.min(30000, 1400 + String(text).length * 80 / TEMPO);
-    setTimeout(schluss, dauer);
     try {
-      if (window.sagen) { window.sagen(text, { rolle:'amanda', tempo:TEMPO, fertig:schluss }); return; }
+      if (window.sagen) {
+        /* Julias Stimme kommt vom Server. Beim ersten Mal muss ein Satz
+           dort erst erzeugt werden, danach liegt er im Zwischenspeicher.
+           Das erste Mal dauert deshalb mehrere Sekunden.
+
+           Hier stand vorher eine knappe Reißleine (80 ms je Zeichen).
+           Die ist der echten Stimme ins Wort gefallen: sie hat
+           weitergeschaltet, während der Ton noch geladen wurde, der
+           nächste Aufruf hat die Ausgabe abgebrochen — und der Abbruch
+           hat in stimmen.js den Rückfall auf die Gerätestimme
+           ausgelöst. Genau so wird aus Julias Stimme eine
+           Roboterstimme.
+
+           stimmen.js hat eine eigene Wache und einen eigenen Rückfall.
+           Unsere wartet deshalb nur noch als allerletzte Sicherung. */
+        setTimeout(schluss, 45000);
+        window.sagen(text, { rolle:'amanda', langsam: TEMPO < 1, fertig:schluss });
+        return;
+      }
       if (!window.speechSynthesis) { schluss(); return; }
+      /* Nur für die Gerätestimme: die meldet am Handy manchmal nie
+         zurück. Grob 80 ms je Zeichen plus Luft. */
+      setTimeout(schluss, Math.min(30000, 1400 + String(text).length * 80 / TEMPO));
       speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = 'de-DE'; u.rate = .97 * TEMPO;
@@ -83,7 +101,11 @@
   function stille(){
     laufendeStimme++;   // alle laufenden Rückrufe verfallen
     try {
-      if (window.stimmeStopp) return window.stimmeStopp();
+      /* Die Plattform hält ihre Stimme mit sagenStopp an. Hier stand
+         stimmeStopp — den Namen gibt es nicht. Dadurch lief Julias
+         Stimme beim Anhalten und beim Schließen einfach weiter. */
+      if (window.sagenStopp) { window.sagenStopp(); return; }
+      if (window.stimmeStopp) { window.stimmeStopp(); return; }
       if (window.speechSynthesis) speechSynthesis.cancel();
     } catch (e) {}
   }
