@@ -1388,6 +1388,67 @@
     poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js')]);
     return poolLauf;
   }
+  /* ---------- Eigene Wörter ----------
+     Die Tabelle vokabel_eigene gibt es seit Langem, aber niemand hat
+     sie je gelesen oder beschrieben. Hier kommen die Wörter an, die
+     jemand sich aus einem Gespräch merkt — sie liegen beim Konto,
+     nicht im Browser, und sind deshalb auf jedem Gerät da. */
+  var eigeneGeladen = false;
+  async function ladeEigene() {
+    if (eigeneGeladen) return;
+    eigeneGeladen = true;
+    var c = sb(); if (!c) return;
+    try {
+      var r = await c.from('vokabel_eigene')
+        .select('vok_id,de,wort,artikel,art,em,bsp,niveau,thema,bild,quelle')
+        .order('angelegt', { ascending: false }).limit(2000);
+      var rows = (r && r.data) || [];
+      if (!rows.length) return;
+      var da = {};
+      (window.VOK_POOL || []).forEach(function (v) { da[v.id] = 1; });
+      var neu = [];
+      rows.forEach(function (x) {
+        if (!x.vok_id || da[x.vok_id]) return;
+        da[x.vok_id] = 1;
+        neu.push({ id:x.vok_id, de:x.de, wort:x.wort, artikel:x.artikel || '',
+                   art:x.art || 'wort', em:x.em || '', bsp:x.bsp || '',
+                   niveau:x.niveau || 'A2', thema:x.thema || 'Meine Wörter',
+                   bild:x.bild || '', quellen:[x.quelle || 'eigen'], eigen:true });
+      });
+      if (neu.length) window.VOK_POOL = (window.VOK_POOL || []).concat(neu);
+    } catch (e) {}
+  }
+
+  /* Von aussen: ein Wort merken. Gibt true zurück, wenn es jetzt
+     im Trainer liegt — auch dann, wenn es schon drin war. */
+  window.vokMerken = async function (w) {
+    var c = sb(); if (!c || !w || !w.wort) return false;
+    var id = 'eig-' + String(w.wort).toLowerCase()
+      .replace(/\u00e4/g,'ae').replace(/\u00f6/g,'oe').replace(/\u00fc/g,'ue').replace(/\u00df/g,'ss')
+      .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60);
+    if (!id || id === 'eig-') return false;
+    var u = null;
+    try { u = (await c.auth.getUser()).data.user; } catch (e) {}
+    if (!u) return false;
+    var zeile = { user_id:u.id, vok_id:id, de:String(w.wort), wort:String(w.wort),
+      artikel:w.artikel || null, art:w.art || 'wort', em:w.em || '',
+      bsp:w.bsp || '', niveau:w.niveau || 'B2',
+      thema:w.thema || 'Aus den Gesprächen', quelle:'gespraech' };
+    try {
+      var r = await c.from('vokabel_eigene').upsert(zeile, { onConflict:'user_id,vok_id' });
+      if (r && r.error) return false;
+    } catch (e) { return false; }
+    /* Sofort sichtbar machen, ohne die Seite neu zu laden. */
+    try {
+      var drin = (window.VOK_POOL || []).some(function (v) { return v.id === id; });
+      if (!drin) window.VOK_POOL = (window.VOK_POOL || []).concat([{
+        id:id, de:zeile.de, wort:zeile.wort, artikel:zeile.artikel || '',
+        art:zeile.art, em:zeile.em, bsp:zeile.bsp, niveau:zeile.niveau,
+        thema:zeile.thema, bild:'', quellen:['gespraech'], eigen:true }]);
+    } catch (e) {}
+    return true;
+  };
+
   function ladeSprache() {
     var l = l1(); if (!l) return Promise.resolve();
     if ((window.VOK_TR || {})[l]) return Promise.resolve();
@@ -1408,6 +1469,7 @@
       ziel.innerHTML = '<div class="vt-leer">Deine Wörter werden geladen …</div>';
       await ladePool();
     }
+    await ladeEigene();
     POOL = window.VOK_POOL || [];
     if (!POOL.length) {
       ziel.innerHTML = '<div class="vt-leer">Die Wortliste konnte nicht geladen werden. Lade die Seite bitte neu.</div>';
