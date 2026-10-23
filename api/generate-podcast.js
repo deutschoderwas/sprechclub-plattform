@@ -54,7 +54,14 @@ const NIVEAUS = ['A2', 'B1', 'B2', 'C1'];
 // Wie viele Wörter ein Niveau in fünf Minuten schafft. A2 wird
 // langsamer und mit mehr Pausen gesprochen, C1 zügiger.
 const LAENGE = {
-  A2: { woerter: 560, tempo: 0.88, satz: 'kurze Hauptsätze, höchstens 12 Wörter' },
+  /* A2 soll deutlich und langsam sein (Julia, 23.10.2026). Die Stimme wird
+     dafür kaum gebremst — das würde Julias Klang verfremden. Die Ruhe kommt
+     aus dem Text: kurze Sätze, viele Punkte (= Pausen), Wiederholung.
+     Weniger Wörter, weil das langsamer gesprochen dieselben fünf Minuten füllt. */
+  A2: { woerter: 500, tempo: 0.95, satz: 'sehr kurze Hauptsätze, höchstens 10 Wörter, ein Gedanke pro Satz. '
+      + 'Lieber Punkt als Komma — jeder Punkt ist eine Atempause. Nach jedem neuen Gedanken ein neuer Absatz. '
+      + 'Wichtige Wörter zweimal sagen („Der Termin. Der Termin beim Arzt.“). Keine Nebensätze, keine Klammern, '
+      + 'keine Umgangssprache, keine Abkürzungen' },
   B1: { woerter: 640, tempo: 0.94, satz: 'Haupt- und einfache Nebensätze' },
   B2: { woerter: 700, tempo: 1.00, satz: 'natürliche, auch längere Sätze mit Konnektoren' },
   C1: { woerter: 760, tempo: 1.00, satz: 'differenziert, mit Nebensatzketten und Nominalstil, wo es passt' }

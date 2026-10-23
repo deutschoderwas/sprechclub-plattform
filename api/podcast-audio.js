@@ -44,8 +44,15 @@ const MODELL  = process.env.ELEVEN_MODEL || 'eleven_multilingual_v2';
    Jede Abweichung von 1.0 verfremdet einen Professional Voice Clone hörbar
    (ElevenLabs: extreme Werte schaden der Qualität). Langsamer für A2 wird
    es über kürzere Sätze im Skript (generate-podcast.js, LAENGE.satz).
-   Wer A2 doch bremsen will: hier 0.95 eintragen, nicht tiefer. */
-const TEMPO = { A2: 1.0, B1: 1.0, B2: 1.0, C1: 1.0 };
+   Ausnahme A2 (Julia 23.10.: „A2 muss deutlicher und langsamer sein“):
+   0.95 — leicht gebremst, aber nicht tiefer, sonst klingt es künstlich.
+   Den Rest der Langsamkeit machen Satzbau und Pausen im Skript. */
+const TEMPO = { A2: 0.95, B1: 1.0, B2: 1.0, C1: 1.0 };
+
+/* Stabilität je Niveau: Höher = gleichmäßiger und deutlicher betont,
+   weniger Schwankung. Für A2 genau richtig; ab B1 darf die Stimme
+   lebendiger klingen. Über 0.65 würde es monoton. */
+const STABIL = { A2: 0.62, B1: 0.5, B2: 0.5, C1: 0.5 };
 
 // Die Farben der Niveau-Punkte auf der Podcast-Seite.
 const FARBE = {
@@ -300,7 +307,7 @@ export default async function handler(req, res) {
                es unberechenbar, darüber monoton.
              - speaker boost an: zieht den Klang zusätzlich zum Original. */
           voice_settings: {
-            stability: 0.5,
+            stability: STABIL[folge.level] || 0.5,
             similarity_boost: 0.92,
             style: 0,
             use_speaker_boost: true,
