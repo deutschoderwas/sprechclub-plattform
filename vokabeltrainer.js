@@ -1400,7 +1400,7 @@
     var c = sb(); if (!c) return;
     try {
       var r = await c.from('vokabel_eigene')
-        .select('vok_id,de,wort,artikel,art,em,bsp,niveau,thema,bild,quelle')
+        .select('vok_id,de,wort,artikel,art,em,bsp,bedeutung,niveau,thema,bild,quelle')
         .order('angelegt', { ascending: false }).limit(2000);
       var rows = (r && r.data) || [];
       if (!rows.length) return;
@@ -1412,6 +1412,7 @@
         da[x.vok_id] = 1;
         neu.push({ id:x.vok_id, de:x.de, wort:x.wort, artikel:x.artikel || '',
                    art:x.art || 'wort', em:x.em || '', bsp:x.bsp || '',
+                   bedeutung:x.bedeutung || '',
                    niveau:x.niveau || 'A2', thema:x.thema || 'Meine Wörter',
                    bild:x.bild || '', quellen:[x.quelle || 'eigen'], eigen:true });
       });
@@ -1432,7 +1433,7 @@
     if (!u) return false;
     var zeile = { user_id:u.id, vok_id:id, de:String(w.wort), wort:String(w.wort),
       artikel:w.artikel || null, art:w.art || 'wort', em:w.em || '',
-      bsp:w.bsp || '', niveau:w.niveau || 'B2',
+      bsp:w.bsp || '', bedeutung:w.bedeutung || '', niveau:w.niveau || 'B2',
       thema:w.thema || 'Aus den Gesprächen', quelle:'gespraech' };
     try {
       var r = await c.from('vokabel_eigene').upsert(zeile, { onConflict:'user_id,vok_id' });
@@ -1443,7 +1444,8 @@
       var drin = (window.VOK_POOL || []).some(function (v) { return v.id === id; });
       if (!drin) window.VOK_POOL = (window.VOK_POOL || []).concat([{
         id:id, de:zeile.de, wort:zeile.wort, artikel:zeile.artikel || '',
-        art:zeile.art, em:zeile.em, bsp:zeile.bsp, niveau:zeile.niveau,
+        art:zeile.art, em:zeile.em, bsp:zeile.bsp, bedeutung:zeile.bedeutung,
+        niveau:zeile.niveau,
         thema:zeile.thema, bild:'', quellen:['gespraech'], eigen:true }]);
     } catch (e) {}
     return true;

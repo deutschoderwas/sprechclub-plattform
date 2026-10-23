@@ -197,9 +197,18 @@
 '.ds-klar.auf{display:block}',
 '.ds-klar b{color:#10627A;font-weight:700}',
 '.ds-woerter{display:none;margin:6px 0 0 37px;font-size:12.5px;line-height:1.6;color:#5C5347}',
-'.ds-paar.du .ds-woerter{margin:6px 37px 0 0;text-align:right}',
+'.ds-paar.du .ds-woerter{margin:6px 37px 0 0}',
 '.ds-woerter.auf{display:block}',
 '.ds-woerter i{font-style:normal;font-weight:700;color:#14181B}',
+'.ds-w{display:flex;gap:8px;align-items:baseline;justify-content:space-between;',
+'  padding:4px 0;border-bottom:1px solid #F1ECE2}',
+'.ds-w:last-child{border-bottom:none}',
+'.ds-wt{min-width:0;flex:1}',
+'.ds-merk{flex:0 0 auto;border:1px solid #CDEAF2;background:#fff;color:#10627A;',
+'  border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;',
+'  font-family:inherit;cursor:pointer;white-space:nowrap}',
+'.ds-merk.an{background:#10627A;color:#fff;border-color:#10627A}',
+'.ds-merk:disabled{cursor:default}',
 
 /* Knöpfe */
 '.ds-k{border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:14px;',
@@ -329,7 +338,11 @@
       h += '<button class="ds-klarK" type="button" data-klar="' + i + '">Klartext</button>';
       if (z.klar) h += '<div class="ds-klar" data-klarbox="' + i + '"><b>Auf Standarddeutsch:</b> ' + E(z.klar) + '</div>';
       if (z.woerter) h += '<div class="ds-woerter" data-klarbox="' + i + '">' +
-        z.woerter.map(function (w) { return '<i>' + E(w.w) + '</i> — ' + E(w.b); }).join('<br>') + '</div>';
+        z.woerter.map(function (w, k) {
+          return '<div class="ds-w"><span class="ds-wt"><i>' + E(w.w) + '</i> — ' + E(w.b) + '</span>' +
+            '<button class="ds-merk" type="button" data-merk="' + i + '_' + k + '">' +
+            '＋ merken</button></div>';
+        }).join('') + '</div>';
     }
     return h + '</div>';
   }
@@ -354,10 +367,43 @@
 
   function koerperKlick(ev){
     var t = ev.target; if (!t.closest) return;
+    var mk = t.closest('[data-merk]');
+    if (mk) { ev.stopPropagation(); return merkeWort(mk); }
     var kb = t.closest('[data-klar]');
     if (kb) { ev.stopPropagation(); return klarSchalten(+kb.getAttribute('data-klar')); }
     var r = t.closest('[data-z]');
     if (r) return zeileHoeren(+r.getAttribute('data-z'));
+  }
+
+  /* ---------- Ein Wort in den Vokabeltrainer ----------
+     Julia: "Und man kann die Wörter auch in den Vokabeltrainer
+     hinzufügen, wenn man will." Wenn — deshalb ein Knopf und kein
+     Automatismus. Das Wort landet beim Konto, nicht im Browser, und
+     ist dadurch auf jedem Gerät da. Den Satz aus dem Gespräch nimmt
+     es als Beispiel mit, sonst steht das Wort später ohne Zuhause da. */
+  function niveauVon(lvl){
+    var t = String(lvl || '').match(/[ABC][12]/g);
+    return (t && t[t.length - 1]) || 'B2';
+  }
+  function merkeWort(knopf){
+    if (!G) return;
+    var teile = String(knopf.getAttribute('data-merk')).split('_');
+    var z = G.skript[+teile[0]]; if (!z || !z.woerter) return;
+    var w = z.woerter[+teile[1]]; if (!w) return;
+    if (typeof window.vokMerken !== 'function') {
+      knopf.textContent = 'geht hier nicht'; knopf.disabled = true; return;
+    }
+    knopf.disabled = true; knopf.textContent = '…';
+    Promise.resolve(window.vokMerken({
+      wort: w.w, bedeutung: w.b, bsp: z.text,
+      niveau: niveauVon(G.d.lvl), thema: 'Aus den Gesprächen'
+    })).then(function (ok) {
+      knopf.textContent = ok ? '✓ im Trainer' : 'ging nicht';
+      knopf.classList.toggle('an', !!ok);
+      knopf.disabled = !!ok;
+    }).catch(function () {
+      knopf.textContent = 'ging nicht'; knopf.disabled = false;
+    });
   }
 
   /* ---------- Stufe 1: Mitlesen ---------- */
