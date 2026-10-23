@@ -1148,6 +1148,7 @@
         // Neu-Mischen/Neustart: alte Gruppen-Tafel sofort leeren (auch wenn die Gruppennummer gleich bleibt)
         if(p.reset && p.reset!==window._gnReset){
           window._gnReset=p.reset;
+          gnotesAutoSave();                 // erst sichern, dann leeren
           const el=document.getElementById('gnotes'); if(el) el.innerHTML=''; window._gnLast='';
           if(g && g===window._currentGroup){ window._gnGroup=0; gnotesEnter(g); }
         }
@@ -1155,7 +1156,8 @@
       }
     } else {
       window._breakoutActive=false; hideBoBanner();
-      if(typeof gnotesLeave==='function') gnotesLeave();   // Gruppen-Notiz sofort weg
+      if(typeof gnotesAutoSave==='function') gnotesAutoSave();   // Gruppen-Notiz noch sichern …
+      if(typeof gnotesLeave==='function') gnotesLeave();   // … dann Gruppen-Notiz weg
       if(window._currentGroup) wechsleRaum(0);
     }
     if(istLehrer) boRenderTeacher();
@@ -1280,8 +1282,8 @@
         const mem = groups[g].map(id=>`${boBadge(id)} ${esc(nameOf(id))}`).join('&nbsp;&nbsp; ');
         html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
-      html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boMix()">🔀 Neu mischen</button></div>`;
-      html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boEnd()">⏹️ Alle zurückholen</button></div>`;
+      html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
+      html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boWarnThen('end')">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
     }
     // Übersichtlich: Niveau-Legende, Auto-Knöpfe (Nach Niveau / Zufällig), dann alle Schüler nach Niveau sortiert
@@ -1323,6 +1325,45 @@
   function boHop(g){ if(g && typeof clearHelp==='function') clearHelp(g); wechsleRaum(g||0); }
   function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); const cb=document.getElementById('bo-call'); if(cb){ cb.style.display=(g && !istLehrer)?'inline-block':'none'; cb.disabled=false; cb.textContent='🔔 Lehrer rufen'; } }
   function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); const cb=document.getElementById('bo-call'); if(cb) cb.style.display='none'; }
+  // ---- 30-Sekunden-Vorwarnung vor Wechsel / Rückholung ----
+  window._boWarnT=null; window._boCountIv=null;
+  function boShowCountdown(kind, secs){
+    const b=document.getElementById('bo-count'); if(!b) return;
+    const was = kind==='end' ? 'geht es zurück in den Hauptraum' : 'werden die Gruppen neu gemischt';
+    let n=secs|0;
+    const mal=()=>{ const t=b.querySelector('.boc-t'); if(t) t.innerHTML='⏳ <b>'+n+' s</b> — gleich '+was+'. Schreibt fertig … (wird automatisch gesichert)'; };
+    const x=document.getElementById('boc-x'); if(x) x.style.display = istLehrer ? 'inline-block' : 'none';
+    mal(); b.classList.add('show');
+    clearInterval(window._boCountIv);
+    window._boCountIv=setInterval(()=>{ n--; if(n<=0){ clearInterval(window._boCountIv); boHideCountdown(); return; } mal(); }, 1000);
+  }
+  function boHideCountdown(){ clearInterval(window._boCountIv); const b=document.getElementById('bo-count'); if(b) b.classList.remove('show'); }
+  // Lehrer: erst 30s vorwarnen, dann wirklich mischen/zurückholen
+  function boWarnThen(kind){
+    const secs=30;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind, secs } }); }catch(e){}
+    boShowCountdown(kind, secs);
+    clearTimeout(window._boWarnT);
+    window._boWarnT=setTimeout(()=>{ boHideCountdown(); if(kind==='end') boEnd(); else boMix(); }, secs*1000);
+  }
+  function boCancelWarn(){ clearTimeout(window._boWarnT); boHideCountdown(); try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind:'cancel' } }); }catch(e){} }
+  function handleWarn(p){ if(!p) return; if(p.kind==='cancel'){ boHideCountdown(); return; } boShowCountdown(p.kind, p.secs||30); }
+  // Gruppen-Notiz automatisch in die eigene Mitschrift sichern, BEVOR sie geleert wird –
+  // so geht nichts verloren, auch wenn niemand auf „Für mich speichern" gedrückt hat.
+  window._gnSaved='';
+  function gnotesAutoSave(){
+    try{
+      const el=document.getElementById('gnotes'); if(!el) return;
+      const text=(el.innerText||'').replace(/\n{3,}/g,'\n\n').trim();
+      if(!text || text===window._gnSaved || !window.AmandaMitschrift) return;
+      window._gnSaved=text;
+      let rest=text; const st=[];
+      while(rest.length>3500){ let s=rest.lastIndexOf('\n',3500); if(s<1200)s=3500; st.push(rest.slice(0,s).trim()); rest=rest.slice(s); }
+      st.push(rest.trim());
+      st.filter(Boolean).forEach(t=>{ try{ window.AmandaMitschrift.notiz('du', t, { art:'gruppe' }); }catch(e){} });
+      try{ window.AmandaMitschrift.spuelen(); }catch(e){}
+    }catch(e){}
+  }
   // Schüler ruft aus seiner Gruppe den Lehrer (wie „Ask for Help" bei Zoom).
   function callTeacher(){
     const g=window._currentGroup||0; if(!g) return;
