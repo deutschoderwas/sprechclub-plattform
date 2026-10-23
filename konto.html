@@ -5073,6 +5073,63 @@ body nav.cl-tabs > button > span:not(.ic):not(.clbdg){display:block;width:100%;
   line-height:1.4;padding-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body nav.cl-tabs > button[data-view="fortschritt"]{font-size:9.5px !important;letter-spacing:-.2px}
 
+/* ============================================================
+   Die Leiste unten, gleichmässig verteilt — 23.10.2026
+   ------------------------------------------------------------
+   Julia: "verteilt, robuster, klarer, besser, schöner".
+
+   Was vorher nicht stimmte: der grosse Buchen-Kreis sass an
+   vierter von fünf Stellen, also sichtbar aus der Mitte
+   gerückt. Weil der ganze Knopf angehoben war (top:-18px),
+   stand seine Beschriftung achtundzwanzig Pixel über den
+   anderen vier — die Zeile wirkte zerfranst. Das Farbband lief
+   quer durch den Kreis hindurch. "Mein Bereich" war als
+   einziges kleiner gesetzt, und die fünf Felder waren
+   unterschiedlich breit (17,5 % gegen 19 %).
+
+   Jetzt: fünf exakt gleich breite Felder, Buchen in der Mitte,
+   der Kreis schwebt frei darüber — er ist absolut gesetzt und
+   zählt deshalb nicht mehr zur Höhe seiner Taste, weshalb alle
+   fünf Beschriftungen auf einer Linie stehen. Das Farbband
+   bekommt genau dort eine Lücke, wo der Kreis steht.
+   ============================================================ */
+body nav.cl-tabs{align-items:flex-end !important;
+  justify-content:space-between !important}
+body nav.cl-tabs > button{flex:1 1 20% !important;max-width:20% !important;
+  min-width:0 !important;min-height:46px !important}
+
+/* Eine Schriftgrösse für alle fünf. */
+body nav.cl-tabs > button,
+body nav.cl-tabs > button[data-view="fortschritt"]{font-size:10px !important;
+  letter-spacing:-.1px !important}
+
+/* Der Chat trug bisher dauerhaft einen türkisen Ring — er sah damit
+   immer halb aktiv aus und war der einzige Knopf in der Reihe mit
+   eigenem Rahmen. Zurück holt die Leute ohnehin die rote Zahl.
+   Jetzt trägt nur die wirklich aktive Taste ein Kissen. */
+body nav.cl-tabs > button.cl-chat{color:#6E7B82 !important;font-weight:600 !important}
+body nav.cl-tabs > button.cl-chat::after{opacity:0 !important;transform:scale(.7) !important;
+  background:#E6F8FC !important;box-shadow:none !important}
+body nav.cl-tabs > button.cl-chat.active{color:#10627A !important;font-weight:800 !important}
+body nav.cl-tabs > button.cl-chat.active::after{opacity:1 !important;transform:scale(1) !important;
+  background:#CFF1F9 !important;box-shadow:none !important}
+body nav.cl-tabs > button.cl-chat.active > .ic{background-color:currentColor !important}
+body nav.cl-tabs .clbdg{left:auto !important;right:16px !important;
+  margin-left:0 !important;top:-1px !important}
+
+/* Der Kreis schwebt über der Leiste, statt sie auseinanderzudrücken. */
+body nav.cl-tabs > button.cl-mitte{top:0 !important;position:relative;
+  max-width:20% !important}
+body nav.cl-tabs > button.cl-mitte > .ic{position:absolute !important;
+  left:50% !important;bottom:19px !important;margin-left:-26px !important;
+  width:52px !important;height:52px !important;flex:0 0 52px !important;z-index:3;
+  box-shadow:0 10px 24px rgba(16,98,122,.34) !important}
+/* Das Farbband bekommt genau dort eine Lücke, wo der Kreis steht.
+   Vorher lief es quer durch ihn hindurch wie eine Narbe. */
+body nav.cl-tabs::before{
+  -webkit-mask:radial-gradient(circle 34px at 50% 100%, transparent 0 34px, #000 34px);
+          mask:radial-gradient(circle 34px at 50% 100%, transparent 0 34px, #000 34px)}
+
 @media(max-width:900px){
   body nav.cl-tabs{display:flex !important}
   /* Die alte Leiste .mtabs (Start/Lernen/Sprechen/Community/Medien) lag
@@ -5424,8 +5481,11 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 <nav class="cl-tabs" id="clTabs">
   <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span data-i18n="nav_start">Start</span></button>
   <button class="navlink" data-view="ueben" onclick="go('ueben')"><span class="ic">📐</span><span data-i18n="nv_tab_ueben">Üben</span></button>
-  <button class="navlink cl-chat" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_tab_chat">Chat</span><span class="clbdg" id="clTabBdg" style="display:none">0</span></button>
+  <!-- Julia, 23.10.2026: "Start Üben BUCHEN chat mein bereich". Buchen
+       gehört in die Mitte — an vierter von fünf Stellen sass der grosse
+       Kreis sichtbar schief. -->
   <button class="cl-mitte" onclick="return bucheStunde(event)"><span class="ic">🗓️</span><span data-i18n="nv_tab_buchen">Buchen</span></button>
+  <button class="navlink cl-chat" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_tab_chat">Chat</span><span class="clbdg" id="clTabBdg" style="display:none">0</span></button>
   <!-- Julia, 22.10.2026: "in der mobilen Version amanda unten weglassen,
        da ist zu viel". Sechs Knoepfe auf 390 px sind zu eng; die Schrift
        bricht um und man trifft daneben. Amanda bleibt erreichbar: ueber
