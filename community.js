@@ -17,6 +17,7 @@
      wann die letzte Nachricht kam. Nach jedem Verbindungsabbruch —
      und am Handy passiert das staendig — holen wir genau die Luecke nach. */
   var SEITE = 60;               // so viele Nachrichten pro Ladung
+  var stummAnhaengen = false;   // beim Nachholen: erst alles anhaengen, dann einmal aufraeumen
   var aeltesteZeit = null;      // Anfang des geladenen Verlaufs
   var letzteZeit = null;        // Ende des geladenen Verlaufs
   var mehrDa = false;           // gibt es noch aeltere?
@@ -851,6 +852,16 @@
 #v-community .feed .m.hl .mb{box-shadow:0 0 0 3px rgba(255,206,0,.6) !important;
   background:#FFFCF2 !important}
 
+/* Der Verbindungs-Hinweis schwebt ueber dem Verlauf und schiebt nichts weg. */
+#v-community .chat{position:relative}
+#v-community .cm-offline{position:absolute;left:50%;transform:translateX(-50%);
+  top:60px;z-index:14;max-width:92%;background:#2B2A27;color:#fff;
+  border-radius:11px;padding:7px 13px;font-size:12.5px;line-height:1.35;
+  box-shadow:0 6px 18px rgba(20,20,20,.22);pointer-events:none;text-align:center}
+/* Der Browser soll den Verlauf nicht zusaetzlich selbst nachjustieren,
+   waehrend wir ihn setzen - sonst zuckt er beim Nachladen. */
+#v-community .feed{overflow-anchor:none}
+
 `; document.head.appendChild(st);
   }
 
@@ -1225,12 +1236,31 @@
     letzteZeit  = rows.length ? rows[rows.length-1].created_at : null;
     await hydrateMedia(rows);
     reax={}; corr={};
-    await loadReactions(rows.map(function(m){return m.id;}));
-    await loadCorrections(rows.map(function(m){return m.id;}));
+    /* Frueher wurde erst gezeichnet, wenn auch Reaktionen und Korrekturen
+       da waren: drei Wartezeiten hintereinander, am Handy mit Funk ein
+       langes "Laedt ...". Jetzt steht der Verlauf sofort und der Rest
+       wird nachgereicht. */
     renderFeed(rows);
     renderPinned();
     subscribe(slug);
     zeigeZielNachricht();
+    var ids=rows.map(function(m){return m.id;});
+    var wach=cur;
+    Promise.all([loadReactions(ids),loadCorrections(ids)]).then(function(){
+      if(cur!==wach||mode!=='channel') return;
+      var box=q('#cmFeed'); if(!box) return;
+      /* Reaktionen und Korrekturen machen den Verlauf ein Stueck hoeher.
+         Wer unten stand, soll unten bleiben und nicht ploetzlich
+         mitten im Verlauf landen. */
+      var warUnten = (box.scrollHeight-box.scrollTop-box.clientHeight) < 120;
+      for(var i=0;i<ids.length;i++){
+        try{ updateRc(ids[i]); }catch(e){}
+        var row=box.querySelector('.m[data-id="'+ids[i]+'"]');
+        var slot=row&&row.querySelector('[data-corrslot]');
+        if(slot && corr[ids[i]] && corr[ids[i]].length) slot.innerHTML=corrsFor(ids[i]);
+      }
+      if(warUnten) box.scrollTop=box.scrollHeight;
+    }).catch(function(){});
   }
 
   /* Aus der Benachrichtigungsmail kommt man mit einer Nachrichten-Nummer
@@ -1565,6 +1595,9 @@
     }
     if(slot){ slot.insertAdjacentHTML('beforeend',msgHtml(m,true)); }
     else{ box.insertAdjacentHTML('beforeend','<div class="thr" data-thr="'+E(m.id)+'">'+msgHtml(m)+schnellHtml(m)+'<div class="thr-a" data-ans="'+E(m.id)+'"></div></div>'); }
+    /* Kommen beim Nachholen viele Nachrichten auf einmal, wird der
+       Verlauf nicht fuer jede einzelne neu durchgerechnet. */
+    if(stummAnhaengen) return;
     gruppiere();
     if(near||m.user_id===ME.id){ box.scrollTop=box.scrollHeight; neuPille(false); }
     else neuPille(true);
@@ -1868,7 +1901,14 @@
       if(neue.length){
         await hydrateMedia(neue);
         await loadReactions(neue.map(function(m){return m.id;}));
-        neue.forEach(appendMsg);
+        var bx=q('#cmFeed');
+        var warUnten = bx ? (bx.scrollHeight-bx.scrollTop-bx.clientHeight<400) : true;
+        stummAnhaengen = true;
+        try{ neue.forEach(appendMsg); } finally{ stummAnhaengen = false; }
+        gruppiere();
+        bx=q('#cmFeed');
+        if(bx && warUnten){ bx.scrollTop=bx.scrollHeight; neuPille(false); }
+        else neuPille(true);
       }
     }catch(e){}
     holtGerade = false;
@@ -1904,7 +1944,8 @@
   /* Eine ruhige Zeile statt einer Fehlermeldung: sie sagt Bescheid,
      wenn gerade nichts durchkommt, und verschwindet von selbst wieder. */
   function zeigeVerbindung(ok){
-    if(verbunden===ok) return;
+    var daB = !!q('#cmChat .cm-offline');
+    if(verbunden===ok && (ok ? !daB : daB)) return;
     verbunden = ok;
     var chat=q('#cmChat'); if(!chat) return;
     var b=chat.querySelector('.cm-offline');
@@ -1913,8 +1954,9 @@
     var d=document.createElement('div');
     d.className='cm-offline';
     d.textContent='Keine Verbindung — neue Nachrichten kommen, sobald du wieder online bist.';
-    var hd=chat.querySelector('.ch-hd');
-    if(hd&&hd.parentNode) hd.parentNode.insertBefore(d, hd.nextSibling);
+    /* Der Hinweis legt sich ueber den Verlauf, statt ihn nach unten zu
+       schieben. Sonst springt der Text, sobald die Verbindung flackert. */
+    chat.appendChild(d);
   }
 
   function subscribe(slug){
@@ -1937,16 +1979,25 @@
      oder das Netz wechselt. Beim Zurueckkommen bauen wir sie neu auf
      und holen die Luecke nach. Ohne das bleibt der Chat still stehen,
      ohne dass jemand merkt, dass etwas fehlt. */
+  var letztesVerbinden=0;
+  /* Frueher hing das Neuverbinden auch am focus-Ereignis. Am Handy kommt
+     das staendig: jedes Antippen riss die Verbindung ab, baute sie neu
+     auf und lud den Verlauf nach. Jetzt nur noch, wenn die Seite wirklich
+     wieder sichtbar wird, hoechstens alle fuenf Sekunden - und wenn die
+     Verbindung noch steht, bleibt sie einfach stehen. */
   function wiederVerbinden(){
     if(mode!=='channel'||!cur) return;
+    try{ if(chan && chan.state==='joined'){ zeigeVerbindung(true); nachholen(); return; } }catch(e){}
+    var jetzt=Date.now();
+    if(jetzt-letztesVerbinden < 5000) return;
+    letztesVerbinden=jetzt;
     subscribe(cur);
   }
   if(!window.__cmWach){
     window.__cmWach = true;
     document.addEventListener('visibilitychange',function(){ if(!document.hidden) wiederVerbinden(); });
-    window.addEventListener('online',function(){ zeigeVerbindung(true); wiederVerbinden(); });
+    window.addEventListener('online',function(){ zeigeVerbindung(true); letztesVerbinden=0; wiederVerbinden(); });
     window.addEventListener('offline',function(){ zeigeVerbindung(false); });
-    window.addEventListener('focus',wiederVerbinden);
   }
   function countOnline(){ var ON=window.CLUB_ONLINE||{}; return roster.filter(function(m){return ON[m.id];}).length; }
   function paintPresence(){
@@ -1980,32 +2031,50 @@
     try{ if(tb && getComputedStyle(tb).display!=='none') oben=Math.max(0,Math.round(tb.getBoundingClientRect().bottom)); }catch(e){}
     var nav=document.getElementById('clTabs'), unten=0;
     try{ if(nav && getComputedStyle(nav).display!=='none') unten=Math.round(nav.getBoundingClientRect().height); }catch(e){}
-    r.style.setProperty('--cm-oben', oben+'px');
-    r.style.setProperty('--cm-unten', unten+'px');
+    /* Nur schreiben, wenn sich wirklich etwas geaendert hat. Jedes
+       Setzen zwingt den Browser sonst zu einer neuen Berechnung. */
+    if(r.__oben!==oben){ r.__oben=oben; r.style.setProperty('--cm-oben', oben+'px'); }
+    if(r.__unten!==unten){ r.__unten=unten; r.style.setProperty('--cm-unten', unten+'px'); }
     /* Tastatur offen: die Tableiste liegt dann darunter. Dann zaehlt
        das wirklich sichtbare Fenster, damit das Schreibfeld sichtbar bleibt. */
     var vv=window.visualViewport;
     var tast = vv ? ((window.innerHeight - vv.height) > 140) : false;
     r.classList.toggle('cm-tast', tast);
-    if(tast && vv) r.style.setProperty('--cm-hoehe', Math.max(220, Math.round(vv.height - oben))+'px');
+    if(tast && vv){
+      var hh=Math.max(220, Math.round(vv.height - oben));
+      if(r.__hoehe!==hh){ r.__hoehe=hh; r.style.setProperty('--cm-hoehe', hh+'px'); }
+    }
   }
   var _hoeheAn=false;
+  /* Frueher hing hier auch der Bildlauf des Fensters mit drin. Am Handy
+     feuert der bei jeder Wischbewegung, und jedes Mal wurde die ganze
+     Hoehe neu vermessen und der Verlauf nach unten gezogen. Genau davon
+     hat der Chat beim Scrollen geruckelt. Jetzt zaehlt nur noch, was die
+     Hoehe wirklich aendert: Drehen und Tastatur. */
   function hoeheUeberwachen(){
     if(_hoeheAn) return; _hoeheAn=true;
-    var lauf=null;
+    var warte=false;
     function nach(){
-      clearTimeout(lauf);
-      lauf=setTimeout(function(){
+      if(warte) return; warte=true;
+      requestAnimationFrame(function(){
+        warte=false;
+        var r=root();
         var box=q('#cmFeed');
         var unten=box?(box.scrollHeight-box.scrollTop-box.clientHeight<160):false;
+        var tastVor=!!(r&&r.classList.contains('cm-tast'));
         passeHoehe();
-        if(box&&unten) box.scrollTop=box.scrollHeight;
-      },60);
+        var tastNach=!!(r&&r.classList.contains('cm-tast'));
+        /* Nur wenn die Tastatur wirklich auf- oder zugegangen ist, ziehen
+           wir den Verlauf nach. Sonst bleibt der Blick, wo er war. */
+        if(box&&unten&&tastVor!==tastNach) box.scrollTop=box.scrollHeight;
+      });
     }
-    window.addEventListener('resize',nach);
     window.addEventListener('orientationchange',nach);
+    window.addEventListener('resize',nach,{passive:true});
+    /* Beim Wechsel in eine andere Ansicht muss die Vollbild-Sperre am
+       Koerper wieder weg - das macht passeHoehe mit. */
     window.addEventListener('hashchange',nach);
-    try{ var vv=window.visualViewport; if(vv){ vv.addEventListener('resize',nach); vv.addEventListener('scroll',nach); } }catch(e){}
+    try{ var vv=window.visualViewport; if(vv) vv.addEventListener('resize',nach); }catch(e){}
     passeHoehe();
   }
 
