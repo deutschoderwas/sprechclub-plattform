@@ -1142,6 +1142,12 @@
       if(!istLehrer){
         const g = (p.groups && p.groups[window._meId]) || 0;
         showBoBanner(g);
+        // Neu-Mischen/Neustart: alte Gruppen-Tafel sofort leeren (auch wenn die Gruppennummer gleich bleibt)
+        if(p.reset && p.reset!==window._gnReset){
+          window._gnReset=p.reset;
+          const el=document.getElementById('gnotes'); if(el) el.innerHTML=''; window._gnLast='';
+          if(g && g===window._currentGroup){ window._gnGroup=0; gnotesEnter(g); }
+        }
         if(g && g!==window._currentGroup) wechsleRaum(g);
       }
     } else {
@@ -1240,7 +1246,7 @@
     boRenderTeacher();
   }
   // Gruppen NEU MISCHEN, während sie laufen – alle bekommen sofort neue Gruppen/Räume (neue Partner).
-  function boMix(){
+  async function boMix(){
     const el=document.getElementById('bo-size-live');
     const size=Math.max(2, parseInt((el&&el.value)||window._boSize||'2',10));
     window._boSize=size;
@@ -1250,7 +1256,9 @@
     ppl.forEach(pp=>{ groups[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
     window._boAssign=Object.assign({},groups);
     window._breakoutGroups=groups; window._breakoutActive=true;
-    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups } }); }catch(e){}
+    await gnotesResetAll();                 // beim Neu-Mischen alte Tafeln leeren
+    const reset=Date.now();
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups, reset } }); }catch(e){}
     boRenderTeacher();
   }
   function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
@@ -1294,11 +1302,13 @@
     body.innerHTML=html;
   }
   function boToggleManual(){ window._boManual=!window._boManual; boRenderTeacher(); }
-  function boStart(){
+  async function boStart(){
     const groups={}; Object.entries(window._boAssign).forEach(([id,g])=>{ if(g>0) groups[id]=g; });
     if(!Object.keys(groups).length) return;
     window._breakoutActive=true; window._breakoutGroups=groups;
-    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups } }); }catch(e){}
+    await gnotesResetAll();                 // frische, leere Tafeln für alle Gruppen
+    const reset=Date.now();
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups, reset } }); }catch(e){}
     boRenderTeacher();
   }
   function boEnd(){
@@ -1359,6 +1369,13 @@
   }
   function gnotesUnsub(){ if(window._gnCh){ try{ sb.removeChannel(window._gnCh); }catch(e){} window._gnCh=null; } }
   function gnotesLeave(){ document.body.classList.remove('ingroup'); gnotesUnsub(); window._gnGroup=0; const hb=document.getElementById('gn-help'); if(hb) hb.style.display='none'; }
+  // Lehrer leert ALLE Gruppen-Tafeln dieser Stunde (frischer Start / Neu-Mischen),
+  // damit eine neue "Gruppe 2" nie den Text der alten "Gruppe 2" erbt.
+  async function gnotesResetAll(){
+    if(!sb || !STUNDE) return;
+    try{ await sb.from('group_notes').delete().eq('class_id', STUNDE); }
+    catch(e){ console.warn('Gruppen-Tafeln leeren', e); }
+  }
   (function(){ const el=document.getElementById('gnotes'); if(!el) return; let tb, td;
     el.addEventListener('input', ()=>{ const g=window._gnGroup; if(!g||g<=0||!sb) return;
       const notes=el.innerHTML; window._gnLast=notes;
