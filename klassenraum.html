@@ -217,6 +217,9 @@
   .bo-banner.show{ display:block; }
   .bo-call{ margin-left:12px; background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 13px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .bo-call:disabled{ opacity:.7; cursor:default; }
+  .bo-count{ position:fixed; top:54px; left:50%; transform:translateX(-50%); z-index:73; background:#B23C22; color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 18px; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,.25); display:none; max-width:92vw; text-align:center; }
+  .bo-count.show{ display:block; }
+  .bo-count .boc-x{ margin-left:12px; background:#fff; color:#B23C22; border:none; border-radius:999px; padding:5px 12px; font-family:'Inter'; font-weight:800; font-size:.8rem; cursor:pointer; }
   .help-alert{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:90; background:var(--rot); color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 14px; border-radius:14px; box-shadow:0 8px 24px rgba(221,0,0,.35); display:none; align-items:center; gap:10px; max-width:92vw; }
   .help-alert.show{ display:flex; }
   .help-alert .ha-go{ background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; white-space:nowrap; }
@@ -2267,6 +2270,7 @@
     // Breakout-Räume: Start/Ende + Gruppenzuordnung
     window._boCh = sb.channel('breakout-'+STUNDE)
       .on('broadcast', { event:'bo' }, ({payload})=>{ if(typeof handleBreakout==='function') handleBreakout(payload); })
+      .on('broadcast', { event:'warn' }, ({payload})=>{ if(typeof handleWarn==='function') handleWarn(payload); })
       .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
       .on('broadcast', { event:'evt' }, ({payload})=>{ if(typeof handleEvent==='function') handleEvent(payload); })
       .subscribe();
@@ -2434,6 +2438,7 @@
 <!-- Breakout-Banner für Schüler -->
 <div class="event-banner" id="event-banner">🎤 Bühne läuft – Mikro aus, bitte zuhören</div>
 <div class="bo-banner" id="bo-banner"><span class="bo-txt"></span><button class="bo-call" id="bo-call" onclick="callTeacher()" style="display:none">🔔 Lehrer rufen</button></div>
+<div class="bo-count" id="bo-count"><span class="boc-t"></span><button class="boc-x" id="boc-x" onclick="boCancelWarn()" style="display:none">Abbrechen</button></div>
 <div class="help-alert" id="help-alert"><span class="ha-txt"></span><button class="ha-go">👀 hinschauen</button><button class="ha-x" title="Weg" onclick="document.getElementById('help-alert').classList.remove('show')">✕</button></div>
 </body>
 </html>
