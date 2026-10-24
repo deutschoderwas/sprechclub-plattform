@@ -308,6 +308,14 @@
         if(st){ st.className = 'pc-stand fertig'; st.textContent = '✓ gehört'; }
       });
       au.addEventListener('play', pcGesehen);
+      /* Immer nur EINE Folge (Julia, 24.10.2026): Startet eine Folge,
+         wird jede andere, die gerade läuft, angehalten. Sie behält ihre
+         Stelle — beim nächsten Abspielen geht sie dort weiter. */
+      au.addEventListener('play', function(){
+        document.querySelectorAll('.pc-ep audio').forEach(function(andere){
+          if(andere !== au && !andere.paused){ try{ andere.pause(); }catch(e){} }
+        });
+      });
     });
   }
 
