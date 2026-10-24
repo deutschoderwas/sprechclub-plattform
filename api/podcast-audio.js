@@ -29,7 +29,13 @@
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
 
-export const maxDuration = 60;
+/* 300 statt 60 Sekunden (24.10.2026): A2-Folgen (um 3:40) kamen durch,
+   B1, B2 und C1 (5 bis 6 Minuten Ton) blieben jeden Tag ohne jede Spur
+   liegen — weder live noch Fehler. Das ist das Bild, wenn Vercel den
+   Aufruf nach 60 s abwürgt, während ElevenLabs noch spricht.
+   Mit Fluid Compute erlaubt Vercel bis zu 300 s. Lehnt der Tarif das ab,
+   scheitert nur der Build, und die alte Version bleibt live. */
+export const maxDuration = 300;
 
 const SUPA    = process.env.SUPABASE_URL;
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
