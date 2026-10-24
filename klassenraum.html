@@ -220,6 +220,9 @@
   .bo-count{ position:fixed; top:54px; left:50%; transform:translateX(-50%); z-index:73; background:#B23C22; color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 18px; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,.25); display:none; max-width:92vw; text-align:center; }
   .bo-count.show{ display:block; }
   .bo-count .boc-x{ margin-left:12px; background:#fff; color:#B23C22; border:none; border-radius:999px; padding:5px 12px; font-family:'Inter'; font-weight:800; font-size:.8rem; cursor:pointer; }
+  .bo-hr{ font-size:.82rem; font-weight:700; color:var(--anthrazit); opacity:.85; margin:2px 0 8px; }
+  .bo-there{ display:inline-block; background:#1f7a4d; color:#fff; border-radius:999px; padding:1px 8px; font-size:.72rem; font-weight:800; margin-left:6px; }
+  .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
   .help-alert{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:90; background:var(--rot); color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 14px; border-radius:14px; box-shadow:0 8px 24px rgba(221,0,0,.35); display:none; align-items:center; gap:10px; max-width:92vw; }
   .help-alert.show{ display:flex; }
   .help-alert .ha-go{ background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; white-space:nowrap; }
@@ -1136,6 +1139,7 @@
     try{ await dframe.join({ url:daily.url, token:daily.token }); window._currentGroup = group||0; }
     catch(e){ console.warn('Raumwechsel', e); }
     window._switching = false;
+    if(istLehrer && typeof boBroadcastPos==='function') boBroadcastPos(group||0);   // Kollegen sehen, wo ich bin
     setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
   }
   function handleBreakout(p){
@@ -1274,13 +1278,17 @@
     if(window._breakoutActive){
       const groups={}; Object.entries(window._breakoutGroups||{}).forEach(([id,g])=>{ (groups[g]=groups[g]||[]).push(id); });
       const nameOf=(id)=>{ const f=ppl.find(x=>x.id===id); return f?f.name:'…'; };
-      let html='<div class="bo-active">🟢 Gruppen laufen</div>';
+      const nG=Object.keys(groups).length, nS=Object.values(groups).reduce((a,b)=>a+b.length,0);
+      let html=`<div class="bo-active">🟢 Gruppen laufen · ${nS} Schüler in ${nG} Gruppen</div>`;
+      const hr=teachersIn(0); html+=`<div class="bo-hr">🏠 Hauptraum: ${hr.length?hr.map(esc).join(', '):'—'}</div>`;
       Object.keys(groups).sort((a,b)=>a-b).forEach(g=>{
         const needs = window._helpGroups && window._helpGroups.has(String(g));
         const bands = [...new Set(groups[g].map(id=>boBand(boLv(id))).filter(bd=>bd!=='x'))];
         const mixed = bands.length>1;
+        const th = teachersIn(g);
+        const thHtml = th.length?` <span class="bo-there" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}</span>`:'';
         const mem = groups[g].map(id=>`${boBadge(id)} ${esc(nameOf(id))}`).join('&nbsp;&nbsp; ');
-        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
+        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
       html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boWarnThen('end')">⏹️ Alle zurückholen</button></div>`;
@@ -1348,6 +1356,32 @@
   }
   function boCancelWarn(){ clearTimeout(window._boWarnT); boHideCountdown(); try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind:'cancel' } }); }catch(e){} }
   function handleWarn(p){ if(!p) return; if(p.kind==='cancel'){ boHideCountdown(); return; } boShowCountdown(p.kind, p.secs||30); }
+  // ---- Lehrer-Präsenz: wer ist in welcher Gruppe / im Hauptraum ----
+  window._teacherPos = window._teacherPos || {};
+  function boBroadcastPos(g){
+    if(!istLehrer) return;
+    const id=window._meId||'self'; const name=window._meName||'Lehrkraft';
+    window._teacherPos[id]={ name, group:g|0, ts:Date.now() };
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'tpos', payload:{ id, name, group:g|0 } }); }catch(e){}
+    if(typeof boRenderTeacher==='function') boRenderTeacher();
+  }
+  function tposPrune(){
+    const now=Date.now(); let ch=false;
+    Object.keys(window._teacherPos).forEach(id=>{ if(now-(window._teacherPos[id].ts||0)>45000){ delete window._teacherPos[id]; ch=true; } });
+    if(ch && istLehrer && typeof boRenderTeacher==='function') boRenderTeacher();
+  }
+  function teachersIn(g){ const now=Date.now(); return Object.values(window._teacherPos||{}).filter(t=>t && (t.group|0)===(g|0) && now-(t.ts||0)<=45000).map(t=>t.name); }
+  function handleTpos(p){
+    if(!p || !p.id) return;
+    const neu = !window._teacherPos[p.id];
+    window._teacherPos[p.id]={ name:p.name||'Lehrkraft', group:p.group|0, ts:Date.now() };
+    if(neu && istLehrer){ clearTimeout(window._tposEcho); window._tposEcho=setTimeout(()=>boBroadcastPos(window._currentGroup||0), 500); }
+    if(istLehrer){ if(typeof boRenderTeacher==='function') boRenderTeacher(); }
+    else {
+      const g=window._currentGroup||0;
+      if(g>0 && (p.group|0)===g && typeof showMicHint==='function') showMicHint('👩‍🏫 '+(p.name||'Lehrkraft')+' ist jetzt in eurer Gruppe.');
+    }
+  }
   // Gruppen-Notiz automatisch in die eigene Mitschrift sichern, BEVOR sie geleert wird –
   // so geht nichts verloren, auch wenn niemand auf „Für mich speichern" gedrückt hat.
   window._gnSaved='';
@@ -2312,9 +2346,17 @@
     window._boCh = sb.channel('breakout-'+STUNDE)
       .on('broadcast', { event:'bo' }, ({payload})=>{ if(typeof handleBreakout==='function') handleBreakout(payload); })
       .on('broadcast', { event:'warn' }, ({payload})=>{ if(typeof handleWarn==='function') handleWarn(payload); })
+      .on('broadcast', { event:'tpos' }, ({payload})=>{ if(typeof handleTpos==='function') handleTpos(payload); })
       .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
       .on('broadcast', { event:'evt' }, ({payload})=>{ if(typeof handleEvent==='function') handleEvent(payload); })
-      .subscribe();
+      .subscribe((status)=>{
+        // Lehrer meldet seine Position (Hauptraum/Gruppe) und hält sie per Heartbeat aktuell
+        if(status==='SUBSCRIBED' && istLehrer){
+          if(typeof boBroadcastPos==='function') boBroadcastPos(window._currentGroup||0);
+          clearInterval(window._tposHb); window._tposHb=setInterval(()=>{ if(typeof boBroadcastPos==='function') boBroadcastPos(window._currentGroup||0); }, 20000);
+          clearInterval(window._tposPruneIv); window._tposPruneIv=setInterval(()=>{ if(typeof tposPrune==='function') tposPrune(); }, 15000);
+        }
+      });
     window._handCh = sb.channel('hand-'+STUNDE)
       .on('broadcast', { event:'hand' }, ({payload})=>{
         if(!payload) return;
