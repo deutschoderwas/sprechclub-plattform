@@ -271,10 +271,18 @@ export default async function handler(req, res) {
   const tage = Math.max(1, Math.min(365, Number((req.query && req.query.tage) || 3)));
   const ab = new Date(Date.now() - tage * 86400000).toISOString().slice(0, 10);
   const nur = req.query && req.query.id;
+  /* Reihenfolge (Julia, 24.10.2026: „B1–C1 bitte vorrangig machen“):
+     erst B1, B2, C1 — innerhalb davon das älteste Datum zuerst —,
+     A2 kommt zuletzt dran. Vorher lief es nach Datum, dann Niveau, und
+     weil A2 alphabetisch vorne steht, war A2 jeden Tag die einzige Folge,
+     die durchkam. */
+  const RANG = { B1: 0, B2: 1, C1: 2, A2: 3 };
   let q = db.from('podcasts').select('*').eq('status', 'entwurf').gte('datum', ab)
-            .order('datum').order('level').limit(1);
+            .order('datum').order('level').limit(60);
   if (nur) q = db.from('podcasts').select('*').eq('id', nur).limit(1);
-  const { data, error } = await q;
+  const { data: alle, error } = await q;
+  const data = (alle || []).slice().sort((x, y) =>
+    ((RANG[x.level] ?? 9) - (RANG[y.level] ?? 9)) || String(x.datum).localeCompare(String(y.datum)));
   if (error) return res.status(500).json({ error: error.message });
   if (!data || !data.length) {
     /* Ehrlich mitzählen, was älter ist als das Fenster — sonst sieht
@@ -368,16 +376,20 @@ export default async function handler(req, res) {
     }).eq('id', folge.id);
     if (uErr) throw new Error('Speichern: ' + uErr.message);
 
-    /* Nächste Folge anstoßen, ohne auf sie zu warten.
-       Achtung: Der Abbruch darf nicht zu kurz sein. Bei 1,2 Sekunden
-       wurde die Anfrage abgebrochen, bevor der nächste Aufruf richtig
-       stand — und die Kette riss ab. Acht Sekunden reichen, um sie
-       anzustoßen, und blockieren diesen Aufruf trotzdem nicht. */
-    fetch(SITE + '/api/podcast-audio', {
-      method: 'POST',
-      headers: { 'x-intern': geheim || '' },
-      signal: AbortSignal.timeout(8000)
-    }).catch(() => {});
+    /* Nächste Folge anstoßen.
+       Bis 24.10.2026 stand hier fetch() OHNE await, direkt vor dem
+       return. Vercel friert die Funktion ein, sobald die Antwort raus
+       ist — der Anstoß ging oft gar nicht mehr los, und die Kette riss
+       nach einer Folge ab. Jetzt wird bis zu acht Sekunden gewartet,
+       bis der nächste Aufruf angenommen ist; dass er danach selbst
+       länger läuft und hier abbricht, ist gewollt. */
+    try {
+      await fetch(SITE + '/api/podcast-audio', {
+        method: 'POST',
+        headers: { 'x-intern': geheim || '' },
+        signal: AbortSignal.timeout(8000)
+      });
+    } catch (e) { /* Zeitüberschreitung ist hier der Normalfall */ }
 
     return res.status(200).json({ ok: true, id: folge.id, dauer: Math.round(sek), saetze: transkript.length });
   } catch (err) {
