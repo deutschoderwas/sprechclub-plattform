@@ -1538,6 +1538,443 @@
     ]
    }
   ]
+ },
+  /* ---- B2/C1-Ausbau, Runde 3 (25.10.2026) ---- */
+
+ {
+  "id": "b2-zug-platz-besetzt",
+  "modus": "alltag",
+  "em": "🚆",
+  "kat": "unterwegs",
+  "titel": "Im ICE sitzt jemand auf deinem reservierten Platz",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Der Zug ist voll. Du hast einen Platz reserviert, aber dort sitzt ein Mann mit Laptop und Kopfhörern.",
+  "schritte": [
+   {
+    "amanda": "Hm? Ja bitte?",
+    "hinweis": "Höflich, aber klar. Zeig deine Reservierung, statt lange zu erklären.",
+    "beispiel": "Entschuldigung, ich glaube, Sie sitzen auf meinem Platz. Ich habe hier die Reservierung für Wagen sieben, Platz dreiundvierzig.",
+    "redemittel": [
+     "Entschuldigung, ich glaube, …",
+     "Ich habe hier die Reservierung für …",
+     "Wagen …, Platz …"
+    ]
+   },
+   {
+    "amanda": "Ach, echt? Da stand aber nix auf der Anzeige. Ich dachte, der ist frei.",
+    "klartext": "Wirklich? Auf der Anzeige stand aber nichts. Ich dachte, der Platz ist frei.",
+    "hinweis": "Verständnis zeigen — die Anzeige ist oft wirklich leer. Trotzdem bei deiner Bitte bleiben.",
+    "beispiel": "Das kann gut sein, die Anzeigen funktionieren oft nicht. Aber ich habe den Platz bezahlt und würde mich gern setzen.",
+    "redemittel": [
+     "Das kann gut sein.",
+     "Die Anzeigen funktionieren oft nicht.",
+     "Ich würde mich gern setzen."
+    ]
+   },
+   {
+    "amanda": "Ich hab hier aber grad alles aufgebaut, und ich muss gleich in ein Meeting. Können Sie nicht woanders hin?",
+    "klartext": "Ich habe hier gerade alles aufgebaut, und ich habe gleich ein Meeting. Können Sie sich nicht woanders hinsetzen?",
+    "hinweis": "Freundlich ablehnen und begründen. Der Zug ist voll — das ist ein gutes Argument.",
+    "beispiel": "Ich verstehe, dass das gerade ungünstig ist. Aber der Zug ist voll, und ich fahre noch drei Stunden. Ich warte gern kurz, bis Sie zusammengepackt haben.",
+    "redemittel": [
+     "Ich verstehe, dass das gerade ungünstig ist.",
+     "Aber …",
+     "Ich warte gern kurz, bis …"
+    ]
+   },
+   {
+    "amanda": "Na gut. Moment.",
+    "hinweis": "Danke sagen und freundlich helfen. So endet es ohne schlechte Stimmung.",
+    "beispiel": "Danke, sehr nett. Soll ich Ihnen mit dem Koffer helfen?",
+    "redemittel": [
+     "Danke, sehr nett.",
+     "Soll ich Ihnen helfen?",
+     "Kein Stress."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-handyvertrag-kuendigen",
+  "modus": "alltag",
+  "em": "📱",
+  "kat": "einkaufen",
+  "titel": "Handyvertrag kündigen — der Verkäufer will verlängern",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Im Handyladen. Dein Vertrag läuft schon über zwei Jahre. Du willst kündigen, weil du ein günstigeres Angebot gefunden hast.",
+  "schritte": [
+   {
+    "amanda": "Hallo! Was kann ich für Sie tun? Wollen Sie ein neues Handy?",
+    "hinweis": "Gleich sagen, was du willst. Kurz und klar.",
+    "beispiel": "Nein, danke. Ich möchte meinen Vertrag kündigen. Hier ist meine Kundennummer.",
+    "redemittel": [
+     "Ich möchte meinen Vertrag kündigen.",
+     "Hier ist meine Kundennummer.",
+     "Nein, danke."
+    ]
+   },
+   {
+    "amanda": "Kündigen? Schade! Ich kann Ihnen aber ein super Angebot machen: zehn Euro günstiger, wenn Sie zwei Jahre verlängern.",
+    "hinweis": "Dich nicht überreden lassen. Freundlich ablehnen und sagen, warum.",
+    "beispiel": "Danke, aber ich möchte mich nicht wieder für zwei Jahre binden. Ich habe ein Angebot ohne lange Laufzeit gefunden.",
+    "redemittel": [
+     "Danke, aber ich möchte mich nicht …",
+     "Ich habe ein Angebot ohne lange Laufzeit gefunden.",
+     "Mein Entschluss steht fest."
+    ]
+   },
+   {
+    "amanda": "Aber dann haben Sie ja noch drei Monate Kündigungsfrist.",
+    "hinweis": "Nachfragen, wenn etwas nicht stimmt. Nach der Mindestlaufzeit ist ein Vertrag in Deutschland monatlich kündbar.",
+    "beispiel": "Mein Vertrag läuft schon über zwei Jahre. Soweit ich weiß, kann ich dann mit einem Monat Frist kündigen. Können Sie das bitte noch mal prüfen?",
+    "redemittel": [
+     "Soweit ich weiß, …",
+     "mit einem Monat Frist",
+     "Können Sie das bitte noch mal prüfen?"
+    ]
+   },
+   {
+    "amanda": "Ah, stimmt, Sie haben recht. Dann endet der Vertrag Ende November.",
+    "hinweis": "Eine schriftliche Bestätigung verlangen. Das ist bei Kündigungen sehr wichtig.",
+    "beispiel": "Super, danke. Bekomme ich dafür bitte eine schriftliche Bestätigung, per Mail oder ausgedruckt?",
+    "redemittel": [
+     "Bekomme ich bitte eine schriftliche Bestätigung?",
+     "per Mail oder ausgedruckt",
+     "Danke für Ihre Hilfe."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-hochzeit-niemand-kennen",
+  "modus": "alltag",
+  "em": "💒",
+  "kat": "menschen",
+  "titel": "Auf einer Hochzeit, auf der du fast niemanden kennst",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du bist mit deinem Partner auf der Hochzeit seiner Kollegin. Er holt Getränke. Neben dir am Stehtisch steht eine Frau, die du nicht kennst.",
+  "schritte": [
+   {
+    "amanda": "Schöne Feier, oder? Woher kennen Sie denn das Brautpaar?",
+    "hinweis": "Kurz antworten und eine Gegenfrage stellen — so läuft Smalltalk.",
+    "beispiel": "Ja, wirklich schön! Ich bin mit Jonas hier, er arbeitet mit der Braut zusammen. Und Sie? Gehören Sie zur Familie?",
+    "redemittel": [
+     "Ich bin mit … hier.",
+     "Er arbeitet mit … zusammen.",
+     "Und Sie? …?"
+    ]
+   },
+   {
+    "amanda": "Ich bin die Tante vom Bräutigam. Ich kenn hier auch kaum jemanden, ehrlich gesagt. Die Familie ist riesig.",
+    "klartext": "Ich bin die Tante des Bräutigams. Ehrlich gesagt kenne ich hier auch kaum jemanden.",
+    "hinweis": "Eine Gemeinsamkeit finden — das verbindet sofort. Ein bisschen Humor hilft.",
+    "beispiel": "Dann sind wir ja schon zu zweit! Ich habe vorhin mindestens zehn Leuten die Hand gegeben und mir keinen einzigen Namen gemerkt.",
+    "redemittel": [
+     "Dann sind wir ja schon zu zweit!",
+     "Ich habe mir keinen einzigen Namen gemerkt.",
+     "Geht mir genauso."
+    ]
+   },
+   {
+    "amanda": "Haha, genau so geht's mir auch. Sie haben einen leichten Akzent — woher kommen Sie?",
+    "hinweis": "Kurz und entspannt antworten. Du entscheidest, wie viel du erzählen willst — und lenkst dann auf ein anderes Thema.",
+    "beispiel": "Aus Portugal, aus Porto. Ich lebe aber schon fünf Jahre hier. Waren Sie schon mal in Portugal?",
+    "redemittel": [
+     "Ich komme aus …",
+     "Ich lebe schon … Jahre hier.",
+     "Waren Sie schon mal in …?"
+    ]
+   },
+   {
+    "amanda": "Ja, an der Algarve, vor Jahren! Ach, da kommt Ihr Mann mit den Getränken.",
+    "hinweis": "Das Gespräch freundlich öffnen: deinen Partner vorstellen, damit sie nicht allein bleibt.",
+    "beispiel": "Ah, perfekt. Jonas, das ist die Tante vom Bräutigam. Wir haben gerade festgestellt, dass wir beide hier niemanden kennen.",
+    "redemittel": [
+     "Das ist …",
+     "Wir haben gerade festgestellt, dass …",
+     "Darf ich vorstellen: …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-apotheke-wechselwirkung",
+  "modus": "alltag",
+  "em": "💊",
+  "kat": "gesundheit",
+  "titel": "In der Apotheke: Verträgt sich das mit meinen Tabletten?",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du hast starke Rückenschmerzen und willst ein Schmerzmittel kaufen. Du nimmst aber jeden Tag Tabletten gegen hohen Blutdruck.",
+  "schritte": [
+   {
+    "amanda": "Guten Tag, was darf's sein?",
+    "hinweis": "Sag, was du brauchst — und sag gleich, welche Tabletten du schon nimmst.",
+    "beispiel": "Ich hätte gern etwas gegen Rückenschmerzen. Ich nehme aber jeden Tag Tabletten gegen Bluthochdruck. Verträgt sich das?",
+    "redemittel": [
+     "Ich hätte gern etwas gegen …",
+     "Ich nehme jeden Tag …",
+     "Verträgt sich das?"
+    ]
+   },
+   {
+    "amanda": "Gut, dass Sie fragen. Wissen Sie, wie Ihr Blutdruckmittel heißt?",
+    "hinweis": "Ehrlich sagen, was du weißt. Wenn du den Namen nicht weißt, biete eine Lösung an.",
+    "beispiel": "Den genauen Namen weiß ich leider nicht. Ich habe aber ein Foto von der Packung auf dem Handy. Soll ich es Ihnen zeigen?",
+    "redemittel": [
+     "Den genauen Namen weiß ich leider nicht.",
+     "Ich habe ein Foto von der Packung.",
+     "Soll ich es Ihnen zeigen?"
+    ]
+   },
+   {
+    "amanda": "Ja, danke. Ibuprofen würde ich Ihnen da eher nicht empfehlen, das kann die Wirkung abschwächen. Für ein paar Tage wäre Paracetamol besser.",
+    "hinweis": "Nachfragen, damit du es richtig nimmst: wie oft, wie lange.",
+    "beispiel": "Okay, verstehe. Wie oft am Tag darf ich das nehmen? Und wie lange höchstens?",
+    "redemittel": [
+     "Wie oft am Tag darf ich …?",
+     "Wie lange höchstens?",
+     "Gibt es etwas, worauf ich achten muss?"
+    ]
+   },
+   {
+    "amanda": "Höchstens dreimal am Tag eine, und nicht länger als drei Tage ohne Arzt. Wenn es dann nicht besser ist, gehen Sie bitte zur Hausärztin.",
+    "hinweis": "Zusammenfassen, was du verstanden hast. So merkst du es dir besser.",
+    "beispiel": "Also höchstens dreimal am Tag und maximal drei Tage, sonst zur Ärztin. Vielen Dank für die Beratung.",
+    "redemittel": [
+     "Also: …",
+     "Sonst gehe ich zur Ärztin.",
+     "Vielen Dank für die Beratung."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-handwerker-dreck",
+  "modus": "business",
+  "em": "🧹",
+  "kat": "handwerk",
+  "titel": "Du bist Handwerker: Die Kundin beschwert sich über den Dreck",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du hast in einer Wohnung neue Steckdosen eingebaut. Die Kundin kommt nach Hause und ist sauer: überall Staub und Bohrreste.",
+  "schritte": [
+   {
+    "amanda": "Also, das darf doch nicht wahr sein! Überall Staub, sogar auf dem Sofa. Das war heute Morgen sauber!",
+    "hinweis": "Nicht verteidigen. Erst ihren Ärger anerkennen und dich entschuldigen.",
+    "beispiel": "Sie haben recht, das sieht nicht gut aus. Das tut mir leid. Beim Bohren in der Wand staubt es leider sehr.",
+    "redemittel": [
+     "Sie haben recht, das sieht nicht gut aus.",
+     "Das tut mir leid.",
+     "Beim Bohren staubt es leider sehr."
+    ]
+   },
+   {
+    "amanda": "Und jetzt? Soll ich das jetzt alles selbst putzen?",
+    "hinweis": "Sofort eine Lösung anbieten und konkret sagen, was du tust.",
+    "beispiel": "Nein, natürlich nicht. Ich hole jetzt den Industriesauger aus dem Auto und mache alles sauber, auch das Sofa.",
+    "redemittel": [
+     "Nein, natürlich nicht.",
+     "Ich hole jetzt …",
+     "und mache alles sauber"
+    ]
+   },
+   {
+    "amanda": "Gut. Aber warum haben Sie nichts abgedeckt?",
+    "hinweis": "Den Fehler zugeben, ohne Ausreden. Und sagen, wie es beim nächsten Mal läuft.",
+    "beispiel": "Das hätte ich machen sollen, da haben Sie völlig recht. Beim nächsten Raum lege ich vorher Folie aus.",
+    "redemittel": [
+     "Das hätte ich machen sollen.",
+     "Da haben Sie völlig recht.",
+     "Beim nächsten Mal …"
+    ]
+   },
+   {
+    "amanda": "Na gut. Die Steckdosen funktionieren aber alle?",
+    "hinweis": "Kurz und kompetent antworten — und anbieten, es zu zeigen.",
+    "beispiel": "Ja, alle sind angeschlossen und geprüft. Wenn Sie möchten, zeige ich sie Ihnen kurz, bevor ich sauge.",
+    "redemittel": [
+     "Ja, alle sind … und geprüft.",
+     "Wenn Sie möchten, zeige ich …",
+     "bevor ich …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-elterngeld-rueckfrage",
+  "modus": "alltag",
+  "em": "👶",
+  "kat": "amt",
+  "titel": "Die Elterngeldstelle ruft an: Es fehlen Unterlagen",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du hast vor drei Wochen Elterngeld beantragt. Jetzt ruft eine Sachbearbeiterin der Elterngeldstelle an.",
+  "schritte": [
+   {
+    "amanda": "Guten Tag, hier ist die Elterngeldstelle. Ich bearbeite Ihren Antrag. Da fehlen leider noch Unterlagen.",
+    "hinweis": "Freundlich reagieren und genau nachfragen, was fehlt. Am besten gleich mitschreiben.",
+    "beispiel": "Oh, gut, dass Sie anrufen. Was genau fehlt denn? Ich schreibe es mir gleich auf.",
+    "redemittel": [
+     "Gut, dass Sie anrufen.",
+     "Was genau fehlt denn?",
+     "Ich schreibe es mir auf."
+    ]
+   },
+   {
+    "amanda": "Die Gehaltsabrechnungen von Januar bis März fehlen. Und die Geburtsurkunde mit dem Vermerk für das Elterngeld.",
+    "hinweis": "Wiederholen, was du verstanden hast. Und nachfragen, wenn ein Wort neu ist.",
+    "beispiel": "Also die Gehaltsabrechnungen von Januar bis März. Und die Geburtsurkunde — was meinen Sie genau mit dem Vermerk?",
+    "redemittel": [
+     "Also: …",
+     "Was meinen Sie genau mit …?",
+     "Habe ich das richtig verstanden?"
+    ]
+   },
+   {
+    "amanda": "Das Standesamt stellt eine extra Bescheinigung für das Elterngeld aus. Die haben Sie bei der Geburt bekommen.",
+    "hinweis": "Ehrlich sagen, wenn du nicht sicher bist, und fragen, was passiert, wenn du sie nicht findest.",
+    "beispiel": "Ah, das kann sein, das muss ich zu Hause suchen. Und wenn ich sie nicht finde? Kann ich sie beim Standesamt neu bekommen?",
+    "redemittel": [
+     "Das muss ich zu Hause suchen.",
+     "Und wenn ich … nicht finde?",
+     "Kann ich sie neu bekommen?"
+    ]
+   },
+   {
+    "amanda": "Ja, das geht. Schicken Sie uns bitte alles innerhalb von vier Wochen, gern auch per Post.",
+    "hinweis": "Nach dem Aktenzeichen fragen, damit alles richtig zugeordnet wird. Dann danke sagen.",
+    "beispiel": "Mache ich. Welches Aktenzeichen soll ich auf den Brief schreiben? Dann danke ich Ihnen für den Anruf.",
+    "redemittel": [
+     "Welches Aktenzeichen soll ich angeben?",
+     "innerhalb von vier Wochen",
+     "Danke für den Anruf."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-bauleiter-subunternehmer",
+  "modus": "business",
+  "em": "🏗️",
+  "kat": "handwerk",
+  "titel": "Falsche Lieferung, der Zeitplan wackelt — Klartext mit dem Subunternehmer",
+  "lvl": "C1",
+  "dauer": "6 Min",
+  "ort": "Du bist Bauleiterin. Der Fensterbauer hat die falschen Maße geliefert. Der Einzug der Mieter ist in sechs Wochen. Du rufst den Chef der Firma an.",
+  "schritte": [
+   {
+    "amanda": "Ja, ich hab's schon gehört. Blöd gelaufen. Da hat sich bei uns jemand beim Aufmaß vertan.",
+    "klartext": "Ich habe es schon gehört. Das ist schlecht gelaufen. Jemand bei uns hat beim Messen einen Fehler gemacht.",
+    "hinweis": "Nicht über die Schuldfrage diskutieren, sie ist geklärt. Sofort zum Wichtigsten: dem Termin.",
+    "beispiel": "Danke, dass Sie das gleich zugeben. Dann müssen wir nicht über die Ursache reden, sondern nur über eins: Wann sind die richtigen Fenster drin?",
+    "redemittel": [
+     "Danke, dass Sie das gleich zugeben.",
+     "Dann müssen wir nicht über …, sondern nur über eins: …",
+     "Wann sind … drin?"
+    ]
+   },
+   {
+    "amanda": "Also, neu produzieren dauert normalerweise fünf Wochen. Plus Einbau.",
+    "hinweis": "Die Folgen klar machen — ohne Drohung, mit Fakten. Dann fragen, was er tun kann.",
+    "beispiel": "Fünf Wochen plus Einbau heißt: Der Innenausbau kann nicht anfangen, und der Einzug in sechs Wochen ist weg. Was können Sie tun, damit es schneller geht?",
+    "redemittel": [
+     "… heißt konkret: …",
+     "Der Einzug ist dann nicht zu halten.",
+     "Was können Sie tun, damit …?"
+    ]
+   },
+   {
+    "amanda": "Ich kann beim Werk anfragen, ob die uns vorziehen. Versprechen kann ich nix.",
+    "klartext": "Ich kann beim Werk fragen, ob sie unseren Auftrag zuerst produzieren. Ich kann aber nichts versprechen.",
+    "hinweis": "Das reicht nicht. Eine Frist und eine Zwischenlösung verlangen, die die Baustelle weiterlaufen lässt.",
+    "beispiel": "Bitte fragen Sie heute noch an und geben Sie mir bis morgen Mittag einen verbindlichen Termin. Und bis dahin: Können Sie die Öffnungen provisorisch dicht machen, damit drinnen weitergearbeitet werden kann?",
+    "redemittel": [
+     "Geben Sie mir bis … einen verbindlichen Termin.",
+     "Und bis dahin: …",
+     "provisorisch dicht machen"
+    ]
+   },
+   {
+    "amanda": "Provisorisch abdichten, ja, das kriegen wir hin. Das geht dann aber auf Ihre Rechnung, oder?",
+    "klartext": "Wir können die Öffnungen provisorisch abdichten. Bezahlen Sie das?",
+    "hinweis": "Bestimmt bleiben: Wer den Fehler verursacht hat, trägt die Kosten. Aber im Ton freundlich.",
+    "beispiel": "Nein, das sehe ich anders. Der Fehler lag beim Aufmaß, also bei Ihnen. Die Abdichtung und die Neuproduktion übernehmen Sie. Das halte ich gleich schriftlich fest.",
+    "redemittel": [
+     "Nein, das sehe ich anders.",
+     "Der Fehler lag bei …, also …",
+     "Das halte ich gleich schriftlich fest."
+    ]
+   },
+   {
+    "amanda": "Hm. Na gut. Ich meld mich morgen bis zwölf.",
+    "klartext": "Na gut. Ich melde mich morgen bis zwölf Uhr.",
+    "hinweis": "Das Gespräch verbindlich abschließen und die Beziehung retten — ihr arbeitet noch länger zusammen.",
+    "beispiel": "Gut, dann bis morgen zwölf. Und danke, dass Sie so offen damit umgehen. Das macht es für uns beide leichter.",
+    "redemittel": [
+     "Dann bis morgen …",
+     "Danke, dass Sie so offen damit umgehen.",
+     "Das macht es für uns beide leichter."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-pflege-arzt-ueberzeugen",
+  "modus": "business",
+  "em": "📞",
+  "kat": "pflege",
+  "titel": "Die Bewohnerin baut ab — den Arzt am Telefon überzeugen",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Du bist Pflegefachkraft im Spätdienst. Frau Weber, 84, ist seit heute Nachmittag verwirrt und hat Fieber. Du rufst den Hausarzt an. Er hat Feierabend.",
+  "schritte": [
+   {
+    "amanda": "Ja, Doktor Brandt. Ich bin eigentlich schon auf dem Sprung. Was gibt's?",
+    "klartext": "Hier ist Doktor Brandt. Ich wollte gerade gehen. Worum geht es?",
+    "hinweis": "Strukturiert berichten: wer, was ist neu, welche Werte. Ein Arzt hört nur kurz zu — gib ihm gleich das Wichtigste.",
+    "beispiel": "Guten Abend, hier ist Schwester Amina aus dem Haus Lindenhof. Es geht um Frau Weber, vierundachtzig. Sie ist seit heute Nachmittag neu verwirrt und hat neununddreißig Komma eins Fieber.",
+    "redemittel": [
+     "Es geht um …",
+     "Seit … ist sie neu …",
+     "Sie hat … Fieber."
+    ]
+   },
+   {
+    "amanda": "Verwirrt ist sie doch öfter mal, oder? Geben Sie ihr was gegen das Fieber, ich schau morgen vorbei.",
+    "klartext": "Sie ist doch öfter verwirrt, oder? Geben Sie ihr ein Mittel gegen das Fieber, ich komme morgen.",
+    "hinweis": "Widersprechen mit Fakten: Was ist anders als sonst? Gib weitere Werte, die die Lage ernst machen.",
+    "beispiel": "Nein, das ist anders als sonst. Normalerweise erkennt sie uns alle, heute nicht. Dazu: Puls hundertzwölf, Blutdruck neunzig zu fünfzig, und sie hat seit Mittag kaum getrunken.",
+    "redemittel": [
+     "Nein, das ist anders als sonst.",
+     "Normalerweise …, heute nicht.",
+     "Dazu: …"
+    ]
+   },
+   {
+    "amanda": "Hm. Blutdruck neunzig zu fünfzig … Und Urin?",
+    "hinweis": "Ehrlich antworten, auch wenn du etwas nicht weißt. Und deine Einschätzung sagen.",
+    "beispiel": "Sie war seit dem Mittag nicht auf der Toilette, die Einlage ist trocken. Ehrlich gesagt mache ich mir Sorgen. Ich glaube nicht, dass das bis morgen warten kann.",
+    "redemittel": [
+     "Seit … nicht …",
+     "Ehrlich gesagt mache ich mir Sorgen.",
+     "Ich glaube nicht, dass das bis morgen warten kann."
+    ]
+   },
+   {
+    "amanda": "Okay. Ich schaff's heute nicht mehr. Rufen Sie den ärztlichen Bereitschaftsdienst — oder bei Verschlechterung direkt die 112.",
+    "hinweis": "Die Anweisung wiederholen, damit sie eindeutig ist, und dokumentieren, dass der Arzt informiert ist.",
+    "beispiel": "Verstanden: Ich rufe jetzt den Bereitschaftsdienst, und wenn es schlechter wird, die 112. Ich dokumentiere, dass ich Sie um neunzehn Uhr zehn informiert habe.",
+    "redemittel": [
+     "Verstanden: …",
+     "Wenn es schlechter wird, …",
+     "Ich dokumentiere, dass ich Sie um … informiert habe."
+    ]
+   }
+  ]
  }
   ];
 
