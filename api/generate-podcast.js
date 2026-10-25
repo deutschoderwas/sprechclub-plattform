@@ -42,7 +42,11 @@
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
 
-export const maxDuration = 60;
+/* 300 statt 60 Sekunden (25.10.2026): Am Sonntag lief der Generator
+   von 06:01:06 bis nach 06:02:02 und wurde dann abgewürgt — vier Skripte
+   parallel plus JSON-Reparatur passten nicht mehr in eine Minute. Es
+   wurde nichts gespeichert und der Audioschritt nie angestoßen. */
+export const maxDuration = 300;
 
 const MODEL   = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 const SUPA    = process.env.SUPABASE_URL;
@@ -389,6 +393,11 @@ export default async function handler(req, res) {
       fehler: zeilen.filter(z => z.status === 'fehler').map(z => z.level + ': ' + z.fehler)
     });
   } catch (err) {
+    /* Auch wenn das Schreiben scheitert: die schon fertigen Entwürfe
+       der letzten Tage trotzdem einsprechen lassen. Nur hier und am
+       Ende anstoßen, nie zusätzlich am Anfang — sonst laufen zwei
+       Ketten gleichzeitig und sprechen dieselbe Folge doppelt ein. */
+    await weiterAnAudio();
     return res.status(500).json({ error: String(err && err.message || err) });
   }
 }
