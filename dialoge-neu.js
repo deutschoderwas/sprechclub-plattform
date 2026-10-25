@@ -2423,6 +2423,223 @@
     ]
    }
   ]
+ },
+  /* ---- B2/C1-Ausbau, Runde 5: die letzten vier C1-Lücken (25.10.2026) ---- */
+
+ {
+  "id": "c1-rauch-treppenhaus",
+  "modus": "alltag",
+  "em": "🔥",
+  "kat": "notfall",
+  "titel": "Rauch im Treppenhaus — die Nachbarin will nach unten rennen",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Abends riecht es nach Rauch. Im Treppenhaus ist dichter Qualm. Du hast schon die 112 gerufen. Deine ältere Nachbarin steht in ihrer offenen Tür und will mit ihrer Tasche die Treppe runter.",
+  "schritte": [
+   {
+    "amanda": "Ich muss hier raus! Lassen Sie mich, ich geh runter!",
+    "hinweis": "Laut, ruhig und mit kurzen Sätzen. Sie aufhalten — durch Rauch im Treppenhaus zu gehen ist lebensgefährlich.",
+    "beispiel": "Frau Kaiser, stopp! Nicht ins Treppenhaus! Der Rauch ist giftig, da unten sehen Sie nichts mehr. In der Wohnung sind Sie sicherer.",
+    "redemittel": [
+     "Stopp! Nicht ins Treppenhaus!",
+     "Der Rauch ist giftig.",
+     "In der Wohnung sind Sie sicherer."
+    ]
+   },
+   {
+    "amanda": "Aber wenn das Feuer hochkommt? Ich will hier nicht verbrennen!",
+    "hinweis": "Angst ernst nehmen und mit klaren Schritten antworten. Wer etwas zu tun hat, beruhigt sich schneller.",
+    "beispiel": "Ich verstehe, dass Sie Angst haben. Die Feuerwehr ist schon unterwegs. Wir machen jetzt drei Dinge: Tür zu, nasses Handtuch unten an die Tür, und dann ans Fenster.",
+    "redemittel": [
+     "Ich verstehe, dass Sie Angst haben.",
+     "Die Feuerwehr ist schon unterwegs.",
+     "Wir machen jetzt drei Dinge: …"
+    ]
+   },
+   {
+    "amanda": "Ein nasses Handtuch? Wozu das denn?",
+    "hinweis": "Kurz erklären, warum — dann macht sie mit.",
+    "beispiel": "Damit kein Rauch unter der Tür durchkommt. Machen Sie das Handtuch im Bad nass und legen Sie es fest an den Spalt. Ich mache das bei mir genauso.",
+    "redemittel": [
+     "Damit kein Rauch …",
+     "Machen Sie … nass und legen Sie es …",
+     "Ich mache das bei mir genauso."
+    ]
+   },
+   {
+    "amanda": "Gut … gut. Und dann?",
+    "hinweis": "Ihr eine klare letzte Aufgabe geben und Kontakt halten.",
+    "beispiel": "Dann gehen Sie ans Fenster zur Straße, machen es auf und winken, wenn die Feuerwehr kommt. Ich rufe Sie gleich auf dem Handy an, dann sind Sie nicht allein.",
+    "redemittel": [
+     "Dann gehen Sie ans Fenster zur Straße.",
+     "Winken Sie, wenn die Feuerwehr kommt.",
+     "Ich rufe Sie gleich an, dann sind Sie nicht allein."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-allergie-restaurant",
+  "modus": "alltag",
+  "em": "🥜",
+  "kat": "essen",
+  "titel": "Nussallergie — der Kellner nimmt es nicht ernst",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Im Restaurant mit deinem Sohn, zehn. Er hat eine schwere Nussallergie. Der Kellner ist gestresst und wimmelt dich ab.",
+  "schritte": [
+   {
+    "amanda": "Nüsse? Nee, da sind keine drin. Also, ich denk mal nicht. Was darf's zu trinken sein?",
+    "klartext": "Nein, da sind keine Nüsse drin. Jedenfalls glaube ich das nicht. Was möchten Sie trinken?",
+    "hinweis": "Ein „ich denk mal“ reicht bei einer Allergie nicht. Freundlich, aber deutlich machen, wie ernst es ist.",
+    "beispiel": "Moment, bevor wir bestellen: Mein Sohn hat eine schwere Nussallergie. Schon Spuren können gefährlich sein. Ich denke reicht da leider nicht — können Sie bitte in der Küche nachfragen?",
+    "redemittel": [
+     "Moment, bevor wir bestellen: …",
+     "Schon Spuren können gefährlich sein.",
+     "Können Sie bitte in der Küche nachfragen?"
+    ]
+   },
+   {
+    "amanda": "Ja, aber wir haben grad richtig viel zu tun. Steht doch alles in der Allergenkarte.",
+    "klartext": "Wir haben gerade sehr viel zu tun. Alle Informationen stehen in der Allergenkarte.",
+    "hinweis": "Verständnis für den Stress, aber nicht nachgeben. Nach der Karte fragen und trotzdem auf der Rückfrage bestehen.",
+    "beispiel": "Das sehe ich, und ich will Sie auch nicht aufhalten. Bringen Sie mir bitte die Allergenkarte. Und beim Dessert frage ich trotzdem lieber den Koch selbst, denn da wird oft mit Nüssen gearbeitet.",
+    "redemittel": [
+     "Das sehe ich, und ich will Sie nicht aufhalten.",
+     "Bringen Sie mir bitte …",
+     "… frage ich trotzdem lieber selbst, denn …"
+    ]
+   },
+   {
+    "amanda": "Okay, ich hol den Koch kurz.",
+    "hinweis": "Beim Koch genau nachfragen: nicht nur Zutaten, auch Öl und Geräte.",
+    "beispiel": "Danke. Mich interessiert vor allem, ob in der Fritteuse oder auf dem Brett vorher etwas mit Nüssen war. Bei einer schweren Allergie zählt auch das.",
+    "redemittel": [
+     "Mich interessiert vor allem, ob …",
+     "Bei einer schweren Allergie zählt auch das.",
+     "Kann man das ausschließen?"
+    ]
+   },
+   {
+    "amanda": "Das Schnitzel mit Pommes ist sicher, eigene Fritteuse. Vom Dessert würde ich abraten.",
+    "hinweis": "Jetzt spricht der Koch. Danke sagen und deine Entscheidung klar treffen. Freundlich bleiben — die beiden helfen dir jetzt.",
+    "beispiel": "Vielen Dank, dass Sie sich die Zeit nehmen. Dann nimmt er das Schnitzel mit Pommes, und auf das Dessert verzichten wir. Das hilft mir sehr.",
+    "redemittel": [
+     "Vielen Dank, dass Sie sich die Zeit nehmen.",
+     "Dann nimmt er …",
+     "Auf … verzichten wir."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-azubi-zu-spaet",
+  "modus": "business",
+  "em": "⏰",
+  "kat": "handwerk",
+  "titel": "Als Meisterin: Der Azubi kommt ständig zu spät",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Du bist Meisterin in einer Tischlerei. Dein Azubi Leon, achtzehn, kam diesen Monat sechsmal zu spät. Du sprichst mit ihm unter vier Augen.",
+  "schritte": [
+   {
+    "amanda": "Sie wollten mich sprechen? Geht's um heute Morgen? Da war echt Stau.",
+    "klartext": "Sie wollten mit mir sprechen? Geht es um heute Morgen? Da war wirklich Stau.",
+    "hinweis": "Nicht über einen einzelnen Morgen reden. Sachlich das Muster benennen — mit Zahl, ohne Vorwurf im Ton.",
+    "beispiel": "Nicht nur um heute. Du warst diesen Monat sechsmal zu spät. Das ist kein Zufall mehr, und darüber möchte ich mit dir reden.",
+    "redemittel": [
+     "Nicht nur um heute.",
+     "Du warst diesen Monat … zu spät.",
+     "Das ist kein Zufall mehr."
+    ]
+   },
+   {
+    "amanda": "Ja, sorry. Ist aber auch nie viel passiert, die anderen haben ja schon angefangen.",
+    "klartext": "Entschuldigung. Es ist aber nie viel passiert, die anderen haben ja schon angefangen.",
+    "hinweis": "Erklären, welche Folgen es hat — für das Team und für ihn selbst. Konkret, nicht moralisch.",
+    "beispiel": "Genau das ist das Problem: Die anderen fangen ohne dich an und müssen dir dann alles noch mal erklären. Und für deine Ausbildung heißt es: Du verpasst die Einweisung, und die ist bei uns an den Maschinen wichtig.",
+    "redemittel": [
+     "Genau das ist das Problem: …",
+     "Für deine Ausbildung heißt das: …",
+     "… ist bei uns wichtig."
+    ]
+   },
+   {
+    "amanda": "Ich komm halt morgens schlecht aus dem Bett. Und der Bus fährt nur alle halbe Stunde.",
+    "hinweis": "Den Grund ernst nehmen und gemeinsam nach einer Lösung suchen. Du willst ihn behalten, nicht bestrafen.",
+    "beispiel": "Danke, dass du das ehrlich sagst. Dann lass uns überlegen: Wenn du den Bus um sechs Uhr zehn nimmst, bist du zehn Minuten zu früh — die kannst du für einen Kaffee nutzen. Was bräuchtest du, damit das klappt?",
+    "redemittel": [
+     "Danke, dass du das ehrlich sagst.",
+     "Dann lass uns überlegen: …",
+     "Was bräuchtest du, damit das klappt?"
+    ]
+   },
+   {
+    "amanda": "Hm. Vielleicht zwei Wecker. Und abends nicht so lange zocken.",
+    "klartext": "Vielleicht zwei Wecker. Und abends nicht so lange Computerspiele spielen.",
+    "hinweis": "Die Abmachung festhalten und klar sagen, was passiert, wenn es nicht klappt — fair, nicht drohend.",
+    "beispiel": "Klingt nach einem Plan. Wir schauen in vier Wochen noch mal drauf. Ich sag dir aber auch ehrlich: Wenn es so weitergeht, muss ich das schriftlich festhalten, und das will ich für uns beide nicht.",
+    "redemittel": [
+     "Klingt nach einem Plan.",
+     "Wir schauen in … noch mal drauf.",
+     "Ich sag dir aber auch ehrlich: …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-kondolieren-kollegin",
+  "modus": "business",
+  "em": "🕊️",
+  "kat": "gefuehle",
+  "titel": "Die Kollegin kommt nach dem Tod ihres Vaters zurück",
+  "lvl": "C1",
+  "dauer": "4 Min",
+  "ort": "Deine Kollegin Sabine war zwei Wochen weg, ihr Vater ist gestorben. Heute ist ihr erster Tag. Ihr trefft euch allein in der Teeküche.",
+  "schritte": [
+   {
+    "amanda": "Oh, hallo. Ja … ich bin wieder da.",
+    "hinweis": "Das Thema nicht umgehen, aber auch nicht ausfragen. Ein kurzer, ehrlicher Satz reicht.",
+    "beispiel": "Schön, dass du wieder da bist. Das mit deinem Vater tut mir sehr leid.",
+    "redemittel": [
+     "Schön, dass du wieder da bist.",
+     "Das mit … tut mir sehr leid.",
+     "Mein herzliches Beileid."
+    ]
+   },
+   {
+    "amanda": "Danke. Es ging dann doch ganz schnell am Ende. Ich glaub, ich hab's noch gar nicht richtig realisiert.",
+    "klartext": "Danke. Am Ende ging es sehr schnell. Ich glaube, ich habe es noch gar nicht richtig verstanden.",
+    "hinweis": "Zuhören. Keine Ratschläge, kein „ich weiß, wie du dich fühlst“. Einfach Raum geben.",
+    "beispiel": "Das kann ich mir vorstellen. Das braucht bestimmt Zeit. Wenn du mal reden willst, bin ich da — und wenn nicht, ist das genauso in Ordnung.",
+    "redemittel": [
+     "Das kann ich mir vorstellen.",
+     "Das braucht bestimmt Zeit.",
+     "Wenn du mal reden willst, bin ich da."
+    ]
+   },
+   {
+    "amanda": "Danke, das ist lieb. Ehrlich gesagt bin ich froh, wenn ich mich ein bisschen auf die Arbeit konzentrieren kann.",
+    "hinweis": "Ihren Wunsch respektieren und praktisch helfen. Das ist oft die beste Unterstützung.",
+    "beispiel": "Verstehe ich gut. Ich habe deine Projekte in den zwei Wochen ein bisschen im Blick behalten. Sollen wir nachher kurz durchgehen, was ansteht? Dann musst du nicht alles allein sortieren.",
+    "redemittel": [
+     "Verstehe ich gut.",
+     "Ich habe … im Blick behalten.",
+     "Sollen wir nachher kurz durchgehen, was ansteht?"
+    ]
+   },
+   {
+    "amanda": "Das wär super. Danke dir, wirklich.",
+    "klartext": "Das wäre sehr gut. Vielen Dank.",
+    "hinweis": "Kurz und warm abschließen. Mehr braucht es nicht.",
+    "beispiel": "Gern. Ich komme um zehn zu dir. Und sag einfach, wenn dir zwischendurch etwas zu viel wird.",
+    "redemittel": [
+     "Gern.",
+     "Ich komme um … zu dir.",
+     "Sag einfach, wenn dir etwas zu viel wird."
+    ]
+   }
+  ]
  }
   ];
 

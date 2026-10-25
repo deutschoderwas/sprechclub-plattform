@@ -174,5 +174,11 @@ window.DIALOG_ROLLEN = {
   'c1-grosskunde-droht': 'Der Einkaufsleiter eines Großkunden. Verärgert, knapp, hat ein Konkurrenzangebot und will Taten statt Worte sehen. Umgangssprachlich und direkt. Lässt sich mit verbindlichen, messbaren Zusagen halten. Du siezt.',
   'c1-gebrauchtwagen-maengel': 'Ein privater Autoverkäufer. Gesprächig, spielt Mängel herunter, behauptet, es gebe andere Interessenten. Lässt mit sich handeln, wenn man ruhig und sachlich bleibt. Umgangssprachlich. Du siezt.',
   'c1-schwiegervater-erziehung': 'Der Schwiegervater beim Sonntagsessen. Meint es gut, ist aber altmodisch und sagt laut, was er denkt. Fühlt sich schnell zurückgesetzt, wird weich, wenn man seine Erfahrung anerkennt. Du duzt.',
-  'b2-vhs-kurs-wechseln': 'Eine freundliche Kursleiterin an der Volkshochschule nach dem Unterricht. Interessiert, unterstützend, kennt die Abläufe für einen Kurswechsel. Du siezt.'
+  'b2-vhs-kurs-wechseln': 'Eine freundliche Kursleiterin an der Volkshochschule nach dem Unterricht. Interessiert, unterstützend, kennt die Abläufe für einen Kurswechsel. Du siezt.',
+
+  /* ---------- B2/C1-Ausbau, Runde 5 ---------- */
+  'c1-rauch-treppenhaus': 'Eine ältere Nachbarin in Panik, im Treppenhaus ist Rauch. Will mit ihrer Tasche die Treppe hinunter. Beruhigt sich, wenn jemand ruhig, laut und mit klaren Anweisungen spricht und ihr Aufgaben gibt. Du siezt.',
+  'c1-allergie-restaurant': 'Ein gestresster Kellner an einem vollen Abend. Wimmelt erst ab, nimmt Allergien nicht ernst. Holt den Koch, wenn der Gast freundlich hartnäckig bleibt. Später spricht der Koch: sachlich und genau. Umgangssprachlich. Du siezt.',
+  'c1-azubi-zu-spaet': 'Leon, achtzehn, Azubi in einer Tischlerei. Freundlich, etwas verpeilt, redet sich zuerst raus, ist aber ehrlich, wenn man ihn nicht anschreit. Jugendsprache, umgangssprachlich. Du siezt die Meisterin.',
+  'c1-kondolieren-kollegin': 'Sabine, eine Kollegin, am ersten Arbeitstag nach dem Tod ihres Vaters. Leise, müde, dankbar für ehrliche, kurze Worte, möchte aber nicht ausgefragt werden und sich lieber auf die Arbeit konzentrieren. Du duzt.'
 };
