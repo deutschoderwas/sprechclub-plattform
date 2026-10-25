@@ -24,6 +24,7 @@
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
 import { erinnerungLauf } from './_lead-erinnerung-lauf.js';
+import { abloufLauf } from './_abo-ablauf-mail.js';
 
 /* Welche Auftragsarten es gibt. Alles andere wird als 'fehler'
    abgelegt statt stillschweigend liegen zu bleiben. */
@@ -61,6 +62,14 @@ const ARTEN = {
      schicken, dass wir einen technischen Fehler hatten." */
   nachzuegler_mail:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', false),
   nachzuegler_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', true),
+
+  /* Eine Woche vor dem Ablauf eines Abos. Der Auftrag tr\u00e4gt die
+     Person (ziel_user) und den Tag (faellig_am) und wird erst an
+     diesem Tag angefasst. Julia, 25.10.2026, \u00fcber Natalia
+     Shurygina: "1 Woche vorher bekommt sie eine Email, dass ihr
+     Premium Abo am 31.12 abl\u00e4uft und ob sie ein neues Abo
+     abschliessen mag." */
+  abo_ablauf_mail: (sb, auftrag) => abloufLauf(sb, auftrag),
 };
 
 /* Einen eigenen Endpunkt mit dem internen Schluessel aufrufen. Der
@@ -104,15 +113,20 @@ export default async function handler(req, res) {
 
   /* Genau einen Auftrag greifen. Das .eq('status','offen') im update
      ist die Sperre: wer die Zeile schon umgestellt hat, hat sie. */
+  /* Auftr\u00e4ge mit einem Termin bleiben bis dahin liegen. Ohne Termin
+     laufen sie sofort, wie bisher. */
+  const heute = new Date().toISOString().slice(0, 10);
   const { data: kandidaten } = await sb.from('mail_auftraege')
-    .select('id').eq('status', 'offen').order('id', { ascending: true }).limit(1);
+    .select('id').eq('status', 'offen')
+    .or('faellig_am.is.null,faellig_am.lte.' + heute)
+    .order('id', { ascending: true }).limit(1);
   const naechster = (kandidaten || [])[0];
   if (!naechster) return res.status(200).json({ ok: true, nichts_zu_tun: true });
 
   const { data: gegriffen } = await sb.from('mail_auftraege')
     .update({ status: 'laeuft', gestartet_at: new Date().toISOString() })
     .eq('id', naechster.id).eq('status', 'offen')
-    .select('id,art,grund,angelegt_von,max_mails');
+    .select('id,art,grund,angelegt_von,max_mails,ziel_user,faellig_am');
   const auftrag = (gegriffen || [])[0];
   if (!auftrag) return res.status(200).json({ ok: true, schon_vergeben: naechster.id });
 
