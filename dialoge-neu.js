@@ -1975,6 +1975,454 @@
     ]
    }
   ]
+ },
+  /* ---- B2/C1-Ausbau, Runde 4 (25.10.2026) ---- */
+
+ {
+  "id": "c1-zeugenaussage-unfall",
+  "modus": "alltag",
+  "em": "🚓",
+  "kat": "notfall",
+  "titel": "Du hast den Unfall gesehen — jetzt fragt die Polizei genau nach",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "An einer Kreuzung sind zwei Autos zusammengestoßen. Du hast es von der Bushaltestelle aus gesehen. Eine Polizistin nimmt deine Aussage auf.",
+  "schritte": [
+   {
+    "amanda": "Sie haben den Unfall gesehen? Erzählen Sie bitte der Reihe nach, was passiert ist.",
+    "hinweis": "Chronologisch und nur das, was du wirklich gesehen hast. Ort und Richtung genau beschreiben.",
+    "beispiel": "Ja. Ich stand an der Haltestelle. Der silberne Kombi kam aus der Goethestraße und wollte nach links abbiegen. Der rote Kleinwagen kam ihm entgegen und fuhr geradeaus. Dann hat es gekracht.",
+    "redemittel": [
+     "Ich stand …",
+     "… kam aus … und wollte …",
+     "Dann hat es gekracht."
+    ]
+   },
+   {
+    "amanda": "Welche Farbe hatte die Ampel für den roten Wagen?",
+    "hinweis": "Genau trennen: Was hast du gesehen, was vermutest du? Das ist bei einer Aussage das Wichtigste.",
+    "beispiel": "Das kann ich nicht mit Sicherheit sagen. Ich habe erst hingeschaut, als ich das Hupen gehört habe. Für den Kombi war es auf jeden Fall noch grün, das habe ich gesehen.",
+    "redemittel": [
+     "Das kann ich nicht mit Sicherheit sagen.",
+     "Ich habe erst hingeschaut, als …",
+     "Auf jeden Fall …, das habe ich gesehen."
+    ]
+   },
+   {
+    "amanda": "Der Fahrer vom Kombi sagt, der Kleinwagen sei viel zu schnell gewesen. Würden Sie das bestätigen?",
+    "hinweis": "Nicht übernehmen, was andere sagen. Deine eigene Einschätzung geben, mit einer vorsichtigen Formulierung.",
+    "beispiel": "Bestätigen kann ich das nicht. Er kam mir nicht auffällig schnell vor, aber Geschwindigkeiten kann ich schlecht schätzen. Das möchte ich nicht behaupten.",
+    "redemittel": [
+     "Bestätigen kann ich das nicht.",
+     "Er kam mir nicht auffällig … vor.",
+     "Das möchte ich nicht behaupten."
+    ]
+   },
+   {
+    "amanda": "Verstehe. Ist Ihnen sonst noch etwas aufgefallen?",
+    "hinweis": "Ein Detail nennen, das wichtig sein kann — wieder klar als Beobachtung.",
+    "beispiel": "Ja, der Fahrer vom Kombi hatte das Handy in der Hand, als er ausgestiegen ist. Ob er es auch vorher beim Fahren benutzt hat, habe ich nicht gesehen.",
+    "redemittel": [
+     "Ja, mir ist aufgefallen, dass …",
+     "Ob …, habe ich nicht gesehen.",
+     "Das kann ich nur so sagen."
+    ]
+   },
+   {
+    "amanda": "Danke. Ich brauche noch Ihre Personalien. Eventuell meldet sich später jemand von der Versicherung.",
+    "hinweis": "Kooperativ abschließen und fragen, ob du deine Aussage noch einmal lesen kannst.",
+    "beispiel": "Natürlich. Kann ich die Aussage nachher noch einmal durchlesen, bevor ich unterschreibe? Ich möchte sicher sein, dass alles genau so drinsteht.",
+    "redemittel": [
+     "Natürlich.",
+     "Kann ich die Aussage noch einmal durchlesen?",
+     "bevor ich unterschreibe"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-mieterhoehung-verhandeln",
+  "modus": "alltag",
+  "em": "🏠",
+  "kat": "wohnen",
+  "titel": "Mieterhöhung um 25 Prozent — du rufst die Vermieterin an",
+  "lvl": "C1",
+  "dauer": "6 Min",
+  "ort": "Ein Brief: Deine Miete soll von 800 auf 1.000 Euro steigen. Du wohnst seit drei Jahren dort, die letzte Erhöhung ist zwei Jahre her. Du rufst die Vermieterin an.",
+  "schritte": [
+   {
+    "amanda": "Ah, Sie haben den Brief bekommen. Ja, die Preise sind ja überall gestiegen, das verstehen Sie sicher.",
+    "hinweis": "Höflich beginnen, aber gleich sagen, dass du nicht einverstanden bist. Noch keine Paragrafen.",
+    "beispiel": "Ja, ich habe den Brief bekommen, und ich verstehe, dass alles teurer wird. Aber fünfundzwanzig Prozent auf einmal — da kann ich so nicht zustimmen.",
+    "redemittel": [
+     "Ich verstehe, dass …",
+     "Aber … auf einmal — da kann ich so nicht zustimmen.",
+     "Das ist für mich eine große Summe."
+    ]
+   },
+   {
+    "amanda": "Na ja, vergleichbare Wohnungen hier kosten inzwischen locker tausend.",
+    "klartext": "Ähnliche Wohnungen hier kosten inzwischen leicht tausend Euro.",
+    "hinweis": "Mit Fakten antworten. Es gibt eine Grenze, wie stark die Miete in drei Jahren steigen darf — das ist die Kappungsgrenze.",
+    "beispiel": "Mag sein. Aber soweit ich weiß, darf die Miete in drei Jahren höchstens um zwanzig Prozent steigen, in vielen Städten sogar nur um fünfzehn. Und die letzte Erhöhung war vor zwei Jahren.",
+    "redemittel": [
+     "Mag sein. Aber soweit ich weiß, …",
+     "höchstens um … Prozent in drei Jahren",
+     "Und die letzte Erhöhung war …"
+    ]
+   },
+   {
+    "amanda": "Das müsste ich prüfen. Mein Steuerberater hat mir das so ausgerechnet.",
+    "hinweis": "Ihr Raum lassen, das zu prüfen, ohne sie bloßzustellen. Und nach der Begründung fragen.",
+    "beispiel": "Das ist gut, prüfen Sie das gern noch einmal. Ich hätte dann auch gern die Begründung schriftlich — zum Beispiel, auf welchen Mietspiegel Sie sich beziehen.",
+    "redemittel": [
+     "Prüfen Sie das gern noch einmal.",
+     "Ich hätte auch gern die Begründung schriftlich.",
+     "auf welchen Mietspiegel Sie sich beziehen"
+    ]
+   },
+   {
+    "amanda": "Hm. Sie sind ja eigentlich ein sehr angenehmer Mieter. Ich will da keinen Streit.",
+    "hinweis": "Die Gelegenheit nutzen: Kooperation zeigen und einen Kompromiss anbieten, der für dich tragbar ist.",
+    "beispiel": "Das geht mir genauso, ich wohne sehr gern hier. Eine moderate Erhöhung im Rahmen des Mietspiegels würde ich akzeptieren. Vielleicht schicken Sie mir einfach ein neues Schreiben, das wir beide gut vertreten können.",
+    "redemittel": [
+     "Das geht mir genauso.",
+     "Eine moderate Erhöhung im Rahmen … würde ich akzeptieren.",
+     "ein Schreiben, das wir beide gut vertreten können"
+    ]
+   },
+   {
+    "amanda": "Gut, ich spreche noch mal mit meinem Steuerberater und schicke Ihnen was Neues.",
+    "hinweis": "Freundlich abschließen. Sag, dass du bis zum neuen Schreiben nichts unterschreibst.",
+    "beispiel": "Sehr gern, danke. Dann warte ich auf das neue Schreiben und unterschreibe das alte erst mal nicht. Schönen Tag noch.",
+    "redemittel": [
+     "Dann warte ich auf …",
+     "… unterschreibe ich erst mal nicht.",
+     "Schönen Tag noch."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-finanzamt-rueckfrage",
+  "modus": "alltag",
+  "em": "📑",
+  "kat": "amt",
+  "titel": "Das Finanzamt will dein Homeoffice nicht anerkennen",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Ein Sachbearbeiter vom Finanzamt ruft an. In deiner Steuererklärung hast du an 180 Tagen Homeoffice angegeben. Er hat Zweifel.",
+  "schritte": [
+   {
+    "amanda": "Sie haben hundertachtzig Tage Homeoffice angegeben. Das ist ziemlich viel. Können Sie das belegen?",
+    "hinweis": "Ruhig und sachlich. Sag, dass die Angabe stimmt, und biete Nachweise an.",
+    "beispiel": "Ja, das stimmt so. Ich arbeite seit letztem Jahr drei Tage pro Woche von zu Hause. Das kann ich gern belegen.",
+    "redemittel": [
+     "Ja, das stimmt so.",
+     "Ich arbeite seit … von zu Hause.",
+     "Das kann ich gern belegen."
+    ]
+   },
+   {
+    "amanda": "Und womit? Eine Bescheinigung vom Arbeitgeber liegt uns nicht vor.",
+    "hinweis": "Konkrete Nachweise nennen und anbieten, sie nachzureichen.",
+    "beispiel": "Mein Arbeitgeber kann mir eine Bescheinigung ausstellen, dass Homeoffice vereinbart ist. Außerdem habe ich einen Kalender, in dem jeder Bürotag eingetragen ist. Beides reiche ich gern nach.",
+    "redemittel": [
+     "Mein Arbeitgeber kann mir … ausstellen.",
+     "Außerdem habe ich …",
+     "Beides reiche ich gern nach."
+    ]
+   },
+   {
+    "amanda": "Gut. Dann würde ich die Bearbeitung erst mal zurückstellen. Wie lange brauchen Sie?",
+    "hinweis": "Eine realistische Frist nennen — lieber etwas mehr Zeit, aber verbindlich.",
+    "beispiel": "Die Bescheinigung dauert vielleicht eine Woche. Wäre es in Ordnung, wenn ich Ihnen alles bis Ende des Monats schicke?",
+    "redemittel": [
+     "… dauert vielleicht …",
+     "Wäre es in Ordnung, wenn ich …?",
+     "bis Ende des Monats"
+    ]
+   },
+   {
+    "amanda": "Das passt. Schicken Sie es über Ihr Elster-Konto, mit Bezug auf Ihre Steuernummer.",
+    "hinweis": "Zusammenfassen, damit nichts schiefgeht, und dich bedanken.",
+    "beispiel": "Alles klar: Bescheinigung und Kalender bis Monatsende über Elster, mit meiner Steuernummer. Danke, dass Sie angerufen haben, statt gleich einen Bescheid zu schicken.",
+    "redemittel": [
+     "Alles klar: …",
+     "über Elster, mit meiner Steuernummer",
+     "Danke, dass Sie angerufen haben."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-stressinterview-deutsch",
+  "modus": "business",
+  "em": "💼",
+  "kat": "bewerbung",
+  "titel": "Vorstellungsgespräch: „Ihr Deutsch ist ja nicht perfekt …“",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Zweites Vorstellungsgespräch für eine Stelle im Vertrieb. Der Abteilungsleiter wird plötzlich kritisch.",
+  "schritte": [
+   {
+    "amanda": "Ganz ehrlich: Ihr Lebenslauf ist gut. Aber Ihr Deutsch ist ja nicht perfekt. Sie müssten jeden Tag mit Kunden telefonieren.",
+    "hinweis": "Nicht verteidigen und nicht entschuldigen. Den Punkt ruhig annehmen und zeigen, warum er kein Problem ist.",
+    "beispiel": "Das stimmt, perfekt ist es nicht — und trotzdem führen wir dieses Gespräch gerade ohne Probleme. In meiner letzten Stelle habe ich täglich auf Deutsch mit Kunden telefoniert.",
+    "redemittel": [
+     "Das stimmt, perfekt ist es nicht.",
+     "Und trotzdem …",
+     "In meiner letzten Stelle habe ich täglich …"
+    ]
+   },
+   {
+    "amanda": "Und wenn ein Kunde Sie mal nicht versteht? Das wirkt dann ja auch auf unsere Firma.",
+    "hinweis": "Eine Strategie zeigen, statt Versprechen zu machen. Und deinen Vorteil nennen.",
+    "beispiel": "Dann frage ich nach und fasse zusammen, was ich verstanden habe — das machen gute Verkäufer sowieso. Und ich spreche außerdem fließend Polnisch und Russisch. Für Ihre Kunden in Osteuropa ist das ein Vorteil.",
+    "redemittel": [
+     "Dann frage ich nach und fasse zusammen.",
+     "Das machen gute … sowieso.",
+     "Für … ist das ein Vorteil."
+    ]
+   },
+   {
+    "amanda": "Hm. Und schriftlich? Angebote, E-Mails?",
+    "hinweis": "Ehrlich sein und zeigen, dass du dich kennst und eine Lösung hast.",
+    "beispiel": "Schriftlich bin ich etwas langsamer als mündlich, das gebe ich zu. Wichtige Angebote lasse ich deshalb gegenlesen oder nutze Vorlagen. Bisher gab es dadurch keine einzige Beschwerde.",
+    "redemittel": [
+     "Schriftlich bin ich etwas langsamer, das gebe ich zu.",
+     "… lasse ich deshalb gegenlesen.",
+     "Bisher gab es dadurch keine …"
+    ]
+   },
+   {
+    "amanda": "Gut. Haben Sie noch Fragen an uns?",
+    "hinweis": "Den Spieß umdrehen: eine kluge Frage stellen, die zeigt, dass du schon an die Arbeit denkst.",
+    "beispiel": "Ja, eine. Welche Kunden würde ich in den ersten drei Monaten betreuen, und wie würde die Einarbeitung aussehen?",
+    "redemittel": [
+     "Ja, eine.",
+     "Welche … würde ich in den ersten … Monaten …?",
+     "Wie würde die Einarbeitung aussehen?"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-grosskunde-droht",
+  "modus": "business",
+  "em": "🤝",
+  "kat": "kunden",
+  "titel": "Der wichtigste Kunde droht zu kündigen",
+  "lvl": "C1",
+  "dauer": "6 Min",
+  "ort": "Du betreust einen Großkunden. Drei Lieferungen kamen zu spät. Der Einkaufsleiter ruft an und ist kurz davor, den Vertrag zu kündigen.",
+  "schritte": [
+   {
+    "amanda": "Ich mach's kurz: Drei Mal zu spät in zwei Monaten. Ich hab ein Angebot von Ihrer Konkurrenz auf dem Tisch.",
+    "klartext": "Ich sage es kurz: Sie haben in zwei Monaten dreimal zu spät geliefert. Ich habe ein Angebot von Ihrer Konkurrenz.",
+    "hinweis": "Nicht abwiegeln, nicht entschuldigen ohne Ende. Die Verspätungen ohne Wenn und Aber anerkennen.",
+    "beispiel": "Das ist berechtigt, und ich will gar nichts schönreden. Drei verspätete Lieferungen sind nicht das, was Sie von uns erwarten können.",
+    "redemittel": [
+     "Das ist berechtigt.",
+     "Ich will gar nichts schönreden.",
+     "… ist nicht das, was Sie von uns erwarten können."
+    ]
+   },
+   {
+    "amanda": "Und? Was ändert sich jetzt? Ich hab keine Lust, mir das noch zwei Monate anzuschauen.",
+    "klartext": "Was ändert sich jetzt? Ich möchte das nicht noch zwei Monate erleben.",
+    "hinweis": "Ursache in einem Satz, dann konkrete Maßnahmen. Keine Ausreden, keine langen Erklärungen.",
+    "beispiel": "Die Ursache war ein Engpass bei unserem Spediteur. Ab sofort liefern wir Ihre Ware über einen zweiten Spediteur, und ich bekomme jeden Morgen einen Statusbericht zu Ihren Aufträgen.",
+    "redemittel": [
+     "Die Ursache war …",
+     "Ab sofort …",
+     "und ich bekomme jeden Morgen …"
+    ]
+   },
+   {
+    "amanda": "Schöne Worte. Das hab ich schon mal gehört.",
+    "klartext": "Das klingt gut, aber das wurde mir schon einmal versprochen.",
+    "hinweis": "Misstrauen ernst nehmen und Verbindlichkeit anbieten, die etwas kostet.",
+    "beispiel": "Verstehe ich. Deshalb mein Vorschlag: Wenn die nächsten drei Monate eine Lieferung zu spät kommt, bekommen Sie auf diese Lieferung fünf Prozent Nachlass. Das schreibe ich Ihnen heute noch schriftlich.",
+    "redemittel": [
+     "Verstehe ich. Deshalb mein Vorschlag: …",
+     "Wenn …, bekommen Sie …",
+     "Das schreibe ich Ihnen heute noch schriftlich."
+    ]
+   },
+   {
+    "amanda": "Hm. Fünf Prozent. Und Sie sind persönlich mein Ansprechpartner, nicht irgendein Callcenter.",
+    "hinweis": "Zusagen und verbindlich abschließen. Kurz und klar.",
+    "beispiel": "Selbstverständlich. Sie erreichen mich direkt, auch mobil. Ich schicke Ihnen die Vereinbarung bis heute Abend, und nächste Woche rufe ich Sie an, wie es läuft.",
+    "redemittel": [
+     "Selbstverständlich.",
+     "Sie erreichen mich direkt.",
+     "Nächste Woche rufe ich Sie an, wie es läuft."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-gebrauchtwagen-maengel",
+  "modus": "alltag",
+  "em": "🚗",
+  "kat": "einkaufen",
+  "titel": "Gebrauchtwagen kaufen: Mängel finden, Preis drücken",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Du schaust dir einen gebrauchten Kombi bei einem privaten Verkäufer an. Er will 9.500 Euro. Bei der Probefahrt fallen dir ein paar Dinge auf.",
+  "schritte": [
+   {
+    "amanda": "Na, und? Der fährt doch super, oder? Für das Geld kriegen Sie nix Besseres.",
+    "klartext": "Er fährt doch sehr gut, oder? Für diesen Preis bekommen Sie nichts Besseres.",
+    "hinweis": "Positiv anfangen, aber nicht begeistert wirken — Begeisterung kostet Geld. Dann die Mängel ruhig nennen.",
+    "beispiel": "Er fährt ordentlich, ja. Mir sind aber ein paar Dinge aufgefallen: Beim Bremsen zieht er leicht nach rechts, und die Reifen sind ziemlich abgefahren.",
+    "redemittel": [
+     "Er fährt ordentlich, ja.",
+     "Mir sind aber ein paar Dinge aufgefallen: …",
+     "Beim … zieht er leicht nach …"
+    ]
+   },
+   {
+    "amanda": "Ach, die Reifen. Die sind halt Sommerreifen, das ist ganz normal.",
+    "klartext": "Das sind Sommerreifen, das ist ganz normal.",
+    "hinweis": "Nicht ablenken lassen. Konkret werden: was es kostet.",
+    "beispiel": "Normal oder nicht — sie müssen vor dem Winter neu, das sind schnell sechshundert Euro. Und das mit der Bremse müsste eine Werkstatt anschauen.",
+    "redemittel": [
+     "Normal oder nicht — …",
+     "Das sind schnell … Euro.",
+     "Das müsste eine Werkstatt anschauen."
+    ]
+   },
+   {
+    "amanda": "Also, unter neuntausend geh ich nicht. Ich hab noch zwei andere Interessenten.",
+    "hinweis": "Ruhig bleiben, ein begründetes Angebot machen und zeigen, dass du auch gehen kannst.",
+    "beispiel": "Das ist Ihr gutes Recht. Mein Angebot wäre achttausendvierhundert — das ist der Preis minus Reifen und Bremse. Wenn das nicht passt, ist das auch in Ordnung.",
+    "redemittel": [
+     "Das ist Ihr gutes Recht.",
+     "Mein Angebot wäre … — das ist …",
+     "Wenn das nicht passt, ist das auch in Ordnung."
+    ]
+   },
+   {
+    "amanda": "Achttausendsiebenhundert, und wir sind uns einig.",
+    "hinweis": "Einen fairen Abschluss finden und sofort die wichtigsten Punkte für den Vertrag nennen.",
+    "beispiel": "Achttausendsechshundert, und Sie geben mir alle Rechnungen und das Serviceheft mit. Dann machen wir einen schriftlichen Kaufvertrag.",
+    "redemittel": [
+     "…, und Sie geben mir … mit.",
+     "das Serviceheft",
+     "Dann machen wir einen schriftlichen Kaufvertrag."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-schwiegervater-erziehung",
+  "modus": "alltag",
+  "em": "👨‍👧",
+  "kat": "familie",
+  "titel": "Der Schwiegervater kritisiert eure Erziehung — vor dem Kind",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Sonntagsessen. Eure Tochter, sieben, will den Nachtisch nicht. Dein Schwiegervater sagt laut, dass ihr viel zu weich seid.",
+  "schritte": [
+   {
+    "amanda": "Also, zu meiner Zeit hätte es das nicht gegeben. Ihr lasst der Kleinen ja alles durchgehen.",
+    "klartext": "Früher hätte es das nicht gegeben. Ihr erlaubt dem Kind alles.",
+    "hinweis": "Nicht vor dem Kind streiten. Ruhig reagieren und das Gespräch auf später verschieben.",
+    "beispiel": "Ich merke, dass dich das beschäftigt. Lass uns da gern nachher in Ruhe drüber reden — nicht jetzt am Tisch.",
+    "redemittel": [
+     "Ich merke, dass dich das beschäftigt.",
+     "Lass uns nachher in Ruhe darüber reden.",
+     "nicht jetzt am Tisch"
+    ]
+   },
+   {
+    "amanda": "Warum denn nicht jetzt? Die Kleine kann ruhig hören, dass man nicht immer seinen Willen kriegt.",
+    "hinweis": "Freundlich, aber klar eine Grenze ziehen. Begründe mit dem Kind, nicht mit deinem Ärger.",
+    "beispiel": "Weil sie gerade sieht, wie Erwachsene über sie reden. Das möchte ich nicht. Das ist keine Kritik an dir — es geht mir nur um sie.",
+    "redemittel": [
+     "Weil …",
+     "Das möchte ich nicht.",
+     "Das ist keine Kritik an dir — es geht mir nur um …"
+    ]
+   },
+   {
+    "amanda": "Ich hab's doch nur gut gemeint. Ich hab ja auch drei Kinder großgezogen.",
+    "klartext": "Ich wollte nur helfen. Ich habe auch drei Kinder großgezogen.",
+    "hinweis": "Später in der Küche, unter vier Augen. Seine Erfahrung anerkennen. Dann erklären, wie ihr es macht und warum.",
+    "beispiel": "Das weiß ich, und das sieht man ja auch. Wir machen es nur ein bisschen anders: Beim Essen zwingen wir sie nicht, dafür gibt es keine Süßigkeiten zwischendurch. Das funktioniert für uns gut.",
+    "redemittel": [
+     "Das weiß ich, und das sieht man ja auch.",
+     "Wir machen es nur ein bisschen anders: …",
+     "Das funktioniert für uns gut."
+    ]
+   },
+   {
+    "amanda": "Na gut. Ihr müsst's ja wissen.",
+    "klartext": "Na gut. Es ist eure Entscheidung.",
+    "hinweis": "Das Gespräch versöhnlich beenden und ihm eine Rolle geben, in der er gut ist.",
+    "beispiel": "Danke, dass du es akzeptierst. Und ehrlich: Sie liebt es, mit dir im Garten zu arbeiten. Da lernt sie mehr Geduld als bei jedem Nachtisch.",
+    "redemittel": [
+     "Danke, dass du es akzeptierst.",
+     "Und ehrlich: …",
+     "Da lernt sie mehr … als …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-vhs-kurs-wechseln",
+  "modus": "alltag",
+  "em": "📚",
+  "kat": "bildung",
+  "titel": "Der Deutschkurs ist zu leicht — du willst wechseln",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du machst einen Deutschkurs an der Volkshochschule. Nach drei Wochen merkst du: Der Kurs ist zu leicht. Du sprichst nach dem Unterricht mit der Kursleiterin.",
+  "schritte": [
+   {
+    "amanda": "Ja? Haben Sie eine Frage zu den Hausaufgaben?",
+    "hinweis": "Freundlich anfangen und dein Anliegen höflich sagen, ohne den Kurs schlechtzumachen.",
+    "beispiel": "Nein, es geht um etwas anderes. Mir gefällt Ihr Unterricht sehr gut. Aber ich habe das Gefühl, dass der Kurs für mich ein bisschen zu leicht ist.",
+    "redemittel": [
+     "Es geht um etwas anderes.",
+     "Mir gefällt Ihr Unterricht sehr gut.",
+     "Ich habe das Gefühl, dass …"
+    ]
+   },
+   {
+    "amanda": "Ah, wirklich? Woran merken Sie das?",
+    "hinweis": "Konkrete Beispiele geben. So kann sie dich besser einschätzen.",
+    "beispiel": "Die meisten Grammatikthemen kenne ich schon, und ich bin bei den Übungen immer als Erste fertig. Was mir fehlt, ist mehr Sprechen über schwierige Themen.",
+    "redemittel": [
+     "Die meisten … kenne ich schon.",
+     "Ich bin bei den Übungen immer als Erste fertig.",
+     "Was mir fehlt, ist …"
+    ]
+   },
+   {
+    "amanda": "Das stimmt, Sie sind wirklich weit. Es gibt einen B2-Kurs am Dienstagabend. Aber der hat schon vor einem Monat angefangen.",
+    "hinweis": "Zeigen, dass du dir das zutraust, und fragen, wie ein Wechsel praktisch geht.",
+    "beispiel": "Das traue ich mir zu, den Stoff vom ersten Monat kann ich nachholen. Wie läuft so ein Wechsel? Muss ich mich neu anmelden?",
+    "redemittel": [
+     "Das traue ich mir zu.",
+     "… kann ich nachholen.",
+     "Wie läuft so ein Wechsel?"
+    ]
+   },
+   {
+    "amanda": "Ich spreche mit der Kollegin. Kommen Sie doch nächsten Dienstag einfach mal zum Schnuppern.",
+    "klartext": "Kommen Sie nächsten Dienstag zum Probieren in den Kurs.",
+    "hinweis": "Dich bedanken und fragen, was mit dem Geld für deinen jetzigen Kurs passiert.",
+    "beispiel": "Sehr gern, vielen Dank. Und noch eine Frage: Was passiert mit der Kursgebühr, die ich schon bezahlt habe?",
+    "redemittel": [
+     "Sehr gern, vielen Dank.",
+     "Noch eine Frage: …",
+     "Was passiert mit der Kursgebühr?"
+    ]
+   }
+  ]
  }
   ];
 
