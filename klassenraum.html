@@ -223,6 +223,10 @@
   .bo-hr{ font-size:.82rem; font-weight:700; color:var(--anthrazit); opacity:.85; margin:2px 0 8px; }
   .bo-there{ display:inline-block; background:#1f7a4d; color:#fff; border-radius:999px; padding:1px 8px; font-size:.72rem; font-weight:800; margin-left:6px; }
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
+  .bo-mv{ display:flex; align-items:center; gap:6px; margin:4px 0; font-size:.86rem; flex-wrap:wrap; }
+  .bo-mv-n{ font-weight:700; }
+  .bo-mv-lbl{ color:var(--anthrazit); opacity:.55; font-size:.76rem; margin-left:auto; }
+  .bo-mv-in{ width:48px; padding:2px 4px; border:1px solid var(--rahmen); border-radius:7px; font-family:'Inter'; font-weight:700; text-align:center; }
   .help-alert{ position:fixed; top:12px; left:50%; transform:translateX(-50%); z-index:90; background:var(--rot); color:#fff; font-family:'Inter'; font-weight:800; font-size:.92rem; padding:10px 14px; border-radius:14px; box-shadow:0 8px 24px rgba(221,0,0,.35); display:none; align-items:center; gap:10px; max-width:92vw; }
   .help-alert.show{ display:flex; }
   .help-alert .ha-go{ background:#fff; color:var(--rot); border:none; border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:800; font-size:.82rem; cursor:pointer; white-space:nowrap; }
@@ -560,11 +564,8 @@
         <button id="vc-hand" onclick="vcHand()" title="Melden – ich möchte sprechen" style="display:none">✋ Melden</button>
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
-        <button id="vc-event" onclick="toggleEvent()" title="Bühnen-Modus: Alle kommen stummgeschaltet rein, Fokus auf dir. Ideal für den Start mit vielen Leuten." style="display:none">🎤 Event-Modus</button>
         <button id="vc-bo" onclick="toggleBoPanel()" title="Kleingruppen (Breakout-Räume) bilden" style="display:none">👥 Gruppen</button>
         <button onclick="vcTiles()" title="Alle Teilnehmer sehen">👥 Alle</button>
-        <button onclick="vcFull()" title="Großansicht">⛶ Groß</button>
-        <button id="vc-tafelbig" onclick="toggleTafelBig()" title="Live-Tafel groß neben der Präsentation (nur am Computer)">🔳 Tafel groß</button>
         <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
@@ -1271,6 +1272,15 @@
     boRenderTeacher();
   }
   function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
+  // Einzelnen Schüler live in eine andere Gruppe verschieben – OHNE Countdown, sofort.
+  // Kein reset-Token → die Gruppen-Tafeln bleiben erhalten; nur der verschobene Schüler wechselt den Raum.
+  function boMoveLive(id, g){
+    const n=parseInt(g,10); if(!n||n<1){ boRenderTeacher(); return; }
+    window._breakoutGroups=window._breakoutGroups||{};
+    window._breakoutGroups[id]=n; if(window._boAssign) window._boAssign[id]=n;
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+    boRenderTeacher();
+  }
   function boRenderTeacher(){
     const body=document.getElementById('bo-body'); if(!body) return;
     const esc=(s)=>String(s==null?'':s).replace(/[<>&"']/g,'');
@@ -1341,6 +1351,7 @@
     let n=secs|0;
     const mal=()=>{ const t=b.querySelector('.boc-t'); if(t) t.innerHTML='⏳ <b>'+n+' s</b> — gleich '+was+'. Schreibt fertig … (wird automatisch gesichert)'; };
     const x=document.getElementById('boc-x'); if(x) x.style.display = istLehrer ? 'inline-block' : 'none';
+    const nw=document.getElementById('boc-now'); if(nw) nw.style.display = istLehrer ? 'inline-block' : 'none';
     mal(); b.classList.add('show');
     clearInterval(window._boCountIv);
     window._boCountIv=setInterval(()=>{ n--; if(n<=0){ clearInterval(window._boCountIv); boHideCountdown(); return; } mal(); }, 1000);
@@ -1349,12 +1360,20 @@
   // Lehrer: erst 30s vorwarnen, dann wirklich mischen/zurückholen
   function boWarnThen(kind){
     const secs=30;
+    window._boWarnKind=kind;
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind, secs } }); }catch(e){}
     boShowCountdown(kind, secs);
     clearTimeout(window._boWarnT);
     window._boWarnT=setTimeout(()=>{ boHideCountdown(); if(kind==='end') boEnd(); else boMix(); }, secs*1000);
   }
   function boCancelWarn(){ clearTimeout(window._boWarnT); boHideCountdown(); try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind:'cancel' } }); }catch(e){} }
+  // „⏩ Sofort": Countdown überspringen und sofort mischen/zurückholen.
+  function boWarnNow(){
+    const kind=window._boWarnKind;
+    clearTimeout(window._boWarnT); boHideCountdown();
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'warn', payload:{ kind:'cancel' } }); }catch(e){}
+    if(kind==='end') boEnd(); else if(kind==='mix') boMix();
+  }
   function handleWarn(p){ if(!p) return; if(p.kind==='cancel'){ boHideCountdown(); return; } boShowCountdown(p.kind, p.secs||30); }
   // ---- Lehrer-Präsenz: wer ist in welcher Gruppe / im Hauptraum ----
   window._teacherPos = window._teacherPos || {};
@@ -1611,7 +1630,7 @@
     setTimeout(()=>{ if(typeof fitLektion==='function') fitLektion(); }, 80);
   }
   function toggleTafelBig(){ setTafelBig(!document.body.classList.contains('tafelbig')); }
-  try{ if(localStorage.getItem('club_tafelbig')==='1') setTafelBig(true); }catch(e){}
+  try{ document.body.classList.remove('tafelbig'); localStorage.removeItem('club_tafelbig'); }catch(e){}
   // (Vollmodus/„Präsi groß" wurde entfernt – festes 3-Spalten-Layout: Präsentation | Live-Tafel | Kameras,
   //  damit die Live-Tafel nie verschwindet.) Sicherheitshalber einen evtl. gespeicherten Zustand aufräumen.
   try{ document.body.classList.remove('praesbig'); localStorage.removeItem('club_praesbig'); }catch(e){}
@@ -2521,7 +2540,7 @@
 <!-- Breakout-Banner für Schüler -->
 <div class="event-banner" id="event-banner">🎤 Bühne läuft – Mikro aus, bitte zuhören</div>
 <div class="bo-banner" id="bo-banner"><span class="bo-txt"></span><button class="bo-call" id="bo-call" onclick="callTeacher()" style="display:none">🔔 Lehrer rufen</button></div>
-<div class="bo-count" id="bo-count"><span class="boc-t"></span><button class="boc-x" id="boc-x" onclick="boCancelWarn()" style="display:none">Abbrechen</button></div>
+<div class="bo-count" id="bo-count"><span class="boc-t"></span><button class="boc-x" id="boc-now" onclick="boWarnNow()" style="display:none">⏩ Sofort</button><button class="boc-x" id="boc-x" onclick="boCancelWarn()" style="display:none">Abbrechen</button></div>
 <div class="help-alert" id="help-alert"><span class="ha-txt"></span><button class="ha-go">👀 hinschauen</button><button class="ha-x" title="Weg" onclick="document.getElementById('help-alert').classList.remove('show')">✕</button></div>
 </body>
 </html>
