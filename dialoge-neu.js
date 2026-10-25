@@ -1070,6 +1070,474 @@
     ]
    }
   ]
+ },
+  /* ---- B2/C1-Ausbau, Runde 2 (25.10.2026) ---- */
+
+ {
+  "id": "b2-notruf-leiter",
+  "modus": "business",
+  "em": "🚑",
+  "kat": "notfall",
+  "titel": "Notruf: Ein Kollege ist von der Leiter gefallen",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Im Lager ist ein Kollege von der Leiter gestürzt. Er ist wach, aber er blutet am Kopf und kann nicht aufstehen. Du rufst die 112.",
+  "schritte": [
+   {
+    "amanda": "Notruf Feuerwehr und Rettungsdienst. Wo genau ist der Notfallort?",
+    "hinweis": "Zuerst der Ort — so genau wie möglich: Adresse, Gebäude, wo man reinkommt.",
+    "beispiel": "Firma Baumann Logistik, Industriestraße vierzehn in Hagen. Im Lager, Halle zwei. Am besten über das Tor an der Rückseite.",
+    "redemittel": [
+     "Die Adresse ist …",
+     "Im Gebäude …, Halle …",
+     "Am besten kommen Sie über …"
+    ]
+   },
+   {
+    "amanda": "Was ist passiert?",
+    "hinweis": "Kurz und sachlich: was, wie hoch, wie geht es ihm jetzt.",
+    "beispiel": "Ein Kollege ist von einer Leiter gefallen, ungefähr aus zwei Metern. Er ist wach und spricht, aber er blutet am Kopf und kann nicht aufstehen.",
+    "redemittel": [
+     "… ist aus etwa … Metern gefallen.",
+     "Er ist wach und spricht.",
+     "Er blutet am … und kann nicht …"
+    ]
+   },
+   {
+    "amanda": "Wie viele Verletzte? Und wie alt ist der Mann ungefähr?",
+    "hinweis": "Genau antworten, auch wenn du nur schätzen kannst. Sag ehrlich, wenn du schätzt.",
+    "beispiel": "Nur er. Er ist ungefähr fünfzig, genau weiß ich es nicht.",
+    "redemittel": [
+     "Nur eine Person.",
+     "Er ist ungefähr …",
+     "Genau weiß ich es nicht."
+    ]
+   },
+   {
+    "amanda": "Der Rettungswagen ist unterwegs. Bewegen Sie ihn nicht. Drücken Sie ein sauberes Tuch auf die Wunde. Ist jemand am Tor?",
+    "hinweis": "Bestätigen, was du tust, und dass jemand den Rettungsdienst reinholt. Nicht auflegen, bevor die Leitstelle es sagt.",
+    "beispiel": "Okay, ich bewege ihn nicht und drücke ein Tuch drauf. Meine Kollegin geht jetzt zum Tor und wartet dort.",
+    "redemittel": [
+     "Okay, ich bewege ihn nicht.",
+     "Ich drücke ein Tuch auf die Wunde.",
+     "Eine Kollegin wartet am Tor."
+    ]
+   },
+   {
+    "amanda": "Gut. Bleiben Sie bei ihm und sprechen Sie mit ihm. Wenn sich etwas verändert, rufen Sie sofort wieder an.",
+    "hinweis": "Kurz bestätigen. Mehr braucht es nicht.",
+    "beispiel": "Mache ich. Danke.",
+    "redemittel": [
+     "Mache ich.",
+     "Ich bleibe bei ihm.",
+     "Danke."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b2-umtausch-ohne-bon",
+  "modus": "business",
+  "em": "🧥",
+  "kat": "kunden",
+  "titel": "Du arbeitest im Laden: Umtausch ohne Kassenbon",
+  "lvl": "B2",
+  "dauer": "4 Min",
+  "ort": "Du arbeitest in einem Bekleidungsgeschäft. Eine Kundin will eine Jacke zurückgeben. Sie hat keinen Kassenbon, und das Etikett ist ab.",
+  "schritte": [
+   {
+    "amanda": "Ich möchte die Jacke zurückgeben. Die gefällt mir doch nicht. Den Bon hab ich leider nicht mehr.",
+    "hinweis": "Freundlich bleiben, dann die Regel erklären: Ohne Bon ist es schwierig.",
+    "beispiel": "Das tut mir leid. Ohne Kassenbon kann ich Ihnen leider kein Geld zurückgeben. Ich muss ja sehen, wann und wo die Jacke gekauft wurde.",
+    "redemittel": [
+     "Das tut mir leid.",
+     "Ohne Kassenbon kann ich leider …",
+     "Ich muss ja sehen, wann …"
+    ]
+   },
+   {
+    "amanda": "Aber ich hab sie doch hier gekauft! Vor zwei Wochen. Ihre Kollegin war da.",
+    "hinweis": "Ihr nicht widersprechen, aber auch nicht nachgeben. Nach einem anderen Nachweis fragen.",
+    "beispiel": "Ich glaube Ihnen das. Haben Sie vielleicht mit Karte bezahlt? Dann sehen Sie es auf dem Kontoauszug, und damit kann ich etwas machen.",
+    "redemittel": [
+     "Ich glaube Ihnen das.",
+     "Haben Sie vielleicht mit Karte bezahlt?",
+     "Damit kann ich etwas machen."
+    ]
+   },
+   {
+    "amanda": "Nein, bar. Und das Etikett hab ich schon abgeschnitten.",
+    "hinweis": "Eine faire Alternative anbieten, die das Geschäft erlauben kann: Gutschein oder Umtausch.",
+    "beispiel": "Dann kann ich Ihnen das Geld nicht auszahlen. Aber ich kann Ihnen einen Gutschein geben, oder Sie suchen sich gleich etwas anderes aus.",
+    "redemittel": [
+     "Dann kann ich … nicht …",
+     "Ich kann Ihnen aber … anbieten.",
+     "Oder Sie suchen sich gleich etwas anderes aus."
+    ]
+   },
+   {
+    "amanda": "Ein Gutschein? Na gut. Wie lange gilt der?",
+    "hinweis": "Klare Auskunft geben und freundlich abschließen.",
+    "beispiel": "Drei Jahre, bis Ende des Jahres zweitausendneunundzwanzig. Ich schreibe es Ihnen drauf. Und vielleicht finden Sie ja heute schon etwas Schönes.",
+    "redemittel": [
+     "Der Gutschein gilt …",
+     "Ich schreibe es Ihnen drauf.",
+     "Vielleicht finden Sie ja heute schon etwas."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-zweitmeinung-op",
+  "modus": "alltag",
+  "em": "🩺",
+  "kat": "gesundheit",
+  "titel": "Der Arzt will operieren — du willst erst eine zweite Meinung",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Beim Orthopäden. Du hast seit Monaten Knieschmerzen. Er schlägt eine Operation vor, am liebsten schon nächste Woche.",
+  "schritte": [
+   {
+    "amanda": "Also, auf dem MRT sieht man es deutlich. Das würde ich operieren. Ich hätte nächsten Dienstag einen Termin frei.",
+    "hinweis": "Nicht sofort ja sagen. Erst zeigen, dass du ihn ernst nimmst, dann um Zeit bitten.",
+    "beispiel": "Danke, dass Sie es so klar erklären. Bevor ich mich festlege, möchte ich das aber gern in Ruhe verstehen. Nächsten Dienstag ist mir ehrlich gesagt zu schnell.",
+    "redemittel": [
+     "Bevor ich mich festlege, …",
+     "Das möchte ich in Ruhe verstehen.",
+     "Das ist mir ehrlich gesagt zu schnell."
+    ]
+   },
+   {
+    "amanda": "Je länger Sie warten, desto schlimmer wird's. Da würde ich nicht lange rumüberlegen.",
+    "klartext": "Je länger Sie warten, desto schlimmer wird es. Ich würde nicht lange darüber nachdenken.",
+    "hinweis": "Sachliche Fragen stellen statt zu streiten: Gibt es eine Alternative? Was passiert, wenn man wartet?",
+    "beispiel": "Das nehme ich ernst. Darf ich trotzdem fragen: Gibt es eine Alternative ohne Operation, zum Beispiel Physiotherapie? Und was genau passiert, wenn ich zwei, drei Monate warte?",
+    "redemittel": [
+     "Das nehme ich ernst. Darf ich trotzdem fragen: …",
+     "Gibt es eine Alternative ohne Operation?",
+     "Was genau passiert, wenn ich … warte?"
+    ]
+   },
+   {
+    "amanda": "Physio können Sie machen, aber das bringt bei Ihrem Befund erfahrungsgemäß wenig.",
+    "hinweis": "Jetzt klar sagen, was du willst: eine zweite Meinung. Und um die Unterlagen bitten.",
+    "beispiel": "Verstehe. Bei einer Operation möchte ich trotzdem gern eine zweite ärztliche Meinung hören. Können Sie mir dafür die MRT-Bilder und den Befund mitgeben?",
+    "redemittel": [
+     "Ich möchte gern eine zweite ärztliche Meinung hören.",
+     "Können Sie mir … mitgeben?",
+     "die Bilder und den Befund"
+    ]
+   },
+   {
+    "amanda": "Können Sie machen. Aber dann ist der Termin am Dienstag weg.",
+    "hinweis": "Gelassen bleiben. Ein verlorener Termin ist kein Argument. Freundlich die Tür offenlassen.",
+    "beispiel": "Das ist in Ordnung. Wenn die zweite Meinung genauso ausfällt, melde ich mich wieder bei Ihnen — dann weiß ich wenigstens, dass es die richtige Entscheidung ist.",
+    "redemittel": [
+     "Das ist in Ordnung.",
+     "Wenn … genauso ausfällt, melde ich mich wieder.",
+     "Dann weiß ich wenigstens, dass …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-pflege-mutter-geschwister",
+  "modus": "alltag",
+  "em": "🫶",
+  "kat": "familie",
+  "titel": "Wer kümmert sich um Mama? Gespräch mit dem Bruder",
+  "lvl": "C1",
+  "dauer": "6 Min",
+  "ort": "Eure Mutter braucht seit dem Sturz Hilfe im Alltag. Du wohnst in der Nähe und machst fast alles. Dein Bruder wohnt weiter weg. Ihr telefoniert.",
+  "schritte": [
+   {
+    "amanda": "Und, wie geht's Mama? Du machst das ja super, ehrlich.",
+    "hinweis": "Danke sagen, aber nicht in Lob versinken. Ehrlich sagen, wie es dir damit geht.",
+    "beispiel": "Danke. Es geht ihr besser. Aber ehrlich gesagt: Mir wird es langsam zu viel. Ich bin fast jeden Tag bei ihr, neben der Arbeit.",
+    "redemittel": [
+     "Ehrlich gesagt: …",
+     "Mir wird es langsam zu viel.",
+     "neben der Arbeit"
+    ]
+   },
+   {
+    "amanda": "Ich weiß, ich weiß. Aber ich wohne nun mal zweihundert Kilometer weg. Was soll ich da machen?",
+    "klartext": "Ich weiß. Aber ich wohne nun einmal zweihundert Kilometer entfernt. Was kann ich da tun?",
+    "hinweis": "Den Einwand anerkennen und zeigen, dass auch aus der Ferne viel geht. Konkret werden.",
+    "beispiel": "Das stimmt, und niemand erwartet, dass du jeden Tag kommst. Aber vieles geht auch von dort: Arzttermine organisieren, mit der Pflegekasse telefonieren, die Rechnungen übernehmen.",
+    "redemittel": [
+     "Das stimmt, und niemand erwartet, dass …",
+     "Vieles geht auch aus der Ferne.",
+     "zum Beispiel: …"
+    ]
+   },
+   {
+    "amanda": "Mit der Pflegekasse? Was soll ich denn da?",
+    "hinweis": "Erklären, was ein Pflegegrad bringt. Damit wird aus Streit ein gemeinsamer Plan.",
+    "beispiel": "Wir sollten einen Pflegegrad beantragen. Dann gibt es Geld, und wir können zum Beispiel einen Pflegedienst bezahlen, der morgens kommt. Den Antrag könntest du übernehmen.",
+    "redemittel": [
+     "Wir sollten … beantragen.",
+     "Dann gibt es …",
+     "Den Antrag könntest du übernehmen."
+    ]
+   },
+   {
+    "amanda": "Okay, das kann ich machen. Und sonst?",
+    "hinweis": "Noch etwas Konkretes vereinbaren, das dir Luft verschafft.",
+    "beispiel": "Und ich hätte gern ein Wochenende im Monat frei. Wäre es möglich, dass du dann zu ihr fährst? Das wäre für mich eine riesige Entlastung — und Mama freut sich auch.",
+    "redemittel": [
+     "Ich hätte gern …",
+     "Wäre es möglich, dass du …?",
+     "Das wäre für mich eine riesige Entlastung."
+    ]
+   },
+   {
+    "amanda": "Ein Wochenende im Monat … ja, das kriege ich hin. Tut mir leid, dass ich das nicht früher gesehen hab.",
+    "klartext": "Ein Wochenende im Monat, ja, das schaffe ich. Es tut mir leid, dass ich das nicht früher bemerkt habe.",
+    "hinweis": "Die Entschuldigung annehmen, ohne nachzutreten. Und festhalten, was ihr vereinbart habt.",
+    "beispiel": "Danke, das bedeutet mir viel. Lass uns die Wochenenden gleich in einen gemeinsamen Kalender eintragen, dann ist es verbindlich.",
+    "redemittel": [
+     "Danke, das bedeutet mir viel.",
+     "Lass uns … gleich eintragen.",
+     "Dann ist es verbindlich."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-flug-annulliert-gutschein",
+  "modus": "alltag",
+  "em": "✈️",
+  "kat": "unterwegs",
+  "titel": "Flug gestrichen — und am Schalter gibt's nur einen Gutschein",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Am Flughafen. Dein Flug nach Lissabon ist gestrichen. Am Schalter der Fluggesellschaft bietet man dir einen Gutschein an.",
+  "schritte": [
+   {
+    "amanda": "Es tut mir leid, der Flug ist annulliert. Ich kann Ihnen einen Gutschein über den Ticketpreis ausstellen.",
+    "hinweis": "Freundlich, aber bestimmt: Du willst wissen, welche Möglichkeiten es gibt — nicht nur die eine, die man dir anbietet.",
+    "beispiel": "Danke. Bevor ich etwas annehme: Welche Möglichkeiten habe ich denn genau? Ich muss eigentlich heute noch nach Lissabon.",
+    "redemittel": [
+     "Bevor ich etwas annehme: …",
+     "Welche Möglichkeiten habe ich genau?",
+     "Ich muss eigentlich heute noch …"
+    ]
+   },
+   {
+    "amanda": "Der nächste Flug ist morgen um 6:40, aber der ist so gut wie voll. Der Gutschein ist einfacher.",
+    "hinweis": "Das Einfache für die Gesellschaft ist nicht automatisch gut für dich. Klar sagen, was du willst.",
+    "beispiel": "Für Sie vielleicht. Mir wäre lieber: Buchen Sie mich bitte auf den nächsten freien Flug um — auch mit einer anderen Gesellschaft. Und wenn ich übernachten muss, brauche ich ein Hotel.",
+    "redemittel": [
+     "Mir wäre lieber: …",
+     "Buchen Sie mich bitte um.",
+     "auch mit einer anderen Gesellschaft"
+    ]
+   },
+   {
+    "amanda": "Das Hotel kann ich Ihnen nicht zusagen. Das müssen Sie dann über das Online-Formular einreichen.",
+    "hinweis": "Ruhig bleiben, aber deine Rechte kennen und benennen. Nach der EU-Verordnung muss die Fluggesellschaft bei Annullierung für Betreuung sorgen.",
+    "beispiel": "Bei einer Annullierung muss die Fluggesellschaft für die Übernachtung sorgen, das steht in der EU-Fluggastrechte-Verordnung. Können Sie bitte nachfragen, welches Hotel Sie mir geben?",
+    "redemittel": [
+     "Das steht in der EU-Fluggastrechte-Verordnung.",
+     "Die Fluggesellschaft muss für … sorgen.",
+     "Können Sie bitte nachfragen, …?"
+    ]
+   },
+   {
+    "amanda": "Ich frag mal meine Kollegin.",
+    "hinweis": "Während du wartest: schriftliche Bestätigung verlangen. Das brauchst du später für die Entschädigung.",
+    "beispiel": "Danke. Und geben Sie mir bitte schriftlich, dass der Flug annulliert wurde und aus welchem Grund. Das brauche ich später für meinen Antrag.",
+    "redemittel": [
+     "Geben Sie mir bitte schriftlich, dass …",
+     "und aus welchem Grund",
+     "Das brauche ich später für meinen Antrag."
+    ]
+   },
+   {
+    "amanda": "Okay. Sie haben einen Platz morgen um 6:40, ein Hotelgutschein ist hier, und die Bestätigung schicke ich Ihnen per Mail.",
+    "hinweis": "Danke sagen. Der Ton bleibt freundlich — die Person am Schalter hat den Flug nicht gestrichen.",
+    "beispiel": "Vielen Dank, dass Sie sich gekümmert haben. Ich weiß, dass Sie heute viel Stress haben.",
+    "redemittel": [
+     "Vielen Dank, dass Sie sich gekümmert haben.",
+     "Ich weiß, dass Sie heute viel Stress haben.",
+     "Schönen Abend noch."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-freundin-geschaeftsidee",
+  "modus": "alltag",
+  "em": "☕",
+  "kat": "gefuehle",
+  "titel": "Ehrlich sein: Die Geschäftsidee der Freundin hat Lücken",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Deine Freundin will ihren festen Job kündigen und ein Café eröffnen. Sie zeigt dir begeistert ihren Plan. Du siehst große Probleme.",
+  "schritte": [
+   {
+    "amanda": "Und? Sag ehrlich! Ich kündige nächsten Monat und dann geht's los. Ist das nicht der Wahnsinn?",
+    "klartext": "Sag ehrlich, was du denkst! Ich kündige nächsten Monat, und dann fange ich an. Ist das nicht großartig?",
+    "hinweis": "Zuerst echte Anerkennung, aber nicht übertreiben. Dann um Erlaubnis für Kritik fragen.",
+    "beispiel": "Man merkt, wie viel Herzblut da drin steckt, und die Idee mit dem Lesecafé finde ich wirklich schön. Darf ich dir trotzdem ehrlich sagen, wo ich noch Fragen habe?",
+    "redemittel": [
+     "Man merkt, wie viel Herzblut da drinsteckt.",
+     "… finde ich wirklich schön.",
+     "Darf ich dir trotzdem ehrlich sagen, …?"
+    ]
+   },
+   {
+    "amanda": "Klar. Aber mach mir jetzt bitte nicht alles kaputt.",
+    "klartext": "Natürlich. Aber bitte zerstöre jetzt nicht meine ganze Freude.",
+    "hinweis": "Sie beruhigen und dann die Kritik als Frage formulieren, nicht als Urteil.",
+    "beispiel": "Will ich gar nicht. Mir ist nur aufgefallen: Die Miete ist eingeplant, aber was ist mit den ersten Monaten, in denen noch wenig Kundschaft kommt? Wovon lebst du da?",
+    "redemittel": [
+     "Will ich gar nicht.",
+     "Mir ist nur aufgefallen: …",
+     "Was ist mit …? Wovon lebst du da?"
+    ]
+   },
+   {
+    "amanda": "Ach, das läuft schon. Die Lage ist super, die Leute kommen bestimmt.",
+    "hinweis": "Nicht lockerlassen, aber humorvoll und warm bleiben. Konkret nachfragen.",
+    "beispiel": "Bestimmt ist so ein Wort, das mir bei Geld immer ein bisschen Angst macht. Hast du mal ausgerechnet, wie viele Kaffees du am Tag verkaufen musst, damit es sich trägt?",
+    "redemittel": [
+     "… ist so ein Wort, das mir … Angst macht.",
+     "Hast du mal ausgerechnet, wie viele …?",
+     "damit es sich trägt"
+    ]
+   },
+   {
+    "amanda": "Hm. Nee, so genau eigentlich nicht.",
+    "klartext": "Nein, so genau habe ich das eigentlich nicht ausgerechnet.",
+    "hinweis": "Jetzt nicht triumphieren. Einen hilfreichen Vorschlag machen, der die Idee rettet statt sie zu beerdigen.",
+    "beispiel": "Dann lass uns das am Wochenende zusammen durchrechnen. Und vielleicht kündigst du nicht sofort, sondern reduzierst erst mal auf Teilzeit. Dann hast du ein Polster und trotzdem dein Café.",
+    "redemittel": [
+     "Lass uns das zusammen durchrechnen.",
+     "Vielleicht …, sondern erst mal …",
+     "Dann hast du ein Polster und trotzdem …"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-catering-verhandeln",
+  "modus": "business",
+  "em": "🥂",
+  "kat": "essen",
+  "titel": "Catering für die Firmenfeier: Das Angebot ist zu teuer",
+  "lvl": "C1",
+  "dauer": "5 Min",
+  "ort": "Du organisierst die Weihnachtsfeier für sechzig Leute. Der Caterer will 52 Euro pro Person. Dein Budget sind 40 Euro.",
+  "schritte": [
+   {
+    "amanda": "Also, zweiundfünfzig pro Kopf, da ist alles drin: Vorspeise, zwei Hauptgerichte, Dessert, Service. Da kann ich nicht viel machen.",
+    "hinweis": "Das Angebot würdigen, aber offen dein Budget nennen. Wer seine Zahl nennt, verhandelt ehrlicher.",
+    "beispiel": "Das Angebot ist wirklich gut zusammengestellt. Ich bin aber ehrlich: Unser Budget liegt bei vierzig Euro pro Person. Wir müssen also schauen, wo wir ansetzen.",
+    "redemittel": [
+     "Das Angebot ist wirklich gut.",
+     "Ich bin aber ehrlich: Unser Budget liegt bei …",
+     "Wir müssen schauen, wo wir ansetzen."
+    ]
+   },
+   {
+    "amanda": "Vierzig? Da müssten wir aber ordentlich abspecken.",
+    "klartext": "Vierzig Euro? Dann müssten wir sehr viel weglassen.",
+    "hinweis": "Selbst Vorschläge machen, wo man sparen kann, ohne dass die Feier schlechter wird.",
+    "beispiel": "Muss gar nicht so viel sein. Zwei Ideen: Statt zwei Hauptgerichten ein Buffet mit einer vegetarischen und einer Fleischvariante. Und das Dessert könnte als kleines Fingerfood kommen.",
+    "redemittel": [
+     "Muss gar nicht so viel sein.",
+     "Zwei Ideen: …",
+     "statt … lieber …"
+    ]
+   },
+   {
+    "amanda": "Buffet ginge. Dann spare ich beim Service. Damit wären wir bei sechsundvierzig.",
+    "hinweis": "Den Fortschritt anerkennen und einen zweiten Hebel nutzen: Menge, Termin, zukünftige Aufträge.",
+    "beispiel": "Das ist schon ein großer Schritt, danke. Wenn wir die Feier an einem Donnerstag machen statt am Freitag, und wir Sie auch für das Sommerfest buchen — kommen wir dann auf zweiundvierzig?",
+    "redemittel": [
+     "Das ist schon ein großer Schritt.",
+     "Wenn wir …, kommen wir dann auf …?",
+     "und wir Sie auch für … buchen"
+    ]
+   },
+   {
+    "amanda": "Donnerstag und Sommerfest … okay, dreiundvierzig. Weiter runter geht's wirklich nicht.",
+    "klartext": "Wenn es Donnerstag ist und Sie mich auch für das Sommerfest buchen, dann dreiundvierzig Euro. Billiger geht es wirklich nicht.",
+    "hinweis": "Entscheiden: Drei Euro über dem Budget sind bei so einem Entgegenkommen vertretbar. Zusagen und schriftlich festhalten.",
+    "beispiel": "Das ist fair, damit kann ich leben. Schicken Sie mir das Angebot bitte schriftlich, mit dem Sommerfest als Option, dann gebe ich es heute noch frei.",
+    "redemittel": [
+     "Das ist fair, damit kann ich leben.",
+     "Schicken Sie mir das bitte schriftlich.",
+     "Dann gebe ich es heute noch frei."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "c1-hausversammlung-fahrradkeller",
+  "modus": "alltag",
+  "em": "🚲",
+  "kat": "menschen",
+  "titel": "Hausversammlung: Streit um den Fahrradkeller",
+  "lvl": "C1",
+  "dauer": "6 Min",
+  "ort": "Hausversammlung. Der Fahrradkeller ist voll, auch mit alten, kaputten Rädern. Eine Nachbarin will Kinderwagen verbieten, andere sind sauer. Du willst vermitteln.",
+  "schritte": [
+   {
+    "amanda": "Ich sag's jetzt mal ganz klar: Kinderwagen haben im Fahrradkeller nichts zu suchen. Das heißt Fahrradkeller, nicht Kinderwagenkeller.",
+    "klartext": "Ich sage es ganz deutlich: Kinderwagen gehören nicht in den Fahrradkeller.",
+    "hinweis": "Nicht Partei ergreifen. Das Problem hinter dem Streit benennen: zu wenig Platz.",
+    "beispiel": "Ich glaube, wir haben eigentlich alle dasselbe Problem: Der Keller ist zu voll. Bevor wir darüber streiten, wer rein darf, sollten wir schauen, was da überhaupt steht.",
+    "redemittel": [
+     "Ich glaube, wir haben alle dasselbe Problem: …",
+     "Bevor wir darüber streiten, …",
+     "sollten wir schauen, was …"
+    ]
+   },
+   {
+    "amanda": "Ach ja? Und was soll da stehen außer Fahrrädern?",
+    "hinweis": "Mit einer Beobachtung antworten, nicht mit einem Vorwurf an jemanden.",
+    "beispiel": "Mir ist aufgefallen, dass mindestens acht Räder seit Jahren nicht bewegt wurden — platte Reifen, verrostete Ketten. Die gehören wahrscheinlich niemandem mehr hier im Haus.",
+    "redemittel": [
+     "Mir ist aufgefallen, dass …",
+     "seit Jahren nicht bewegt",
+     "Die gehören wahrscheinlich niemandem mehr."
+    ]
+   },
+   {
+    "amanda": "Das mag ja sein. Aber das ändert nichts daran, dass die Kinderwagen den Gang versperren.",
+    "hinweis": "Ihren Punkt anerkennen — er ist berechtigt — und ihn in eine Lösung einbauen.",
+    "beispiel": "Da haben Sie recht, der Gang muss frei bleiben, schon wegen der Sicherheit. Mein Vorschlag: Wir räumen die alten Räder raus, und dann bekommen die Kinderwagen eine feste Ecke hinten links, wo sie niemanden stören.",
+    "redemittel": [
+     "Da haben Sie recht, … muss frei bleiben.",
+     "Mein Vorschlag: …",
+     "eine feste Ecke, wo sie niemanden stören"
+    ]
+   },
+   {
+    "amanda": "Und wer entscheidet, welches Rad weg darf? Ich will nicht, dass mir einer mein Rad wegschmeißt.",
+    "klartext": "Wer entscheidet, welches Fahrrad entfernt wird? Ich möchte nicht, dass jemand mein Fahrrad wegwirft.",
+    "hinweis": "Ein faires Verfahren vorschlagen, das niemanden überrumpelt: markieren, Frist, Hausverwaltung.",
+    "beispiel": "Niemand wirft einfach etwas weg. Wir hängen an jedes Rad einen Zettel. Wer sein Rad behalten will, nimmt den Zettel innerhalb von vier Wochen ab. Was danach noch einen Zettel hat, entsorgt die Hausverwaltung.",
+    "redemittel": [
+     "Niemand wirft einfach etwas weg.",
+     "Wer …, nimmt den Zettel innerhalb von … ab.",
+     "Was danach noch …, entsorgt die Hausverwaltung."
+    ]
+   },
+   {
+    "amanda": "Gut, das klingt fair. Und wer schreibt der Hausverwaltung?",
+    "hinweis": "Die Aufgabe übernehmen und das Ergebnis zusammenfassen, damit alle wissen, was beschlossen ist.",
+    "beispiel": "Das mache ich. Also: Zettel an alle Räder, vier Wochen Frist, danach räumt die Verwaltung, und die Kinderwagen bekommen die Ecke hinten links. Sind alle einverstanden?",
+    "redemittel": [
+     "Das mache ich.",
+     "Also, zusammengefasst: …",
+     "Sind alle einverstanden?"
+    ]
+   }
+  ]
  }
   ];
 
