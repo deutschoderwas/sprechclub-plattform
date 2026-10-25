@@ -49,6 +49,15 @@
     .replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]); }); }
   function el(id){ return document.getElementById(id); }
 
+  /* Jedes Gespräch hat ein Foto unter bilder/dialog/<bild oder id>.jpg,
+     dazu eine kleine Fassung -s.jpg (gleiches Schema wie lernen.js).
+     Fehlt es, bleibt das Emoji stehen. */
+  function foto(d, klein){ return 'bilder/dialog/' + (d.bild || d.id) + (klein ? '-s' : '') + '.jpg'; }
+  function fotoTag(d, klein, notfall){
+    return '<img src="' + E(foto(d, klein)) + '" alt="" loading="lazy" ' +
+      'onerror="var p=this.parentNode;p.classList.remove(\'foto\');p.textContent=\'' + E(notfall) + '\'">';
+  }
+
   /* ---------- Stimme ----------
      Zwei Fallen, die beide schon dafür gesorgt haben, dass
      Vorleseschleifen hängen bleiben: speechSynthesis meldet auf
@@ -160,6 +169,11 @@
 '.ds-kopf::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;',
 '  background:linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#FFE100 50% 75%,#10627A 75% 100%)}',
 '.ds-kopf .em{font-size:22px;line-height:1}',
+/* Fotos (Julia, 25.10.2026: "immer visualisieren") */
+'.ds-kopf .em.foto{width:38px;height:38px;border-radius:11px;overflow:hidden;flex:none;background:#F3EFE7}',
+'.ds-kopf .em.foto img,.ds-av img{width:100%;height:100%;object-fit:cover;display:block}',
+'.ds-szene{border-radius:15px;overflow:hidden;margin-bottom:12px;aspect-ratio:16/9;background:#F3EFE7}',
+'.ds-szene img{width:100%;height:100%;object-fit:cover;display:block}',
 '.ds-kopf .tx{min-width:0;flex:1}',
 '.ds-kopf b{display:block;font-family:"Space Grotesk",Inter,sans-serif;font-size:16px;',
 '  color:#14181B;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
@@ -284,7 +298,7 @@
   function auf(d){
     stil(); ovBauen();
     G = { d:d, skript:skript(d), stufe:null, pos:0, laeuft:false, rolle:'du' };
-    el('dsEm').textContent = d.em || '💬';
+    var em = el('dsEm'); em.className = 'em foto'; em.innerHTML = fotoTag(d, true, d.em || '💬');
     el('dsTitel').textContent = d.titel || 'Gespräch';
     el('dsLvl').textContent = (d.lvl || '') + (d.dauer ? ' · ' + d.dauer : '');
     el('dsOv').classList.add('auf');
@@ -318,6 +332,7 @@
     ];
     el('dsKoerper').innerHTML =
       (hatKlartext(d) ? '<div class="ds-umg">🗣 So wird wirklich gesprochen — mit Klartext</div>' : '') +
+      '<div class="ds-szene">' + fotoTag(d, false, '') + '</div>' +
       (d.ort ? '<div class="ds-ort">' + E(d.ort) + '</div>' : '') +
       stufen.map(function (s, i) {
         var fertig = s[0] !== 'frei' && geschafft(id, s[0]);
@@ -353,7 +368,7 @@
     var h = '<div class="ds-paar ' + wer(z) + '" data-p="' + i + '">';
     if (mitHinweis && z.hinweis) h += '<div class="ds-tipp">' + E(z.hinweis) + '</div>';
     h += '<div class="ds-z ' + wer(z) + '" data-z="' + i + '">' +
-           '<span class="ds-av">' + (du ? 'Du' : E(G.d.em || 'A')) + '</span>' +
+           '<span class="ds-av">' + (du ? 'Du' : fotoTag(G.d, true, G.d.em || 'A')) + '</span>' +
            '<span class="ds-bb">' + E(z.text) + '</span>' +
          '</div>';
     if (z.klar || z.woerter) {
