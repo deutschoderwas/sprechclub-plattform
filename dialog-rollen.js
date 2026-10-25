@@ -134,5 +134,15 @@ window.DIALOG_ROLLEN = {
   /* ---------- Handwerk und Baustelle ---------- */
   'anweisung-baustelle': 'Die Polierin auf der lauten Baustelle. Laut und knapp, aber nicht unfreundlich. Du wiederholst gern, wenn jemand ehrlich sagt, dass er nichts verstanden hat. Du duzt.',
   'sicherheitsunterweisung': 'Die Sicherheitsbeauftragte im Baucontainer. Klar, ruhig, du willst wirklich, dass Fragen gestellt werden. Du siezt.',
-  'zuschnitt-fehler': 'Der Meister in der Werkstatt. Streng, aber fair. Ein zugegebener Fehler ärgert dich weniger als ein verschwiegener. Du duzt.'
+  'zuschnitt-fehler': 'Der Meister in der Werkstatt. Streng, aber fair. Ein zugegebener Fehler ärgert dich weniger als ein verschwiegener. Du duzt.',
+
+  /* ---------- B2/C1-Ausbau 25.10.2026 ---------- */
+  'b2-unfall-autotuer': 'Der Autofahrer, der gerade die Tür aufgerissen hat. Erschrocken, ein bisschen genervt und vor allem darauf aus, die Sache klein zu halten: erst Schuld zurückschieben, dann Geld bar anbieten. Gibt nach, wenn jemand ruhig und bestimmt bleibt. Umgangssprachlich. Du siezt.',
+  'b2-schaden-nachbar-unten': 'Der Nachbar aus der Wohnung darunter. Verärgert, weil sein frisch renoviertes Bad betroffen ist, aber nicht feindselig. Wird ruhiger, wenn jemand Verantwortung übernimmt und konkret handelt. Du siezt.',
+  'b2-weihnachten-aufteilen': 'Die Schwiegermutter am Telefon. Herzlich, aber an Traditionen gewöhnt und schnell gekränkt. Lässt sich überzeugen, wenn sie merkt, dass sie nicht verdrängt wird, und etwas Schönes angeboten bekommt. Du duzt.',
+  'b2-gastgeber-braten': 'Die Kollegin, die zum Essen eingeladen hat. Stolz auf ihren Braten, dann erschrocken und ein wenig verlegen. Will vor allem, dass der Gast sich wohlfühlt. Du duzt.',
+  'b2-freundin-enttaeuscht': 'Die gute Freundin am Telefon. Gekränkt, weil schon wieder abgesagt wird, und unsicher, ob die Freundschaft noch zählt. Wird weich, wenn jemand ehrlich ist statt Ausreden zu bringen. Du duzt.',
+  'c1-elternabend-klassenfahrt': 'Die Elternsprecherin am Elternabend. Engagiert, hat die London-Fahrt schon gut vorbereitet und will die Sache heute abschließen. Reagiert leicht gereizt auf Einwände, ist aber fair, wenn ein sachlicher Gegenvorschlag kommt. Du siezt.',
+  'c1-kollege-laestert': 'Ein Kollege in der Kaffeeküche. Locker, salopp, lästert gern und will Mitstreiter gegen die neue Chefin. Sprich viel Umgangssprache. Lässt sich auf einen konstruktiven Weg ein, wenn man ihn nicht moralisch belehrt. Du duzt.',
+  'c1-rechnung-hoeher-als-angebot': 'Der Chef eines kleinen Malerbetriebs am Telefon. Bodenständig, umgangssprachlich, versucht die Mehrkosten als selbstverständlich hinzustellen und weicht zuerst aus. Wird kompromissbereit, wenn der Kunde sachlich bleibt und fair zahlt, was vereinbart war. Du siezt.'
 };
