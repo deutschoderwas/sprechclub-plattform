@@ -1287,7 +1287,7 @@
         const mixed = bands.length>1;
         const th = teachersIn(g);
         const thHtml = th.length?` <span class="bo-there" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}</span>`:'';
-        const mem = groups[g].map(id=>`${boBadge(id)} ${esc(nameOf(id))}`).join('&nbsp;&nbsp; ');
+        const mem = groups[g].map(id=>`<div class="bo-mv">${boBadge(id)} <span class="bo-mv-n">${esc(nameOf(id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" value="${esc(g)}" title="Diesen Schüler in eine andere Gruppe verschieben" onchange="boMoveLive('${esc(id)}', this.value)"></div>`).join('');
         html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
       html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
