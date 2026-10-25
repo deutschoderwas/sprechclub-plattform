@@ -2849,12 +2849,22 @@ async function openClassMaterial(classId, booked){
     if(data&&data.content){ m=data.content; materials[classId]=m; }
   }
   if(!m){ toast('Für diese Stunde liegt noch kein Material vor.'); return; }
+  /* Julia, 25.10.2026: "passt das Material mit dem Material im Unterricht?"
+     Die Vorbereitung stand bisher nur in class_materials.prep_url. Wer im
+     Admin classes.material_pre aenderte, aenderte die nicht mit — dann zeigte
+     der Handout-Knopf das Thema der Vorwoche. Jetzt gilt classes.material_pre,
+     prep_url ist nur noch die Rueckfallebene. Genau wie beim Unterricht. */
+  let prepUrl = m.prep_url;
+  try{
+    const { data: klPre } = await sb.from('classes').select('material_pre').eq('id', classId).maybeSingle();
+    if(klPre && klPre.material_pre && /^https?:/i.test(klPre.material_pre)) prepUrl = klPre.material_pre;
+  }catch(e){}
   const tip=m.grammar_tip;
   let html=`<h3 style="margin-bottom:4px">📚 Material zur Stunde</h3>`;
   if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
   if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">▶️ Interaktive Lektion öffnen</a>`;
-  if(booked && m.prep_url) html+=`<a class="btn btn-ghost" href="${esc(m.prep_url)}" target="_blank" rel="noopener" style="display:inline-block;margin:0 0 12px 8px">📝 Vorbereitung öffnen (Handout)</a>`;
-  else if(!booked && m.prep_url) html+=`<p class="muted" style="font-size:13px;margin:0 0 12px">📝 Die Vorbereitungs-Datei siehst du nach der Buchung.</p>`;
+  if(booked && prepUrl) html+=`<a class="btn btn-ghost" href="${esc(prepUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin:0 0 12px 8px">📝 Vorbereitung öffnen (Handout)</a>`;
+  else if(!booked && prepUrl) html+=`<p class="muted" style="font-size:13px;margin:0 0 12px">📝 Die Vorbereitungs-Datei siehst du nach der Buchung.</p>`;
   if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
   if(Array.isArray(m.vocab)&&m.vocab.length){
     html+=`<h4 style="margin:14px 0 6px">🃏 Wortschatz</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`+
