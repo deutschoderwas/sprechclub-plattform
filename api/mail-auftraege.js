@@ -63,11 +63,11 @@ const ARTEN = {
   nachzuegler_mail:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', false),
   nachzuegler_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', true),
 
-  /* Eine Woche vor dem Ablauf eines Abos. Der Auftrag tr\u00e4gt die
+  /* Eine Woche vor dem Ablauf eines Abos. Der Auftrag trägt die
      Person (ziel_user) und den Tag (faellig_am) und wird erst an
-     diesem Tag angefasst. Julia, 25.10.2026, \u00fcber Natalia
+     diesem Tag angefasst. Julia, 25.10.2026, über Natalia
      Shurygina: "1 Woche vorher bekommt sie eine Email, dass ihr
-     Premium Abo am 31.12 abl\u00e4uft und ob sie ein neues Abo
+     Premium Abo am 31.12 abläuft und ob sie ein neues Abo
      abschliessen mag." */
   abo_ablauf_mail: (sb, auftrag) => abloufLauf(sb, auftrag),
 };
@@ -113,11 +113,18 @@ export default async function handler(req, res) {
 
   /* Genau einen Auftrag greifen. Das .eq('status','offen') im update
      ist die Sperre: wer die Zeile schon umgestellt hat, hat sie. */
-  /* Auftr\u00e4ge mit einem Termin bleiben bis dahin liegen. Ohne Termin
-     laufen sie sofort, wie bisher. */
+  /* Aufträge mit einem Termin bleiben bis dahin liegen. Ohne Termin
+     laufen sie sofort, wie bisher.
+
+     'geplant' neben 'offen' ist Absicht: Ein Auftrag, der erst in
+     Wochen fällig wird, muss auch dann sicher liegen bleiben, wenn
+     gerade noch eine ältere Fassung dieser Datei veröffentlicht ist.
+     Die kennt weder faellig_am noch den neuen Auftragstyp und würde
+     die Zeile sofort greifen und als 'unbekannte_art' abhaken.
+     'geplant' sieht sie nicht — sie sucht nur nach 'offen'. */
   const heute = new Date().toISOString().slice(0, 10);
   const { data: kandidaten } = await sb.from('mail_auftraege')
-    .select('id').eq('status', 'offen')
+    .select('id').in('status', ['offen', 'geplant'])
     .or('faellig_am.is.null,faellig_am.lte.' + heute)
     .order('id', { ascending: true }).limit(1);
   const naechster = (kandidaten || [])[0];
@@ -125,7 +132,7 @@ export default async function handler(req, res) {
 
   const { data: gegriffen } = await sb.from('mail_auftraege')
     .update({ status: 'laeuft', gestartet_at: new Date().toISOString() })
-    .eq('id', naechster.id).eq('status', 'offen')
+    .eq('id', naechster.id).in('status', ['offen', 'geplant'])
     .select('id,art,grund,angelegt_von,max_mails,ziel_user,faellig_am');
   const auftrag = (gegriffen || [])[0];
   if (!auftrag) return res.status(200).json({ ok: true, schon_vergeben: naechster.id });
