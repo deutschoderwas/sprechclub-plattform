@@ -4,10 +4,9 @@
    Situation (Amt, Praxis, Büro, Lager …). Ein eigenes Foto hat Vorrang:
    Liegt später bilder/dialog/<id>.jpg vor, einfach die Zeile löschen. */
 (function () {
+  /* Seit 26.10.2026 leer: alle Gespräche haben ein eigenes Foto.
+     Die Datei bleibt, falls ein neues Gespräch noch keins hat. */
   var BILD = {
-    'wetter-arbeit': 'anweisung-baustelle',
-    'telefon-praxis': 'arzt-termin',
-    'weiterbildung-beratung': 'jobcenter-weiterbewilligung'
   };
   var D = window.DIALOGE; if (!D) return;
   var liste = Array.isArray(D) ? D : Object.keys(D).map(function (k) { return D[k]; });
