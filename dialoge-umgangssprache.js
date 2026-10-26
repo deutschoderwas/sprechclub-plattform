@@ -97,7 +97,62 @@
   'frist-nicht-halten': {
     1: { amanda: 'Hm. Das hör ich nicht gern. Woran hakt\'s denn?', klartext: 'Das höre ich nicht gern. Woran liegt es?' } },
   'angehoerige-kritik': {
-    1: { amanda: 'Ärgern ist noch harmlos. Ich frag mich, was hier sonst noch so alles untergeht.', klartext: 'Ärgern ist noch harmlos. Ich frage mich, was hier sonst noch übersehen wird.' } }
+    1: { amanda: 'Ärgern ist noch harmlos. Ich frag mich, was hier sonst noch so alles untergeht.', klartext: 'Ärgern ist noch harmlos. Ich frage mich, was hier sonst noch übersehen wird.' } },
+
+  /* ---------- B1 und B1–B2 (27.10.2026): sparsam, eine bis zwei Zeilen ----------
+     Nur wo man im echten Leben so redet: Freunde, Familie, Nachbarn,
+     Kollegen. Ämter, Praxen, Versicherungen, Polizei und Notruf bleiben
+     bei B1 bewusst in Standardsprache. */
+  'kunde': {
+    0: { amanda: 'Also echt jetzt, das ist schon das dritte Mal, dass die Lieferung zu spät kommt!', klartext: 'Also ehrlich, das ist jetzt das dritte Mal, dass die Lieferung zu spät kommt!' } },
+  'sofa-verkaufen': {
+    1: { amanda: 'Hm, der Fleck ist größer als gedacht. Und da vorne ist das Leder auch schon rissig. Gehen sechzig statt hundertzwanzig?', klartext: 'Der Fleck ist größer, als ich dachte. Und vorne ist das Leder schon rissig. Würden Sie es für sechzig statt hundertzwanzig Euro verkaufen?' } },
+  'laerm-nachbar': {
+    0: { klartext: 'Ja? Oh, hallo. Gibt es ein Problem?' },
+    1: { amanda: 'Echt? Sorry, hab ich gar nicht gemerkt. Wir feiern halt Geburtstag, ist ja nicht jede Woche.', klartext: 'Wirklich? Entschuldigung, das habe ich nicht bemerkt. Wir feiern Geburtstag, das ist ja nicht jede Woche.' } },
+  'essen-reklamieren': {
+    1: { amanda: 'Oh, das tut mir leid. Heute war echt die Hölle los, und die Küche ist unterbesetzt.', klartext: 'Oh, das tut mir leid. Es war eben ziemlich viel los, und die Küche ist heute unterbesetzt.' } },
+  'umzug-hilfe': {
+    0: { amanda: 'Na, wie läuft\'s mit dem Umzug? Schon alles in Kisten?', klartext: 'Na, wie läuft es mit dem Umzug? Bist du schon fertig mit Packen?' },
+    3: { amanda: 'Gut. Und was ist mit dem Klavier? Das schlepp ich nicht.', klartext: 'Gut. Und was ist mit dem Klavier? Das trage ich nicht.' } },
+  'zu-viel-verlangt': {
+    0: { amanda: 'Du, ich bin nächste Woche schon wieder weg. Nimmst du wieder meine Pakete an?', klartext: 'Ich bin nächste Woche wieder verreist. Nimmst du wieder meine Pakete an?' },
+    1: { amanda: 'Ach, sind ja nur zehn Tage. Und die Blumen bräuchten auch \'n bisschen Wasser.', klartext: 'Ach, nur zehn Tage. Und die Blumen bräuchten auch Wasser.' } },
+  'streit-klaeren': {
+    2: { amanda: 'Und warum hast du dann hinterher nix gesagt?', klartext: 'Und warum hast du dann hinterher nichts gesagt?' } },
+  'heimweh-sprechen': {
+    0: { amanda: 'Du bist heute so still. Alles okay bei dir?', klartext: 'Du bist heute so ruhig. Ist alles in Ordnung?' },
+    3: { amanda: 'Du könntest doch einfach öfter mal hinfliegen.', klartext: 'Du könntest doch einfach öfter hinfliegen.' } },
+  'erziehungstipp-schwieger': {
+    1: { amanda: 'Ich mein ja nur. Kinder müssen früh selbstständig werden.', klartext: 'Ich meine ja nur. Kinder müssen früh selbstständig werden.' },
+    2: { amanda: 'Jetzt bist du eingeschnappt. Ich wollt doch nur helfen.', klartext: 'Jetzt bist du beleidigt. Ich wollte doch nur helfen.' } },
+  'bildschirmzeit-absprache': {
+    1: { amanda: 'Ach komm, \'n bisschen Fernsehen hat noch keinem geschadet.', klartext: 'Ach, ein bisschen Fernsehen hat noch niemandem geschadet.' } },
+  'mail-missverstaendnis': {
+    0: { amanda: 'Du, deine Mail von gestern hat ganz schön Verwirrung gestiftet. Drei Leute dachten, das Treffen fällt flach.', klartext: 'Deine E-Mail von gestern hat für Verwirrung gesorgt. Drei Personen dachten, das Treffen fällt aus.' } },
+  'meeting': {
+    1: { amanda: 'Frau Klein meint, das frisst am Anfang zu viel Zeit. Was sagen Sie dazu?', klartext: 'Frau Klein sagt, das kostet am Anfang zu viel Zeit. Was meinen Sie dazu?' } },
+  'dienstplan-fehler': {
+    2: { amanda: 'Das wird schwierig. Wir haben zwei Ausfälle. Können Sie diese Woche nicht mal die Zähne zusammenbeißen?', klartext: 'Das wird schwierig. Wir haben zwei Ausfälle. Können Sie diese Woche nicht einmal durchhalten?' } },
+  'uebergabe-station': {
+    0: { amanda: 'So, da bin ich. Wie war\'s in der Früh? Fang mit der Zwölf an.', klartext: 'So, ich bin da. Wie war die Frühschicht? Fang mit Zimmer 12 an.' } },
+  'zuschnitt-fehler': {
+    2: { amanda: 'Mist. Und jetzt? Das Holz ist nicht billig.', klartext: 'Ärgerlich. Und jetzt? Das Holz ist teuer.' } },
+  'rezept-erklaeren': {
+    0: { amanda: 'Mmh, das schmeckt mega! Wie machst du das?', klartext: 'Das schmeckt sehr gut! Wie machst du das?' } },
+  'reinigung-beschwerde': {
+    2: { amanda: 'Vorgestern war\'s auch schon nicht so prickelnd.', klartext: 'Vorgestern war es auch schon nicht besonders sauber.' } },
+  'hof-einweisung': {
+    0: { amanda: 'Morgen! Ich bin der Neue — was soll ich machen?', klartext: 'Guten Morgen! Ich bin neu. Was soll ich machen?' } },
+  'wetter-arbeit': {
+    0: { amanda: 'Bei dem Sauwetter können wir doch nicht raus, oder?', klartext: 'Bei dem Regen können wir doch nicht hinaus, oder?' } },
+  'phishing-erkennen': {
+    0: { amanda: 'Guck mal, die Bank will mein Passwort. Soll ich das eingeben?', klartext: 'Schau mal, die Bank will mein Passwort. Soll ich das eingeben?' },
+    2: { amanda: 'Und wenn\'s doch echt ist? Die schreiben, mein Konto wird gesperrt.', klartext: 'Und wenn es doch echt ist? Sie schreiben, dass mein Konto gesperrt wird.' } },
+  'unklare-aufgabe': {
+    0: { amanda: 'Machen Sie mir bis morgen bitte die Auswertung fertig, wie letztes Mal. Danke!', klartext: 'Bitte machen Sie bis morgen die Auswertung fertig, so wie letztes Mal. Danke!' } },
+  'bestellung-kueche': {
+    3: { amanda: 'Schade. Na gut, dann eben das Risotto. Aber bitte flott.', klartext: 'Schade. Na gut, dann nehme ich das Risotto. Aber es soll bitte schnell gehen.' } }
   };
 
   var D = window.DIALOGE;
