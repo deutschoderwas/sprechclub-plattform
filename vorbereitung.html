@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vorbereitung | deutschoderwas</title>
+<!--
+  Gegenstueck zu nachbereitung.html: dieselbe Mechanik (eine Seite fuer
+  alle Stunden, ?id=<class_id>, Inhalt aus Supabase), aber vor dem
+  Unterricht statt danach.
+
+  Aussehen: die kurze Vorbereitung aus der Unterricht-ab-14-09-Reihe —
+  Markenfarben, Merksaetze mit Markierung, Mini-Quiz zum Antippen.
+  Dazu der Umschalter A2/B1 · B1/B2 · B2/C1, damit dieselbe Stunde fuer
+  jedes Niveau vorbereitet werden kann.
+
+  Inhalt: class_notes.pre_content = { a:{...}, b:{...}, c:{...} }
+  je Niveau mit badge, merk[] und quiz[].
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFF8E0;--card:#FFFCF5;--rahmen:#F0E5D8;--tuerkis:#2DD4BF;--tuerkis-soft:#A7F3D0;--auf-tuerkis:#06403A;--ink:#1A1A1A;--ink-soft:#6B7280;--rot:#EF6461;--gold:#F4B942;--font-head:'Space Grotesk',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:var(--font-body);line-height:1.55;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:680px;margin:0 auto;padding:1.4rem 1.2rem 4rem;}
+.back{display:inline-block;color:var(--ink-soft);text-decoration:none;font-size:.86rem;font-weight:600;margin-bottom:1rem;}
+.back:hover{color:var(--ink);}
+.eyebrow{text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:.7rem;}
+h1{font-family:var(--font-head);font-weight:700;font-size:clamp(1.6rem,5vw,2.5rem);line-height:1.08;text-align:center;}
+/* Die Markierung muss jede Zeile tragen: bei langen Themen bricht die
+   Zeile um, und ein einzelner Balken saesse dann nur unter der letzten. */
+h1 .hl{display:inline;background:linear-gradient(transparent 62%,var(--tuerkis-soft) 62%);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:0 .08em;}
+.sub{text-align:center;max-width:520px;margin:.8rem auto 0;color:var(--ink-soft);font-size:1rem;}
+.badge{display:inline-block;background:var(--tuerkis);color:var(--auf-tuerkis);font-weight:700;font-size:.78rem;padding:5px 14px;border-radius:999px;margin:.9rem auto 0;}
+.badge-wrap{text-align:center;}
+/* Niveau-Umschalter — gleiche Pillenform wie die Plakette darueber */
+.lvl{display:flex;justify-content:center;gap:.35rem;margin:1.1rem auto 0;background:#fff;border:1px solid var(--rahmen);border-radius:999px;padding:.28rem;max-width:fit-content;box-shadow:0 2px 10px rgba(26,26,26,.05);}
+.lvl button{border:none;background:transparent;font-family:inherit;font-weight:700;font-size:.86rem;color:var(--ink-soft);padding:.42rem .95rem;border-radius:999px;cursor:pointer;transition:background .15s,color .15s;}
+.lvl button:hover{background:var(--cream);}
+.lvl button.on{background:var(--tuerkis);color:var(--auf-tuerkis);}
+.lvl button:focus-visible{outline:2px solid var(--auf-tuerkis);outline-offset:2px;}
+h2{font-family:var(--font-head);font-weight:700;font-size:1.25rem;margin:1.8rem 0 .8rem;}
+mark{background:var(--tuerkis-soft);padding:.06em .32em;border-radius:6px;font-weight:700;color:var(--ink);}
+.en{display:block;color:var(--ink-soft);font-weight:500;font-size:.84rem;font-style:italic;margin-top:.25rem;}
+.merk{background:var(--card);border:1px solid var(--rahmen);border-left:5px solid var(--tuerkis);border-radius:14px;padding:.9rem 1.1rem;margin-bottom:.8rem;font-size:1.05rem;font-weight:600;}
+.merk .n{color:var(--auf-tuerkis);font-weight:800;margin-right:.35rem;}
+.merk.c1{border-left-color:#2DD4BF;}.merk.c1 .n{color:#0B7A6E;}
+.merk.c2{border-left-color:#14B8A6;}.merk.c2 .n{color:#0B7A6E;}
+.merk.c3{border-left-color:#F4B942;}.merk.c3 .n{color:#9A6B00;}
+.merk.c4{border-left-color:#EF6461;}.merk.c4 .n{color:#B4322C;}
+.merk.c2 mark{background:#BFF3EA;}.merk.c3 mark{background:#FFE9A8;}.merk.c4 mark{background:#FBD5D0;}
+.qz{background:var(--card);border:1px solid var(--rahmen);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.8rem;}
+.qz .q{font-weight:700;margin-bottom:.55rem;}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--rahmen);border-radius:12px;padding:.55rem .85rem;margin:.35rem 0;cursor:pointer;font-family:inherit;font-size:.97rem;font-weight:600;}
+.opt:hover{border-color:var(--tuerkis);}
+.opt.ok{background:#BBF7D0;border-color:#34B36B;}
+.opt.no{background:#FBD5D0;border-color:var(--rot);}
+.exp{display:none;margin-top:.45rem;background:var(--cream);border-radius:10px;padding:.5rem .75rem;font-size:.9rem;color:var(--ink-soft);}
+.qz.done .exp{display:block;}
+.zurstunde{display:block;text-align:center;margin:1.6rem auto 0;background:var(--tuerkis);color:var(--auf-tuerkis);font-weight:700;text-decoration:none;border-radius:999px;padding:.6rem 1.3rem;max-width:fit-content;}
+.center{text-align:center;color:var(--ink-soft);padding:3rem 1rem;line-height:1.7;}
+.center a{color:var(--auf-tuerkis);font-weight:700;}
+footer{text-align:center;color:var(--ink-soft);font-size:.82rem;margin-top:2.4rem;}
+footer b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="center">Lädt …</div></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const CFG = window.SPRECHCLUB_CONFIG;
+let sb, PRE = null, KLASSE = null, NIVEAU = 'a';
+
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* Die Merksaetze duerfen <mark>, <b> und <i> tragen — das ist ja ihr
+   Sinn. Alles andere wird entschaerft, damit aus der Datenbank kein
+   fremdes HTML in die Seite rutscht. */
+function sicher(s){
+  let t = esc(s);
+  ['mark','b','i','u'].forEach(function(tag){
+    t = t.split('&lt;'+tag+'&gt;').join('<'+tag+'>')
+         .split('&lt;/'+tag+'&gt;').join('</'+tag+'>');
+  });
+  return t;
+}
+
+const NAMEN = {a:'A2/B1', b:'B1/B2', c:'B2/C1'};
+
+/* Welches Niveau zuerst? Die eigene Wahl schlaegt alles, danach das
+   Niveau der Stunde, sonst A2/B1. */
+function startNiveau(level){
+  try{ const g = localStorage.getItem('dow-vorb-niveau'); if(NAMEN[g]) return g; }catch(e){}
+  const l = String(level||'').toUpperCase();
+  if(l.indexOf('B2/C1')>=0 || l.indexOf('C1')>=0) return 'c';
+  if(l.indexOf('B1/B2')>=0 || l.indexOf('B2')>=0) return 'b';
+  return 'a';
+}
+
+async function init(){
+  const app = document.getElementById('app');
+  const id = new URLSearchParams(location.search).get('id');
+  if(!id){ app.innerHTML = '<div class="center">Keine Stunde angegeben.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){ app.innerHTML = '<div class="center">Bitte zuerst einloggen, um deine Vorbereitung zu sehen.<br><br><a href="index.html?login=1">Zum Login →</a></div>'; return; }
+
+  const [{ data:c }, { data:cn }] = await Promise.all([
+    sb.from('classes').select('title,level,topic,starts_at,material_live').eq('id',id).maybeSingle(),
+    sb.from('class_notes').select('pre_content').eq('class_id',id).maybeSingle()
+  ]);
+  if(!c){ app.innerHTML = '<div class="center">Stunde nicht gefunden.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
+
+  PRE = cn && cn.pre_content;
+  KLASSE = c;
+  if(!PRE || !(PRE.a || PRE.b || PRE.c)){
+    app.innerHTML = '<div class="center">📋 Die Vorbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>';
+    return;
+  }
+  NIVEAU = startNiveau(c.level);
+  if(!PRE[NIVEAU]) NIVEAU = (PRE.a ? 'a' : (PRE.b ? 'b' : 'c'));
+  geruest();
+  fuelle();
+}
+
+function geruest(){
+  const c = KLASSE;
+  const wann = c.starts_at
+    /* Der Club rechnet in deutscher Zeit — sonst sieht jemand in Kiew
+       eine andere Uhrzeit als im Klassenzimmer steht. */
+    ? new Date(c.starts_at).toLocaleString('de-DE',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Berlin'})+' Uhr'
+    : '';
+  const thema = c.topic || c.title || 'Die nächste Stunde';
+  /* Nur den Teil nach dem Mittelpunkt hervorheben — das ist das
+     eigentliche Thema, davor steht die Rubrik. */
+  const teil = thema.split(' · ');
+  const vorn = teil.length > 1 ? esc(teil.shift()) + ' ' : '';
+  let kernRoh = teil.join(' · ');
+  /* „Im Hotel: Suchbild, Wo?/Wohin? (Wechselpraepositionen) & Tabu" ist
+     keine Ueberschrift. Steht ein Doppelpunkt drin und wird es lang,
+     reicht der Teil davor — vollstaendig steht es in der Fusszeile. */
+  if(kernRoh.length > 34 && kernRoh.indexOf(':') > 0) kernRoh = kernRoh.split(':')[0].trim();
+  const kern = esc(kernRoh);
+
+  const knoepfe = ['a','b','c'].filter(k => PRE[k]).map(k =>
+    '<button data-l="'+k+'" onclick="setNiveau(\''+k+'\')">'+NAMEN[k]+'</button>').join('');
+
+  document.getElementById('app').innerHTML =
+    '<a class="back" href="konto.html#stunden">← Meine Stunden</a>' +
+    '<div class="eyebrow">deutschoderwas · Vorbereitung</div>' +
+    '<h1>'+vorn+'<span class="hl">'+kern+'</span></h1>' +
+    '<p class="sub">Kurz vorbereiten: ein paar Merksätze lesen, dann das Mini-Quiz machen. Fertig.' +
+      '<span class="en">Read a few key sentences, then do the mini quiz. Done.</span></p>' +
+    '<div class="badge-wrap"><span class="badge" id="badge"></span></div>' +
+    (knoepfe ? '<div class="lvl" id="lvl">'+knoepfe+'</div>' : '') +
+    '<h2>📌 Merk dir das</h2><div id="merk"></div>' +
+    '<h2>✅ Mini-Quiz</h2><div id="quiz"></div>' +
+    (c.material_live ? '<a class="zurstunde" href="'+esc(c.material_live)+'" target="_blank" rel="noopener">📘 Zur Stunde →</a>' : '') +
+    '<footer><b>deutsch</b>oderwas · Vorbereitung · '+esc(thema)+(wann?' · '+esc(wann):'')+'</footer>';
+}
+
+function fuelle(){
+  const d = PRE[NIVEAU] || {};
+  const wann = KLASSE.starts_at
+    ? new Date(KLASSE.starts_at).toLocaleString('de-DE',{weekday:'short',day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Berlin'})
+    : '';
+  document.getElementById('badge').textContent = NAMEN[NIVEAU] + (wann ? ' · ' + wann + ' Uhr' : '');
+  document.querySelectorAll('#lvl button').forEach(b => b.classList.toggle('on', b.dataset.l === NIVEAU));
+
+  document.getElementById('merk').innerHTML = (d.merk || []).map(function(m,i){
+    return '<div class="merk c'+((i%4)+1)+'"><span class="n">'+(i+1)+'.</span>'+sicher(m.t)+
+           (m.en ? '<span class="en">'+esc(m.en)+'</span>' : '')+'</div>';
+  }).join('');
+
+  document.getElementById('quiz').innerHTML = (d.quiz || []).map(function(q){
+    return '<div class="qz"><div class="q">'+sicher(q.q)+
+      (q.qen ? '<span class="en">'+esc(q.qen)+'</span>' : '')+'</div>'+
+      '<button class="opt" data-ok>'+esc(q.ok)+'</button>'+
+      '<button class="opt">'+esc(q.no)+'</button>'+
+      (q.exp ? '<div class="exp">💡 '+sicher(q.exp)+'</div>' : '')+'</div>';
+  }).join('');
+}
+
+/* Ein Horcher am Dokument statt einzelner onclick — die Fragen werden
+   beim Umschalten neu gebaut, direkte Zuweisungen waeren dann weg. */
+document.addEventListener('click', function(ev){
+  const o = ev.target.closest ? ev.target.closest('#quiz .opt') : null;
+  if(!o) return;
+  const q = o.closest('.qz');
+  if(q.classList.contains('done')) return;
+  q.classList.add('done');
+  if(o.hasAttribute('data-ok')) o.classList.add('ok');
+  else { o.classList.add('no'); const r = q.querySelector('.opt[data-ok]'); if(r) r.classList.add('ok'); }
+});
+
+function setNiveau(k){
+  if(!PRE[k]) return;
+  NIVEAU = k;
+  try{ localStorage.setItem('dow-vorb-niveau', k); }catch(e){}
+  fuelle();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.setNiveau = setNiveau;
+
+init();
+</script>
+</body>
+</html>
