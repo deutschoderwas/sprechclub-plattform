@@ -2646,4 +2646,11 @@
   var da = {};
   window.DIALOGE.forEach(function (d) { da[d.id] = 1; });
   NEU.forEach(function (d) { if (!da[d.id]) window.DIALOGE.push(d); });
+
+  /* Doppelte Szenen: Julia will nur die neue Fassung (27.10.2026).
+     'praktikum' (Autohaus Kremer) = gleiche Situation wie 'praktikum-fragen'. */
+  var RAUS = { 'praktikum': 1 };
+  for (var i = window.DIALOGE.length - 1; i >= 0; i--) {
+    if (RAUS[window.DIALOGE[i].id]) window.DIALOGE.splice(i, 1);
+  }
 })();

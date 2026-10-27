@@ -7,7 +7,7 @@
      LERNPfad.pfad()   -> die Straße: Kapitel und Szenen von A1 bis C1
 
    WICHTIG: Diese Datei erzeugt KEINEN neuen Lernstoff. Sie ordnet nur,
-   was schon da ist — die 97 Situationen aus dialoge.js. Nichts wird
+   was schon da ist — die Gespräche aus dialoge.js und dialoge-neu.js. Nichts wird
    ersetzt, nichts überschrieben.
 
    Fortschritt wird vorerst im Browser gespeichert (localStorage).
@@ -18,33 +18,32 @@
   'use strict';
 
   /* ---------- Die sechs Kapitel ----------
-     Die Namen stammen nicht aus einer Theorie, sondern aus Julias
-     eigenen A2-Lektionen im Integrationskurs-Aufbau. */
+     Reihenfolge von Julia abgesegnet (27.10.2026). Ein Gespräch kommt
+     über sein Themenfeld (d.kat) in sein Kapitel — nicht mehr über
+     Wörter im Titel. Vorher fielen 42 Gespräche einfach in „Ankommen“. */
   var KAPITEL = [
     { id: 'ankommen', t: 'Ankommen & Menschen', z: 'lernen',
-      u: 'Sich vorstellen, Nachbarn, höflich sein',
-      r: /vorstell|nachbar|kennenlern|kaffee|einlad|komplim|entschuld|absag|versteh|freundin|erzieh|betreu/ },
+      u: 'Kennenlernen, Einladungen, Gefühle, Familie',
+      kat: ['menschen', 'gefuehle', 'familie'] },
+    { id: 'einkaufen', t: 'Einkaufen & Essen', z: 'guthaben',
+      u: 'Bäckerei, Restaurant, Läden, Bank',
+      kat: ['essen', 'einkaufen'] },
     { id: 'wohnen', t: 'Wohnen', z: 'material',
-      u: 'Wohnung, Miete, Handwerk, Nachbarschaft',
-      r: /wohnung|heizung|miete|kaution|umzug|musik von oben|tonne|hotel|besichtig/ },
-    { id: 'geld', t: 'Einkaufen, Geld & Verträge', z: 'guthaben',
-      u: 'Läden, Verträge, Reklamation',
-      r: /bäcker|baecker|supermarkt|flohmarkt|umtausch|reklamation|vertrag|kündig|kuendig|versicher|verkauf|bezahl|paket|lieferung|friseur|werkstatt|tisch reserv|handy/ },
-    { id: 'gesund', t: 'Gesundheit', z: 'hoeren',
-      u: 'Arzt, Apotheke, Notfall, Krankenkasse',
-      r: /arzt|apothek|krankenhaus|physio|zahnarzt|notruf|bereitschaft|krankenkasse|allergie/ },
-    { id: 'amt', t: 'Amt & Papiere', z: 'material',
-      u: 'Anmelden, Aufenthalt, Formulare',
-      r: /amt|anmeld|aufenthalt|führerschein|fuehrerschein|kindergeld|anzeige|unterlagen|widerspruch|diebstahl/ },
-    { id: 'arbeit', t: 'Arbeit', z: 'lernpfad',
-      u: 'Bewerbung, Betrieb, Kolleginnen und Kollegen',
-      r: /arbeitstag|vorstellungsgespräch|vorstellungsgespraech|praktikum|dienstplan|baustelle|sicherheitsunterweis|kolleg|gehalt|kritik|aufgabe klären|aufgabe klaeren|einarbeit|betrieb|eltern|schule/ },
+      u: 'Wohnung, Nachbarn, Heizung, Müll',
+      kat: ['wohnen'] },
+    { id: 'gesund', t: 'Gesundheit & Notfall', z: 'hoeren',
+      u: 'Arzt, Apotheke, Krankenhaus, Notruf',
+      kat: ['gesundheit', 'notfall'] },
+    { id: 'amt', t: 'Unterwegs, Ämter & Verträge', z: 'material',
+      u: 'Fahrkarte, Bürgeramt, Formulare, Verträge',
+      kat: ['unterwegs', 'amt', 'vertrag'] },
+    { id: 'arbeit', t: 'Arbeit & Lernen', z: 'lernpfad',
+      u: 'Bewerbung, Kollegen, Kunden, Kurs und Schule',
+      kat: ['buero', 'bewerbung', 'team', 'kunden', 'handwerk', 'pflege', 'bildung'] },
   ];
 
-  /* Einzelne Situationen, die die Regel nicht sicher trifft. */
-  var FEST = {
-    'termin-verschieben': 'ankommen',
-  };
+  var KAT_ZU = {};
+  KAPITEL.forEach(function (k) { k.kat.forEach(function (x) { KAT_ZU[x] = k.id; }); });
 
   var NIVEAUS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 
@@ -105,12 +104,16 @@
 
   /* ---------- Den Weg aus dialoge.js bauen ---------- */
   function kapitelVon(d) {
-    if (FEST[d.id]) return FEST[d.id];
-    var t = String(d.titel || '').toLowerCase();
-    for (var i = 0; i < KAPITEL.length; i++) {
-      if (KAPITEL[i].r.test(t)) return KAPITEL[i].id;
-    }
-    return 'ankommen';
+    return KAT_ZU[d.kat] || 'ankommen';
+  }
+
+  /* Innerhalb eines Kapitels von leicht nach schwer:
+     A1 vor A1–A2 vor A2 vor A2–B1 vor B1 … Gleiche Stufe bleibt in der
+     Reihenfolge aus dialoge.js. */
+  var RANG = ['A1', 'A1–A2', 'A2', 'A2–B1', 'B1', 'B1–B2', 'B2', 'B2–C1', 'C1'];
+  function rang(lvl) {
+    var r = RANG.indexOf(String(lvl || '').toUpperCase().replace(/[-—]/g, '–').trim());
+    return r < 0 ? 99 : r;
   }
 
   var _weg = null;
@@ -126,6 +129,13 @@
       var n = stufeVon(d.lvl);
       if (!w[n]) return;
       w[n][kapitelVon(d)].push(d);
+    });
+    NIVEAUS.forEach(function (n) {
+      KAPITEL.forEach(function (k) {
+        var l = w[n][k.id];
+        l.forEach(function (d, i) { d.__lpI = i; });
+        l.sort(function (x, y) { return (rang(x.lvl) - rang(y.lvl)) || (x.__lpI - y.__lpI); });
+      });
     });
     _weg = w;
     return w;
@@ -181,6 +191,13 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
     });
   }
+  /* Echtes Foto der Szene (bilder/dialog/<id>-s.jpg); fehlt es,
+     springt das Emoji ein. */
+  function fotoHtml(d) {
+    var src = 'bilder/dialog/' + (d.bild || d.id) + '-s.jpg';
+    return '<span class="lp-em lp-foto"><img src="' + E(src) + '" alt="" loading="lazy" ' +
+      'onerror="this.parentNode.textContent=this.parentNode.getAttribute(\'data-em\')"></span>';
+  }
   function zeichen(name) {
     try { return window.ZEICHEN ? ZEICHEN.html(name) : ''; } catch (e) { return ''; }
   }
@@ -235,6 +252,9 @@
   .lernpfad .lp-szene.fertig::before{background:var(--gruen)}
   .lernpfad .lp-szene.dran::before{background:var(--gelb)}
   .lernpfad .lp-szene .lp-em{font-size:20px;flex:0 0 auto}
+  .lernpfad .lp-szene .lp-foto{width:56px;height:42px;border-radius:9px;overflow:hidden;
+    border:2px solid var(--tinte);display:flex;align-items:center;justify-content:center;background:var(--karte)}
+  .lernpfad .lp-szene .lp-foto img{width:100%;height:100%;object-fit:cover;display:block}
   .lernpfad .lp-szene .lp-t{flex:1;min-width:0;font-family:var(--schrift-kopf,inherit);font-weight:700}
   .lernpfad .lp-szene .lp-d{font-family:var(--schrift-notiz,cursive);font-size:16px;color:var(--text-soft);flex:0 0 auto}
   .lernpfad .lp-szene.fertig{opacity:.72}
@@ -350,7 +370,7 @@
             var ist = speicher.fertig(d.id);
             var cls = 'lp-szene' + (ist ? ' fertig' : '') + (d.id === dranId ? ' dran' : '');
             return '<button class="' + cls + '" data-lp-start="' + E(d.id) + '">' +
-              '<span class="lp-em">' + E(d.em || '•') + '</span>' +
+              fotoHtml(d).replace('class="lp-em lp-foto"', 'class="lp-em lp-foto" data-em="' + E(d.em || '•') + '"') +
               '<span class="lp-t">' + E(d.titel) + '</span>' +
               '<span class="lp-d">' + E(d.dauer || '') + '</span>' +
               (ist ? '<span class="lp-haken">✓</span>' : '') +

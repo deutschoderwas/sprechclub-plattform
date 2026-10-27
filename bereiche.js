@@ -231,7 +231,7 @@ window.BEREICHE = [
 { id:'bewerbung', bild:'sz-bewerbung', weg:'beruf', gr:'ueberall', t:'Bewerbung & Vorstellung',
   u:'Sich vorstellen, nachfassen, Unterlagen klären, Gehalt verhandeln.',
   zeichen:'stift', lvl:'A2–C1',
-  dlg:['bewerbung','bewerbung-nachfassen','unterlagen-nachreichen','probearbeit-termin','praktikum','gehalt','c1-gehalt-und-luecke'],
+  dlg:['bewerbung','bewerbung-nachfassen','unterlagen-nachreichen','probearbeit-termin','praktikum-fragen','gehalt','c1-gehalt-und-luecke'],
   ws:['bewerbung-b1','c1-bewerbung'], ho:['bewerbung'], hilf:['konjunktiv2','perfekt-praeteritum','satzmelodie','praeteritum-sein-haben','perfekt-bilden'],
   lek:'bewerbung-lektion.html' },
 
