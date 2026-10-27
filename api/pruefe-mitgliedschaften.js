@@ -762,13 +762,30 @@ export default async function handler(req, res) {
     for (const a of abschiedListe) {
       try {
         if (!a.email) continue;
-        const ref = 'abschied:' + String(a.bis || 'ohne').slice(0, 10);
+        /* Julia, 27.10.2026, zu Dmitry Kropotov: "Was ist da schief
+           gegangen??" — Die Kennung bestand nur aus dem Enddatum.
+           email_log hat aber ein UNIQUE auf (kind, ref): sobald an
+           einem Datum schon jemand verabschiedet worden war, scheiterte
+           der Eintrag fuer jeden weiteren mit demselben Enddatum. Der
+           Fehler wurde nicht geprueft, die Mail ging trotzdem raus —
+           ohne Spur im Log und ohne Schutz vor einer zweiten.
+           Jetzt steckt die Person in der Kennung, und wenn der Eintrag
+           nicht gelingt, wird auch nicht verschickt. */
+        const datumTeil = String(a.bis || 'ohne').slice(0, 10);
+        const ref = 'abschied:' + a.id + ':' + datumTeil;
         const { data: schon } = await sb.from('email_log')
-          .select('id').eq('user_id', a.id).eq('kind', 'abschied').eq('ref', ref).maybeSingle();
+          .select('id').eq('user_id', a.id).eq('kind', 'abschied')
+          .in('ref', [ref, 'abschied:' + datumTeil]).maybeSingle();
         if (schon) continue;
 
-        const { data: notiz } = await sb.from('email_log')
+        const { data: notiz, error: notizErr } = await sb.from('email_log')
           .insert({ user_id: a.id, kind: 'abschied', ref }).select('id').maybeSingle();
+        if (notizErr || !notiz) {
+          bericht.fehler.push({ name: a.name || a.email,
+            fehler: 'Abschiedsmail nicht verschickt, Eintrag ins Mail-Log misslang: '
+                  + String((notizErr && notizErr.message) || 'kein Eintrag') });
+          continue;
+        }
 
         const r = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
