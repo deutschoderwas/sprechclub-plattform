@@ -64,6 +64,23 @@ const LAEUFT = ['active', 'trialing'];
    "das Abo dieses Kunden" ins Profil geschrieben werden. */
 const NIE_ZUSTANDE = ['incomplete', 'incomplete_expired'];
 
+/* Welche Stufe steckt in einem Stripe-Abo? Erst die Metadaten, sonst
+   der Name des Preises. Dieselbe Herleitung benutzt der Bestand weiter
+   unten; sie steht hier oben, damit das Wiederaufmachen eines Zugangs
+   dieselbe Antwort bekommt wie die Zaehlung. */
+function stufeVon(ab) {
+  const md = (ab && ab.metadata) || {};
+  const stufe = String(md.tier || '').toLowerCase();
+  if (stufe) return stufe;
+  const pos = ab && ab.items && ab.items.data && ab.items.data[0];
+  const preis = pos && pos.price;
+  const txt = String(md.plan || (preis && (preis.nickname || preis.lookup_key)) || '').toLowerCase();
+  if (txt.includes('premiumplus') || txt.startsWith('pp_')) return 'premiumplus';
+  if (txt.includes('premium')) return 'premium';
+  if (txt.includes('community')) return 'community';
+  return '';
+}
+
 function periodeEnde(s) {
   const e = s && (s.current_period_end
     || (s.items && s.items.data && s.items.data[0] && s.items.data[0].current_period_end));
@@ -114,11 +131,28 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  const { data: leute, error } = await sb
-    .from('profiles')
-    .select('id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher,pass_until,abo_stripe_status,abo_ende,bezahlt_von,bezahlt_hinweis')
-    .in('tier', TIERS);
+  const FELDER = 'id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher,pass_until,abo_stripe_status,abo_ende,bezahlt_von,bezahlt_hinweis';
+  const { data: leute, error } = await sb.from('profiles').select(FELDER).in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
+
+  /* Wer hier zugemacht wird, verliert seine Stufe (tier: null). Damit
+     fiel er aus genau dieser Abfrage heraus — und wurde nie wieder
+     angesehen. Der Satz weiter oben, eine durchgegangene Nachzahlung
+     mache den Zugang "von allein wieder auf", stimmte deshalb nicht:
+     entsperrt konnte fuer einen Geschlossenen gar nicht mehr greifen.
+
+     Dmitry Kropotov, 27.10.2026, zeigt, warum das zaehlt: zugemacht,
+     obwohl er bezahlt hatte. Ohne diese zweite Abfrage haette nur eine
+     Aenderung von Hand ihn zurueckgeholt.
+
+     Also: wer auf 'gekuendigt' steht und eine Stripe-Kundennummer hat,
+     wird weiter jede Nacht angesehen. Findet sich dort wieder ein
+     bezahltes Abo, geht der Zugang auf. Findet sich keins, passiert
+     nichts — zugemacht wird nur, wer gerade Zugang hat. */
+  const { data: geschlossen } = await sb.from('profiles').select(FELDER)
+    .eq('status', 'gekuendigt').not('stripe_customer_id', 'is', null);
+  const kennen = new Set((leute || []).map(x => x.id));
+  for (const g of (geschlossen || [])) if (!kennen.has(g.id)) (leute || []).push(g);
 
   const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], kundennummer_gewechselt: [], stripe_bild: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
 
@@ -316,8 +350,17 @@ export default async function handler(req, res) {
          als "hat Zugang" und muss genauso zugehen. */
       const istAktiv = ['aktiv', 'pause', 'urlaub'].includes(p.status || '');
       if (sollAktiv && !istAktiv) {
+        /* Beim Zumachen faellt die Stufe weg. Wer wieder aufgemacht
+           wird, braucht sie zurueck — sonst steht er als Mitglied ohne
+           Mitgliedschaft da und has_full_access() laesst ihn nicht
+           durch. Welche Stufe, sagt das Abo selbst. */
+        const auf = { status: 'aktiv' };
+        if (!p.tier) {
+          const stufe = stufeVon(laufend[0] || ausklingend[0]);
+          if (stufe) auf.tier = (stufe === 'premiumplus' ? 'premium_plus' : stufe);
+        }
         if (!trocken) {
-          const { error: aufErr } = await sb.from('profiles').update({ status: 'aktiv' }).eq('id', p.id);
+          const { error: aufErr } = await sb.from('profiles').update(auf).eq('id', p.id);
           if (aufErr) {
             bericht.fehler.push({
               name: p.name || p.email,
@@ -326,7 +369,7 @@ export default async function handler(req, res) {
             continue;
           }
         }
-        bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status });
+        bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status, stufe: auf.tier || p.tier || '—' });
       } else if (!sollAktiv && istAktiv
                  && !(alle.length === 0 && (subs.data || []).length > 0)) {
         /* Kein laufendes Abo mehr: Status auf 'gekuendigt' statt
@@ -709,15 +752,7 @@ export default async function handler(req, res) {
           const pos   = ab.items && ab.items.data && ab.items.data[0];
           const preis = pos && pos.price;
           const wdh   = (preis && preis.recurring) || {};
-          const md    = ab.metadata || {};
-          let stufe = String(md.tier || '').toLowerCase();
-          if (!stufe) {
-            const txt = String(md.plan || (preis && (preis.nickname || preis.lookup_key)) || '').toLowerCase();
-            if (txt.includes('premiumplus') || txt.startsWith('pp_')) stufe = 'premiumplus';
-            else if (txt.includes('premium')) stufe = 'premium';
-            else if (txt.includes('community')) stufe = 'community';
-            else stufe = 'unbekannt';
-          }
+          const stufe = stufeVon(ab) || 'unbekannt';
           const takt = { month: 'Monat', year: 'Jahr', week: 'Woche', day: 'Tag' }[wdh.interval] || '?';
           const lage = ab.cancel_at_period_end ? 'gekündigt, läuft aus' : ab.status;
           const schluessel = stufe + ' · ' + takt + ' · ' + lage;
