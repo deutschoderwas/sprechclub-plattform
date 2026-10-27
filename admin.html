@@ -2909,6 +2909,19 @@ function aboBlock(p){
     if (p.abo_stripe_status === 'trialing' && p.abo_ende){
       txt = 'läuft · erste Abbuchung am ' + dt(p.abo_ende);
     }
+    /* "von Hand eingetragen — läuft nicht über Stripe" stimmt nur,
+       wenn es wirklich keine Zahlung bei Stripe gibt. Bei Dmitry
+       Kropotov stand der Satz am 27.10.2026 falsch da: er hat am
+       06.10. gekauft, zahlt ab dem 01.12. über Stripe, und das
+       von_hand steht nur drin, damit der nächtliche Abgleich ihn nicht
+       noch einmal zumacht. Julia: "Was schreibst du da...." — zu
+       Recht. Wer eine Kundennummer hat, zahlt über Stripe. */
+    if (p.abo_stripe_status === 'von_hand' && p.stripe_customer_id){
+      txt = p.abo_ende
+        ? 'läuft über Stripe · nächste Abbuchung am ' + dt(p.abo_ende)
+          + ' — vom nächtlichen Abgleich ausgenommen'
+        : 'läuft über Stripe — vom nächtlichen Abgleich ausgenommen';
+    }
     z.push(['Zahlung', esc(txt)]);
   }
   z.push(['Zuletzt geprüft', p.abo_geprueft_am

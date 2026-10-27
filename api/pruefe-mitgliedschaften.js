@@ -120,7 +120,7 @@ export default async function handler(req, res) {
     .in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
 
-  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
+  const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], kundennummer_gewechselt: [], stripe_bild: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
 
   const abschiedListe = [];
 
@@ -160,12 +160,72 @@ export default async function handler(req, res) {
       }
 
       // --- 2. Abos ansehen
-      const subs = await stripe.subscriptions.list({ customer: kunde, status: 'all', limit: 10 });
-      const alle = (subs.data || []).filter(s => !NIE_ZUSTANDE.includes(s.status));
-      const laufend = alle.filter(s => LAEUFT.includes(s.status));
+      let subs = await stripe.subscriptions.list({ customer: kunde, status: 'all', limit: 10 });
+      let alle = (subs.data || []).filter(s => !NIE_ZUSTANDE.includes(s.status));
+      let laufend = alle.filter(s => LAEUFT.includes(s.status));
       /* Gekuendigt, Periode laeuft aber noch: zaehlt als Zugang. */
-      const ausklingend = alle.filter(s => !LAEUFT.includes(s.status) && nochBezahlt(s));
-      const hatAbo = laufend.length > 0 || ausklingend.length > 0;
+      let ausklingend = alle.filter(s => !LAEUFT.includes(s.status) && nochBezahlt(s));
+      let hatAbo = laufend.length > 0 || ausklingend.length > 0;
+
+      /* --- 2b. Eine zweite Kundennummer bei Stripe ----------------
+         Stripe legt pro Kauf einen Kunden an, wenn der Kauf nicht
+         erkennbar zu einem vorhandenen gehoert. Wer also ein zweites
+         Mal kauft — nach einer Kuendigung, ueber einen anderen Weg,
+         mit einem anderen Browser — kann bei Stripe zweimal stehen.
+         Im Profil steht aber nur eine Nummer, und zwar die alte.
+
+         Dieser Lauf hat dann genau die alte angesehen, dort nur das
+         gekuendigte Abo gefunden und den Zugang zugemacht, waehrend das
+         bezahlte Abo unter der zweiten Nummer weiterlief.
+
+         Dmitry Kropotov, 27.10.2026: Kauf am 06.10., erste Abbuchung am
+         01.12. — der Lauf sah nur sein altes Abo bis 26.10. und hat ihn
+         um 06:00 geschlossen. Julia: "er hat nicht gekuendigt". Bei
+         Toma stand am 17.10. derselbe Verdacht im Hinweisfeld.
+
+         Also: bevor hier jemand zugemacht wird, erst unter seiner
+         E-Mail nach weiteren Kundennummern sehen. Findet sich dort ein
+         laufendes oder ein noch bezahltes Abo, gilt dieses — und die
+         Nummer wird im Profil berichtigt, damit die Frage nicht jede
+         Nacht neu gestellt wird. */
+      if (!hatAbo && p.email) {
+        let weitere = { data: [] };
+        try { weitere = await stripe.customers.list({ email: p.email, limit: 10 }); } catch (e) {}
+        for (const k of (weitere.data || [])) {
+          if (!k || !k.id || k.id === kunde) continue;
+          let zweit;
+          try { zweit = await stripe.subscriptions.list({ customer: k.id, status: 'all', limit: 10 }); }
+          catch (e) { continue; }
+          const alle2 = (zweit.data || []).filter(s => !NIE_ZUSTANDE.includes(s.status));
+          const laufend2 = alle2.filter(s => LAEUFT.includes(s.status));
+          const ausklingend2 = alle2.filter(s => !LAEUFT.includes(s.status) && nochBezahlt(s));
+          if (!laufend2.length && !ausklingend2.length) continue;
+
+          subs = zweit; alle = alle2; laufend = laufend2; ausklingend = ausklingend2; hatAbo = true;
+          if (!trocken) await sb.from('profiles').update({ stripe_customer_id: k.id }).eq('id', p.id);
+          bericht.kundennummer_gewechselt.push({
+            name: p.name || p.email, email: p.email, von: kunde, nach: k.id,
+            abo: (laufend2[0] || ausklingend2[0]).status,
+          });
+          kunde = k.id;
+          break;
+        }
+      }
+
+      /* Probelauf: wenn trotzdem kein Abo da ist, zeigen was Stripe
+         wirklich hat. Sonst steht im Bericht nur "wird zugemacht" und
+         man muss sich bei Stripe durchklicken, um zu sehen, warum. */
+      if (trocken && !hatAbo) {
+        bericht.stripe_bild.push({
+          name: p.name || p.email, email: p.email, kunde,
+          abos: (subs.data || []).map(s => ({
+            status: s.status,
+            bis: periodeEnde(s) ? new Date(periodeEnde(s)).toISOString().slice(0, 10) : null,
+            kuendigt_zum_ende: !!s.cancel_at_period_end,
+            gekuendigt_am: s.canceled_at ? new Date(s.canceled_at * 1000).toISOString().slice(0, 10) : null,
+          })),
+        });
+      }
 
       // --- 3. userId nachtragen, damit der Webhook künftig greift
       //        und die irrefuehrende Stundenzahl entfernen
