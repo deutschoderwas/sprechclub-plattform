@@ -31,6 +31,20 @@
   function getProfile(){ try{ return window.profile || (typeof profile!=='undefined'?profile:null);}catch(e){return null;} }
   function active(){ try{ return (typeof isActive==='function')?isActive():true; }catch(e){ return true; } }
   function E(s){ return (window.esc?window.esc(s):String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);})); }
+  // Links in Nachrichten anklickbar machen: erst escapen, dann verlinken.
+  function verlinkt(s){
+    var t = E(s==null?'':s);
+    return t.replace(/(^|[\s(])((?:https?:\/\/|www\.)[^\s<]+)/g, function(_, vor, url){
+      var schwanz = '';
+      var m = url.match(/[.,:;!?)\]}'"]+$/);
+      if(m){ schwanz = m[0]; url = url.slice(0, url.length - schwanz.length); }
+      if(!url) return vor + schwanz;
+      var ziel = url.indexOf('http')===0 ? url : 'https://' + url;
+      var text = url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+      if(text.length>48) text = text.slice(0,45)+'\u2026';
+      return vor + '<a class="mlink" href="' + ziel + '" target="_blank" rel="noopener noreferrer">' + text + '</a>' + schwanz;
+    });
+  }
   function root(){ return document.getElementById('v-community'); }
   function q(sel){ var r=root(); return r?r.querySelector(sel):null; }
   function vorname(n){ return String(n==null?'':n).trim().split(/\s+/)[0] || 'Mitglied'; }
@@ -123,6 +137,9 @@
     #v-community .mh .del{margin-left:auto;opacity:0;color:var(--t3);cursor:pointer;padding:2px;border-radius:5px}
     #v-community .m:hover .mh .del{opacity:1}
     #v-community .mt{font-size:13.5px;color:#2b2f33;margin-top:2px;line-height:1.55;word-wrap:break-word;white-space:pre-wrap}
+    #v-community .mt a.mlink{color:#0E6D85;font-weight:600;text-decoration:underline;text-decoration-color:rgba(14,109,133,.38);text-underline-offset:2px;word-break:break-word}
+    #v-community .mt a.mlink:active{color:#1FA6C6}
+    #v-community .mt a.mlink:focus-visible{outline:2px solid #3FBDDC;outline-offset:2px;border-radius:3px}
     #v-community .mt .men{color:var(--brand-2);font-weight:600}
     #v-community .rc{display:inline-flex;gap:5px;margin-top:6px;flex-wrap:wrap;align-items:center}
     #v-community .rc span{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:1px 8px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer}
@@ -1309,6 +1326,7 @@
   }
   function onFeedClick(ev){
     var t=ev.target; if(!t||!t.closest) return;
+    if(t.closest('a.mlink')) return;   // Links im Text ganz normal oeffnen
     var addr=t.closest('[data-addr]');
     if(addr){ ev.stopPropagation(); showRepop(addr,addr.getAttribute('data-addr')); return; }
     var rp=t.closest('[data-rep]'); if(rp){ ev.stopPropagation(); setReply(rp.getAttribute('data-rep')); return; }
@@ -1430,9 +1448,9 @@
       return '<div class="voice"><button class="vp" data-play="'+E(m.id)+'"'+(m._url?' data-src="'+E(m._url)+'"':'')+'>'+svg(IC.play,'ico-sm')+'</button><div class="wave">'+waveHtml(m.id)+'</div><span class="vd">'+(m.audio_secs?Math.round(m.audio_secs)+'s':'')+'</span></div>';
     }
     if(m.kind==='image'){
-      return (m._url?'<a href="'+E(m._url)+'" target="_blank" rel="noopener"><img class="mimg" src="'+E(m._url)+'" alt="Bild" loading="lazy"></a>':'<span style="color:#8B929A">📷 Bild</span>')+(m.body?'<div class="mt" style="margin-top:5px">'+E(m.body)+'</div>':'');
+      return (m._url?'<a href="'+E(m._url)+'" target="_blank" rel="noopener"><img class="mimg" src="'+E(m._url)+'" alt="Bild" loading="lazy"></a>':'<span style="color:#8B929A">📷 Bild</span>')+(m.body?'<div class="mt" style="margin-top:5px">'+verlinkt(m.body)+'</div>':'');
     }
-    return '<div class="mt">'+E(m.body||'')+'</div>';
+    return '<div class="mt">'+verlinkt(m.body||'')+'</div>';
   }
   function kurzText(m){
     if(!m) return 'Nachricht';
@@ -1840,7 +1858,7 @@
     return '<div class="m'+(meins?' me':'')+'" data-id="'+E(m.id||'')+'" data-u="'+E(m.sender_id||'')+'" data-t="'+E(m.created_at||'')+'">'+
       '<div class="ava '+avClass(nm)+'">'+E(initials(nm))+'</div>'+
       '<div class="mb"><div class="mh"><span class="w">'+(meins?'Du':E(vorname(nm)))+'</span><time>'+timeStr(m.created_at)+'</time></div>'+
-      '<div class="mt">'+E(m.body||'')+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div></div>';
+      '<div class="mt">'+verlinkt(m.body||'')+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div></div>';
   }
 
   async function openDM(partnerId,name){
