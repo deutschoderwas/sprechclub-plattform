@@ -329,6 +329,15 @@
     +   '--tq-t:#0E6D85;--tq-soft:#E8F7FC;--gold:#FFCE00;--rot:#DD0000;'
     +   'display:flex;flex-direction:column;gap:14px}'
     + '.hs *{box-sizing:border-box}'
+    /* Der Grund. Ohne ihn stehen die weissen Karten auf dem alten
+       Creme (#FFF8E0) und wirken flach — im Entwurf liegen sie auf
+       einem hellen Graubeige, und erst dadurch heben sie sich ab.
+       Julia, 28.10.2026: "So moechte ich das, aber in der Realitaet
+       sieht es anders aus."
+       Gebunden an body.auf-heute, das konto.html nur auf der
+       Startseite setzt — die anderen Ansichten behalten ihr Creme. */
+    + 'body.auf-heute.hs-an{background:#F2EFE6}'
+    + 'body.auf-heute.hs-an .content,body.auf-heute.hs-an .content-inner{background:transparent}'
     + '.hs button{font-family:inherit;color:inherit;cursor:pointer}'
     + '.hs .druck{transition:transform .13s cubic-bezier(.2,.7,.3,1)}'
     + '.hs .druck:active{transform:scale(.973)}'
@@ -678,6 +687,7 @@
 
   function handyStart(ziel, k, s){
     zeichenEinhaengen();
+    try{ document.body.classList.add('hs-an'); }catch(e){}
     ziel.innerHTML = '<div class="hs">'
       + hsKopf(k, s)
       + hsWoche(k, s)
