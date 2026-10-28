@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;}
+:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;--green:#2E9E5B;--green-soft:#EAF7EF;}
 *{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
 body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
 .wrapper{max-width:1180px;margin:0 auto;padding:2.5rem 1.6rem 5rem;}
@@ -92,6 +92,56 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 .lvtag.e{background:var(--yellow-soft);color:#8a6400;}
 .lvtag.k{background:#E4EEFB;color:#1e4f91;}
 .lvtag.s{background:#E4F6EC;color:#1d6c3e;}
+.quiz-img{width:70px;height:70px;object-fit:cover;border-radius:11px;border:1.5px solid var(--sand);float:left;margin:0 .7rem .2rem 0;background:#fff;}
+.quiz{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.2rem;margin:.8rem 0;border-left:5px solid var(--sand);}
+.lv[data-lvl=einfach] .quiz{border-left-color:var(--yellow);}
+.lv[data-lvl=komplexer] .quiz{border-left-color:var(--der);}
+.lv[data-lvl=schwierig] .quiz{border-left-color:var(--das);}
+.quiz-q{font-family:'Space Grotesk',sans-serif;font-size:1rem;color:var(--ink);margin-bottom:.7rem;overflow:hidden;}
+.quiz-opts{display:flex;flex-wrap:wrap;gap:.45rem;}
+.quiz-chip{background:var(--paper);border:2px solid var(--sand);font-weight:600;font-size:.95rem;color:var(--ink);padding:.4rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;}
+.quiz-chip:hover{border-color:var(--ink);}
+.quiz-chip.correct{background:#E4F6EC;border-color:var(--das);color:var(--das);}
+.quiz-chip.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);text-decoration:line-through;}
+.quiz-explain{margin-top:.6rem;font-size:.86rem;color:var(--das);background:#E4F6EC;padding:.5rem .8rem;border-radius:10px;display:none;}
+.quiz-explain.show{display:block;}
+.quiz-runden{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1.1rem 0 1.5rem;}
+@media(max-width:900px){.quiz-runden{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.quiz-runden{grid-template-columns:repeat(2,1fr);}}
+.qr{background:var(--paper);border:2px solid var(--sand);border-radius:14px;padding:.65rem .8rem;cursor:pointer;transition:.12s;text-align:left;font-family:'Inter',sans-serif;}
+.qr:hover{border-color:var(--ink);transform:translateY(-1px);}
+.qr.active{border-color:var(--red);background:var(--red-soft);}
+.qr.fertig{border-color:var(--green);background:var(--green-soft);}
+.qr-i{font-size:1.25rem;line-height:1;}
+.qr-t{font-weight:700;font-size:.92rem;margin-top:.2rem;}
+.qr-d{font-size:.74rem;color:var(--ink-mute);}
+.quiz-buehne{background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:6px 6px 0 rgba(38,32,25,.13);max-width:740px;margin:0 auto;}
+.quiz-kopf{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.quiz-zaehler{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.quiz-punkte{font-size:.86rem;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:999px;padding:.2rem .8rem;}
+.quiz-balken{height:8px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:1.2rem;border:1.5px solid var(--ink);}
+.quiz-balken i{display:block;height:100%;background:var(--red);transition:width .3s;}
+.quiz-frage{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.42rem);line-height:1.35;margin-bottom:1.1rem;min-height:2.7em;}
+.gq-opts{display:grid;gap:.5rem;}
+.qo{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand);border-radius:14px;padding:.75rem 1rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s;}
+.qo:hover:not(.aus){border-color:var(--ink);}
+.qo .qo-b{flex:0 0 26px;height:26px;border-radius:999px;background:var(--paper);border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--ink-mute);}
+.qo.richtig{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+.qo.richtig .qo-b{background:var(--green);border-color:var(--green);color:#fff;}
+.qo.falsch{background:var(--red-soft);border-color:var(--red);color:#B01813;}
+.qo.falsch .qo-b{background:var(--red);border-color:var(--red);color:#fff;}
+.qo.aus{cursor:default;}
+.quiz-erkl{margin-top:1rem;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;font-size:.94rem;line-height:1.6;display:none;}
+.quiz-erkl.an{display:block;animation:fade .3s ease;}
+.quiz-erkl b{color:var(--red);}
+.quiz-fuss{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.quiz-ende{text-align:center;padding:1.2rem .5rem;}
+.quiz-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:3rem;color:var(--green);line-height:1;}
+.quiz-ende p{color:var(--ink-soft);margin:.6rem 0 1.1rem;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter',sans-serif;}
+.btn:hover{background:#C8211D;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper);}
 </style></head>
 <body data-level="komplexer"><div class="wrapper">
 <div class="eyebrow">deutschoderwas · Wortschatzfokus · B1/B2</div>
@@ -117,6 +167,8 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <button class="tab" data-tab="2">📍 Präpositionen</button>
 <button class="tab" data-tab="3">🔤 Tabu</button>
 <button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">✏️ Übungen</button>
+<button class="tab" data-tab="6">🏆 Großes Quiz</button>
 </nav>
 <section class="section active" data-section="0">
 <h2 class="section-title">Was gibt es <em>alles</em> zu sehen?</h2>
@@ -221,6 +273,93 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 </div>
 <div class="tip">🔑 <strong>Redemittel:</strong> „Ganz vorne / hinten sieht man …", „Direkt daneben …", „Links / rechts von … befindet sich …", „Im Vordergrund / im Hintergrund …"</div>
 </section>
+<section class="section" data-section="5">
+<h2 class="section-title">✏️ <em>Übungen</em></h2>
+<p class="section-sub">Testet euch selbst! Tippt auf die richtige Antwort — die Übungen passen sich eurem Niveau an. <strong>Artikel</strong>, <strong>Wo? &amp; Wohin?</strong> und <strong>Bild → Wort</strong>.</p>
+
+<div class="lv" data-lvl="einfach">
+<span class="lvtag e">A2/B1</span>
+<h2 class="section-title">Der, die oder <em>das</em>?</h2>
+<p class="section-sub">Welcher Artikel passt?</p>
+<div class="quiz"><div class="quiz-q">___ Schreibtisch</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Schreibtisch"</div></div>
+<div class="quiz"><div class="quiz-q">___ Tastatur</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Tastatur"</div></div>
+<div class="quiz"><div class="quiz-q">___ Telefon</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ das Telefon"</div></div>
+<div class="quiz"><div class="quiz-q">___ Stift</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Stift"</div></div>
+<div class="quiz"><div class="quiz-q">___ Tasse</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Tasse"</div></div>
+<h2 class="section-title">Wo? oder <em>Wohin?</em></h2>
+<p class="section-sub">Lage (Dativ) oder Richtung (Akkusativ)?</p>
+<div class="quiz"><div class="quiz-q">Die Tasse steht auf ___ Schreibtisch.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">dem</button><button class="quiz-chip">den</button></div><div class="quiz-explain">„✓ Wo? = Dativ: auf dem Schreibtisch."</div></div>
+<div class="quiz"><div class="quiz-q">Der Stift liegt in ___ Tasse.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button></div><div class="quiz-explain">„✓ Wo? = Dativ: in der Tasse."</div></div>
+<div class="quiz"><div class="quiz-q">Die Maus liegt neben ___ Tastatur.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button></div><div class="quiz-explain">„✓ Wo? = Dativ: neben der Tastatur."</div></div>
+<div class="quiz"><div class="quiz-q">Ich lege das Papier auf ___ Schreibtisch.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">den</button><button class="quiz-chip">dem</button></div><div class="quiz-explain">„✓ Wohin? = Akkusativ: auf den Schreibtisch."</div></div>
+<h2 class="section-title">Bild → <em>Wort</em></h2>
+<p class="section-sub">Was ist das?</p>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114828_b7312dfc-879e-4aac-9a0a-2da55668267b.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der Schreibtisch</button><button class="quiz-chip">die Tastatur</button><button class="quiz-chip">das Telefon</button></div><div class="quiz-explain">„✓ der Schreibtisch"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114915_b15262d3-865f-48b5-8c51-097c02bc0c9a.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der Stift</button><button class="quiz-chip">die Maus</button><button class="quiz-chip">das Fenster</button></div><div class="quiz-explain">„✓ die Maus"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114838_9aeb88f4-7363-4a29-8276-9fd8c58c4f66.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">das Papier</button><button class="quiz-chip">der Bürostuhl</button><button class="quiz-chip">die Uhr</button></div><div class="quiz-explain">„✓ die Uhr"</div></div>
+</div>
+
+<div class="lv" data-lvl="komplexer">
+<span class="lvtag k">B1/B2</span>
+<h2 class="section-title">Der, die oder <em>das</em>?</h2>
+<p class="section-sub">Welcher Artikel passt?</p>
+<div class="quiz"><div class="quiz-q">___ Laptop</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Laptop"</div></div>
+<div class="quiz"><div class="quiz-q">___ Schreibtischlampe</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Schreibtischlampe"</div></div>
+<div class="quiz"><div class="quiz-q">___ Regal</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ das Regal"</div></div>
+<div class="quiz"><div class="quiz-q">___ Ordner</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Ordner"</div></div>
+<div class="quiz"><div class="quiz-q">___ Kollegin</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Kollegin"</div></div>
+<h2 class="section-title">Wo? oder <em>Wohin?</em></h2>
+<p class="section-sub">Lage (Dativ) oder Richtung (Akkusativ)?</p>
+<div class="quiz"><div class="quiz-q">Der Laptop steht auf ___ Schreibtisch.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">dem</button><button class="quiz-chip">den</button></div><div class="quiz-explain">„✓ Wo? = Dativ: auf dem Schreibtisch."</div></div>
+<div class="quiz"><div class="quiz-q">Ich lege das Notizbuch in ___ Regal.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">das</button><button class="quiz-chip">dem</button></div><div class="quiz-explain">„✓ Wohin? = Akkusativ: in das (ins) Regal."</div></div>
+<div class="quiz"><div class="quiz-q">Ich werfe das Papier in ___ Mülleimer.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">den</button><button class="quiz-chip">dem</button></div><div class="quiz-explain">„✓ Wohin? = Akkusativ: in den Mülleimer."</div></div>
+<div class="quiz"><div class="quiz-q">Der Drucker steht neben ___ Kollegin.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button></div><div class="quiz-explain">„✓ Wo? = Dativ: neben der Kollegin."</div></div>
+<h2 class="section-title">Bild → <em>Wort</em></h2>
+<p class="section-sub">Was ist das?</p>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114828_3687664f-e50a-463a-8460-de88f99e0a0a.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der Laptop</button><button class="quiz-chip">das Regal</button><button class="quiz-chip">die Kollegin</button></div><div class="quiz-explain">„✓ der Laptop"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114827_0e082123-2fa1-423a-b88f-e15f6f4b8429.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der Drucker</button><button class="quiz-chip">die Schreibtischlampe</button><button class="quiz-chip">der Ordner</button></div><div class="quiz-explain">„✓ die Schreibtischlampe"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114843_251a07c7-d38c-4ac6-8ce5-4e409a51bd1a.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">das Notizbuch</button><button class="quiz-chip">der Kalender</button><button class="quiz-chip">der Mülleimer</button></div><div class="quiz-explain">„✓ der Mülleimer"</div></div>
+</div>
+
+<div class="lv" data-lvl="schwierig">
+<span class="lvtag s">B2/C1</span>
+<h2 class="section-title">Der, die oder <em>das</em>?</h2>
+<p class="section-sub">Welcher Artikel passt?</p>
+<div class="quiz"><div class="quiz-q">___ Tacker</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Tacker"</div></div>
+<div class="quiz"><div class="quiz-q">___ Schere</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Schere"</div></div>
+<div class="quiz"><div class="quiz-q">___ Bild</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ das Bild"</div></div>
+<div class="quiz"><div class="quiz-q">___ Aktenschrank</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ der Aktenschrank"</div></div>
+<div class="quiz"><div class="quiz-q">___ Pinnwand</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der</button><button class="quiz-chip">die</button><button class="quiz-chip">das</button></div><div class="quiz-explain">„✓ die Pinnwand"</div></div>
+<h2 class="section-title">Wo? oder <em>Wohin?</em></h2>
+<p class="section-sub">Lage (Dativ) oder Richtung (Akkusativ)? Achte genau auf das Verb!</p>
+<div class="quiz"><div class="quiz-q">Ich hänge das Bild über ___ Aktenschrank.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">den</button><button class="quiz-chip">dem</button></div><div class="quiz-explain">„✓ Wohin? = Akkusativ: über den Aktenschrank."</div></div>
+<div class="quiz"><div class="quiz-q">Das Bild hängt über ___ Aktenschrank.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">dem</button><button class="quiz-chip">den</button></div><div class="quiz-explain">„✓ Wo? = Dativ: über dem Aktenschrank."</div></div>
+<div class="quiz"><div class="quiz-q">Ich stecke den Zettel an ___ Pinnwand.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">die</button><button class="quiz-chip">der</button></div><div class="quiz-explain">„✓ Wohin? = Akkusativ: an die Pinnwand."</div></div>
+<div class="quiz"><div class="quiz-q">Die Schere liegt zwischen ___ Becher und dem Tacker.</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">dem</button><button class="quiz-chip">den</button></div><div class="quiz-explain">„✓ Wo? = Dativ: zwischen dem Becher und dem Tacker."</div></div>
+<h2 class="section-title">Bild → <em>Wort</em></h2>
+<p class="section-sub">Was ist das?</p>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114827_d7ae4d64-f453-4769-a8ef-c83f2655cc19.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="0"><button class="quiz-chip">der Tacker</button><button class="quiz-chip">die Schere</button><button class="quiz-chip">das Bild</button></div><div class="quiz-explain">„✓ der Tacker"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114916_8888d7ab-f994-43fe-a00d-7c46150ef002.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="1"><button class="quiz-chip">der Becher</button><button class="quiz-chip">die Pinnwand</button><button class="quiz-chip">der Zettel</button></div><div class="quiz-explain">„✓ die Pinnwand"</div></div>
+<div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_114915_0de67bb7-2888-4c20-8ee2-53b8d9ac55fa.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der Aktenschrank</button><button class="quiz-chip">das Bild</button><button class="quiz-chip">der Taschenrechner</button></div><div class="quiz-explain">„✓ der Taschenrechner"</div></div>
+</div>
+</section>
+<section class="section" data-section="6">
+<h2 class="section-title">🏆 Das <em>große Quiz</em></h2>
+<p class="section-sub">Mehrere Runden rund ums Büro: Wortschatz, Artikel, <strong>Wo? &amp; Wohin?</strong> und Büro-Alltag. Pro Frage gibt es genau eine richtige Antwort — das Quiz passt sich eurem <strong>Niveau</strong> an.</p>
+<div class="quiz-runden" id="quizRunden"></div>
+<div class="quiz-buehne">
+  <div class="quiz-kopf"><span class="quiz-zaehler" id="quizZaehler">Runde 1 · Frage 1</span><span class="quiz-punkte" id="quizPunkte">0 von 6</span></div>
+  <div class="quiz-balken"><i id="quizBalken" style="width:0%"></i></div>
+  <div id="quizInhalt">
+    <div class="quiz-frage" id="quizFrage"></div>
+    <div class="gq-opts" id="quizOpts"></div>
+    <div class="quiz-erkl" id="quizErkl"></div>
+    <div class="quiz-fuss"><button class="btn ghost" onclick="quizRundeStart(qRunde)">↺ Runde neu</button><button class="btn" onclick="quizWeiter()">Weiter →</button></div>
+  </div>
+  <div class="quiz-ende" id="quizEnde" style="display:none"></div>
+</div>
+<div class="tip teal">🏅 <strong>Als Wettkampf:</strong> Zwei Teams, abwechselnd. Wer die richtige Antwort hat, muss zusätzlich <u>einen eigenen Satz</u> mit dem Wort bilden — erst dann gibt es den Punkt.</div>
+</section>
 </div>
 <footer><strong>deutschoderwas</strong> — Wortschatzfokus · B1/B2 · Im Büro</footer>
 <script>
@@ -234,7 +373,103 @@ var secQ=makeQueue(WORDS[curLevel].length),secP=0;
 document.getElementById('secretNew').onclick=function(){var list=WORDS[curLevel];if(secP>=secQ.length){secQ=makeQueue(list.length);secP=0;}var w=list[secQ[secP++]];document.getElementById('secretWord').innerHTML=artSpan(w);var im=document.getElementById('secretImg');im.src=w.img;im.style.display='block';};
 var tabQ=makeQueue(WORDS[curLevel].length),tabP=0;
 document.getElementById('tabooNew').onclick=function(){var list=WORDS[curLevel];if(tabP>=tabQ.length){tabQ=makeQueue(list.length);tabP=0;}var w=list[tabQ[tabP++]];document.getElementById('tabooWord').innerHTML=artSpan(w);var im=document.getElementById('tabooImg');im.src=w.img;im.style.display='block';document.getElementById('tabooList').innerHTML=w.f.map(function(x){return '<li>'+x+'</li>';}).join('');};
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';}
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';qFertig=[];quizRundenBauen();quizRundeStart(0);}
+function _sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=[].slice.call(opts.querySelectorAll('.quiz-chip'));var correct=chips[c];_sh(chips);chips.forEach(function(ch){opts.appendChild(ch);});opts.dataset.c=chips.indexOf(correct);});
+document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=opts.querySelectorAll('.quiz-chip');var exp=opts.parentElement.querySelector('.quiz-explain');chips.forEach(function(chip,i){chip.onclick=function(){if(opts.dataset.done)return;opts.dataset.done='1';if(i===c)chip.classList.add('correct');else{chip.classList.add('wrong');chips[c].classList.add('correct');}if(exp)exp.classList.add('show');};});});
+var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
+function QZ(){return QUIZ[curLevel];}
+function quizRundenBauen(){var qg=document.getElementById('quizRunden');qg.innerHTML='';QZ().forEach(function(R,i){var b=document.createElement('button');b.className='qr';b.dataset.i=i;b.innerHTML='<div class="qr-i">'+R.i+'</div><div class="qr-t">'+R.t+'</div><div class="qr-d">'+R.d+' · '+R.q.length+' Fragen</div>';b.addEventListener('click',function(){quizRundeStart(i);});qg.appendChild(b);});}
+function quizRundeStart(i){qRunde=i;qNr=0;qPunkte=0;qOffen=false;document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0 && +b.dataset.i!==i);});document.getElementById('quizEnde').style.display='none';document.getElementById('quizInhalt').style.display='block';quizFrage();}
+function quizFrage(){var R=QZ()[qRunde];if(!R)return;if(qNr>=R.q.length){quizEnde();return;}var f=R.q[qNr];qOffen=true;document.getElementById('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;document.getElementById('quizPunkte').textContent=qPunkte+' von '+R.q.length;document.getElementById('quizBalken').style.width=(qNr/R.q.length*100)+'%';document.getElementById('quizFrage').innerHTML=f.f;var paare=f.o.map(function(t,j){return {t:t,ok:j===f.r};});for(var j=paare.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var h=paare[j];paare[j]=paare[k];paare[k]=h;}var buch='ABCD',opts=document.getElementById('quizOpts');opts.innerHTML='';paare.forEach(function(p,j){var b=document.createElement('button');b.className='qo';b.dataset.ok=p.ok?'1':'0';b.innerHTML='<span class="qo-b">'+buch[j]+'</span><span>'+p.t+'</span>';b.addEventListener('click',function(){quizAntwort(b,f);});opts.appendChild(b);});var e=document.getElementById('quizErkl');e.className='quiz-erkl';e.innerHTML='';}
+function quizAntwort(btn,f){if(!qOffen)return;qOffen=false;var ok=btn.dataset.ok==='1';document.querySelectorAll('#quizOpts .qo').forEach(function(b){b.classList.add('aus');if(b.dataset.ok==='1')b.classList.add('richtig');});if(!ok)btn.classList.add('falsch');if(ok)qPunkte++;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;var e=document.getElementById('quizErkl');e.innerHTML=(ok?'✅ Richtig. ':'❌ Nicht ganz. ')+f.e;e.className='quiz-erkl an';}
+function quizWeiter(){if(qOffen){var b=document.getElementById('quizOpts').querySelector('.qo[data-ok="1"]');if(b){quizAntwort(b,QZ()[qRunde].q[qNr]);qPunkte--;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;return;}}qNr++;quizFrage();}
+function quizEnde(){var R=QZ()[qRunde],n=R.q.length;if(qFertig.indexOf(qRunde)<0)qFertig.push(qRunde);document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0);});document.getElementById('quizBalken').style.width='100%';document.getElementById('quizInhalt').style.display='none';var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));var naechste=(qRunde+1)%QZ().length;document.getElementById('quizEnde').style.display='block';document.getElementById('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+'<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+'<button class="btn" onclick="quizRundeStart('+naechste+')">'+QZ()[naechste].i+' Weiter: '+QZ()[naechste].t+' →</button></div>';}
+var QUIZ={
+"einfach":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Worauf tippt man, um Buchstaben zu schreiben?","o":["die Tastatur","die Maus","der Bildschirm"],"r":0,"e":"Auf der Tastatur sind die Tasten mit den Buchstaben. Mit der Maus bewegt man den Zeiger, und der Bildschirm zeigt alles an."},
+{"f":"Woraus trinkt man im Büro seinen Kaffee?","o":["aus der Tasse","aus dem Drucker","aus dem Stift"],"r":0,"e":"Aus der Tasse trinkt man Kaffee oder Tee. Der Drucker druckt Papier, und mit dem Stift schreibt man."},
+{"f":"Was hängt an der Wand und zeigt die Zeit?","o":["die Uhr","das Fenster","die Pflanze"],"r":0,"e":"Die Uhr zeigt die Zeit. Durch das Fenster kommt Licht, und die Pflanze ist grün und steht im Topf."},
+{"f":"Worauf sitzt man am Schreibtisch?","o":["auf dem Bürostuhl","auf dem Telefon","auf dem Papier"],"r":0,"e":"Auf dem Bürostuhl sitzt man; er hat Rollen und eine Lehne. Mit dem Telefon ruft man an, und das Papier ist dünn und weiß."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Telefon?","o":["das","der","die"],"r":0,"e":"Es heißt das Telefon. Viele Wörter auf -on sind im Deutschen Neutrum."},
+{"f":"Welcher Artikel passt: ___ Tastatur?","o":["die","der","das"],"r":0,"e":"Es heißt die Tastatur. Wörter auf -ur sind fast immer feminin."},
+{"f":"Welcher Artikel passt: ___ Schreibtisch?","o":["der","das","die"],"r":0,"e":"Es heißt der Schreibtisch. Das Grundwort entscheidet: der Tisch wird zu der Schreibtisch."},
+{"f":"Welcher Artikel passt: ___ Fenster?","o":["das","der","die"],"r":0,"e":"Es heißt das Fenster. Wörter auf -ster sind oft Neutrum."}
+]},
+{"t":"Wo ist das?","d":"Dativ","i":"📍","q":[
+{"f":"Die Tasse steht auf ___ Schreibtisch.","o":["dem","den","der"],"r":0,"e":"Wo? fragt nach der Lage, also Dativ: auf dem Schreibtisch."},
+{"f":"Der Stift liegt in ___ Tasse.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Tasse wird im Dativ zu der Tasse."},
+{"f":"Die Maus liegt neben ___ Tastatur.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ: neben der Tastatur."}
+]},
+{"t":"Büro-Alltag","d":"Alltag","i":"💼","q":[
+{"f":"Was sagt man, wenn man morgens ins Büro kommt?","o":["Guten Morgen!","Gute Nacht!","Guten Appetit!"],"r":0,"e":"Am Morgen begrüßt man die Kollegen mit „Guten Morgen“. „Gute Nacht“ sagt man vor dem Schlafen, „Guten Appetit“ vor dem Essen."},
+{"f":"Was macht man mit dem Drucker?","o":["Man druckt Papier.","Man trinkt Kaffee.","Man telefoniert."],"r":0,"e":"Der Drucker bringt Text und Bilder aufs Papier. Kaffee kommt aus der Maschine, telefonieren tut man mit dem Telefon."},
+{"f":"Wohin wirft man altes Papier?","o":["in den Mülleimer","in die Tasse","auf den Bildschirm"],"r":0,"e":"Altes Papier kommt in den Mülleimer. In die Tasse gehört ein Getränk, und der Bildschirm bleibt frei."}
+]}
+],
+"komplexer":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Welches Gerät druckt Dokumente auf Papier?","o":["der Drucker","der Laptop","der Kalender"],"r":0,"e":"Der Drucker bringt Dateien zu Papier. Der Laptop ist ein tragbarer Computer, und der Kalender zeigt Tage und Termine."},
+{"f":"Worin heftet man Dokumente ab und stellt sie ins Regal?","o":["in den Ordner","in das Notizbuch","in den Mülleimer"],"r":0,"e":"In einen Ordner heftet man Papiere ab. Ins Notizbuch schreibt man Notizen, und in den Mülleimer kommt der Abfall."},
+{"f":"Worauf schreibt man im Meeting mit einem Stift und wischt es später wieder weg?","o":["auf das Whiteboard","auf das Papier","auf den Kalender"],"r":0,"e":"Das Whiteboard ist die weiße Tafel, die man beschreiben und abwischen kann. Papier wirft man weg, und in den Kalender trägt man Termine ein."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Laptop?","o":["der","das","die"],"r":0,"e":"Es heißt der Laptop, genau wie der Computer."},
+{"f":"Welcher Artikel passt: ___ Schreibtischlampe?","o":["die","der","das"],"r":0,"e":"Es heißt die Schreibtischlampe. Das Grundwort entscheidet: die Lampe wird zu die Schreibtischlampe."},
+{"f":"Welcher Artikel passt: ___ Regal?","o":["das","der","die"],"r":0,"e":"Es heißt das Regal."},
+{"f":"Welcher Artikel passt: ___ Kollegin?","o":["die","der","das"],"r":0,"e":"Es heißt die Kollegin. Die Endung -in macht eine weibliche Person: der Kollege wird zu die Kollegin."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Der Laptop steht auf ___ Schreibtisch.","o":["dem","den","das"],"r":0,"e":"Wo? = Dativ: auf dem Schreibtisch. Der Laptop bewegt sich nicht."},
+{"f":"Ich lege das Notizbuch in ___ Regal.","o":["das","dem","der"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: in das (ins) Regal."},
+{"f":"Ich werfe das Papier in ___ Mülleimer.","o":["den","dem","das"],"r":0,"e":"Wohin? = Akkusativ: in den Mülleimer."},
+{"f":"Der Kalender hängt an ___ Wand.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Wand wird im Dativ zu der Wand."}
+]},
+{"t":"Büro-Alltag & Redewendungen","d":"Alltag","i":"💼","q":[
+{"f":"Was bedeutet „etwas auf die lange Bank schieben“?","o":["etwas immer wieder aufschieben","etwas sofort erledigen","etwas laut vorlesen"],"r":0,"e":"Wer etwas auf die lange Bank schiebt, verschiebt es immer wieder. Das Gegenteil wäre, es sofort zu erledigen."},
+{"f":"Was bedeutet „Feierabend machen“?","o":["die Arbeit für heute beenden","eine Party im Büro feiern","zu spät kommen"],"r":0,"e":"Feierabend machen heißt, Schluss für heute zu machen und nach Hause zu gehen. Mit einer Party hat es nichts zu tun."},
+{"f":"Eine Kollegin fragt: „Hast du kurz Zeit?“ Was möchte sie?","o":["kurz mit dir sprechen","dir Kaffee bringen","nach Hause gehen"],"r":0,"e":"„Hast du kurz Zeit?“ ist eine höfliche Bitte um ein kurzes Gespräch."}
+]},
+{"t":"Funktion & Verben","d":"Was passt?","i":"🖼️","q":[
+{"f":"Welches Verb passt: Ich muss den Bericht noch ___.","o":["ausdrucken","austrinken","aufwachen"],"r":0,"e":"Einen Bericht druckt man aus. Austrinken passt zu Getränken, aufwachen zum Morgen."},
+{"f":"Was macht man mit einem Kalender?","o":["Termine eintragen","Kaffee kochen","Papier schneiden"],"r":0,"e":"In den Kalender trägt man Termine und Daten ein. Kaffee kocht die Maschine, Papier schneidet die Schere."},
+{"f":"Welches Wort gehört nicht auf den Schreibtisch?","o":["die Achterbahn","der Laptop","die Tastatur"],"r":0,"e":"Die Achterbahn steht auf dem Volksfest, nicht im Büro. Laptop und Tastatur gehören auf den Schreibtisch."}
+]}
+],
+"schwierig":[
+{"t":"Wortschatz","d":"Seltenere Wörter","i":"🔤","q":[
+{"f":"Mit welchem Gerät heftet man mehrere Blätter mit einer Metallklammer zusammen?","o":["mit dem Tacker","mit der Schere","mit dem Taschenrechner"],"r":0,"e":"Der Tacker (auch Hefter genannt) schießt eine Klammer durch die Blätter. Die Schere schneidet, und der Taschenrechner rechnet."},
+{"f":"Wie heißt der abschließbare Schrank mit Schubladen für Akten?","o":["der Aktenschrank","die Pinnwand","das Regal"],"r":0,"e":"Der Aktenschrank hat Schubladen und lässt sich abschließen. Die Pinnwand ist aus Kork, und das Regal ist offen."},
+{"f":"Woran steckt man mit Nadeln kleine Zettel und Notizen?","o":["an die Pinnwand","an das Whiteboard","an den Becher"],"r":0,"e":"An die Pinnwand steckt man Zettel mit Nadeln. Das Whiteboard beschreibt man mit Stiften, und im Becher stehen die Stifte."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Tacker?","o":["der","das","die"],"r":0,"e":"Es heißt der Tacker."},
+{"f":"Welcher Artikel passt: ___ Schere?","o":["die","der","das"],"r":0,"e":"Es heißt die Schere."},
+{"f":"Welcher Artikel passt: ___ Bild?","o":["das","der","die"],"r":0,"e":"Es heißt das Bild."}
+]},
+{"t":"Wo? oder Wohin?","d":"Feinheiten","i":"📍","q":[
+{"f":"Ich hänge das Bild über ___ Aktenschrank.","o":["den","dem","das"],"r":0,"e":"Hängen mit Bewegung = Wohin? = Akkusativ: über den Aktenschrank."},
+{"f":"Das Bild hängt über ___ Aktenschrank.","o":["dem","den","das"],"r":0,"e":"Hängen ohne Bewegung = Wo? = Dativ: über dem Aktenschrank. Gleiches Verb, anderer Fall."},
+{"f":"Ich stecke den Zettel an ___ Pinnwand.","o":["die","der","das"],"r":0,"e":"Wohin? = Akkusativ: an die Pinnwand."},
+{"f":"Die Schere liegt zwischen ___ Becher und dem Tacker.","o":["dem","den","der"],"r":0,"e":"Wo? = Dativ, bei zwei Dingen: zwischen dem Becher und dem Tacker."}
+]},
+{"t":"Redewendungen im Büro","d":"ab B2","i":"💼","q":[
+{"f":"Was bedeutet „etwas zu den Akten legen“?","o":["eine Sache als erledigt abschließen","einen Brief schreiben","laut diskutieren"],"r":0,"e":"Etwas zu den Akten legen heißt, eine Angelegenheit endgültig abzuschließen. Das Bild stammt direkt aus dem Büro."},
+{"f":"Was bedeutet „Dienst nach Vorschrift machen“?","o":["nur genau das Nötigste tun","besonders fleißig arbeiten","zu früh gehen"],"r":0,"e":"Dienst nach Vorschrift bedeutet, exakt nur die Pflicht zu erfüllen und keinen Schritt mehr. Es ist das Gegenteil von besonderem Einsatz."},
+{"f":"Was bedeutet „am selben Strang ziehen“?","o":["gemeinsam auf ein Ziel hinarbeiten","sich streiten","allein arbeiten"],"r":0,"e":"Wer am selben Strang zieht, verfolgt mit anderen dasselbe Ziel. Streit wäre das Gegenteil."},
+{"f":"Eine E-Mail endet mit „Mit freundlichen Grüßen“. Was ist das?","o":["eine formelle Grußformel am Schluss","eine Entschuldigung","eine Einladung"],"r":0,"e":"„Mit freundlichen Grüßen“ ist die klassische höfliche Schlussformel in Geschäftsbriefen und E-Mails."}
+]},
+{"t":"Nuance & Wortbildung","d":"Feinheiten","i":"🖼️","q":[
+{"f":"Was ist der Unterschied zwischen dem Becher und der Tasse?","o":["Die Tasse hat meist einen Henkel, der Becher oft nicht.","Der Becher ist immer aus Glas.","Es gibt keinen Unterschied."],"r":0,"e":"Die klassische Tasse hat einen Henkel, der Becher meist nicht. Beide kann man zum Trinken nutzen; im Büro steht im Becher oft Schreibzeug."},
+{"f":"Welches Wort ist ein zusammengesetztes Nomen (Kompositum)?","o":["der Taschenrechner","die Schere","das Bild"],"r":0,"e":"Der Taschenrechner ist aus Tasche und Rechner zusammengesetzt. Schere und Bild sind einfache Wörter."},
+{"f":"Welches Verb passt am besten: einen Zettel an die Pinnwand ___.","o":["heften","gießen","kochen"],"r":0,"e":"Einen Zettel heftet (oder pinnt) man an die Pinnwand. Gießen passt zur Pflanze, kochen zum Kaffee."}
+]}
+]
+};
+quizRundenBauen();quizRundeStart(0);
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <style>.tab-level-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif;font-weight:800;font-size:.82rem;padding:.34rem .72rem;border-radius:999px;margin-right:.15rem;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1);align-self:center;}</style>
