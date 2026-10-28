@@ -257,9 +257,52 @@
     + '.st-pod:hover .st-pod-pfeil{color:#1A1A1A;transform:translateX(3px)}'
     + '@media(max-width:560px){.st-pod-pfeil{display:none}.st-pod-bild{width:64px;height:64px}}';
 
+  /* ============================================================
+     Alles auf einen Blick — die Landkarte der Plattform
+
+     Julia, 28.10.2026: "man kann nichts finden weil es auch zu viel
+     ist" und, zur neuen Seitenleiste: "auch mit den kleinen Zeichen
+     ist super".
+
+     Darum hier dieselbe Ordnung wie in der Leiste, aber alles auf
+     einmal sichtbar: vier Gruppen, in jeder die Bereiche als kleine
+     Felder mit Zeichen und Namen. Keine Beschreibungstexte — wer
+     sucht, liest keine Saetze, der sucht ein Wort und ein Bild.
+     ============================================================ */
+  var CSS_KARTE = ''
+    + '.st-karte{background:#fff;border:1px solid var(--rand);border-radius:20px;padding:18px 20px;margin-top:4px}'
+    + '@media(max-width:560px){.st-karte{padding:16px 14px}}'
+    + '.st-karte > h2{font-family:"Space Grotesk",sans-serif;font-size:19px;font-weight:800;'
+    +   'color:var(--ink);margin:0 0 3px;letter-spacing:-.02em}'
+    + '.st-karte > p{margin:0 0 16px;font-size:13.5px;color:#5B6A70;line-height:1.5}'
+    + '.st-kgrp{margin-top:16px}'
+    + '.st-kgrp:first-of-type{margin-top:0}'
+    + '.st-kgrp > h3{display:flex;align-items:center;gap:7px;margin:0 0 9px;font-size:12px;font-weight:900;'
+    +   'letter-spacing:.07em;text-transform:uppercase;color:#7C8A91}'
+    + '.st-kgrp > h3 .z{font-size:14px}'
+    + '.st-kfeld{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:8px}'
+    + '@media(max-width:560px){.st-kfeld{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:7px}}'
+    + '.st-kf{display:flex;align-items:center;gap:9px;background:#F8FBFC;border:1px solid var(--rand);'
+    +   'border-radius:13px;padding:10px 11px;font-family:inherit;font-size:13.5px;font-weight:700;'
+    +   'color:var(--ink);text-align:left;cursor:pointer;line-height:1.25;'
+    +   'transition:background .12s,border-color .12s,transform .12s}'
+    + '.st-kf:hover{background:#fff;border-color:#9FD9E6;transform:translateY(-2px)}'
+    /* "Kursbibliothek" und "Community-Chat" liefen ueber den Rand
+       hinaus — ein Gitterfeld laesst sein Kind erst schrumpfen, wenn
+       man es ihm erlaubt. */
+    /* Weiche Trennstellen (&shy;) statt hyphens:auto — Chromium bringt
+       ohne Woerterbuch keine Trennung zustande und schnitt
+       "Pruefungstraining" mitten im Wort ab. */
+    + '.st-kf > span:last-child{min-width:0;overflow-wrap:break-word}'
+    + '.st-kf:focus-visible{outline:2px solid #10627A;outline-offset:2px}'
+    + '.st-kf .z{flex:none;width:30px;height:30px;border-radius:9px;background:#E6F8FC;'
+    +   'display:grid;place-items:center;font-size:16px}'
+    + '@media(max-width:560px){.st-kf{font-size:12.5px;padding:9px 9px;gap:7px}'
+    +   '.st-kf .z{width:27px;height:27px;font-size:15px}}';
+
   function stil(){
     if(document.getElementById('startStil')) return;
-    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED;
+    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED+CSS_KARTE;
     document.head.appendChild(s);
   }
 
@@ -306,6 +349,9 @@
       +       '<div class="st-titel"><span class="tag">' + T('sn_tag','Dein Übungsplatz') + '</span>'
       +         '<h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'
       +       kacheln(k, s)
+      +       '<div class="st-titel"><span class="tag">' + T('sn_tag2','Die ganze Plattform') + '</span>'
+      +         '<h2>' + T('sn_wofind','Wo finde ich was?') + '</h2></div>'
+      +       uebersicht()
       +     '</div>'
       +     '<aside class="sf-rand">'
       +       termineHTML(k)
@@ -528,6 +574,67 @@
   }
 
   /* Weitermachen — mit den Fotos aus dem Kurs */
+  /* ---------- Alles auf einen Blick ----------
+     Dieselben vier Gruppen wie in der Seitenleiste, nur offen
+     nebeneinander statt aufklappbar. Wer in der Leiste sucht, klappt;
+     wer hier sucht, sieht. Beides fuehrt an denselben Ort. */
+
+  function KARTE(){
+    return [
+      ['👑', T('nv_grp_club','Sprechclub'), [
+        ['🗓️', T('nv_wochenplan','Wochenplan'),            "go('kalender')"],
+        ['🎟️', T('nv_stunden','Meine Stunden'),            "go('stunden')"],
+        ['📄', T('nv_material','Materialien'),             "go('materialien')"]
+      ]],
+      ['📚', T('nv_grp_lernen2','Lernen'), [
+        ['🧭', T('nv_kurs','Mein Kurs'),                   "go('lernen')"],
+        ['📖', T('nv_bib','Kursbibliothek'),               "go('kurse')"],
+        ['🗺️', T('nv_themen','Themen & Orte'),             "go('bereiche')"],
+        ['🎧', T('nv_podcast','Podcast & Hören'),          "go('medien')"]
+      ]],
+      ['📐', T('nv_grp_ueben','Üben'), [
+        ['🧠', T('nv_woerter','Wörter'),                   "go('vokabeln')"],
+        ['📐', T('nv_gram','Grammatik & Übungen'),         "go('ueben')"],
+        ['✍️', T('nv_schreiben','Schreiben'),              "go('schreiben')"],
+        ['🔊', T('sn_wauft','Aussprache trainieren'),      "location.href='aussprache.html'"],
+        ['🎲', T('nv_spiele','Sprachspiele'),              "go('szenen')"],
+        ['🩹', T('nv_fehler','Meine Fehler'),              "go('fehler')"],
+        ['🎚️', T('nv_fert','Fertigkeiten'),                "go('fertigkeit')"],
+        ['🎯', T('nv_pruef','Prüfungs&shy;training'),      "go('pruefung')"]
+      ]],
+      ['🗣️', T('nv_grp_sprechen','Sprechen'), [
+        ['💭', T('nv_gespraeche','Gespräche üben'),        "go('sprechen')"],
+        ['🎙️', T('nv_amanda_sp','Mit Amanda sprechen'),    "go('amandasprechen')"],
+        ['🤖', T('nv_amanda_fr','Amanda fragen'),          "go('amanda')"],
+        ['👥', T('nv_tandem','Sprech-Tandem'),             "go('buddy')"]
+      ]],
+      /* Chat, Postfach und das eigene Konto gehoeren weder zum Ueben
+         noch zum Sprechen — sie sind der Club selbst. */
+      ['💬', T('sn_kgrp_club','Mein Club'), [
+        ['💬', T('nv_news','Community-Chat'),              "go('community')"],
+        ['✉️', T('k_msg','Nachrichten'),                   "go('nachrichten')"],
+        ['🎒', T('nv_mein','Mein Bereich'),                "go('fortschritt')"],
+        ['💳', T('nav_abo','Mein Abo'),                    "go('abo')"],
+        ['👤', T('k_profile','Profil'),                    "go('profil')"]
+      ]]
+    ];
+  }
+
+  function uebersicht(){
+    var gruppen = KARTE().map(function(g){
+      var felder = g[2].map(function(f){
+        return '<button class="st-kf" onclick="' + f[2] + '">'
+          + '<span class="z">' + f[0] + '</span><span>' + f[1] + '</span></button>';
+      }).join('');
+      return '<div class="st-kgrp"><h3><span class="z">' + g[0] + '</span>' + g[1] + '</h3>'
+        + '<div class="st-kfeld">' + felder + '</div></div>';
+    }).join('');
+    return '<div class="st-karte">'
+      + '<h2>' + T('sn_kartet','Alles auf einen Blick') + '</h2>'
+      + '<p>' + T('sn_karteb','Jeder Bereich des Clubs, nach Thema sortiert — ein Tipp und du bist da.') + '</p>'
+      + gruppen + '</div>';
+  }
+
   function kacheln(k, s){
     var vok = (s.vocabTotal>0)
       ? (s.vocabTotal + ' ' + '<span data-i18n="sn_wvokb1">Wörter warten auf dich — mit Bild, Ton und Beispielsatz.</span>')
