@@ -1684,6 +1684,21 @@ function show(v){
   // Lernbereich. Also bleibt dort die Markierung stehen.
   if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="bereiche"]'); if(_lb) _lb.classList.add('active'); }
   try{ navGruppeZuAnsicht(v); }catch(e){}
+  /* Ansichten, die ohne die Uebungsdaten nichts zeigen koennen.
+     Sind sie noch nicht da, wird kurz gewartet statt leer gezeichnet —
+     und die Seite sagt das auch, statt stumm zu bleiben. */
+  if (typeof window.spaetLaden === 'function' && !window.SPAET_DA
+      && ['ueben','lernen','bereiche','kurs','weg','szenen','schreiben','fertigkeit',
+          'pruefung','fehler','lernpfad','vokabeln','sprechen'].includes(v)) {
+    var _z = document.getElementById('v-' + v);
+    if (_z && !_z.innerHTML.trim()) {
+      _z.innerHTML = '<div class="card" style="text-align:center;padding:30px 20px">'
+        + '<b style="font-size:17px">Einen Moment …</b>'
+        + '<p class="muted" style="margin:6px 0 0">Die Übungen werden geladen.</p></div>';
+    }
+    window.spaetLaden().then(function(){ show(v); });
+    return;
+  }
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   try{ sprechclubMarkieren(); }catch(e){}
@@ -4377,36 +4392,73 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
 <!-- Zurueck-Knopf: ein Schritt zurueck statt raus aus der Ansicht -->
 <script src="zurueck.js?v=1"></script>
 <script src="app-gefuehl.js?v=1" defer></script>
-<script src="uebungen.js"></script>
-<!-- Neue Hoerthemen: haengt sich an uebungen.js an, aendert dort nichts. -->
-<script src="hoer-neu.js?v=1"></script>
-<script src="hoeren-a1-neu.js?v=1"></script>
-<script src="aussprache-neu.js?v=1"></script>
-<script src="aussprache-plus.js"></script>
-<script src="hoeren-b2-neu.js?v=1"></script>
-<script src="hoeren-c1-neu.js?v=1"></script>
-<script src="hoeren-b2c1-plus.js"></script>
-<script src="wortschatz-neu.js?v=1"></script>
-<script src="grammatik-reihenfolge.js?v=1"></script>
-<script src="wortschatz-a1-neu.js?v=1"></script>
-<script src="grammatik-neu.js?v=1"></script>
-<script src="grammatik-c1-neu.js?v=1"></script>
-<script src="grammatik-b1-mehr.js?v=1"></script>
-<script src="grammatik-b2c1-mehr.js?v=1"></script>
-<script src="grammatik-c1-plus.js"></script>
-<script src="lesen-schreiben-neu.js?v=1"></script>
-<script src="lesen-schreiben-plus.js"></script>
-<!-- Wortschatz fuer B2 und C1 -->
-<script src="wortschatz-plus.js?v=1"></script>
-<!-- Mehr als Anklicken: tippen, Buchstaben, der/die/das, nachsprechen, Satzbau -->
-<script src="vielfalt-neu.js?v=1"></script>
-<script src="grammatik-vielfalt.js?v=2"></script>
-<script src="grammatik-karten-fix.js?v=1"></script>
-<!-- Doppelte Themen zusammenfuehren: nach allen Datendateien, vor ueben.js -->
-<script src="themen-zusammenfuehren.js?v=1"></script>
-<script src="woerter-sprachen.js?v=1"></script>
-<script src="hoer-fragen.js?v=1"></script>
-<script src="ueben.js?v=4"></script>
+<!-- ============================================================
+     Die Uebungsdaten kommen spaeter — und das ist der Unterschied
+     zwischen einer Seite, die laedt, und einer, die steht.
+
+     Julia, 28.10.2026: "alles laeuft wieder sehr schlecht, community
+     chat laesst sich nicht oeffnen nichts" — am Handy im Browser,
+     und nicht kaputt, sondern zaeh.
+
+     Nachgestellt mit Chromium auf 4G und einem viermal langsameren
+     Prozessor: 25 Sekunden bis die Seite fertig war, 9,3 MB ueber
+     143 Dateien. Allein diese Liste hier wiegt 4,1 MB — Wortschatz,
+     Hoertexte, Grammatik, Berufe. Sie wurde bei JEDEM Seitenaufruf
+     mitgeladen, auch wenn jemand nur in den Chat wollte. konto.html
+     selbst fasst diese Daten an keiner Stelle an; gebraucht werden
+     sie nur in den Uebungsansichten.
+
+     Jetzt stehen sie als Liste da und werden nachgeladen:
+       - von allein, sobald die Seite fertig ist (nach 800 ms),
+       - oder sofort und mit Warten, wenn jemand vorher auf eine
+         Uebungsansicht geht (siehe BRAUCHT_UEBUNGEN in show()).
+
+     Die Reihenfolge bleibt streng erhalten (script.async = false):
+     hoer-neu.js haengt sich an uebungen.js, themen-zusammenfuehren.js
+     will nach allen Datendateien laufen. Wird sie vertauscht, fehlen
+     Themen.
+
+     Notausgang: ?voll=1 an die Adresse haengen, dann wird alles
+     sofort geladen wie frueher.
+     ============================================================ -->
+<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "ueben.js?v=4"]</script>
+<script>
+(function(){
+  var liste = [];
+  try{ liste = JSON.parse(document.getElementById('spaete-dateien').textContent); }catch(e){}
+  var laeuft = null;
+
+  window.spaetLaden = function(){
+    if (laeuft) return laeuft;
+    laeuft = liste.reduce(function(kette, datei){
+      return kette.then(function(){
+        return new Promise(function(fertig){
+          var s = document.createElement('script');
+          s.src = datei;
+          s.async = false;              // Reihenfolge halten
+          s.onload = fertig;
+          s.onerror = function(){ console.warn('Uebungsdatei fehlt:', datei); fertig(); };
+          document.head.appendChild(s);
+        });
+      });
+    }, Promise.resolve()).then(function(){
+      window.SPAET_DA = true;
+      try{ window.dispatchEvent(new Event('uebungen-da')); }catch(e){}
+    });
+    return laeuft;
+  };
+
+  /* Von allein, sobald die Seite steht. Wer in den Chat will, wartet
+     auf nichts; wer danach auf "Üben" geht, findet meist alles schon
+     da. */
+  function los(){ setTimeout(window.spaetLaden, 800); }
+  try{
+    if (/[?&]voll=1\b/.test(location.search)) { window.spaetLaden(); }
+    else if (document.readyState === 'complete') { los(); }
+    else { window.addEventListener('load', los); }
+  }catch(e){ window.spaetLaden(); }
+})();
+</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"sl_lernbereich": {"en": "Learning area", "es": "Área de aprendizaje", "ru": "Учебный раздел", "uk": "Навчальний розділ", "tr": "Öğrenme alanı", "it": "Area di apprendimento", "fa": "بخش یادگیری"}, "sl_tuer_frei": {"en": "For everyday life", "es": "Para el día a día", "ru": "Для повседневной жизни", "uk": "Для повсякдення", "tr": "Günlük hayat için", "it": "Per la vita quotidiana", "fa": "برای زندگی روزمره"}, "sl_tuer_beruf": {"en": "For work", "es": "Para el trabajo", "ru": "Для работы", "uk": "Для роботи", "tr": "İş için", "it": "Per il lavoro", "fa": "برای کار"}, "ls_frage": {"en": "What are you learning German for right now?", "es": "¿Para qué estás aprendiendo alemán ahora?", "ru": "Для чего ты сейчас учишь немецкий?", "uk": "Для чого ти зараз вчиш німецьку?", "tr": "Şu anda Almancayı ne için öğreniyorsun?", "it": "Per cosa stai imparando il tedesco?", "fa": "الان برای چه آلمانی یاد می‌گیری؟"}, "ls_kicker": {"en": "Your learning area", "es": "Tu área de aprendizaje", "ru": "Твой учебный раздел", "uk": "Твій навчальний розділ", "tr": "Öğrenme alanın", "it": "La tua area di apprendimento", "fa": "بخش یادگیری تو"}, "ls_unter": {"en": "Pick a door. Behind it is everything for that goal — situations to speak, words, listening and the lesson.", "es": "Elige una puerta. Detrás está todo lo que sirve para ese objetivo: situaciones para hablar, palabras, audios y la lección.", "ru": "Выбери дверь. За ней всё, что нужно для этой цели: ситуации для разговора, слова, аудио и урок.", "uk": "Обери двері. За ними все для цієї мети: ситуації для розмови, слова, аудіо та урок.", "tr": "Bir kapı seç. Arkasında o hedefe ait her şey var: konuşma durumları, kelimeler, dinleme ve ders.", "it": "Scegli una porta. Dietro c'è tutto ciò che serve per quell'obiettivo: situazioni da parlare, parole, ascolto e la lezione.", "fa": "یک در انتخاب کن. پشت آن هر چیزی که برای این هدف لازم است: موقعیت‌های گفتگو، واژه‌ها، شنیدن و درس."}, "ls_tuer_pruef": {"en": "For the exam", "es": "Para el examen", "ru": "Для экзамена", "uk": "Для іспиту", "tr": "Sınav için", "it": "Per l'esame", "fa": "برای آزمون"}, "ls_tuer_frei": {"en": "For everyday life", "es": "Para el día a día", "ru": "Для повседневной жизни", "uk": "Для повсякдення", "tr": "Günlük hayat için", "it": "Per la vita quotidiana", "fa": "برای زندگی روزمره"}, "ls_tuer_beruf": {"en": "For work", "es": "Para el trabajo", "ru": "Для работы", "uk": "Для роботи", "tr": "İş için", "it": "Per il lavoro", "fa": "برای کار"}, "ls_werkzeuge": {"en": "Tools — always available", "es": "Herramientas — siempre disponibles", "ru": "Инструменты — всегда под рукой", "uk": "Інструменти — завжди під рукою", "tr": "Araçlar — her zaman elinde", "it": "Strumenti — sempre disponibili", "fa": "ابزارها — همیشه در دسترس"}});</script>
 <script src="app-tipp.js?v=1" defer></script>
 <script src="lektionen-katalog.js?v=1"></script>
