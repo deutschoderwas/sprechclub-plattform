@@ -46,7 +46,9 @@
   var CSS = ''
   + '#v-fortschritt .mb{display:flex;flex-direction:column;gap:16px}'
   + '#v-fortschritt .mb *{box-sizing:border-box}'
-  + '.mb{--tint:#10627A;--ink:#14181B;--leise:#5A6B72;--linie:#E7ECEE;--linie2:#F1F5F6;'
+  /* Dieselbe Leiter wie ueberall sonst, aus dem Logo gemessen.
+     Vorher stand hier ein gruenstichiges #10627A. */
+  + '.mb{--tint:#0E6D85;--ink:#14181B;--leise:#5A6B72;--linie:#E7ECEE;--linie2:#F1F5F6;'
   +     '--gruen:#0F7B5A;--rot:#D42A21;--gold:#C9A200}'
 
   /* Kopf */
@@ -74,12 +76,56 @@
      Stufe sah dann wichtiger aus als die anderen fuenf. */
   + '.mb-nivf .w{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}'
   + '@media(max-width:420px){.mb-nivf .w{gap:5px}.mb-nivf .st{font-size:14px}}'
-  + '.mb-nivf .st{width:100%;height:42px;padding:0;border:1px solid var(--linie);background:#F8FBFC;'
-  +   'border-radius:11px;font-family:"Space Grotesk",system-ui,sans-serif;font-size:15px;font-weight:700;'
-  +   'color:var(--ink);cursor:pointer;line-height:1;transition:background .12s,border-color .12s}'
-  + '.mb-nivf .st:hover{border-color:var(--tint);background:#fff}'
-  + '.mb-nivf .st.an{background:var(--tint);border-color:var(--tint);color:#fff}'
-  + '.mb-nivf .st:focus-visible{outline:2px solid var(--tint);outline-offset:2px}'
+  /* ------------------------------------------------------------
+     Die Niveaus als Skala, nicht als Farbkasten
+
+     Julia, 28.10.2026: "Mein Bereich visueller gestalten, die Niveaus
+     nach Farben." Und kurz darauf, mit einem Bildschirm von
+     Finanzguru: "wirklich sehr professionell, als ob es ein
+     Webdesigner gebaut hat ... ohne dass es wie eine KI aussieht."
+
+     Der erste Anlauf hatte sechs Stufen in drei Ampelfarben — tuerkis,
+     gold, rot. Bunt, aber genau das, was nach Maschine aussieht: viele
+     Farben ohne Grund. Wer Finanzguru ansieht, merkt das Gegenteil:
+     dort traegt ein ganzer Bildschirm EINE Akzentfarbe, und die
+     bedeutet etwas.
+
+     Darum jetzt eine Leiter in einer Farbe — dem Tuerkis aus dem Logo,
+     von hell (A1) bis tief (C2). Das ist keine Dekoration, das ist die
+     Aussage: je weiter, desto dunkler. Man sieht die eigene Stufe und
+     den Weg dahin in einem Blick.
+
+     Im Ruhezustand ist jede Taste schlicht; unten laeuft ein drei
+     Punkt hoher Streifen in ihrer Farbe, so steht die Leiter da, ohne
+     zu schreien. Gewaehlt wird sie ganz in ihrer Farbe gefuellt — mit
+     dunkler Schrift auf den hellen Stufen und weisser auf den tiefen,
+     damit jede lesbar bleibt.
+
+     Und das Angeklickt-Aussehen, Julia: "ich finde, dass die Buttons
+     nicht so schoen sind, wenn man sie anklickt." Kein harter
+     Farbblock mehr beim Druecken, sondern ein kurzes Kleinerwerden.
+     ------------------------------------------------------------ */
+  + '.mb-nivf .st{position:relative;overflow:hidden;width:100%;height:46px;padding:0;'
+  +   'border:1px solid var(--linie);background:#F8F6F0;border-radius:12px;'
+  +   'font-family:"Space Grotesk",system-ui,sans-serif;font-size:15px;font-weight:700;'
+  +   'color:var(--ink);cursor:pointer;line-height:1;'
+  +   'transition:transform .13s cubic-bezier(.2,.7,.3,1),background-color .16s,border-color .16s,color .16s}'
+  /* Der Streifen unten: die Leiter, ruhig */
+  + '.mb-nivf .st::after{content:"";position:absolute;left:9px;right:9px;bottom:7px;height:3px;'
+  +   'border-radius:999px;background:var(--st-ton);transition:opacity .16s}'
+  + '.mb-nivf .st:hover{border-color:var(--st-ton)}'
+  + '.mb-nivf .st:active{transform:scale(.95)}'
+  + '.mb-nivf .st.an{background:var(--st-ton);border-color:var(--st-ton);color:var(--st-txt)}'
+  + '.mb-nivf .st.an::after{opacity:0}'
+  + '.mb-nivf .st:focus-visible{outline:2px solid var(--st-ton);outline-offset:2px}'
+  + '@media (prefers-reduced-motion: reduce){.mb-nivf .st,.mb-nivf .st:active{transition:none;transform:none}}'
+  /* Die Leiter: ein Tuerkis, sechs Stufen. */
+  + '.mb-nivf .st.a1{--st-ton:#BDE9F6;--st-txt:#0A4E62}'
+  + '.mb-nivf .st.a2{--st-ton:#86D9EE;--st-txt:#0A4E62}'
+  + '.mb-nivf .st.b1{--st-ton:#4EC2DF;--st-txt:#073E4D}'
+  + '.mb-nivf .st.b2{--st-ton:#1FA6C6;--st-txt:#FFFFFF}'
+  + '.mb-nivf .st.c1{--st-ton:#117F9B;--st-txt:#FFFFFF}'
+  + '.mb-nivf .st.c2{--st-ton:#0A5468;--st-txt:#FFFFFF}'
   + '.mb-nivf .h{display:block;font-size:12.5px;color:var(--leise);margin-top:9px;line-height:1.5}'
   + '.mb-nivf .h a{color:var(--tint);font-weight:700;cursor:pointer;text-decoration:none}'
   + '.mb-nivf .h a:hover{text-decoration:underline}'
@@ -134,7 +180,7 @@
 
   /* Balken für den Kursstand und die Fertigkeiten */
   + '.mb-bal{height:8px;border-radius:999px;background:#F1F5F6;overflow:hidden;margin-top:6px}'
-  + '.mb-bal i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#1B9BC0,#10627A)}'
+  + '.mb-bal i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3FBDDC,#0E6D85)}'
   + '.mb-fert{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}'
   + '.mb-fert > div{background:#F6F9FA;border:1px solid var(--linie);border-radius:12px;padding:11px 13px}'
   + '.mb-fert b{display:block;font-size:13.5px;color:var(--ink)}'
@@ -214,7 +260,7 @@
 
   function niveauFeld(art, label, wert, hinweis){
     var knoepfe = STUFEN.map(function(st){
-      return '<button type="button" class="st' + (st === wert ? ' an' : '') + '"'
+      return '<button type="button" class="st ' + st.toLowerCase() + (st === wert ? ' an' : '') + '"'
         + ' aria-pressed="' + (st === wert ? 'true' : 'false') + '"'
         + ' onclick="mbNiveau(\'' + art + '\',\'' + st + '\')">' + st + '</button>';
     }).join('');
