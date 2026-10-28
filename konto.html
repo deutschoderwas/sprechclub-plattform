@@ -330,6 +330,20 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 .navlink.active{background:#E6F8FC;color:#063138;box-shadow:none}
 .navlink.active::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:4px;border-radius:0 4px 4px 0;background:var(--turq)}
 .navlink.active .ic{filter:none}
+/* Gruppen in der Seitenleiste (28.10.2026) — neun Zeilen statt 26.
+   Zu sehen ist immer nur die Gruppe, in der man gerade steht; die
+   anderen bleiben zu, bis man sie antippt. */
+.navgrp{display:block}
+.navhead .pf{margin-left:auto;font-size:11px;color:#9AAAB0;transition:transform .16s ease}
+.navgrp.auf > .navhead .pf{transform:rotate(180deg)}
+.navgrp.auf > .navhead{color:#14181B}
+.navhead.drin{color:#063138;font-weight:700}
+.navsub{display:none;margin:1px 0 6px 20px;padding-left:9px;border-left:2px solid #E7ECEE}
+.navgrp.auf > .navsub{display:block}
+.navsub .navlink{font-size:13.5px;padding:8px 10px;gap:10px}
+.navsub .navlink .ic{font-size:15px;width:19px}
+.navsub .navlink.active::before{left:-11px;top:7px;bottom:7px}
+@media(max-width:860px){.navsub{margin-left:14px}}
 .navlink.active .badge{background:var(--primary);color:#fff}
 .navlink .lockic{margin-left:auto;font-size:13px;opacity:.6}
 .navlink.locknav{color:#6B7C84}
@@ -565,34 +579,73 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 
     <button class="cl-buch" onclick="return bucheStunde(event)">🗓️ <span data-i18n="k_book3">Sprechclub buchen</span></button>
 
+    <!-- ============================================================
+         Die Seitenleiste, 28.10.2026 neu geordnet.
+
+         Julia: "weniger ist mehr, mach es bitte alles uebersichtlicher
+         und organisierter und strukturierter, so dass man einen
+         gesamten guten Ueberblick ueber die Plattform hat, ohne dass
+         man extrem lange suchen muss."
+
+         Vorher standen hier 26 Knoepfe untereinander, flach, in vier
+         Haufen mit Ueberschrift. Wer "Schreiben" suchte, las 26 Zeilen.
+
+         Jetzt neun Zeilen im Ruhezustand. Was zusammengehoert, liegt
+         in einer Gruppe, die aufklappt — und die Gruppe mit der
+         gerade offenen Ansicht klappt von allein auf. Nichts ist
+         verschwunden, alles ist einen Klick naeher.
+
+         Die Ordnung ist dieselbe, die hubs.js schon kennt:
+         Start · Lernen · Sprechen · Community · Medien.
+         ============================================================ -->
+
     <button class="navlink" data-view="dashboard" onclick="go('dashboard')"><span class="ic">🏠</span><span><span data-i18n="nav_start">Start</span></span></button>
     <button class="navlink" data-view="community" onclick="go('community')"><span class="ic">💬</span><span data-i18n="nv_news">Community-Chat</span><span class="badge" id="commBadge" style="display:none">0</span></button>
+    <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">✉️</span><span><span data-i18n="k_msg">Nachrichten</span></span></button>
     <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🎒</span><span data-i18n="nv_mein">Mein Bereich</span></button>
-    <button class="navlink" data-view="nachrichten" onclick="go('nachrichten')"><span class="ic">💬</span><span><span data-i18n="k_msg">Nachrichten</span></span></button>
 
-    <div class="cl-grp" data-i18n="nv_grp_lernen">Selbstlernbereich</div>
-    <button class="navlink" data-view="lernen" onclick="go('lernen')"><span class="ic">🧭</span><span data-i18n="nv_kurs">Mein Kurs</span></button>
-    <button class="navlink" data-view="kurse" onclick="go('kurse')"><span class="ic">📚</span><span data-i18n="nv_bib">Kursbibliothek</span></button>
-    <button class="navlink" data-view="bereiche" onclick="go('bereiche')"><span class="ic">🗺️</span><span data-i18n="nv_themen">Themen &amp; Orte</span></button>
-    <button class="navlink" data-view="fertigkeit" onclick="go('fertigkeit')"><span class="ic">🎚️</span><span data-i18n="nv_fert">Fertigkeiten</span></button>
-    <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🧠</span><span data-i18n="nv_woerter">Wörter</span></button>
-    <button class="navlink" data-view="ueben" onclick="go('ueben')"><span class="ic">📐</span><span data-i18n="nv_gram">Grammatik &amp; Übungen</span></button>
-    <button class="navlink" data-view="schreiben" onclick="go('schreiben')"><span class="ic">✍️</span><span data-i18n="nv_schreiben">Schreiben</span></button>
-    <button class="navlink" data-view="szenen" onclick="go('szenen')"><span class="ic">🎲</span><span data-i18n="nv_spiele">Sprachspiele</span></button>
-    <button class="navlink" data-view="pruefung" onclick="go('pruefung')"><span class="ic">🎯</span><span data-i18n="nv_pruef">Prüfungstraining</span></button>
-    <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">🩹</span><span data-i18n="nv_fehler">Meine Fehler</span></button>
+    <div class="navgrp" id="g-club">
+      <button class="navlink navhead" onclick="navGruppe('club')"><span class="ic">👑</span><span data-i18n="nv_grp_club">Sprechclub</span><span class="pf">▾</span></button>
+      <div class="navsub">
+        <button class="navlink" data-live="1" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span><span data-i18n="nv_wochenplan">Wochenplan</span></button>
+        <button class="navlink" data-live="1" data-view="stunden" onclick="go('stunden')"><span class="ic">🎟️</span><span data-i18n="nv_stunden">Meine Stunden</span></button>
+        <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic">📄</span><span data-i18n="nv_material">Materialien</span></button>
+      </div>
+    </div>
 
-    <div class="cl-grp" data-i18n="nv_grp_podcast">Podcast</div>
+    <div class="navgrp" id="g-lernen">
+      <button class="navlink navhead" onclick="navGruppe('lernen')"><span class="ic">📚</span><span data-i18n="nv_grp_lernen2">Lernen</span><span class="pf">▾</span></button>
+      <div class="navsub">
+        <button class="navlink" data-view="lernen" onclick="go('lernen')"><span class="ic">🧭</span><span data-i18n="nv_kurs">Mein Kurs</span></button>
+        <button class="navlink" data-view="kurse" onclick="go('kurse')"><span class="ic">📖</span><span data-i18n="nv_bib">Kursbibliothek</span></button>
+        <button class="navlink" data-view="bereiche" onclick="go('bereiche')"><span class="ic">🗺️</span><span data-i18n="nv_themen">Themen &amp; Orte</span></button>
+      </div>
+    </div>
+
+    <div class="navgrp" id="g-ueben">
+      <button class="navlink navhead" onclick="navGruppe('ueben')"><span class="ic">📐</span><span data-i18n="nv_grp_ueben">Üben</span><span class="pf">▾</span></button>
+      <div class="navsub">
+        <button class="navlink" data-view="vokabeln" onclick="go('vokabeln')"><span class="ic">🧠</span><span data-i18n="nv_woerter">Wörter</span></button>
+        <button class="navlink" data-view="ueben" onclick="go('ueben')"><span class="ic">📐</span><span data-i18n="nv_gram">Grammatik &amp; Übungen</span></button>
+        <button class="navlink" data-view="schreiben" onclick="go('schreiben')"><span class="ic">✍️</span><span data-i18n="nv_schreiben">Schreiben</span></button>
+        <button class="navlink" data-view="szenen" onclick="go('szenen')"><span class="ic">🎲</span><span data-i18n="nv_spiele">Sprachspiele</span></button>
+        <button class="navlink" data-view="fehler" onclick="go('fehler')"><span class="ic">🩹</span><span data-i18n="nv_fehler">Meine Fehler</span></button>
+        <button class="navlink" data-view="fertigkeit" onclick="go('fertigkeit')"><span class="ic">🎚️</span><span data-i18n="nv_fert">Fertigkeiten</span></button>
+        <button class="navlink" data-view="pruefung" onclick="go('pruefung')"><span class="ic">🎯</span><span data-i18n="nv_pruef">Prüfungstraining</span></button>
+      </div>
+    </div>
+
+    <div class="navgrp" id="g-sprechen">
+      <button class="navlink navhead" onclick="navGruppe('sprechen')"><span class="ic">🗣️</span><span data-i18n="nv_grp_sprechen">Sprechen</span><span class="pf">▾</span></button>
+      <div class="navsub">
+        <button class="navlink" data-view="sprechen" onclick="go('sprechen')"><span class="ic">💭</span><span data-i18n="nv_gespraeche">Gespräche üben</span></button>
+        <button class="navlink" data-view="amandasprechen" onclick="go('amandasprechen')"><span class="ic">🎙️</span><span data-i18n="nv_amanda_sp">Mit Amanda sprechen</span></button>
+        <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🤖</span><span data-i18n="nv_amanda_fr">Amanda fragen</span></button>
+        <button class="navlink" data-view="buddy" onclick="go('buddy')"><span class="ic">👥</span><span data-i18n="nv_tandem">Sprech-Tandem</span></button>
+      </div>
+    </div>
+
     <button class="navlink" data-view="medien" onclick="go('medien')"><span class="ic">🎧</span><span data-i18n="nv_podcast">Podcast &amp; Hören</span></button>
-    <button class="navlink" data-view="materialien" onclick="go('materialien')"><span class="ic">📄</span><span data-i18n="nv_material">Materialien</span></button>
-
-    <div class="cl-grp"><span class="cl-krone">👑</span> <span data-i18n="nv_grp_club">Sprechclub</span></div>
-    <button class="navlink" data-live="1" data-view="kalender" onclick="go('kalender')"><span class="ic">🗓️</span><span data-i18n="nv_wochenplan">Wochenplan</span></button>
-    <button class="navlink" data-live="1" data-view="stunden" onclick="go('stunden')"><span class="ic">🎟️</span><span data-i18n="nv_stunden">Meine Stunden</span></button>
-    <button class="navlink" data-view="sprechen" onclick="go('sprechen')"><span class="ic">🗣️</span><span data-i18n="nv_gespraeche">Gespräche üben</span></button>
-    <button class="navlink" data-view="amandasprechen" onclick="go('amandasprechen')"><span class="ic">🎙️</span><span data-i18n="nv_amanda_sp">Mit Amanda sprechen</span></button>
-    <button class="navlink" data-view="amanda" onclick="go('amanda')"><span class="ic">🤖</span><span data-i18n="nv_amanda_fr">Amanda fragen</span></button>
-    <button class="navlink" data-view="buddy" onclick="go('buddy')"><span class="ic">👥</span><span data-i18n="nv_tandem">Sprech-Tandem</span></button>
 
     <button class="cl-amanda" onclick="go('amanda')" id="clAmanda">
       <img src="amanda/a-willkommen.webp" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -607,6 +660,54 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     </div>
   </aside>
   <div class="nav-backdrop" onclick="toggleNav()"></div>
+
+<script id="nav-gruppen">
+/* Die Gruppen in der Seitenleiste.
+
+   navGruppe()          — von Hand auf- und zuklappen. Immer nur eine
+                          offen; zwei offene Gruppen sind schon wieder
+                          eine lange Liste.
+   navGruppeZuAnsicht() — nach jedem Ansichtswechsel aufgerufen (aus
+                          go()). Die Gruppe, in der die offene Ansicht
+                          steht, klappt auf, ihr Kopf wird markiert.
+                          Steht die Ansicht in keiner Gruppe (Start,
+                          Chat, Mein Bereich, Podcast), schliesst alles. */
+(function(){
+  window.navGruppe = function(id){
+    var g = document.getElementById('g-' + id);
+    if(!g) return;
+    var war = g.classList.contains('auf');
+    var alle = document.querySelectorAll('.navgrp');
+    for(var i=0;i<alle.length;i++) alle[i].classList.remove('auf');
+    if(!war) g.classList.add('auf');
+  };
+
+  window.navGruppeZuAnsicht = function(v){
+    var alle = document.querySelectorAll('.navgrp');
+    for(var i=0;i<alle.length;i++){
+      alle[i].classList.remove('auf');
+      var k = alle[i].querySelector('.navhead');
+      if(k) k.classList.remove('drin');
+    }
+    if(!v) return;
+    var knopf = document.querySelector('.navsub .navlink[data-view="' + v + '"]');
+    if(!knopf) return;
+    var g = knopf.parentNode && knopf.parentNode.parentNode;
+    if(!g || !g.classList || !g.classList.contains('navgrp')) return;
+    g.classList.add('auf');
+    var kopf = g.querySelector('.navhead');
+    if(kopf) kopf.classList.add('drin');
+  };
+
+  /* Beim ersten Laden ist go() oft schon durch, bevor dieses Stueck
+     steht — also einmal von Hand nachziehen. */
+  function start(){
+    try{ window.navGruppeZuAnsicht((location.hash||'#dashboard').slice(1)); }catch(e){}
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
 
 <script id="cl-heute">
 /* Der Stand-Streifen auf der Startseite haengt an body.auf-heute.
@@ -1582,6 +1683,7 @@ function show(v){
   // Der Stufenkurs hat keinen eigenen Menüpunkt mehr — er gehört zum
   // Lernbereich. Also bleibt dort die Markierung stehen.
   if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="bereiche"]'); if(_lb) _lb.classList.add('active'); }
+  try{ navGruppeZuAnsicht(v); }catch(e){}
   try{updateTopbar(v);}catch(e){}
   document.body.classList.remove('nav-open');
   try{ sprechclubMarkieren(); }catch(e){}
@@ -5356,6 +5458,9 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 "nv_mein":{"en":"My area","es":"Mi espacio","ru":"Мой раздел","uk":"Мій розділ","tr":"Benim alanım","it":"La mia area","fa":"بخش من"},
 "nv_grp_lernen":{"en":"Self-study","es":"Autoaprendizaje","ru":"Самостоятельно","uk":"Самостійно","tr":"Kendi kendine öğrenme","it":"Studio autonomo","fa":"خودآموز"},
 "nv_grp_podcast":{"en":"Podcast","es":"Pódcast","ru":"Подкаст","uk":"Подкаст","tr":"Podcast","it":"Podcast","fa":"پادکست"},
+"nv_grp_lernen2":{"en":"Learn","es":"Aprender","ru":"Учёба","uk":"Навчання","tr":"Öğren","it":"Imparare","fa":"یادگیری"},
+"nv_grp_ueben":{"en":"Practice","es":"Practicar","ru":"Практика","uk":"Практика","tr":"Alıştırma","it":"Esercizi","fa":"تمرین"},
+"nv_grp_sprechen":{"en":"Speaking","es":"Hablar","ru":"Говорение","uk":"Говоріння","tr":"Konuşma","it":"Parlare","fa":"گفتار"},
 "nv_grp_club":{"en":"Speaking club","es":"Club de conversación","ru":"Разговорный клуб","uk":"Розмовний клуб","tr":"Konuşma kulübü","it":"Club di conversazione","fa":"باشگاه گفت‌وگو"},
 "nv_kurs":{"en":"My course","es":"Mi curso","ru":"Мой курс","uk":"Мій курс","tr":"Kursum","it":"Il mio corso","fa":"دورهٔ من"},
 "nv_bib":{"en":"Course library","es":"Biblioteca de cursos","ru":"Библиотека курсов","uk":"Бібліотека курсів","tr":"Kurs kitaplığı","it":"Biblioteca dei corsi","fa":"کتابخانهٔ دوره‌ها"},
