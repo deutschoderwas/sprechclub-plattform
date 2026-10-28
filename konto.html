@@ -661,6 +661,29 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
   </aside>
   <div class="nav-backdrop" onclick="toggleNav()"></div>
 
+<script id="frage-knoepfe">
+/* Ein Zuhoerer fuer alle Knoepfe mit data-frage — auf dem Dokument,
+   nicht am einzelnen Block. Damit wirkt so ein Knopf auch dann, wenn
+   die Ansicht spaeter neu gezeichnet wird oder von woanders kommt.
+
+   Amandas Ansicht gibt die Frage an amSenden(); die Startseite am
+   Handy hat ihr eigenes hsFragen(), das erst zu Amanda wechselt und
+   die Frage danach uebergibt — deshalb hat das hier Vorrang und
+   laeuft nur, wenn kein hsFragen zustaendig war. */
+(function(){
+  document.addEventListener('click', function(ev){
+    var t = ev.target;
+    var knopf = t && t.closest ? t.closest('[data-frage]') : null;
+    if(!knopf) return;
+    if(knopf.closest('.hs')) return;            // die Startseite macht es selbst
+    var frage = knopf.getAttribute('data-frage');
+    if(!frage) return;
+    ev.preventDefault();
+    try{ if(typeof amSenden === 'function') amSenden(frage); }catch(e){}
+  });
+})();
+</script>
+
 <script id="nav-gruppen">
 /* Die Gruppen in der Seitenleiste.
 
@@ -3957,7 +3980,17 @@ function renderAmanda(){
           <textarea id="amText" rows="2" placeholder="Deine Frage — tippen oder sprechen …"></textarea>
           <button class="af-send" id="amSend" type="button">Fragen</button>
         </div>
-        <div class="af-vor" id="amVor">${AM_VORSCHLAEGE.map(v=>`<button type="button" onclick="amSenden(${JSON.stringify(v)})">${esc(v)}</button>`).join('')}</div>
+        <!-- Die Frage steht im data-Attribut, nicht im onclick.
+             Vorher stand hier JSON.stringify(v) mitten in einem mit "
+             begrenzten Attribut: onclick="amSenden("Was ist der
+             Unterschied …")". Der Browser beendet das Attribut beim
+             ersten Anfuehrungszeichen, der Rest wird zu Unsinn — die
+             vier Vorschlaege sahen richtig aus und taten nichts.
+             Julia, 28.10.2026: "wenn ich vorne bei Amanda z. B. auf
+             Dativ erklären klicke, dann klickt es nicht." Derselbe
+             Fehler stand auch in start.js; beide sind jetzt auf
+             data-frage umgestellt. -->
+        <div class="af-vor" id="amVor">${AM_VORSCHLAEGE.map(v=>`<button type="button" data-frage="${esc(v)}">${esc(v)}</button>`).join('')}</div>
         <label class="af-schalter"><input type="checkbox" id="amAuto"> Antworten vorlesen</label>
       </div>
     </div>
