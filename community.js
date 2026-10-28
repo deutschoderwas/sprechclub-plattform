@@ -31,19 +31,30 @@
   function getProfile(){ try{ return window.profile || (typeof profile!=='undefined'?profile:null);}catch(e){return null;} }
   function active(){ try{ return (typeof isActive==='function')?isActive():true; }catch(e){ return true; } }
   function E(s){ return (window.esc?window.esc(s):String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);})); }
-  // Links in Nachrichten anklickbar machen: erst escapen, dann verlinken.
+  /* Links in Nachrichten anklickbar machen.
+     Reihenfolge: erst escapen (sonst waere jede Nachricht eine Luecke),
+     dann [Text](https://...) als Platzhalter wegnehmen, dann nackte
+     Adressen verlinken, dann die Platzhalter zuruecksetzen. Ohne den
+     Platzhalter wuerde der zweite Schritt die URL im fertigen <a>
+     noch einmal verlinken. */
   function verlinkt(s){
     var t = E(s==null?'':s);
-    return t.replace(/(^|[\s(])((?:https?:\/\/|www\.)[^\s<]+)/g, function(_, vor, url){
+    var merk = [];
+    t = t.replace(/\[([^\]\n]{1,120})\]\((https?:\/\/[^\s)]+)\)/g, function(_, text, url){
+      merk.push('<a class="mlink" href="' + url + '" target="_blank" rel="noopener noreferrer">' + text + '</a>');
+      return '\u0000' + (merk.length-1) + '\u0000';
+    });
+    t = t.replace(/(^|[\s(])((?:https?:\/\/|www\.)[^\s<]+)/g, function(_, vor, url){
       var schwanz = '';
       var m = url.match(/[.,:;!?)\]}'"]+$/);
       if(m){ schwanz = m[0]; url = url.slice(0, url.length - schwanz.length); }
       if(!url) return vor + schwanz;
       var ziel = url.indexOf('http')===0 ? url : 'https://' + url;
-      var text = url.replace(/^https?:\/\//,'').replace(/\/$/,'');
-      if(text.length>48) text = text.slice(0,45)+'\u2026';
+      var text = url.replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/$/,'');
+      if(text.length>46) text = text.slice(0,43)+'\u2026';
       return vor + '<a class="mlink" href="' + ziel + '" target="_blank" rel="noopener noreferrer">' + text + '</a>' + schwanz;
     });
+    return t.replace(/\u0000(\d+)\u0000/g, function(_, i){ return merk[+i] || ''; });
   }
   function root(){ return document.getElementById('v-community'); }
   function q(sel){ var r=root(); return r?r.querySelector(sel):null; }

@@ -525,7 +525,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
    echten Leisten gemessen, statt sie hier zu raten — sonst lag das
    Schreibfeld hinter der unteren Tableiste. */
 </style>
-<link rel="stylesheet" href="club-theme.css?v=2">
+<link rel="stylesheet" href="club-theme.css?v=3">
 <style id="kalMonthCss">
 .kal-viewtog{display:flex;gap:8px;justify-content:center;margin:10px 0 4px}
 .kal-viewtog button{font-size:13px;font-weight:700;padding:6px 18px;border-radius:999px;border:1.5px solid #E6F8FC;background:#fff;color:#6B7C84;cursor:pointer}
@@ -1668,7 +1668,28 @@ function routeFromHash(){ let v=(location.hash||'#dashboard').slice(1);
      dieselbe Ansicht wie das alte #community — Links aus alten Mails
      funktionieren weiter. */
   if(v==='chat') v='community';
-  show(VIEWS.includes(v)?v:'dashboard'); }
+  /* #podcast/<folge-id> springt direkt auf eine einzelne Folge. So kann
+     eine Ankuendigung im Chat oder in einer Mail einen Link mitgeben,
+     unter dem die Schuelerin genau diese Folge findet — statt nur den
+     Bereich. Alles hinter dem ersten Schraegstrich ist das Ziel. */
+  var teil = v.split('/'); v = teil[0];
+  show(VIEWS.includes(v)?v:'dashboard');
+  if(v==='podcast' && teil[1]) zuFolge(teil[1]); }
+/* Die Folgen kommen aus der Datenbank und sind beim Routen oft noch
+   nicht da. Also ein paar Mal nachsehen, hoechstens fuenf Sekunden. */
+function zuFolge(id){
+  var versuche = 0;
+  (function sehen(){
+    var ep = document.querySelector('.pc-ep[data-id="' + id + '"]');
+    if(ep){
+      try{ ep.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){ }
+      ep.classList.add('pc-ziel');
+      setTimeout(function(){ ep.classList.remove('pc-ziel'); }, 2600);
+      return;
+    }
+    if(++versuche < 25) setTimeout(sehen, 200);
+  })();
+}
 // Ohne Guthaben/Probestunde/Pass: ALLES gesperrt außer Kalender (und Profil für Konto/Logout).
 // Vor dem Starttag gesperrt — offen bleiben Start, Profil, Nachrichten und Guthaben.
 const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
