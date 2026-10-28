@@ -567,8 +567,17 @@
       +   '</div>'
       +   '<p class="oder">Oder tipp auf einen Vorschlag:</p>'
       +   '<div class="chips">' + vor.map(function(v){
-            return '<button class="chip druck" onclick="hsFragen(' + JSON.stringify(v[1]) + ')">'
-              + ikon(v[0]) + '<span>' + v[1] + '</span></button>';
+            /* Die Frage steht in einem data-Attribut, nicht im onclick.
+               Vorher stand hier JSON.stringify(...) mitten in einem
+               mit " begrenzten Attribut — das Anfuehrungszeichen der
+               Zeichenkette hat das Attribut vorzeitig beendet und den
+               Knopf zerschossen. Julia, 28.10.2026: "bei Amanda vorne
+               auf dem Bildschirm kann ich nichts anklicken."
+               Geklickt wird jetzt ueber einen einzigen Zuhoerer am
+               Block (siehe handyStart) — so kann kein Zeichen im Text
+               mehr etwas kaputt machen. */
+            return '<button type="button" class="chip druck" data-frage="' + E(v[1]) + '">'
+              + ikon(v[0]) + '<span>' + E(v[1]) + '</span></button>';
           }).join('') + '</div>'
       + '</div></section>';
   }
@@ -695,6 +704,20 @@
       + hsFertigkeiten()
       + hsUnterricht(k, s)
       + '</div>';
+    /* Ein Zuhoerer fuer alles, was im Block geklickt wird. Inline-
+       Attribute mit Text darin sind eine Fehlerquelle; hier kann kein
+       Anfuehrungszeichen mehr etwas zerreissen. */
+    try{
+      var block = ziel.querySelector('.hs');
+      if(block && !block.__klick){
+        block.__klick = true;
+        block.addEventListener('click', function(ev){
+          var t = ev.target;
+          var chip = t.closest ? t.closest('[data-frage]') : null;
+          if(chip){ ev.preventDefault(); hsFragen(chip.getAttribute('data-frage')); }
+        });
+      }
+    }catch(e){ console.error('Klicks:', e); }
     try{ hsRingeFuellen(); }catch(e){ console.error('Fertigkeiten:', e); }
   }
 
