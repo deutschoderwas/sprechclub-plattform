@@ -4,13 +4,13 @@
 //  GET /api/shadowing-ton?paket=a1-vorstellen&n=1
 //  -> { ok:true, url:"https://…/storage/v1/object/public/tts/shadowing/…mp3" }
 //
-//  Erzeugt die 80 Sätze aus bau/shadowing-plan.json EINMAL mit
+//  Erzeugt die Sätze aus bau/shadowing-plan.json EINMAL mit
 //  Julias ElevenLabs-Stimme (ELEVEN_VOICE_JULIA) und legt sie im
 //  Bucket "tts" ab. Danach kommt jeder Satz kostenlos aus dem Cache.
 //
 //  Sicher gegen Missbrauch, ohne Login: Es geht NUR um die Sätze,
 //  die hier unten fest stehen. Wer die Adresse aufruft, kann also
-//  höchstens diese 80 Sätze einmal erzeugen lassen — keinen eigenen
+//  höchstens diese Sätze einmal erzeugen lassen — keinen eigenen
 //  Text, keine zweite Rechnung.
 //
 //  Fehlt Julias Stimme, antwortet der Dienst mit 503. Bewusst KEIN
@@ -28,8 +28,21 @@ const STIMME  = process.env.ELEVEN_VOICE_JULIA || '';
 const MODELL  = process.env.ELEVEN_MODEL || 'eleven_multilingual_v2';
 const BUCKET  = 'tts';
 
-/* Anfänger hören langsamer und gleichmäßiger, ab B1 natürlich. */
-const TEMPO  = { A1: 0.9, A2: 0.95, B1: 1.0, B2: 1.0, C1: 1.0 };
+/* Julia (28.10.2026): „nicht so schnell, denk immer an Pause –
+   wie ein ECHTER MENSCH“. Deshalb auf allen Niveaus ruhiger als
+   normal, und Atempausen an jedem Komma und zwischen den Sätzen. */
+const TEMPO  = { A1: 0.84, A2: 0.88, B1: 0.92, B2: 0.94, C1: 0.95 };
+const PAUSE  = { A1: [0.45, 0.8], A2: [0.4, 0.75], B1: [0.35, 0.65], B2: [0.3, 0.6], C1: [0.3, 0.55] };
+
+/* Pausen als ElevenLabs-<break>: kurz nach Komma, Doppelpunkt und
+   Gedankenstrich, länger zwischen zwei Sätzen. Gezeigt wird den
+   Lernenden der Text ohne diese Marken. */
+function mitPausen(text, level) {
+  const [kurz, lang] = PAUSE[level] || [0.35, 0.65];
+  return text
+    .replace(/([,:;–])\s+/g, `$1 <break time="${kurz}s" /> `)
+    .replace(/([.?!])\s+(?=\S)/g, `$1 <break time="${lang}s" /> `);
+}
 const STABIL = { A1: 0.62, A2: 0.62, B1: 0.5, B2: 0.5, C1: 0.5 };
 
 const PLAN = {
@@ -88,11 +101,11 @@ const PLAN = {
  "b1-alltag-gefuehle": {
   "level": "B1",
   "saetze": [
-   "Ehrlich gesagt hab ich heute keine Lust auf Kino.",
+   "Ehrlich gesagt habe ich heute keine Lust auf Kino.",
    "Das finde ich eine super Idee!",
    "Ich bin mir nicht ganz sicher, ob das klappt.",
    "Ach, das ist doch nicht so schlimm.",
-   "Ich hab mich total gefreut, dass du gekommen bist.",
+   "Ich habe mich total gefreut, dass du gekommen bist.",
    "Mich nervt es, wenn Leute ständig zu spät kommen.",
    "Kannst du mir mal kurz helfen? Das wäre echt nett.",
    "Wenn ich mehr Zeit hätte, würde ich öfter Sport machen."
@@ -131,10 +144,10 @@ const PLAN = {
    "Keine Ahnung, mal gucken.",
    "Das ist mir echt zu blöd.",
    "Komm, lass mal gut sein.",
-   "Hast du 'ne Idee, wo wir hingehen könnten?",
-   "Ich bin total fertig, ich geh gleich ins Bett.",
+   "Hast du eine Idee, wo wir hingehen könnten?",
+   "Ich bin total fertig, ich gehe gleich ins Bett.",
    "Das klingt doch gar nicht so schlecht.",
-   "Weißte was? Wir machen das einfach morgen."
+   "Weißt du was? Wir machen das einfach morgen."
   ]
  },
  "c1-diplomatisch": {
@@ -162,6 +175,136 @@ const PLAN = {
    "Abschließend lässt sich festhalten, dass es keine einfache Lösung gibt.",
    "Vielen Dank für Ihre Aufmerksamkeit – ich freue mich auf Ihre Fragen."
   ]
+ },
+ "a1-uhrzeit": {
+  "level": "A1",
+  "saetze": [
+   "Wie spät ist es? Es ist halb drei.",
+   "Der Kurs beginnt um neun Uhr.",
+   "Ich habe am Montag Zeit.",
+   "Heute ist der dritte Mai.",
+   "Wir treffen uns um Viertel nach acht.",
+   "Am Wochenende arbeite ich nicht.",
+   "Wann hast du Geburtstag?",
+   "Mein Bus kommt in fünf Minuten."
+  ]
+ },
+ "a1-familie-freizeit": {
+  "level": "A1",
+  "saetze": [
+   "Ich habe zwei Kinder, einen Sohn und eine Tochter.",
+   "Meine Schwester wohnt in Berlin.",
+   "Am Wochenende spiele ich gern Fußball.",
+   "Was machst du in deiner Freizeit?",
+   "Ich lese gern und gehe oft spazieren.",
+   "Mein Vater kocht sehr gut.",
+   "Hast du Geschwister?",
+   "Wir fahren im Sommer ans Meer."
+  ]
+ },
+ "a2-arzt-apotheke": {
+  "level": "A2",
+  "saetze": [
+   "Ich habe seit drei Tagen Halsschmerzen.",
+   "Mir ist schwindelig und ich habe Fieber.",
+   "Wie oft muss ich die Tabletten nehmen?",
+   "Dreimal am Tag nach dem Essen.",
+   "Brauche ich dafür ein Rezept?",
+   "Ich bin gegen Penizillin allergisch.",
+   "Können Sie mich bitte krankschreiben?",
+   "Gute Besserung!"
+  ]
+ },
+ "a2-wohnung-nachbarn": {
+  "level": "A2",
+  "saetze": [
+   "Die Heizung in meiner Wohnung funktioniert nicht.",
+   "Wann kann der Hausmeister kommen?",
+   "Könnten Sie die Musik bitte etwas leiser machen?",
+   "Ich habe ein Paket für Sie angenommen.",
+   "Wo stehen die Mülltonnen?",
+   "Die Wohnung hat drei Zimmer und einen Balkon.",
+   "Wie hoch sind die Nebenkosten?",
+   "Herzlich willkommen im Haus!"
+  ]
+ },
+ "b1-smalltalk": {
+  "level": "B1",
+  "saetze": [
+   "Na, wie war dein Wochenende?",
+   "Schönes Wetter heute, oder?",
+   "Arbeitest du schon lange hier?",
+   "Das kann ich gut verstehen.",
+   "Ach, wirklich? Das wusste ich gar nicht.",
+   "Wir sollten mal zusammen einen Kaffee trinken.",
+   "Ich muss leider los, aber es war schön, dich zu sehen.",
+   "Grüß deine Familie von mir!"
+  ]
+ },
+ "b1-reklamation": {
+  "level": "B1",
+  "saetze": [
+   "Ich habe letzte Woche einen Staubsauger bei Ihnen gekauft.",
+   "Leider funktioniert er schon nicht mehr.",
+   "Kann ich das Gerät umtauschen?",
+   "Ich hätte gern mein Geld zurück.",
+   "Den Kassenbon habe ich dabei.",
+   "Wie lange dauert die Reparatur?",
+   "Das ist schon das zweite Mal, dass das passiert.",
+   "Vielen Dank, dass Sie sich so schnell darum kümmern."
+  ]
+ },
+ "b2-meeting": {
+  "level": "B2",
+  "saetze": [
+   "Ich möchte kurz zusammenfassen, wo wir gerade stehen.",
+   "Der wichtigste Punkt ist meiner Meinung nach der Zeitplan.",
+   "Wir haben drei Möglichkeiten, und ich empfehle die zweite.",
+   "Das würde uns viel Zeit und Geld sparen.",
+   "Darf ich an dieser Stelle kurz einhaken?",
+   "Lass uns das bis Freitag klären.",
+   "Wer übernimmt welche Aufgabe?",
+   "Gut, dann halten wir das so fest."
+  ]
+ },
+ "b2-mitfuehlen": {
+  "level": "B2",
+  "saetze": [
+   "Oh nein, das tut mir wirklich leid.",
+   "Das klingt ja furchtbar anstrengend.",
+   "Wie geht es dir jetzt damit?",
+   "Wenn du reden willst, bin ich für dich da.",
+   "Echt? Das freut mich so für dich!",
+   "Herzlichen Glückwunsch, das hast du dir verdient!",
+   "Mach dir keinen Kopf, das wird schon wieder.",
+   "Ich kann total nachvollziehen, dass du sauer bist."
+  ]
+ },
+ "c1-verhandeln": {
+  "level": "C1",
+  "saetze": [
+   "Ich schätze Ihr Angebot, allerdings liegt es über unserem Budget.",
+   "Wären Sie bereit, uns beim Preis entgegenzukommen?",
+   "Bei einer längeren Laufzeit könnten wir über einen Rabatt sprechen.",
+   "Das ist für uns leider nicht verhandelbar.",
+   "Lassen Sie uns nach einer Lösung suchen, die für beide Seiten passt.",
+   "Unter diesen Bedingungen könnten wir zustimmen.",
+   "Ich müsste das zunächst intern abstimmen.",
+   "Dann halten wir fest: Lieferung im März, Zahlung in zwei Raten."
+  ]
+ },
+ "c1-kritik": {
+  "level": "C1",
+  "saetze": [
+   "Darf ich dir ein offenes Feedback geben?",
+   "Mir ist aufgefallen, dass die Absprachen zuletzt nicht eingehalten wurden.",
+   "Ich sage das nicht, um dich zu kritisieren, sondern weil mir das Projekt wichtig ist.",
+   "Was bräuchtest du, damit das in Zukunft besser klappt?",
+   "Danke für die ehrliche Rückmeldung, das nehme ich mir zu Herzen.",
+   "Da hast du einen wunden Punkt getroffen.",
+   "Ich sehe das teilweise anders, aber ich verstehe, worauf du hinauswillst.",
+   "Lass uns in zwei Wochen noch einmal schauen, wie es läuft."
+  ]
  }
 };
 
@@ -187,7 +330,7 @@ export default async function handler(req, res) {
   const text = p.saetze[n - 1];
   const tempo = TEMPO[p.level] || 1.0;
   const hash = crypto.createHash('sha256')
-    .update(`${STIMME}|${MODELL}|${tempo}|${text}`).digest('hex').slice(0, 12);
+    .update(`v2|${STIMME}|${MODELL}|${tempo}|${text}`).digest('hex').slice(0, 12);
   const pfad = `shadowing/${paket}-${n}-${hash}.mp3`;
   const url = `${SUPA}/storage/v1/object/public/${BUCKET}/${pfad}`;
 
@@ -202,7 +345,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'xi-api-key': key, 'content-type': 'application/json', accept: 'audio/mpeg' },
       body: JSON.stringify({
-        text,
+        text: mitPausen(text, p.level),
         model_id: MODELL,
         /* Dieselben Einstellungen wie beim Podcast (so nah an Julia
            wie möglich): style 0, similarity 0.92, speaker boost an. */
