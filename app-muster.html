@@ -6,334 +6,447 @@
 <title>deutschoderwas — App-Muster</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F2EFE6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="deutschoderwas">
+<meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   deutschoderwas — App, Muster der Startseite
+   deutschoderwas — App, Muster der Startseite (2. Fassung)
 
-   Julia, 28.10.2026, mit fuenf Bildschirmfotos von Finanzguru:
-   "schau mal das design dieser app an ... ich finde das design und
-   den Aufbau und alles mega auch von den Farben."
+   Julia, 28.10.2026: "Kannst du das noch robuster machen? ... Soll
+   ich vielleicht etwas dafuer installieren dass es wirklich
+   professionell und robust ausschaut? Als ob es mir ein Webdesigner
+   gemacht hat."
 
-   Uebernommen ist der AUFBAU, nicht die Farbwelt:
-     - heller, leicht grauer Grund, damit weisse Karten darauf stehen
-     - eine grosse dunkle Karte ganz oben, die eine Zahl gross sagt
-     - eine Reihe Ringe darunter, auf einen Blick
-     - Abschnitte mit grosser Ueberschrift, dazwischen Luft
-     - unten eine schwebende Leiste mit fuenf Reitern
+   Installiert werden musste nichts ausser einem Symbolsatz. Was den
+   Unterschied macht, steht hier — und es ist Handwerk, kein Werkzeug:
 
-   Die Farben bleiben deutschoderwas: Tuerkis (#2DD4BF/#14B8A6) als
-   Signatur, Rot (#DD0000) und Gold (#FFCE00) als Akzente der
-   deutschen Flagge, warmes Creme statt kaltem Lavendel. Schriften
-   wie ueberall: Space Grotesk fuer Ueberschriften, Inter fuer Text.
+   1. ECHTE SYMBOLE statt Emoji. Emoji sehen auf jedem Geraet anders
+      aus (Apple zeichnet sie bunt und plastisch, Android flach,
+      Windows wieder anders) und verraten sofort, dass niemand das
+      gestaltet hat. Hier liegen 24 Zeichen aus Lucide inline als
+      <symbol>: ein Satz, eine Strichstaerke, eine Sprache, und sie
+      nehmen die Farbe ihres Textes an (currentColor). MIT-Lizenz.
+   2. SICHERE RAENDER. env(safe-area-inset-*) — ohne das sitzt die
+      untere Leiste auf dem iPhone unter dem Strich zum Entsperren,
+      und genau daran erkennt man eine Webseite im App-Kostuem.
+   3. KEIN BROWSER-VERHALTEN. Kein blaues Aufblitzen beim Tippen,
+      kein Markieren von Beschriftungen, kein Ueberziehen der Seite
+      beim Scrollen am Rand.
+   4. ANTWORT AUF JEDE BERUEHRUNG. Jeder Knopf wird beim Druecken
+      kurz kleiner. Das ist der Unterschied zwischen "es passiert
+      etwas" und "hat es den Klick genommen?".
+   5. LADEN OHNE SPRINGEN. Was aus dem Netz kommt, hat vorher einen
+      grauen Platzhalter in genau seiner Groesse. Nichts rutscht
+      nach, wenn die Daten da sind.
+   6. KEINE NAMEN, DIE SICH TREFFEN. Beim Pruefen trugen die Zeichen
+      in der unteren Leiste ploetzlich den dunklen Verlauf der grossen
+      Karte: die Karte hiess .gross, und die groessere Zeichengroesse
+      hiess .ic.gross — beide trafen dasselbe Element. Die Karte heisst
+      jetzt .wochenkarte, die Groessen .ic-gross und .ic-klein. Genau
+      solche Zusammenstoesse sind es, die eine Oberflaeche an einem
+      Geraet heil und am naechsten kaputt aussehen lassen.
 
-   Die Reiter unten stehen in Julias eigener Reihenfolge vom
-   23.10.2026: "Start Üben BUCHEN chat mein bereich".
+   7. EIN MASSRASTER. Alle Abstaende sind Vielfache von 4, alle
+      Rundungen aus einer Leiter. Sieht man nicht einzeln, aber man
+      sieht, wenn es fehlt.
+
+   Die Farben bleiben die Marke: Tuerkis #2DD4BF/#14B8A6 als
+   Signatur, Rot #DD0000 und Gold #FFCE00 als Akzente, Space Grotesk
+   und Inter wie ueberall.
    ============================================================ */
 
 :root{
-  --grund:#F2EFE6;        /* warmer, leicht gegrauter Grund */
-  --karte:#FFFFFF;
-  --ink:#14232A;          /* fast schwarz, ein Hauch Tuerkis darin */
-  --ink2:#5B6A70;
-  --ink3:#95A3A8;
-  --rand:#E9E3D6;
-  --rand2:#F1ECE0;
+  --grund:#F2EFE6; --karte:#FFFFFF;
+  --ink:#14232A; --ink2:#5B6A70; --ink3:#93A2A8;
+  --rand:#E8E2D4; --rand2:#F1ECE1;
   --tq:#2DD4BF; --tq-d:#14B8A6; --tq-tief:#0F766E; --tq-t:#06403A; --tq-soft:#E6FAF6;
   --rot:#DD0000; --rot-soft:#FDECEB;
-  --gold:#FFCE00; --gold-soft:#FFF6D6;
-  --gruen:#1F7A3D;
+  --gold:#FFCE00; --gold-soft:#FFF4CC;
+  /* Masse: alles Vielfache von 4 */
+  --r1:12px; --r2:16px; --r3:20px; --r4:24px;
+  --schatten:0 1px 2px rgba(20,35,42,.04), 0 8px 24px rgba(20,35,42,.05);
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
 body{
-  background:var(--grund);
+  margin:0; background:var(--grund); color:var(--ink);
   font-family:Inter,-apple-system,"Segoe UI",system-ui,sans-serif;
-  color:var(--ink);
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:112px;
+  font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  padding-bottom:calc(104px + env(safe-area-inset-bottom));
+  overscroll-behavior-y:none;
 }
-h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;letter-spacing:-.025em}
+/* Nichts fuehlt sich so sehr nach Browser an wie ein blauer Kasten
+   um ein Wort, das man nur antippen wollte. */
+body, button{-webkit-tap-highlight-color:transparent}
+button, .titel, .abschnitt, .kopfz h2, nav{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;letter-spacing:-.025em;font-weight:700}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--tq-tief);outline-offset:2px;border-radius:6px}
 
-.huelle{max-width:520px;margin:0 auto;padding:0 18px}
+/* Jeder Knopf antwortet. */
+.druck{transition:transform .13s cubic-bezier(.2,.7,.3,1), background-color .13s}
+.druck:active{transform:scale(.973)}
+@media (prefers-reduced-motion: reduce){
+  .druck,.druck:active{transition:none;transform:none}
+  .skel::after{animation:none}
+}
+
+/* Symbole */
+.ic{width:20px;height:20px;flex:none;stroke-width:1.75;display:block}
+.ic-gross{width:22px;height:22px}
+.ic-klein{width:16px;height:16px}
+
+.huelle{max-width:520px;margin:0 auto;padding:0 16px}
 
 /* ---------- Kopfzeile ---------- */
-.kopf{display:flex;align-items:center;gap:12px;padding:14px 0 2px}
+.kopf{display:flex;align-items:center;gap:8px;
+  padding:calc(12px + env(safe-area-inset-top)) 0 4px}
 .kopf .platz{flex:1}
-.kopf button{width:40px;height:40px;border-radius:13px;border:1px solid var(--rand);
-  background:var(--karte);font-size:17px;cursor:pointer;display:grid;place-items:center}
+.kopf .knopf{width:40px;height:40px;border-radius:var(--r1);border:1px solid var(--rand);
+  background:var(--karte);cursor:pointer;display:grid;place-items:center;color:var(--ink2)}
 .kopf .ich{width:40px;height:40px;border-radius:999px;border:none;
   background:linear-gradient(135deg,var(--tq),var(--tq-d));color:var(--tq-t);
-  font-weight:800;font-size:15px}
+  font-weight:700;font-size:14px;letter-spacing:.02em;cursor:pointer}
 
-.titel{font-size:34px;font-weight:700;margin:6px 0 2px;line-height:1.1}
-.unter{margin:0 0 16px;font-size:14.5px;color:var(--ink2)}
+.titel{font-size:32px;line-height:1.12;margin:8px 0 4px}
+.unter{display:flex;align-items:center;gap:6px;margin:0 0 16px;font-size:14px;color:var(--ink2)}
+.unter .ic{color:var(--rot)}
 
-/* ---------- Die grosse Karte oben ---------- */
-.gross{
-  background:linear-gradient(135deg,#0F766E 0%,#0B5A54 100%);
-  border-radius:22px;padding:18px 20px 20px;color:#fff;
-  box-shadow:0 14px 30px rgba(15,118,110,.22);
-}
-.gross .reihe{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.gross .marke{background:var(--gold);color:#1A1A1A;font-size:11.5px;font-weight:800;
-  border-radius:7px;padding:3px 8px;letter-spacing:.02em}
-.gross .was{font-size:14.5px;font-weight:700}
-.gross .rechts{margin-left:auto;display:flex;align-items:center;gap:5px;
-  font-size:13.5px;color:#BFEDE6;font-weight:600}
-.gross .zahl{font-family:"Space Grotesk",sans-serif;font-size:36px;font-weight:700;
-  line-height:1.05;font-variant-numeric:tabular-nums}
-.gross .zahl small{font-size:15px;font-weight:500;color:#BFEDE6;margin-left:7px;
+/* ---------- Die grosse Karte ---------- */
+.wochenkarte{background:linear-gradient(140deg,#0F766E 0%,#0A544E 100%);
+  border-radius:var(--r4);padding:16px 20px 20px;color:#fff;
+  box-shadow:0 12px 28px rgba(10,84,78,.24);display:block;width:100%;
+  border:none;text-align:left;cursor:pointer}
+.wochenkarte .reihe{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.wochenkarte .marke{background:var(--gold);color:#1A1A1A;font-size:11px;font-weight:700;
+  border-radius:6px;padding:3px 7px;letter-spacing:.03em}
+.wochenkarte .was{font-size:14px;font-weight:600}
+.wochenkarte .rechts{margin-left:auto;display:flex;align-items:center;gap:2px;
+  font-size:13px;color:#A9E5DC;font-weight:500}
+.wochenkarte .zahl{font-family:"Space Grotesk",sans-serif;font-size:34px;font-weight:700;
+  line-height:1.06;font-variant-numeric:tabular-nums}
+.wochenkarte .zahl small{font-size:14px;font-weight:400;color:#A9E5DC;margin-left:8px;
   font-family:Inter,sans-serif;letter-spacing:0}
-.gross .balken{height:7px;border-radius:999px;background:rgba(255,255,255,.18);
-  margin-top:14px;overflow:hidden}
-.gross .balken i{display:block;height:100%;border-radius:999px;
-  background:linear-gradient(90deg,var(--gold),#FFB300)}
+.wochenkarte .balken{height:6px;border-radius:999px;background:rgba(255,255,255,.17);
+  margin-top:16px;overflow:hidden}
+.wochenkarte .balken i{display:block;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--gold),#FFB020)}
 
 /* ---------- Ringe ---------- */
-.ringkarte{background:var(--karte);border-radius:20px;padding:15px 16px 13px;margin-top:14px;
-  border:1px solid var(--rand)}
-.kopfz{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
-.kopfz h2{font-size:16px;font-weight:700;flex:1}
-.kopfz a{font-size:13.5px;font-weight:700;color:var(--tq-tief);text-decoration:none;
-  display:inline-flex;align-items:center;gap:3px;cursor:pointer}
-.ringe{display:flex;gap:11px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+.karte{background:var(--karte);border:1px solid var(--rand);border-radius:var(--r3);
+  box-shadow:var(--schatten)}
+.ringkarte{padding:16px 16px 12px;margin-top:12px}
+.kopfz{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.kopfz h2{font-size:16px;flex:1;min-width:0}
+.kopfz .mehr{display:inline-flex;align-items:center;gap:2px;font-size:13px;font-weight:600;
+  color:var(--tq-tief);background:none;border:none;padding:4px 0;cursor:pointer;white-space:nowrap}
+.ringe{display:flex;gap:8px;overflow-x:auto;padding:0 0 4px;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .ringe::-webkit-scrollbar{display:none}
-.ring{flex:0 0 auto;width:62px;text-align:center;border:none;background:none;padding:0;
-  cursor:pointer;font-family:inherit}
-.ring .kreis{position:relative;width:58px;height:58px;margin:0 auto}
-.ring svg{transform:rotate(-90deg);display:block}
-.ring .mitte{position:absolute;inset:0;display:grid;place-items:center;font-size:21px}
-.ring .mitte.txt{font-family:"Space Grotesk",sans-serif;font-size:12.5px;font-weight:700;
-  color:var(--ink2);letter-spacing:-.02em}
-.ring b{display:block;font-size:11.5px;font-weight:600;color:var(--ink2);margin-top:5px;
-  line-height:1.25}
+.ring{flex:0 0 auto;width:64px;text-align:center;border:none;background:none;padding:4px 0;
+  cursor:pointer;scroll-snap-align:start}
+.ring .kreis{position:relative;width:56px;height:56px;margin:0 auto}
+.ring svg.bogen{transform:rotate(-90deg);display:block}
+.ring .mitte{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink2)}
+/* Das Zeichen in der Mitte nimmt die Farbe seines Bogens an — sonst
+   sitzt ein graues Symbol in einem farbigen Ring und wirkt wie
+   vergessen. */
+.ring .mitte .ic{width:21px;height:21px}
+.ring.f-tq .mitte{color:var(--tq-d)} .ring.f-gold .mitte{color:#B88A00}
+.ring.f-rot .mitte{color:var(--rot)}
+.ring .mitte .wert{font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:700;
+  color:var(--ink);font-variant-numeric:tabular-nums}
+.ring b{display:block;font-size:11px;font-weight:500;color:var(--ink2);margin-top:6px;
+  line-height:1.3;letter-spacing:-.01em}
 
-/* ---------- Abschnittsueberschrift ---------- */
-.abschnitt{font-size:23px;font-weight:700;margin:26px 0 12px}
+/* ---------- Abschnitte ---------- */
+.abschnitt{font-size:21px;margin:28px 0 12px}
 
-/* ---------- Tipp-Karte ---------- */
-.tipp{background:var(--karte);border-radius:20px;padding:18px 19px;border:1px solid var(--rand);
-  position:relative}
-.tipp h3{font-size:17px;font-weight:700;margin:0 44px 7px 0}
-.tipp p{margin:0 0 15px;font-size:14.5px;line-height:1.5;color:var(--ink2)}
-.tipp .zu{position:absolute;top:15px;right:15px;width:28px;height:28px;border-radius:999px;
-  border:none;background:#EFEAE0;color:var(--ink2);font-size:14px;cursor:pointer;
-  display:grid;place-items:center;line-height:1}
-.tipp .tun{display:inline-block;background:var(--tq-soft);color:var(--tq-tief);border:none;
-  border-radius:12px;padding:11px 18px;font-family:inherit;font-size:14.5px;font-weight:700;
-  cursor:pointer}
+/* ---------- Tipp ---------- */
+.tipp{padding:18px 18px 18px;position:relative}
+.tipp .band{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--tq-tief);margin-bottom:8px}
+.tipp h3{font-size:18px;margin:0 40px 6px 0;line-height:1.25}
+.tipp p{margin:0 0 16px;font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.tipp .zu{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:999px;
+  border:none;background:#F1ECE1;color:var(--ink2);cursor:pointer;display:grid;place-items:center}
+.tipp .tun{display:inline-flex;align-items:center;gap:7px;background:var(--tq-soft);
+  color:var(--tq-tief);border:none;border-radius:var(--r1);padding:11px 16px;
+  font-size:14.5px;font-weight:600;cursor:pointer}
 
-/* ---------- Listenkarte ---------- */
-.liste{background:var(--karte);border-radius:20px;border:1px solid var(--rand);overflow:hidden}
-.zeile{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid var(--rand2);
-  background:none;border-left:none;border-right:none;border-top:none;width:100%;
-  font-family:inherit;text-align:left;cursor:pointer}
+/* ---------- Listen ---------- */
+.liste{overflow:hidden}
+.zeile{display:flex;align-items:center;gap:12px;padding:13px 16px;width:100%;
+  border:none;border-bottom:1px solid var(--rand2);background:var(--karte);
+  text-align:left;cursor:pointer}
 .zeile:last-child{border-bottom:none}
-.zeile .zeichen{flex:none;width:42px;height:42px;border-radius:13px;background:var(--tq-soft);
-  display:grid;place-items:center;font-size:20px}
-.zeile .zeichen.rot{background:var(--rot-soft)}
-.zeile .zeichen.gold{background:var(--gold-soft)}
+.zeile:active{background:#FAF8F3}
+.kachel{flex:none;width:40px;height:40px;border-radius:var(--r1);background:var(--tq-soft);
+  display:grid;place-items:center;color:var(--tq-tief)}
+.kachel.rot{background:var(--rot-soft);color:var(--rot)}
+.kachel.gold{background:var(--gold-soft);color:#8A6608}
 .zeile .tx{flex:1;min-width:0}
-.zeile .tx b{display:block;font-size:15.5px;font-weight:600;color:var(--ink);line-height:1.3}
-.zeile .tx span{display:block;font-size:13px;color:var(--ink2);margin-top:2px}
+.zeile .tx b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.zeile .tx span{display:block;font-size:13px;color:var(--ink2);margin-top:1px}
 .zeile .wert{font-family:"Space Grotesk",sans-serif;font-size:15px;font-weight:700;
-  color:var(--tq-tief);white-space:nowrap}
-.zeile .pfeil{color:var(--ink3);font-size:17px}
-.zeile .schild{font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+  color:var(--tq-tief);font-variant-numeric:tabular-nums}
+.zeile .pfeil{color:var(--ink3)}
+.schild{font-size:11px;font-weight:700;border-radius:999px;padding:4px 9px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:4px}
 .schild.jetzt{background:var(--rot);color:#fff}
 .schild.frei{background:var(--tq-soft);color:var(--tq-tief)}
+.schild .punkt{width:6px;height:6px;border-radius:999px;background:#fff;
+  animation:pulsen 1.6s ease-in-out infinite}
+@keyframes pulsen{0%,100%{opacity:1}50%{opacity:.35}}
 
 /* ---------- Podcast ---------- */
-.pod{display:flex;align-items:center;gap:14px;background:var(--karte);border:1px solid var(--rand);
-  border-radius:20px;padding:14px 16px;width:100%;font-family:inherit;text-align:left;cursor:pointer}
-.pod .bild{flex:none;width:58px;height:58px;border-radius:15px;
-  background:linear-gradient(140deg,#2DD4BF,#0F766E);display:grid;place-items:center;font-size:25px}
+.pod{display:flex;align-items:center;gap:14px;padding:12px 14px;width:100%;
+  border:1px solid var(--rand);background:var(--karte);border-radius:var(--r3);
+  box-shadow:var(--schatten);text-align:left;cursor:pointer;margin-top:12px}
+.pod .bild{flex:none;width:56px;height:56px;border-radius:var(--r2);
+  background:linear-gradient(140deg,#2DD4BF,#0F766E);display:grid;place-items:center;color:#06403A}
 .pod .tx{flex:1;min-width:0}
-.pod .tx b{display:block;font-size:15.5px;font-weight:700;line-height:1.3}
-.pod .tx span{display:block;font-size:13px;color:var(--ink2);margin-top:3px}
-.pod .ab{flex:none;width:40px;height:40px;border-radius:999px;border:none;
+.pod .tx b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.pod .tx span{display:block;font-size:13px;color:var(--ink2);margin-top:2px}
+.pod .ab{flex:none;width:40px;height:40px;border-radius:999px;
   background:linear-gradient(135deg,var(--tq),var(--tq-d));color:var(--tq-t);
-  font-size:15px;display:grid;place-items:center}
+  display:grid;place-items:center}
+
+/* ---------- Platzhalter beim Laden ----------
+   Die Flaeche steht schon in voller Groesse da, bevor die Daten
+   kommen. Deshalb rutscht beim Nachladen nichts. */
+.skel{position:relative;overflow:hidden;background:#EDE8DD;border-radius:8px}
+.skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);
+  animation:wisch 1.4s ease-in-out infinite}
+@keyframes wisch{100%{transform:translateX(100%)}}
+.skel.z1{height:13px;width:62%} .skel.z2{height:11px;width:40%;margin-top:7px}
+.skel.kachel{width:40px;height:40px;border-radius:var(--r1);background:#EDE8DD}
 
 /* ---------- Untere Leiste ---------- */
-.leiste{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:0 14px 14px;
-  pointer-events:none}
-.leiste .innen{max-width:492px;margin:0 auto;background:rgba(255,255,255,.94);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid var(--rand);border-radius:26px;
-  box-shadow:0 10px 30px rgba(20,35,42,.13);
-  display:flex;align-items:center;justify-content:space-between;padding:8px 10px;
-  pointer-events:auto}
-.leiste button{border:none;background:none;font-family:inherit;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;
-  padding:7px 4px;border-radius:17px;color:var(--ink2);font-size:10px;font-weight:600;
-  flex:1;min-width:0;white-space:nowrap}
-.leiste button .ic{font-size:19px;line-height:1}
-.leiste button.an{background:var(--tq-soft);color:var(--tq-tief);font-weight:800}
-/* Der grosse Knopf in der Mitte traegt nur das Zeichen. Mit Wort darin
-   standen Zeichen und Schrift uebereinander und wurden beide eng; das
-   Wort steht jetzt darunter, wie bei den anderen vieren. */
-.leiste .mitte{flex:0 0 auto;width:64px;padding:0;background:none;gap:4px;margin-top:-26px}
-.leiste .mitte .ic{width:54px;height:54px;border-radius:999px;display:grid;place-items:center;
-  font-size:23px;background:linear-gradient(135deg,var(--tq),var(--tq-d));
-  box-shadow:0 8px 20px rgba(45,212,191,.42)}
-.leiste .mitte{color:var(--tq-tief);font-weight:800}
-.leiste .punkt{position:absolute;margin:-5px 0 0 15px;width:9px;height:9px;border-radius:999px;
+.leiste{position:fixed;left:0;right:0;bottom:0;z-index:50;pointer-events:none;
+  padding:0 12px calc(12px + env(safe-area-inset-bottom))}
+.leiste .innen{max-width:496px;margin:0 auto;pointer-events:auto;
+  background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px);
+  border:1px solid var(--rand);border-radius:var(--r4);
+  box-shadow:0 2px 6px rgba(20,35,42,.05), 0 12px 32px rgba(20,35,42,.14);
+  display:flex;align-items:flex-start;justify-content:space-between;padding:8px 8px 7px}
+.leiste button{border:none;background:none;cursor:pointer;flex:1;min-width:0;
+  display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;
+  border-radius:var(--r2);color:var(--ink2);font-size:10px;font-weight:500;white-space:nowrap}
+.leiste button.an{background:var(--tq-soft);color:var(--tq-tief);font-weight:700}
+.leiste .mitte{flex:0 0 auto;width:62px;padding:0;gap:5px;margin-top:-24px;
+  color:var(--tq-tief);font-weight:700;background:none}
+.leiste .mitte .haube{width:52px;height:52px;border-radius:999px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--tq),var(--tq-d));color:var(--tq-t);
+  box-shadow:0 6px 16px rgba(20,184,166,.40)}
+.leiste .umzeichen{position:relative;display:grid;place-items:center}
+.leiste .punkt{position:absolute;top:-2px;right:-3px;width:9px;height:9px;border-radius:999px;
   background:var(--rot);border:2px solid #fff}
 
-@media(max-width:380px){
-  .titel{font-size:29px}
-  .abschnitt{font-size:21px}
-  .huelle{padding:0 14px}
+@media(max-width:374px){
+  .titel{font-size:28px} .abschnitt{font-size:19px} .huelle{padding:0 14px}
+  .leiste button{font-size:9.5px}
 }
 </style>
 </head>
 <body>
 
+<!-- Der Symbolsatz, einmal im Dokument. Jedes <use> holt sich ein
+     Zeichen daraus; es gibt keine zweite Datei und keinen Ladefehler. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+<symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol>
+<symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /> <path d="m14.5 12.5 2-2" /> <path d="m11.5 9.5 2-2" /> <path d="m8.5 6.5 2-2" /> <path d="m17.5 15.5 2-2" /></symbol>
+<symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /> <path d="M8 14h.01" /> <path d="M12 14h.01" /> <path d="M16 14h.01" /> <path d="M8 18h.01" /> <path d="M12 18h.01" /> <path d="M16 18h.01" /></symbol>
+<symbol id="i-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol>
+<symbol id="i-backpack" viewBox="0 0 24 24"><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /> <path d="M8 10h8" /> <path d="M8 18h8" /> <path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6" /> <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" /></symbol>
+<symbol id="i-ear" viewBox="0 0 24 24"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0" /> <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4" /></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" /></symbol>
+<symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 7v14" /> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></symbol>
+<symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol>
+<symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path d="M18 18a4 4 0 0 0 2-7.464" /> <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path d="M6 18a4 4 0 0 1-2-7.464" /> <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></symbol>
+<symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" /></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+<symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol>
+<symbol id="i-align-left" viewBox="0 0 24 24"><path d="M21 5H3" /> <path d="M15 12H3" /> <path d="M17 19H3" /></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></symbol>
+<symbol id="i-file-text" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /> <path d="M14 2v4a2 2 0 0 0 2 2h4" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" /> <circle cx="12" cy="12" r="10" /></symbol>
+<symbol id="i-lightbulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" /></symbol>
+<symbol id="i-bandage" viewBox="0 0 24 24"><path d="M10 10.01h.01" /> <path d="M10 14.01h.01" /> <path d="M14 10.01h.01" /> <path d="M14 14.01h.01" /> <path d="M18 6v11.5" /> <path d="M6 6v12" /> <rect x="2" y="6" width="20" height="12" rx="2" /></symbol>
+<symbol id="i-radio" viewBox="0 0 24 24"><path d="M16.247 7.761a6 6 0 0 1 0 8.478" /> <path d="M19.075 4.933a10 10 0 0 1 0 14.134" /> <path d="M4.925 19.067a10 10 0 0 1 0-14.134" /> <path d="M7.753 16.239a6 6 0 0 1 0-8.478" /> <circle cx="12" cy="12" r="2" /></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol>
+<symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /> <path d="M22 10v6" /> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol>
+<symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /> <path d="m22 7-8.5 8.5-5-5L2 17" /></symbol>
+</defs>
+</svg>
+
 <div class="huelle">
 
-  <div class="kopf">
+  <header class="kopf">
     <div class="platz"></div>
-    <button aria-label="Alles auf einen Blick">☰</button>
-    <button class="ich" aria-label="Mein Profil">JK</button>
-  </div>
+    <button class="knopf druck" aria-label="Alles auf einen Blick">
+      <svg class="ic" fill="none" stroke="currentColor"><use href="#i-align-left"/></svg></button>
+    <button class="ich druck" aria-label="Mein Profil">JK</button>
+  </header>
 
   <h1 class="titel">Guten Morgen,<br>Julia</h1>
-  <p class="unter">Dienstag, 28. Oktober · Tag 12 in Folge 🔥</p>
+  <p class="unter">
+    <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-flame"/></svg>
+    Dienstag, 28. Oktober · Tag 12 in Folge
+  </p>
 
-  <!-- Die grosse Karte: eine Zahl, gross, mit Balken. Bei Finanzguru
-       das Gehalt, hier die Woche im Sprechclub. -->
-  <div class="gross">
-    <div class="reihe">
+  <button class="wochenkarte druck">
+    <span class="reihe">
       <span class="marke">B1</span>
       <span class="was">Diese Woche</span>
-      <span class="rechts">in 2 Tagen dran ›</span>
-    </div>
-    <div class="zahl">2 von 3 <small>Stunden geschafft</small></div>
-    <div class="balken"><i style="width:66%"></i></div>
-  </div>
+      <span class="rechts">in 2 Tagen dran
+        <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-chevron-right"/></svg></span>
+    </span>
+    <span class="zahl">2 von 3 <small>Stunden geschafft</small></span>
+    <span class="balken"><i style="width:66%"></i></span>
+  </button>
 
-  <!-- Die Ringe: bei Finanzguru die Budgets, hier die Fertigkeiten. -->
-  <div class="ringkarte">
+  <section class="karte ringkarte">
     <div class="kopfz">
       <h2>Deine Fertigkeiten</h2>
-      <a>Alle anzeigen ›</a>
+      <button class="mehr druck">Alle anzeigen
+        <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-chevron-right"/></svg></button>
     </div>
     <div class="ringe">
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="55"/></svg>
-          <span class="mitte txt">65&nbsp;%</span>
-        </span><b>Gesamt</b>
-      </button>
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="31"/></svg>
-          <span class="mitte">👂</span>
-        </span><b>Hören</b>
-      </button>
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#FFCE00" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="86"/></svg>
-          <span class="mitte">🗣️</span>
-        </span><b>Sprechen</b>
-      </button>
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="47"/></svg>
-          <span class="mitte">📖</span>
-        </span><b>Lesen</b>
-      </button>
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#DD0000" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="118"/></svg>
-          <span class="mitte">✍️</span>
-        </span><b>Schreiben</b>
-      </button>
-      <button class="ring">
-        <span class="kreis">
-          <svg width="58" height="58"><circle cx="29" cy="29" r="25" fill="none" stroke="#EFEAE0" stroke-width="5"/>
-          <circle cx="29" cy="29" r="25" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="39"/></svg>
-          <span class="mitte">🧠</span>
-        </span><b>Wörter</b>
-      </button>
+      <button class="ring druck"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="55"/></svg><span class="mitte"><span class="wert">65 %</span></span></span><b>Gesamt</b></button>
+      <button class="ring druck f-tq"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="31"/></svg><span class="mitte"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-ear"/></svg></span></span><b>Hören</b></button>
+      <button class="ring druck f-gold"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#FFCE00" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="86"/></svg><span class="mitte"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-mic"/></svg></span></span><b>Sprechen</b></button>
+      <button class="ring druck f-tq"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="47"/></svg><span class="mitte"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-book-open"/></svg></span></span><b>Lesen</b></button>
+      <button class="ring druck f-rot"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#DD0000" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="118"/></svg><span class="mitte"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-pen-line"/></svg></span></span><b>Schreiben</b></button>
+      <button class="ring druck f-tq"><span class="kreis"><svg class="bogen" width="56" height="56"><circle cx="28" cy="28" r="24" fill="none" stroke="#EFEAE0" stroke-width="5"/><circle cx="28" cy="28" r="24" fill="none" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="39"/></svg><span class="mitte"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-brain"/></svg></span></span><b>Wörter</b></button>
     </div>
-  </div>
+  </section>
 
   <h2 class="abschnitt">Heute für dich</h2>
 
-  <div class="tipp">
-    <button class="zu" aria-label="Schließen">✕</button>
-    <h3>Wort der Woche: <span style="color:var(--rot)">lüften</span></h3>
+  <section class="karte tipp" id="tipp">
+    <button class="zu druck" aria-label="Schließen" onclick="tippZu()">
+      <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-x"/></svg></button>
+    <span class="band">
+      <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-sparkles"/></svg>
+      Wort der Woche</span>
+    <h3>lüften</h3>
     <p>Aus der Folge „Prost! – das Anstoßen" (4:14 Min, A2). Sprich es dreimal laut, dann schreib mir einen Satz damit — ich schaue ihn mir an.</p>
-    <button class="tun">Folge anhören</button>
-  </div>
+    <button class="tun druck">
+      <svg class="ic ic-klein" fill="none" stroke="currentColor"><use href="#i-headphones"/></svg>
+      Folge anhören</button>
+  </section>
 
   <h2 class="abschnitt">Dein Unterricht</h2>
 
-  <div class="liste">
-    <button class="zeile">
-      <span class="zeichen rot">🔴</span>
+  <section class="karte liste">
+    <button class="zeile druck">
+      <span class="kachel rot"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-radio"/></svg></span>
       <span class="tx"><b>Kultur &amp; Traditionen</b><span>Heute · 19:00 Uhr · B1</span></span>
-      <span class="schild jetzt">Läuft</span>
+      <span class="schild jetzt"><span class="punkt"></span>Läuft</span>
     </button>
-    <button class="zeile">
-      <span class="zeichen">🗓️</span>
+    <button class="zeile druck">
+      <span class="kachel"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-calendar-days"/></svg></span>
       <span class="tx"><b>Integration &amp; Heimat</b><span>Do, 30.10. · 18:00 Uhr · B1</span></span>
       <span class="schild frei">gebucht</span>
     </button>
-    <button class="zeile">
-      <span class="zeichen gold">📄</span>
-      <span class="tx"><b>Vorbereitung öffnen</b><span>Wortschatz, Merksätze und ein kurzes Quiz</span></span>
-      <span class="pfeil">›</span>
+    <button class="zeile druck">
+      <span class="kachel gold"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-file-text"/></svg></span>
+      <span class="tx"><b>Vorbereitung öffnen</b><span>Wortschatz, Merksätze und ein Quiz</span></span>
+      <svg class="ic pfeil" fill="none" stroke="currentColor"><use href="#i-chevron-right"/></svg>
     </button>
-  </div>
+  </section>
 
   <h2 class="abschnitt">Weitermachen</h2>
 
-  <div class="liste" style="margin-bottom:14px">
-    <button class="zeile">
-      <span class="zeichen">🧠</span>
+  <section class="karte liste">
+    <button class="zeile druck">
+      <span class="kachel"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-brain"/></svg></span>
       <span class="tx"><b>Wörter üben</b><span>12 Wörter sind heute fällig</span></span>
       <span class="wert">12</span>
     </button>
-    <button class="zeile">
-      <span class="zeichen">🧭</span>
+    <button class="zeile druck">
+      <span class="kachel"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-compass"/></svg></span>
       <span class="tx"><b>Mein Kurs · B1</b><span>Lektion 4 von 14 · 28 % geschafft</span></span>
-      <span class="pfeil">›</span>
+      <svg class="ic pfeil" fill="none" stroke="currentColor"><use href="#i-chevron-right"/></svg>
     </button>
-    <button class="zeile">
-      <span class="zeichen">🩹</span>
+    <button class="zeile druck">
+      <span class="kachel"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-lightbulb"/></svg></span>
       <span class="tx"><b>Meine Fehler</b><span>3 Merksätze warten auf dich</span></span>
       <span class="wert">3</span>
     </button>
-  </div>
+    <!-- Diese Zeile kommt aus dem Netz: erst der Platzhalter in genau
+         ihrer Groesse, dann der Inhalt. Nichts rutscht nach. -->
+    <button class="zeile druck" id="laedt">
+      <span class="skel kachel"></span>
+      <span class="tx"><span class="skel z1"></span><span class="skel z2"></span></span>
+    </button>
+  </section>
 
-  <button class="pod">
-    <span class="bild">🎧</span>
+  <button class="pod druck">
+    <span class="bild"><svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-headphones"/></svg></span>
     <span class="tx"><b>Prost! – das Anstoßen</b><span>Neue Folge · 4:14 Min · A2</span></span>
-    <span class="ab">▶</span>
+    <span class="ab"><svg class="ic ic-klein" fill="currentColor" stroke="none"><use href="#i-play"/></svg></span>
   </button>
 
 </div>
 
-<nav class="leiste">
+<nav class="leiste" aria-label="Hauptbereiche">
   <div class="innen">
-    <button class="an"><span class="ic">🏠</span>Start</button>
-    <button><span class="ic">📐</span>Üben</button>
-    <button class="mitte"><span class="ic">🗓️</span>Buchen</button>
-    <button><span class="ic">💬</span><span class="punkt"></span>Chat</button>
-    <button><span class="ic">🎒</span>Mein Bereich</button>
+    <button class="an druck" aria-current="page">
+      <svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-house"/></svg>Start</button>
+    <button class="druck">
+      <svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-ruler"/></svg>Üben</button>
+    <button class="mitte druck">
+      <span class="haube"><svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-calendar-days"/></svg></span>Buchen</button>
+    <button class="druck">
+      <span class="umzeichen">
+        <svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-message-circle"/></svg>
+        <span class="punkt"></span></span>Chat</button>
+    <button class="druck">
+      <svg class="ic ic-gross" fill="none" stroke="currentColor"><use href="#i-backpack"/></svg>Mein Bereich</button>
   </div>
 </nav>
 
+<script>
+/* Der Tipp verschwindet, ohne dass die Seite springt: erst zusammen-
+   fahren, dann aus dem Fluss nehmen. */
+function tippZu(){
+  var t = document.getElementById('tipp'); if(!t) return;
+  t.style.transition = 'opacity .18s, transform .18s';
+  t.style.opacity = '0'; t.style.transform = 'scale(.97)';
+  setTimeout(function(){ t.style.display = 'none'; }, 180);
+}
+
+/* Zeigt, wie Nachladen aussieht: Platzhalter in voller Groesse,
+   dann der Inhalt an derselben Stelle. */
+setTimeout(function(){
+  var z = document.getElementById('laedt'); if(!z) return;
+  z.innerHTML =
+    '<span class="kachel"><svg class="ic" fill="none" stroke="currentColor"><use href="#i-pen-line"/></svg></span>'
+    + '<span class="tx"><b>Dein Text ist korrigiert</b><span>„Beschwerde Hotel" · von Julia</span></span>'
+    + '<span class="schild frei">neu</span>';
+}, 1200);
+
+/* Reiter unten umschalten. */
+document.querySelectorAll('.leiste .innen > button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.leiste .innen > button').forEach(function(x){
+      x.classList.remove('an'); x.removeAttribute('aria-current'); });
+    if(!b.classList.contains('mitte')){ b.classList.add('an'); b.setAttribute('aria-current','page'); }
+  });
+});
+</script>
 </body>
 </html>
