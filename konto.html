@@ -1478,12 +1478,20 @@ async function init(){
   sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
   });
+  /* Kommt die Schuelerin ueber einen Folgen-Link und ist nicht
+     angemeldet, geht sie erst durch den Login - und die Adresse mit
+     ?folge= ist danach weg. Also vorher merken. */
+  try{
+    var _fg = new URLSearchParams(location.search).get('folge');
+    if(_fg) localStorage.setItem('dow-folge-ziel', JSON.stringify({id:_fg, t:Date.now()}));
+  }catch(e){}
   const { data:{ session } } = await sb.auth.getSession();
   if (!session){ location.href='index.html?login=1'; return; }
   user = session.user;
   maybeStartNow(session);
   await load();
   startPresence();
+  folgeAusLink();      // /folge/<id> oder konto.html?folge=<id> springt auf genau diese Folge
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
   kanalAusLink();      // konto.html?kanal=fragen#community oeffnet genau diesen Kanal
@@ -1497,6 +1505,30 @@ async function init(){
 // Ohne diese Zeilen landet man zwar im Chat, aber im zuletzt geoeffneten
 // Kanal — und der Beitrag, wegen dem man geklickt hat, ist nicht zu sehen.
 // communityOeffne wartet selbst, bis die Kanalliste geladen ist.
+/* /folge/<id> (Umleitung aus vercel.json) oder konto.html?folge=<id>.
+   Setzt den Hash auf #podcast/<id> - von da an macht routeFromHash
+   den Rest. Das gemerkte Ziel verfaellt nach zehn Minuten, damit ein
+   alter Eintrag nicht beim naechsten Besuch wieder aufspringt. */
+function folgeAusLink(){
+  try{
+    var par = new URLSearchParams(location.search);
+    var id = par.get('folge');
+    if(!id){
+      var roh = localStorage.getItem('dow-folge-ziel');
+      if(roh){
+        localStorage.removeItem('dow-folge-ziel');
+        var o = JSON.parse(roh);
+        if(o && o.id && (Date.now() - (o.t||0)) < 600000) id = o.id;
+      }
+    } else {
+      try{ localStorage.removeItem('dow-folge-ziel'); }catch(e){}
+    }
+    if(!id) return;
+    par.delete('folge');
+    var rest = par.toString();
+    history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + '#podcast/' + id);
+  }catch(e){ console.error('folge-link', e); }
+}
 function kanalAusLink(){
   try{
     const par = new URLSearchParams(location.search);
