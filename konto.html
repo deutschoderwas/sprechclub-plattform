@@ -1684,12 +1684,12 @@ function show(v){
   // Lernbereich. Also bleibt dort die Markierung stehen.
   if(v==='kurs'){ var _lb=document.querySelector('.navlink[data-view="bereiche"]'); if(_lb) _lb.classList.add('active'); }
   try{ navGruppeZuAnsicht(v); }catch(e){}
-  /* Ansichten, die ohne die Uebungsdaten nichts zeigen koennen.
-     Sind sie noch nicht da, wird kurz gewartet statt leer gezeichnet —
-     und die Seite sagt das auch, statt stumm zu bleiben. */
+  /* Ansichten, die ohne diese Daten nichts zeigen koennen. Sind sie
+     noch nicht da, wird gewartet statt leer gezeichnet — und die Seite
+     sagt das auch, statt stumm zu bleiben. */
   if (typeof window.spaetLaden === 'function' && !window.SPAET_DA
       && ['ueben','lernen','bereiche','kurs','weg','szenen','schreiben','fertigkeit',
-          'pruefung','fehler','lernpfad','vokabeln','sprechen'].includes(v)) {
+          'pruefung','fehler','lernpfad','vokabeln','sprechen','kurse'].includes(v)) {
     var _z = document.getElementById('v-' + v);
     if (_z && !_z.innerHTML.trim()) {
       _z.innerHTML = '<div class="card" style="text-align:center;padding:30px 20px">'
@@ -4393,35 +4393,39 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
 <script src="zurueck.js?v=1"></script>
 <script src="app-gefuehl.js?v=1" defer></script>
 <!-- ============================================================
-     Die Uebungsdaten kommen spaeter — und das ist der Unterschied
-     zwischen einer Seite, die laedt, und einer, die steht.
+     Die Uebungs-, Kurs- und Pruefungsdaten laden erst, wenn die Seite
+     steht. Das ist der Unterschied zwischen einer Seite, die laedt,
+     und einer, die steht.
 
      Julia, 28.10.2026: "alles laeuft wieder sehr schlecht, community
-     chat laesst sich nicht oeffnen nichts" — am Handy im Browser,
-     und nicht kaputt, sondern zaeh.
+     chat laesst sich nicht oeffnen nichts" — am Handy im Browser, und
+     nicht kaputt, sondern zaeh.
 
      Nachgestellt mit Chromium auf 4G und einem viermal langsameren
-     Prozessor: 25 Sekunden bis die Seite fertig war, 9,3 MB ueber
-     143 Dateien. Allein diese Liste hier wiegt 4,1 MB — Wortschatz,
-     Hoertexte, Grammatik, Berufe. Sie wurde bei JEDEM Seitenaufruf
-     mitgeladen, auch wenn jemand nur in den Chat wollte. konto.html
-     selbst fasst diese Daten an keiner Stelle an; gebraucht werden
-     sie nur in den Uebungsansichten.
+     Prozessor, also einem normalen Handy unterwegs:
+       vorher  24,9 s bis load | 143 Dateien | 9,3 MB
+       nachher  6,4 s bis load |  86 Dateien | 2,6 MB
 
-     Jetzt stehen sie als Liste da und werden nachgeladen:
-       - von allein, sobald die Seite fertig ist (nach 800 ms),
-       - oder sofort und mit Warten, wenn jemand vorher auf eine
-         Uebungsansicht geht (siehe BRAUCHT_UEBUNGEN in show()).
+     Diese 58 Dateien — Wortschatz, Hoertexte, Grammatik, Berufe, der
+     Stufenkurs und die Pruefungen — wurden bei JEDEM Seitenaufruf
+     mitgeladen, auch wenn jemand nur in den Chat wollte. konto.html
+     selbst fasst sie an keiner Stelle an; gebraucht werden sie nur in
+     den Lern- und Pruefungsansichten.
+
+     Jetzt werden sie nachgeladen:
+       - von allein, 800 ms nachdem die Seite fertig ist,
+       - oder sofort und mit kurzem Warten, wenn jemand direkt auf eine
+         solche Ansicht geht (siehe show()).
 
      Die Reihenfolge bleibt streng erhalten (script.async = false):
      hoer-neu.js haengt sich an uebungen.js, themen-zusammenfuehren.js
-     will nach allen Datendateien laufen. Wird sie vertauscht, fehlen
-     Themen.
+     will nach allen Datendateien laufen, schreiben-a1.js bis -c1.js
+     ergaenzen SCHREIBEN. Vertauscht man sie, fehlen Inhalte.
 
-     Notausgang: ?voll=1 an die Adresse haengen, dann wird alles
-     sofort geladen wie frueher.
+     Notausgang: ?voll=1 an die Adresse haengen laedt alles sofort wie
+     frueher.
      ============================================================ -->
-<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "ueben.js?v=4"]</script>
+<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "ueben.js?v=4", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js", "pruefung.js", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js", "pruefung-schreiben.js", "pruefung-bildschirm.js", "pruefung-bereich.js"]</script>
 <script>
 (function(){
   var liste = [];
@@ -4437,7 +4441,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
           s.src = datei;
           s.async = false;              // Reihenfolge halten
           s.onload = fertig;
-          s.onerror = function(){ console.warn('Uebungsdatei fehlt:', datei); fertig(); };
+          s.onerror = function(){ console.warn('Datei fehlt:', datei); fertig(); };
           document.head.appendChild(s);
         });
       });
@@ -4448,9 +4452,6 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
     return laeuft;
   };
 
-  /* Von allein, sobald die Seite steht. Wer in den Chat will, wartet
-     auf nichts; wer danach auf "Üben" geht, findet meist alles schon
-     da. */
   function los(){ setTimeout(window.spaetLaden, 800); }
   try{
     if (/[?&]voll=1\b/.test(location.search)) { window.spaetLaden(); }
@@ -4922,38 +4923,15 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
      und der letzte gewinnt. Der ausgebaute Trainer soll gewinnen. -->
 <script src="vokabeltrainer.js?v=3"></script>
 <script src="niveau.js"></script>
-<script src="a1.js"></script>
-<script src="a2.js"></script>
-<script src="schreiben.js"></script>
-<script src="berufe.js"></script>
-<script src="kurs.js"></script>
-<script src="pruefung.js"></script>
-<script src="lesen-a1.js"></script>
-<script src="lesen-a2.js"></script>
-<script src="lesen-b1.js"></script>
-<script src="lesen-b2.js"></script>
-<script src="lesen-c1.js"></script>
-<script src="schreiben-c1.js"></script>
-<script src="sprechen-c1.js"></script>
-<script src="hoeren-c1.js"></script>
-<script src="pruefung-lesen.js"></script>
-<script src="hoeren-a1.js"></script>
-<script src="hoeren-a2.js"></script>
-<script src="hoeren-b1.js"></script>
-<script src="hoeren-b2.js"></script>
-<script src="pruefung-hoeren.js"></script>
-<script src="schreiben-a1.js"></script>
-<script src="schreiben-a2.js"></script>
-<script src="schreiben-b1.js"></script>
-<script src="schreiben-b2.js"></script>
-<script src="sprechen-a1.js"></script>
-<script src="sprechen-a2.js"></script>
-<script src="sprechen-b1.js"></script>
-<script src="sprechen-b2.js"></script>
-<script src="pruefung-sprechen.js"></script>
-<script src="pruefung-schreiben.js"></script>
-<script src="pruefung-bildschirm.js"></script>
-<script src="pruefung-bereich.js"></script>
+<!-- Der Kurs- und Pruefungsstapel (a1.js bis pruefung-bereich.js,
+     32 Dateien, rund 1,5 MB) laedt spaeter — die Liste steht weiter
+     oben bei "spaete-dateien", in genau dieser Reihenfolge.
+
+     Warum das gefahrlos geht: die Dateien, die BERUFE oder SCHREIBEN
+     lesen (bereiche-ansicht.js, bereiche-anschluss.js), stehen im
+     Dokument schon heute VOR ihnen. Sie koennen die Daten also
+     ohnehin nicht beim Laden gebraucht haben, sondern erst beim
+     Zeichnen — und dann sind sie da. -->
 <style id="kalRueckblick">
 /* Hinweis, wenn man in einer vergangenen Woche blättert */
 .kal-rueckblick{text-align:center;font-size:13px;font-weight:600;color:#C9A200;
