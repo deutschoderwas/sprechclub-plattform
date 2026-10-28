@@ -134,7 +134,13 @@ kbd{font-family:'Inter';font-size:.8rem;font-weight:800;background:#fff;border:2
 .gk-marke{display:inline-flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:800;letter-spacing:.11em;
   text-transform:uppercase;color:#fff;background:var(--f);border-radius:999px;padding:.34rem .85rem}
 .gk-nr{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;color:var(--ink-mute)}
-.gk-text{font-family:'Space Grotesk';font-weight:600;font-size:clamp(1.45rem,3.7vw,2.5rem);line-height:1.2;color:var(--ink)}
+.gk-zeile{display:flex;align-items:flex-start;gap:clamp(.9rem,2.4vw,1.6rem)}
+.gk-bild{flex:0 0 auto;display:grid;place-items:center;
+  width:clamp(62px,11vw,96px);height:clamp(62px,11vw,96px);border-radius:22px;
+  background:#fff;border:2px solid var(--linie);box-shadow:0 3px 0 rgba(36,31,24,.07);
+  font-size:clamp(2rem,5.4vw,3rem);line-height:1}
+.gk-text{font-family:'Space Grotesk';font-weight:600;font-size:clamp(1.4rem,3.5vw,2.35rem);line-height:1.2;color:var(--ink);min-width:0}
+@media(max-width:520px){.gk-zeile{flex-direction:column;align-items:flex-start;gap:.8rem}}
 .gk-text b{font-weight:700;background:var(--gelb-soft);padding:.04em .1em;border-radius:5px;
   -webkit-box-decoration-break:clone;box-decoration-break:clone}
 .gk-hilfe{margin-top:1.35rem;background:#fff;border:2px dashed var(--linie);border-radius:14px;padding:.85rem 1.1rem;
@@ -156,7 +162,7 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
   <p class="eyebrow">Freitagabend &middot; Sprechclub</p>
   <h1 class="title">Sprech<span class="hl">karten</span></h1>
   <p class="theme-line">Freie Sprechstunde &middot; A2&ndash;C1</p>
-  <p class="subtitle">Sechs Stapel, drei Niveaus, 216 Karten. Eine Zahl sagen, die Karte umdrehen &mdash; und losreden.</p>
+  <p class="subtitle">Acht Alltagsbereiche, drei Niveaus, 288 Karten. Eine Zahl sagen, die Karte umdrehen &mdash; und losreden.</p>
 
   <div class="levelbar">
     <span class="lab">Niveau</span>
@@ -195,7 +201,10 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
       <span class="gk-marke" id="gkMarke"></span>
       <span class="gk-nr" id="gkNr"></span>
     </div>
-    <p class="gk-text" id="gkText"></p>
+    <div class="gk-zeile">
+      <span class="gk-bild" id="gkBild" aria-hidden="true"></span>
+      <p class="gk-text" id="gkText"></p>
+    </div>
     <div class="gk-hilfe" id="gkHilfe"><span>W&ouml;rter, die helfen</span><em id="gkHilfeT"></em></div>
     <div class="gk-fuss">
       <button class="knopf voll" id="gkWeiter">N&auml;chste Karte</button>
@@ -205,279 +214,392 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
 </div>
 
 <script>
-/* Nur die Inhalte. Wird beim Bauen in die HTML-Datei eingesetzt. */
+/* Nur die Inhalte. Wird beim Bauen in die HTML-Datei eingesetzt.
+   Jede Karte: [ Satz, Woerter die helfen, Zeichen-Schluessel aus Z ] */
+
+const Z = {
+ uhr:'&#9200;', stern:'&#11088;', hand:'&#9995;', bett:'&#128719;&#65039;', kalender:'&#128197;',
+ regen:'&#127783;&#65039;', idee:'&#128161;', handy:'&#128241;', freunde:'&#129309;',
+ sprechen:'&#128483;&#65039;', schluessel:'&#128273;', zeit:'&#8987;', denken:'&#129300;',
+ gefuehl:'&#128173;', herz:'&#10084;&#65039;', waage:'&#9878;&#65039;', uhrzeit:'&#128344;',
+ telefon:'&#128222;', sofa:'&#128715;&#65039;', buch:'&#128214;', feuer:'&#128293;',
+ familie:'&#128106;', spielen:'&#129528;', fest:'&#127881;', kind:'&#129490;', geschenk:'&#127873;',
+ putzen:'&#129529;', schule:'&#127890;', oma:'&#128117;', baby:'&#128118;', streit:'&#128544;',
+ haus:'&#127968;', arbeit:'&#128188;', bus:'&#128652;', buero:'&#127970;', team:'&#128101;',
+ chef:'&#128084;', bewerbung:'&#128196;', laptop:'&#128187;', computer:'&#128421;&#65039;',
+ nachbarn:'&#128075;', stadt:'&#127961;&#65039;', dorf:'&#127969;', tuer:'&#128682;',
+ werkzeug:'&#128295;', vertrag:'&#128221;', geld:'&#128182;', amt:'&#127963;&#65039;',
+ muell:'&#128465;&#65039;', kochen:'&#127859;', einkauf:'&#128722;', brot:'&#127838;',
+ apfel:'&#127822;', restaurant:'&#127869;&#65039;', kaffee:'&#9749;', kasse:'&#129534;',
+ salat:'&#129367;', karte:'&#128506;&#65039;', koffer:'&#129523;', berg:'&#9968;&#65039;',
+ zug:'&#128646;', flugzeug:'&#9992;&#65039;', urlaub:'&#127796;', auto:'&#128663;',
+ hotel:'&#127976;', arzt:'&#129658;', medizin:'&#128138;', sport:'&#127939;', schlaf:'&#128564;',
+ krank:'&#129298;', musik:'&#127925;', film:'&#127916;', party:'&#129395;', lachen:'&#128516;'
+};
+
 const BEREICHE = [
-  { id:'fragen',   name:'Sprechfragen',         zeichen:'&#128172;',        unter:'Erz&auml;hlen, was dich ausmacht', f:'#1B9BC0', d:'#0C5C74' },
-  { id:'wahl',     name:'Entweder &ndash; oder', zeichen:'&#9878;&#65039;',  unter:'W&auml;hlen und begr&uuml;nden',   f:'#D99500', d:'#8A5E00' },
-  { id:'erzaehl',  name:'Erz&auml;hl mal',       zeichen:'&#128214;',        unter:'Eine kleine Geschichte',           f:'#D32F23', d:'#8C1D15' },
-  { id:'meinung',  name:'Deine Meinung',         zeichen:'&#128483;&#65039;',unter:'Zustimmen oder widersprechen',     f:'#7A5BD0', d:'#4B3390' },
-  { id:'situation',name:'Situationen',           zeichen:'&#127917;',        unter:'Rollenspiel zu zweit',             f:'#0E9E86', d:'#076253' },
-  { id:'spiel',    name:'Wortschatz-Spiele',     zeichen:'&#127918;',        unter:'Tabu, nenne f&uuml;nf, erkl&auml;re', f:'#2F72C9', d:'#1B4785' }
+ { id:'persoenlich', name:'Pers&ouml;nliches',      zeichen:'&#129489;',       unter:'Ich, mein Tag, meine Gewohnheiten', f:'#1B9BC0', d:'#0C5C74' },
+ { id:'familie',     name:'Familie &amp; Kinder',   zeichen:'&#128106;',       unter:'Zu Hause, Feste, Generationen',     f:'#D32F23', d:'#8C1D15' },
+ { id:'beruf',       name:'Beruf &amp; Arbeit',     zeichen:'&#128188;',       unter:'Kollegen, Aufgaben, Chefs',         f:'#2F72C9', d:'#1B4785' },
+ { id:'wohnen',      name:'Wohnen &amp; Nachbarn',  zeichen:'&#127968;',       unter:'Wohnung, Haushalt, Nachbarschaft',  f:'#0E9E86', d:'#076253' },
+ { id:'essen',       name:'Einkaufen &amp; Essen',  zeichen:'&#128722;',       unter:'Supermarkt, K&uuml;che, Restaurant',f:'#D99500', d:'#8A5E00' },
+ { id:'unterwegs',   name:'Unterwegs &amp; Reisen', zeichen:'&#9992;&#65039;', unter:'Weg zur Arbeit, Bahn, Urlaub',      f:'#7A5BD0', d:'#4B3390' },
+ { id:'gesundheit',  name:'Gesundheit',             zeichen:'&#129658;',       unter:'K&ouml;rper, Arzt, Erholung',       f:'#D4426E', d:'#8E2248' },
+ { id:'freizeit',    name:'Freizeit &amp; Freunde', zeichen:'&#127881;',       unter:'Hobbys, Feiern, Freundschaft',      f:'#E2662B', d:'#983C13' }
 ];
 
 const KARTEN = {
-fragen: {
+
+persoenlich: {
 einfach: [
- ['Wie sieht dein typischer Morgen aus?','aufstehen &middot; fr&uuml;hst&uuml;cken &middot; zuerst &middot; danach'],
- ['Was machst du am liebsten am Wochenende?','gern &middot; am liebsten &middot; meistens'],
- ['Erz&auml;hl von deinem Lieblingsessen. Wer kocht es?','schmecken &middot; die Zutaten &middot; selbst kochen'],
- ['Wie kommst du zur Arbeit oder zum Unterricht?','zu Fu&szlig; &middot; mit dem Bus &middot; dauern'],
- ['Welche Jahreszeit magst du am liebsten? Warum?','der Fr&uuml;hling &middot; der Winter &middot; weil'],
- ['Beschreib dein Zimmer. Was steht wo?','neben &middot; zwischen &middot; an der Wand'],
- ['Was hast du gestern gemacht? Drei S&auml;tze.','zuerst &middot; dann &middot; am Abend'],
- ['Hast du ein Haustier? Oder m&ouml;chtest du eins?','der Hund &middot; die Katze &middot; sich k&uuml;mmern um'],
- ['Was machst du, wenn du m&uuml;de bist?','sich ausruhen &middot; eine Pause machen'],
- ['Wer ist dir wichtig? Erz&auml;hl von dieser Person.','die Schwester &middot; der Freund &middot; nett'],
- ['Was kannst du gut?','kochen &middot; Fahrrad fahren &middot; singen'],
- ['Wohin m&ouml;chtest du einmal reisen?','das Meer &middot; die Berge &middot; besuchen']
+ ['Wie sieht dein typischer Morgen aus? Erz&auml;hl in drei S&auml;tzen.','aufstehen &middot; fr&uuml;hst&uuml;cken &middot; zuerst','uhr'],
+ ['Was machst du am liebsten, wenn du frei hast?','gern &middot; am liebsten &middot; meistens','stern'],
+ ['Was kannst du richtig gut? Erkl&auml;r es uns.','kochen &middot; singen &middot; Fahrrad fahren','hand'],
+ ['Stehst du lieber fr&uuml;h auf, oder schl&auml;fst du lieber lange?','der Wecker &middot; ausschlafen','bett'],
+ ['Planst du deinen Tag lieber genau, oder bleibst du lieber spontan?','der Plan &middot; spontan &middot; die Vorfreude','kalender'],
+ ['Erz&auml;hl von einem Tag, an dem alles schiefgegangen ist.','vergessen &middot; verpassen &middot; leider','regen'],
+ ['Erz&auml;hl von etwas, das du zum ersten Mal gemacht hast.','zum ersten Mal &middot; aufgeregt &middot; sich trauen','idee'],
+ ['&bdquo;Man soll jeden Tag etwas Neues lernen.&ldquo; Stimmst du zu? Sag, warum.','neugierig &middot; jeden Tag &middot; ich finde','buch'],
+ ['&bdquo;Ohne Handy kann ich nicht mehr leben.&ldquo; Stimmst du zu?','das Handy &middot; brauchen &middot; ohne','handy'],
+ ['Du triffst einen alten Freund auf der Stra&szlig;e. Begr&uuml;&szlig;e ihn und erz&auml;hl kurz, wie es dir geht.','lange nicht gesehen &middot; mir geht es &middot; und dir','freunde'],
+ ['Du stellst dich einer neuen Gruppe vor. Sag drei S&auml;tze &uuml;ber dich.','ich hei&szlig;e &middot; ich komme aus &middot; ich arbeite als','sprechen'],
+ ['Nenne f&uuml;nf Dinge, die du jeden Tag benutzt, und beschreib eines, ohne es zu nennen.','der Schl&uuml;ssel &middot; das Handy &middot; die Tasse','schluessel']
 ],
 komplexer: [
- ['Was hat sich in deinem Leben in den letzten f&uuml;nf Jahren am meisten ver&auml;ndert?','sich ver&auml;ndern &middot; seitdem &middot; inzwischen'],
- ['Gibt es eine Entscheidung, die du heute anders treffen w&uuml;rdest?','bereuen &middot; r&uuml;ckblickend &middot; an deiner Stelle'],
- ['Wie wichtig ist dir P&uuml;nktlichkeit &mdash; und warum?','Wert legen auf &middot; es kommt darauf an'],
- ['Was bedeutet &bdquo;Zuhause&ldquo; f&uuml;r dich?','sich heimisch f&uuml;hlen &middot; die Wurzeln &middot; vermissen'],
- ['Welche Gewohnheit w&uuml;rdest du gern ablegen?','sich etwas angew&ouml;hnen &middot; es f&auml;llt mir schwer'],
- ['Erz&auml;hl von einem Menschen, der dich gepr&auml;gt hat.','pr&auml;gen &middot; beibringen &middot; dankbar sein'],
- ['Was war die beste Entscheidung deines Lebens?','sich entscheiden f&uuml;r &middot; es hat sich gelohnt'],
- ['Lernst du lieber allein oder mit anderen?','konzentriert &middot; sich austauschen &middot; ablenken'],
- ['Wie gehst du mit Stress um?','abschalten &middot; der Ausgleich &middot; mir hilft es, wenn &hellip;'],
- ['Was w&uuml;rdest du jemandem raten, der gerade nach Deutschland gezogen ist?','sich zurechtfinden &middot; der Rat &middot; am Anfang'],
- ['Welches Kompliment hat dich besonders gefreut?','das Kompliment &middot; sich freuen &uuml;ber'],
- ['Gibt es etwas, das du dir nie zugetraut h&auml;ttest &mdash; und doch geschafft hast?','sich zutrauen &middot; stolz sein auf']
+ ['Was hat sich in deinem Leben in den letzten f&uuml;nf Jahren am meisten ver&auml;ndert?','sich ver&auml;ndern &middot; seitdem &middot; inzwischen','zeit'],
+ ['Welche Gewohnheit w&uuml;rdest du gern ablegen, und warum f&auml;llt es dir schwer?','sich angew&ouml;hnen &middot; es f&auml;llt mir schwer','denken'],
+ ['Wie gehst du mit Stress um? Beschreib, was dir wirklich hilft.','abschalten &middot; der Ausgleich &middot; die Pause','gefuehl'],
+ ['M&ouml;chtest du lieber bewundert oder lieber gemocht werden?','die Anerkennung &middot; die Zuneigung','herz'],
+ ['Machst du lieber Fehler, oder riskierst du lieber gar nichts?','der Fehler &middot; dazulernen &middot; das Risiko','waage'],
+ ['Erz&auml;hl von einem Moment, in dem du richtig stolz auf dich warst.','stolz sein auf &middot; geschafft &middot; endlich','stern'],
+ ['Erz&auml;hl von etwas, das du lange vor dir hergeschoben hast.','aufschieben &middot; sich &uuml;berwinden &middot; endlich','uhrzeit'],
+ ['&bdquo;Wer nichts riskiert, verpasst das Leben.&ldquo; Stimmst du zu oder siehst du das anders?','riskieren &middot; verpassen &middot; die Chance','feuer'],
+ ['&bdquo;Man muss nicht jede Meinung respektieren.&ldquo; Was meinst du dazu?','respektieren &middot; die Grenze &middot; tolerant','sprechen'],
+ ['Ein Freund bittet dich um einen Gefallen, f&uuml;r den du keine Zeit hast. Sag h&ouml;flich ab.','es passt leider nicht &middot; ein andermal','telefon'],
+ ['Du sollst in zwei Minuten erkl&auml;ren, wer du bist &mdash; ohne deinen Beruf zu nennen.','mich interessiert &middot; mir ist wichtig','sprechen'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;gem&uuml;tlich&ldquo; und &bdquo;bequem&ldquo; an einem Beispiel.','die Atmosph&auml;re &middot; der Sessel &middot; sich wohlf&uuml;hlen','sofa']
 ],
 schwierig: [
- ['Inwiefern ver&auml;ndert Sprache die Art, wie wir denken?','die Denkweise &middot; beeinflussen &middot; insofern als'],
- ['Ist H&ouml;flichkeit ein Zeichen von Respekt oder von Distanz?','die Zur&uuml;ckhaltung &middot; zum Ausdruck bringen'],
- ['Was verlieren wir, wenn alles jederzeit verf&uuml;gbar ist?','die Verf&uuml;gbarkeit &middot; zu kurz kommen &middot; die Kehrseite'],
- ['Wann ist Ehrlichkeit angebracht &mdash; und wann nicht?','angebracht &middot; r&uuml;cksichtsvoll &middot; es h&auml;ngt davon ab'],
- ['Kann man Heimat w&auml;hlen?','die Zugeh&ouml;rigkeit &middot; sich entscheiden f&uuml;r &middot; letztlich'],
- ['Welche Rolle spielt Scheitern f&uuml;rs Lernen?','das Scheitern &middot; der R&uuml;ckschlag &middot; daraus lernen'],
- ['Wie frei sind wir in unseren Entscheidungen wirklich?','gepr&auml;gt sein von &middot; der Handlungsspielraum'],
- ['Braucht eine Gesellschaft gemeinsame Werte?','der Zusammenhalt &middot; die Grundlage &middot; verbindlich'],
- ['Ist Geduld heute noch eine Tugend?','die Tugend &middot; aus der Mode kommen &middot; sich bew&auml;hren'],
- ['Was unterscheidet Wissen von Verstehen?','der Unterschied besteht darin &middot; verinnerlichen'],
- ['Wann wird Hilfsbereitschaft zur Bevormundung?','die Bevormundung &middot; gut gemeint &middot; &uuml;ber den Kopf hinweg'],
- ['Welche Verantwortung tr&auml;gt jeder Einzelne f&uuml;rs Klima?','Verantwortung tragen &middot; der Beitrag &middot; angesichts']
+ ['Wie frei sind wir in unseren Entscheidungen wirklich?','gepr&auml;gt sein von &middot; der Handlungsspielraum','denken'],
+ ['Was unterscheidet f&uuml;r dich Wissen von Verstehen?','der Unterschied besteht darin &middot; verinnerlichen','buch'],
+ ['Welche Rolle spielt das Scheitern f&uuml;r das Lernen?','das Scheitern &middot; der R&uuml;ckschlag &middot; daraus lernen','feuer'],
+ ['Ist dir eine unbequeme Wahrheit lieber oder ein bequemer Konsens?','der Konsens &middot; unbequem &middot; zumuten','waage'],
+ ['Triffst du Entscheidungen lieber schnell oder lieber sp&auml;t, daf&uuml;r gut begr&uuml;ndet?','das Z&ouml;gern &middot; abw&auml;gen','uhrzeit'],
+ ['Erz&auml;hl von einer Situation, in der du deine Meinung grundlegend ge&auml;ndert hast.','umdenken &middot; die Einsicht &middot; im Nachhinein','idee'],
+ ['Erz&auml;hl von einer Entscheidung, die niemand in deinem Umfeld verstanden hat.','auf Unverst&auml;ndnis sto&szlig;en &middot; dazu stehen','stern'],
+ ['&bdquo;Ein Mensch ist mehr als die Summe seiner Leistungen.&ldquo; Was meinst du dazu?','sich definieren &uuml;ber &middot; der Wert','herz'],
+ ['&bdquo;Erinnerung ist immer auch Erfindung.&ldquo; Stimmst du zu?','die Erinnerung &middot; verkl&auml;ren &middot; rekonstruieren','denken'],
+ ['Du musst jemandem eine Entscheidung erkl&auml;ren, die ihn entt&auml;uscht. Formuliere es einf&uuml;hlsam.','behutsam &middot; bedauern &middot; nachvollziehbar','sprechen'],
+ ['Halte ein kurzes Pl&auml;doyer f&uuml;r eine Sache, an die au&szlig;er dir niemand glaubt.','das Pl&auml;doyer &middot; &uuml;berzeugen &middot; der Nutzen','feuer'],
+ ['Erkl&auml;r &bdquo;Verantwortung &uuml;bernehmen&ldquo; an einem Beispiel aus deinem Leben.','einstehen f&uuml;r &middot; die Folgen tragen','hand']
 ]},
 
-wahl: {
+familie: {
 einfach: [
- ['Kaffee oder Tee?','lieber &middot; weil &middot; am Morgen'],
- ['Stadt oder Dorf?','laut &middot; ruhig &middot; die Nachbarn'],
- ['Sommer oder Winter?','die Sonne &middot; der Schnee &middot; mir ist kalt'],
- ['Fr&uuml;h aufstehen oder lange schlafen?','der Wecker &middot; ausschlafen'],
- ['Selbst kochen oder essen gehen?','das Restaurant &middot; bequem &middot; sparen'],
- ['Telefonieren oder schreiben?','die Nachricht &middot; anrufen &middot; schneller'],
- ['Berge oder Meer?','wandern &middot; schwimmen &middot; die Aussicht'],
- ['Allein oder mit Freunden lernen?','zusammen &middot; sich konzentrieren'],
- ['Auto oder Fahrrad?','der Stau &middot; gesund &middot; das Wetter'],
- ['Buch oder Film?','sich vorstellen &middot; spannend'],
- ['Hund oder Katze?','treu &middot; selbstst&auml;ndig'],
- ['Geschenke bekommen oder machen?','sich freuen &middot; aussuchen']
+ ['Wer geh&ouml;rt zu deiner Familie? Erz&auml;hl von zwei Personen.','die Schwester &middot; der Onkel &middot; nett','familie'],
+ ['Was macht ihr in deiner Familie am Wochenende zusammen?','zusammen &middot; besuchen &middot; spazieren gehen','herz'],
+ ['Wie hast du als Kind am liebsten gespielt?','drau&szlig;en &middot; mit Freunden &middot; damals','spielen'],
+ ['Verbringst du Feste lieber mit der Familie oder mit Freunden?','das Fest &middot; feiern &middot; gem&uuml;tlich','fest'],
+ ['H&auml;ttest du lieber viele Geschwister oder lieber keine?','der Bruder &middot; die Schwester &middot; allein','kind'],
+ ['Erz&auml;hl von einem sch&ouml;nen Familienfest.','gefeiert &middot; die G&auml;ste &middot; das Essen','fest'],
+ ['Erz&auml;hl von einem Geschenk, &uuml;ber das du dich sehr gefreut hast.','bekommen &middot; sich freuen &middot; &uuml;berrascht','geschenk'],
+ ['&bdquo;Hausarbeit sollen alle in der Familie teilen.&ldquo; Stimmst du zu?','putzen &middot; kochen &middot; gerecht','putzen'],
+ ['&bdquo;Kinder sollen fr&uuml;h eine Fremdsprache lernen.&ldquo; Was meinst du?','leicht &middot; das Kind &middot; besser','schule'],
+ ['Du rufst deine Mutter an und erz&auml;hlst ihr von deiner Woche.','am Montag &middot; danach &middot; es war sch&ouml;n','telefon'],
+ ['Ein Kind fragt dich, warum es ins Bett muss. Erkl&auml;r es ihm freundlich.','m&uuml;de &middot; morgen &middot; schlafen','bett'],
+ ['Nenne f&uuml;nf W&ouml;rter f&uuml;r Familienmitglieder und erkl&auml;r eines davon.','die Tante &middot; der Cousin &middot; die Gro&szlig;mutter','familie']
 ],
 komplexer: [
- ['Sicherer Job oder Traumjob?','die Sicherheit &middot; sich erf&uuml;llen &middot; ein Risiko eingehen'],
- ['Viel Geld und wenig Zeit &mdash; oder umgekehrt?','sich leisten k&ouml;nnen &middot; die Lebensqualit&auml;t'],
- ['Ehrliche Kritik oder freundliches Schweigen?','die Kritik &middot; verletzen &middot; offen ansprechen'],
- ['Alles planen oder spontan sein?','der Plan &middot; sich treiben lassen &middot; die Vorfreude'],
- ['Allein leben oder in einer WG?','die R&uuml;cksicht &middot; der R&uuml;ckzugsort'],
- ['Immer die Wahrheit sagen oder manchmal schweigen?','die Notl&uuml;ge &middot; jemanden schonen'],
- ['Ein Leben an einem Ort oder alle f&uuml;nf Jahre ein neues Land?','sich einleben &middot; die Wurzeln'],
- ['Lieber zu fr&uuml;h oder zu sp&auml;t kommen?','unh&ouml;flich &middot; warten lassen'],
- ['Fehler machen oder nichts riskieren?','der Fehler &middot; dazulernen &middot; das Risiko'],
- ['Erfolg im Beruf oder viel Zeit mit der Familie?','die Vereinbarkeit &middot; Priorit&auml;ten setzen'],
- ['In der Vergangenheit oder in der Zukunft leben k&ouml;nnen?','neugierig &middot; bereuen'],
- ['Lieber bewundert oder gemocht werden?','die Anerkennung &middot; die Zuneigung']
+ ['Erz&auml;hl von einem Menschen aus deiner Familie, der dich gepr&auml;gt hat.','pr&auml;gen &middot; beibringen &middot; dankbar sein','oma'],
+ ['Wie viel N&auml;he und wie viel Abstand braucht eine Familie deiner Meinung nach?','die N&auml;he &middot; der Abstand &middot; die Grenze','herz'],
+ ['Was w&uuml;rdest du einem jungen Elternpaar raten?','der Rat &middot; Geduld haben &middot; am Anfang','baby'],
+ ['Sollen Kinder fr&uuml;h Verantwortung &uuml;bernehmen, oder sollen sie einfach Kind sein?','die Verantwortung &middot; die Kindheit','kind'],
+ ['Feierst du Feste lieber gro&szlig; oder lieber im kleinen Kreis?','der Kreis &middot; die Einladung &middot; gem&uuml;tlich','fest'],
+ ['Erz&auml;hl von einem Streit in der Familie, der gut ausgegangen ist.','sich streiten &middot; sich vers&ouml;hnen &middot; zuh&ouml;ren','streit'],
+ ['Erz&auml;hl von einer Angewohnheit, die du von deinen Eltern &uuml;bernommen hast.','&uuml;bernehmen &middot; sich abschauen &middot; auffallen','familie'],
+ ['&bdquo;Freunde sind die Familie, die man sich aussucht.&ldquo; Stimmst du zu?','sich aussuchen &middot; sich verlassen auf','freunde'],
+ ['&bdquo;Kinder brauchen klare Regeln.&ldquo; Siehst du das auch so?','die Regel &middot; die Grenze &middot; konsequent','kind'],
+ ['Du musst einem Kind erkl&auml;ren, warum ihr umzieht. Formuliere es kindgerecht.','umziehen &middot; die neue Schule &middot; keine Sorge','haus'],
+ ['Deine Eltern m&ouml;chten etwas, das du anders siehst. F&uuml;hre dieses Gespr&auml;ch.','ich verstehe &middot; mir ist wichtig &middot; der Kompromiss','sprechen'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;erziehen&ldquo; und &bdquo;begleiten&ldquo;.','erziehen &middot; begleiten &middot; die Haltung','kind']
 ],
 schwierig: [
- ['Freiheit oder Sicherheit &mdash; was wiegt schwerer?','abw&auml;gen &middot; einschr&auml;nken &middot; der Preis daf&uuml;r'],
- ['Gleichheit oder Gerechtigkeit?','die Chancengleichheit &middot; bedarfsgerecht'],
- ['Schnelle Entscheidung oder sp&auml;te, gut begr&uuml;ndete?','das Z&ouml;gern &middot; der g&uuml;nstige Zeitpunkt'],
- ['Transparenz um jeden Preis oder gesch&uuml;tzte Privatsph&auml;re?','die Privatsph&auml;re &middot; der Missbrauch'],
- ['Tradition bewahren oder Neues wagen?','bewahren &middot; der Wandel &middot; &uuml;berholt'],
- ['Eigenverantwortung oder staatliche F&uuml;rsorge?','die F&uuml;rsorge &middot; der Anspruch &middot; zumutbar'],
- ['Ein Fachmann entscheidet oder alle stimmen ab?','die Fachkenntnis &middot; die Legitimation'],
- ['Unbequeme Wahrheit oder bequemer Konsens?','der Konsens &middot; unbequem &middot; zumuten'],
- ['K&uuml;nstliche Intelligenz als Werkzeug oder als Gegen&uuml;ber?','das Werkzeug &middot; eine Grenze ziehen'],
- ['Weniger arbeiten oder mehr verdienen?','die Arbeitszeit &middot; der Wohlstand &middot; verzichten'],
- ['Strenge Regeln oder Vertrauen in die Vernunft?','die Vernunft &middot; der Missbrauch &middot; sich bew&auml;hren'],
- ['Heimatverbundenheit oder Weltoffenheit?','die Verbundenheit &middot; sich ausschlie&szlig;en']
+ ['Welche Verantwortung haben erwachsene Kinder f&uuml;r ihre alternden Eltern?','die Pflege &middot; die Pflicht &middot; zumutbar','oma'],
+ ['Wie viel Pr&auml;gung aus der Kindheit l&auml;sst sich sp&auml;ter noch ver&auml;ndern?','die Pr&auml;gung &middot; sich l&ouml;sen von','denken'],
+ ['Was bedeutet Familie in einer Zeit, in der Menschen oft weit voneinander entfernt leben?','die Entfernung &middot; die Verbundenheit','familie'],
+ ['Soll Erziehung vor allem sch&uuml;tzen oder vor allem selbstst&auml;ndig machen?','sch&uuml;tzen &middot; die Selbstst&auml;ndigkeit','waage'],
+ ['Ist Elternschaft heute eine Entscheidung wie jede andere oder etwas grundlegend anderes?','die Entscheidung &middot; die Tragweite','baby'],
+ ['Erz&auml;hl von etwas in deiner Familie, das du erst sp&auml;t verstanden hast.','im Nachhinein &middot; verschweigen &middot; ahnen','denken'],
+ ['Erz&auml;hl von einem Abschied in deiner Familie und davon, was geblieben ist.','der Abschied &middot; schwerfallen &middot; bleiben','herz'],
+ ['&bdquo;Jede Generation h&auml;lt sich f&uuml;r die letzte vern&uuml;nftige.&ldquo; Was meinst du dazu?','die Generation &middot; sich einbilden','denken'],
+ ['&bdquo;Was man in der Kindheit nicht gelernt hat, holt man nie nach.&ldquo; Stimmst du zu?','nachholen &middot; die Pr&auml;gung &middot; dennoch','buch'],
+ ['Du vermittelst zwischen zwei Familienmitgliedern, die nicht mehr miteinander reden.','vermitteln &middot; die Sicht &middot; der Kompromiss','streit'],
+ ['Du &uuml;berbringst einer Familie eine traurige Nachricht. Formuliere die ersten S&auml;tze.','behutsam &middot; bedauern &middot; da sein','herz'],
+ ['Erkl&auml;r &bdquo;Loyalit&auml;t&ldquo; und zieh eine Grenze: Wann wird sie zum Problem?','die Loyalit&auml;t &middot; die Grenze &middot; verschweigen','waage']
 ]},
 
-erzaehl: {
+beruf: {
 einfach: [
- ['Erz&auml;hl von deinem letzten Urlaub.','gefahren &middot; gesehen &middot; es war'],
- ['Erz&auml;hl von deinem ersten Tag in Deutschland.','angekommen &middot; fremd &middot; aufgeregt'],
- ['Erz&auml;hl von einem sch&ouml;nen Fest.','gefeiert &middot; die G&auml;ste &middot; das Essen'],
- ['Erz&auml;hl, wie du Deutsch lernst.','jeden Tag &middot; die App &middot; der Unterricht'],
- ['Erz&auml;hl von einem Tag, an dem alles schiefging.','vergessen &middot; verpassen &middot; leider'],
- ['Erz&auml;hl von deinem Lieblingsort.','ruhig &middot; sch&ouml;n &middot; oft hingehen'],
- ['Erz&auml;hl von einem guten Freund.','kennengelernt &middot; zusammen &middot; lustig'],
- ['Erz&auml;hl, was du letztes Wochenende gemacht hast.','am Samstag &middot; danach &middot; abends'],
- ['Erz&auml;hl von einem Geschenk, &uuml;ber das du dich gefreut hast.','bekommen &middot; sich freuen'],
- ['Erz&auml;hl von deiner Schulzeit.','der Lehrer &middot; das Fach &middot; damals'],
- ['Erz&auml;hl von einem Essen, das du nie vergisst.','geschmeckt &middot; probiert &middot; zum ersten Mal'],
- ['Erz&auml;hl von einem Tier, das du einmal gesehen hast.','gro&szlig; &middot; klein &middot; Angst haben']
+ ['Was ist dein Beruf, oder welchen Beruf m&ouml;chtest du lernen?','arbeiten als &middot; lernen &middot; gern','arbeit'],
+ ['Wie kommst du zur Arbeit? Beschreib deinen Weg.','zu Fu&szlig; &middot; mit dem Bus &middot; dauern','bus'],
+ ['Was gef&auml;llt dir an deiner Arbeit am besten?','gefallen &middot; die Kollegen &middot; die Aufgabe','buero'],
+ ['Arbeitest du lieber allein oder lieber im Team?','allein &middot; zusammen &middot; das Team','team'],
+ ['M&ouml;chtest du lieber morgens oder lieber abends arbeiten?','fr&uuml;h &middot; sp&auml;t &middot; m&uuml;de','uhrzeit'],
+ ['Erz&auml;hl von deinem ersten Arbeitstag.','der erste Tag &middot; aufgeregt &middot; neu','buero'],
+ ['Erz&auml;hl von einem Kollegen, mit dem du gern zusammenarbeitest.','nett &middot; helfen &middot; zusammen','team'],
+ ['&bdquo;Arbeit soll Spa&szlig; machen.&ldquo; Stimmst du zu? Sag, warum.','Spa&szlig; machen &middot; das Geld &middot; wichtig','arbeit'],
+ ['&bdquo;Am Freitag arbeitet niemand mehr richtig.&ldquo; Siehst du das auch so?','der Freitag &middot; der Feierabend &middot; m&uuml;de','kalender'],
+ ['Du bittest einen Kollegen um Hilfe bei einer Aufgabe.','k&ouml;nntest du &middot; kurz &middot; vielen Dank','team'],
+ ['Du rufst in der Firma an und sagst, dass du heute krank bist.','krank &middot; leider &middot; der Arzt','telefon'],
+ ['Nenne f&uuml;nf Berufe und beschreib einen davon, ohne ihn zu nennen.','der B&auml;cker &middot; die &Auml;rztin &middot; arbeiten mit','arbeit']
 ],
 komplexer: [
- ['Erz&auml;hl von einem Moment, in dem du stolz auf dich warst.','stolz sein auf &middot; geschafft'],
- ['Erz&auml;hl von einer Reise, die anders lief als geplant.','schiefgehen &middot; umplanen &middot; zum Gl&uuml;ck'],
- ['Erz&auml;hl von einer Begegnung, die dich &uuml;berrascht hat.','die Begegnung &middot; ausgerechnet'],
- ['Erz&auml;hl von etwas, das du lange aufgeschoben hast.','aufschieben &middot; sich &uuml;berwinden'],
- ['Erz&auml;hl von einem Streit, der gut ausgegangen ist.','sich streiten &middot; sich vers&ouml;hnen'],
- ['Erz&auml;hl von einem Tag, der dein Leben ver&auml;ndert hat.','der Wendepunkt &middot; seitdem'],
- ['Erz&auml;hl von etwas, das du dir m&uuml;hsam erarbeitet hast.','sich erarbeiten &middot; dranbleiben'],
- ['Erz&auml;hl von einem Missverst&auml;ndnis auf Deutsch.','verwechseln &middot; peinlich &middot; das Missverst&auml;ndnis'],
- ['Erz&auml;hl von einem Abschied.','der Abschied &middot; schwerfallen &middot; in Kontakt bleiben'],
- ['Erz&auml;hl von einem Rat, den du befolgt hast &mdash; oder eben nicht.','befolgen &middot; im Nachhinein'],
- ['Erz&auml;hl von einem Ort, an den du zur&uuml;ckkehren m&ouml;chtest.','zur&uuml;ckkehren &middot; wie damals'],
- ['Erz&auml;hl von einer Angewohnheit, die du von jemandem &uuml;bernommen hast.','&uuml;bernehmen &middot; sich abschauen']
+ ['Was macht f&uuml;r dich eine gute Chefin oder einen guten Chef aus?','f&uuml;hren &middot; zuh&ouml;ren &middot; sich durchsetzen','chef'],
+ ['Wie trennst du Arbeit und Freizeit voneinander?','abschalten &middot; der Feierabend &middot; erreichbar','uhrzeit'],
+ ['Was w&uuml;rdest du an deinem Arbeitsplatz &auml;ndern, wenn du k&ouml;nntest?','&auml;ndern &middot; verbessern &middot; der Ablauf','buero'],
+ ['Nimmst du lieber einen sicheren Job oder deinen Traumjob?','die Sicherheit &middot; sich erf&uuml;llen &middot; das Risiko','waage'],
+ ['Was ist dir wichtiger: Erfolg im Beruf oder viel Zeit mit der Familie?','die Vereinbarkeit &middot; Priorit&auml;ten setzen','waage'],
+ ['Erz&auml;hl von einer Aufgabe, die du dir nicht zugetraut hast und doch geschafft hast.','sich zutrauen &middot; schaffen &middot; stolz','stern'],
+ ['Erz&auml;hl von einem Vorstellungsgespr&auml;ch, das dir in Erinnerung geblieben ist.','sich bewerben &middot; die Frage &middot; nerv&ouml;s','bewerbung'],
+ ['&bdquo;Homeoffice schadet dem Zusammenhalt im Team.&ldquo; Stimmst du zu?','der Zusammenhalt &middot; der Austausch','laptop'],
+ ['&bdquo;Gute Chefs m&uuml;ssen nicht beliebt sein.&ldquo; Was meinst du dazu?','beliebt &middot; die F&uuml;hrung &middot; respektieren','chef'],
+ ['Du bittest deinen Chef um einen freien Tag. F&uuml;hre dieses Gespr&auml;ch.','dringend &middot; vertreten &middot; die Bitte','chef'],
+ ['Du erkl&auml;rst einem neuen Kollegen, wie eine Aufgabe abl&auml;uft.','zuerst &middot; achte darauf &middot; anschlie&szlig;end','laptop'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;Termin&ldquo; und &bdquo;Verabredung&ldquo;.','offiziell &middot; privat &middot; vereinbaren','kalender']
 ],
 schwierig: [
- ['Erz&auml;hl von einer Situation, in der du deine Meinung ge&auml;ndert hast.','umdenken &middot; die Einsicht'],
- ['Erz&auml;hl von einem Konflikt zwischen Pflicht und Wunsch.','die Pflicht &middot; hin- und hergerissen'],
- ['Erz&auml;hl von einem Erfolg, der sich sp&auml;ter als Umweg erwies.','der Umweg &middot; sich herausstellen'],
- ['Erz&auml;hl von einer Regel, die du bewusst gebrochen hast.','bewusst &middot; die Konsequenz tragen'],
- ['Erz&auml;hl von einem kulturellen Unterschied, der dich irritiert hat.','irritieren &middot; nachvollziehen'],
- ['Erz&auml;hl von einem Versprechen, das schwer zu halten war.','das Versprechen &middot; einhalten'],
- ['Erz&auml;hl von einem Augenblick v&ouml;lliger Ruhe.','der Augenblick &middot; zur Ruhe kommen'],
- ['Erz&auml;hl von einer Erwartung, die entt&auml;uscht wurde &mdash; und was daraus wurde.','die Erwartung &middot; entt&auml;uschen'],
- ['Erz&auml;hl von einem Menschen, dessen Haltung du bewunderst.','die Haltung &middot; bewundern &middot; aufrecht'],
- ['Erz&auml;hl von einer Entscheidung, die niemand verstanden hat.','auf Unverst&auml;ndnis sto&szlig;en'],
- ['Erz&auml;hl von etwas, das du erst mit Abstand verstanden hast.','mit Abstand &middot; im R&uuml;ckblick'],
- ['Erz&auml;hl von einem Risiko, das sich gelohnt hat.','ein Risiko eingehen &middot; sich auszahlen']
+ ['Sollte Arbeit Sinn stiften, oder reicht es, wenn sie Geld bringt?','Sinn stiften &middot; der Anspruch &middot; der Luxus','denken'],
+ ['Wie ver&auml;ndert k&uuml;nstliche Intelligenz deinen Beruf in den n&auml;chsten zehn Jahren?','ersetzen &middot; das Werkzeug &middot; die Qualifikation','computer'],
+ ['Was schulden Unternehmen ihren Mitarbeitern &uuml;ber den Lohn hinaus?','die F&uuml;rsorge &middot; die Verpflichtung','buero'],
+ ['W&uuml;rdest du lieber weniger arbeiten oder mehr verdienen?','die Arbeitszeit &middot; der Wohlstand &middot; verzichten','geld'],
+ ['Soll bei einer Bef&ouml;rderung die Leistung oder die Erfahrung den Ausschlag geben?','die Leistung &middot; die Erfahrung &middot; den Ausschlag geben','waage'],
+ ['Erz&auml;hl von einem beruflichen Erfolg, der sich sp&auml;ter als Umweg erwiesen hat.','der Umweg &middot; sich herausstellen','zeit'],
+ ['Erz&auml;hl von einem Konflikt am Arbeitsplatz und davon, wie er ausgegangen ist.','der Konflikt &middot; eskalieren &middot; beilegen','streit'],
+ ['&bdquo;Wer sich nicht st&auml;ndig weiterbildet, f&auml;llt zur&uuml;ck.&ldquo; Stimmst du zu?','sich weiterbilden &middot; der Druck &middot; zur&uuml;ckfallen','buch'],
+ ['&bdquo;Eine Vier-Tage-Woche w&uuml;rde allen guttun.&ldquo; Was meinst du dazu?','die Produktivit&auml;t &middot; die Erholung','kalender'],
+ ['Du widersprichst h&ouml;flich einem Vorgesetzten in einer Sachfrage.','zu bedenken geben &middot; aus meiner Sicht','chef'],
+ ['Du erkl&auml;rst einem Kunden einen Fehler deiner Firma und bietest eine L&ouml;sung an.','einr&auml;umen &middot; bedauern &middot; die L&ouml;sung','telefon'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;Ursache&ldquo; und &bdquo;Anlass&ldquo; an einem Beispiel aus dem Beruf.','zugrunde liegen &middot; ausl&ouml;sen','denken']
 ]},
 
-meinung: {
+wohnen: {
 einfach: [
- ['&bdquo;Fernsehen ist Zeitverschwendung.&ldquo;','ich finde &middot; das stimmt nicht &middot; manchmal'],
- ['&bdquo;Geld macht gl&uuml;cklich.&ldquo;','gl&uuml;cklich &middot; brauchen &middot; wichtig'],
- ['&bdquo;Kinder sollen fr&uuml;h Fremdsprachen lernen.&ldquo;','leicht &middot; das Kind &middot; besser'],
- ['&bdquo;Hausarbeit soll man teilen.&ldquo;','putzen &middot; kochen &middot; gerecht'],
- ['&bdquo;Handys geh&ouml;ren nicht an den Esstisch.&ldquo;','st&ouml;ren &middot; zusammen essen'],
- ['&bdquo;Jeder sollte kochen k&ouml;nnen.&ldquo;','selbst kochen &middot; gesund &middot; sparen'],
- ['&bdquo;Sport ist wichtiger als Di&auml;t.&ldquo;','sich bewegen &middot; gesund bleiben'],
- ['&bdquo;In der Stadt braucht man kein Auto.&ldquo;','der Bus &middot; die Bahn &middot; parken'],
- ['&bdquo;Freunde sind wichtiger als Familie.&ldquo;','sich verlassen auf &middot; die Familie'],
- ['&bdquo;Im Urlaub soll man nichts planen.&ldquo;','planen &middot; spontan &middot; entspannt'],
- ['&bdquo;Man soll jeden Tag etwas Neues lernen.&ldquo;','jeden Tag &middot; neugierig'],
- ['&bdquo;Hunde machen Menschen gl&uuml;cklicher.&ldquo;','der Hund &middot; spazieren gehen']
+ ['Beschreib deine Wohnung. Was ist dein Lieblingsplatz darin?','das Zimmer &middot; hell &middot; gem&uuml;tlich','haus'],
+ ['Wie sind deine Nachbarn? Erz&auml;hl von einem.','nett &middot; ruhig &middot; nebenan','nachbarn'],
+ ['Welche Hausarbeit machst du am liebsten, welche gar nicht gern?','putzen &middot; aufr&auml;umen &middot; die W&auml;sche','putzen'],
+ ['M&ouml;chtest du lieber in der Stadt oder auf dem Dorf wohnen?','laut &middot; ruhig &middot; die Nachbarn','stadt'],
+ ['Wohnst du lieber in einem Haus oder in einer Wohnung?','der Garten &middot; der Balkon &middot; die Treppe','dorf'],
+ ['Erz&auml;hl von deinem letzten Umzug.','umziehen &middot; die Kisten &middot; anstrengend','koffer'],
+ ['Erz&auml;hl von einem Ort, an dem du gern gewohnt hast.','damals &middot; sch&ouml;n &middot; vermissen','dorf'],
+ ['&bdquo;Man muss seine Nachbarn nicht kennen.&ldquo; Stimmst du zu?','gr&uuml;&szlig;en &middot; die Nachbarn &middot; privat','nachbarn'],
+ ['&bdquo;Eine Wohnung muss immer aufger&auml;umt sein.&ldquo; Siehst du das auch so?','aufger&auml;umt &middot; das Chaos &middot; sich wohlf&uuml;hlen','sofa'],
+ ['Du stellst dich bei neuen Nachbarn vor.','ich wohne &middot; nebenan &middot; sich freuen','tuer'],
+ ['Deine Heizung ist kaputt. Ruf den Vermieter an.','kaputt &middot; seit gestern &middot; reparieren','werkzeug'],
+ ['Nenne f&uuml;nf M&ouml;belst&uuml;cke und beschreib eines, ohne es zu nennen.','der Schrank &middot; das Regal &middot; der Sessel','sofa']
 ],
 komplexer: [
- ['&bdquo;Heimweh vergeht mit der Zeit.&ldquo;','das Heimweh &middot; vergehen &middot; sich gew&ouml;hnen an'],
- ['&bdquo;Wer eine Sprache lernt, bekommt eine zweite Pers&ouml;nlichkeit.&ldquo;','die Pers&ouml;nlichkeit &middot; sich anders f&uuml;hlen'],
- ['&bdquo;Homeoffice schadet dem Zusammenhalt im Team.&ldquo;','der Zusammenhalt &middot; der Austausch'],
- ['&bdquo;Kritik geh&ouml;rt immer unter vier Augen.&ldquo;','unter vier Augen &middot; blo&szlig;stellen'],
- ['&bdquo;Wer nichts riskiert, verpasst das Leben.&ldquo;','riskieren &middot; verpassen &middot; die Chance'],
- ['&bdquo;Soziale Netzwerke machen einsam.&ldquo;','einsam &middot; der Vergleich &middot; oberfl&auml;chlich'],
- ['&bdquo;Man muss nicht jede Meinung respektieren.&ldquo;','respektieren &middot; die Grenze &middot; tolerant'],
- ['&bdquo;Reisen bildet mehr als Lesen.&ldquo;','bilden &middot; die Erfahrung &middot; der Horizont'],
- ['&bdquo;H&ouml;flichkeit ist in Deutschland anders als bei uns.&ldquo;','direkt &middot; die H&ouml;flichkeit &middot; auffallen'],
- ['&bdquo;P&uuml;nktlichkeit wird &uuml;bersch&auml;tzt.&ldquo;','&uuml;bersch&auml;tzen &middot; der Respekt &middot; die Verabredung'],
- ['&bdquo;Niemand lernt eine Sprache ohne Fehler.&ldquo;','der Fehler &middot; sich trauen &middot; der Mut'],
- ['&bdquo;Gute Chefs m&uuml;ssen nicht beliebt sein.&ldquo;','beliebt &middot; die F&uuml;hrung &middot; sich durchsetzen']
+ ['Was macht f&uuml;r dich ein Zuhause aus &mdash; mehr als vier W&auml;nde?','sich heimisch f&uuml;hlen &middot; die Wurzeln','haus'],
+ ['Wie wichtig ist dir eine gute Nachbarschaft?','die Nachbarschaft &middot; die R&uuml;cksicht &middot; der Zusammenhalt','nachbarn'],
+ ['Was w&uuml;rdest du jemandem raten, der in Deutschland eine Wohnung sucht?','die Kaution &middot; besichtigen &middot; der Vertrag','vertrag'],
+ ['W&uuml;rdest du lieber allein wohnen oder in einer WG?','die R&uuml;cksicht &middot; der R&uuml;ckzugsort','haus'],
+ ['Lieber eine kleine Wohnung im Zentrum oder eine gro&szlig;e am Stadtrand?','der Stadtrand &middot; die Miete &middot; pendeln','stadt'],
+ ['Erz&auml;hl von einer Wohnung, in der du dich nie wohlgef&uuml;hlt hast.','sich wohlf&uuml;hlen &middot; der Grund &middot; ausziehen','haus'],
+ ['Erz&auml;hl von einem Nachbarn, der dir einmal sehr geholfen hat.','helfen &middot; sich k&uuml;mmern &middot; dankbar','nachbarn'],
+ ['&bdquo;Miete zahlen ist rausgeworfenes Geld.&ldquo; Stimmst du zu?','die Miete &middot; das Eigentum &middot; sich binden','geld'],
+ ['&bdquo;Wer laut feiert, muss auf seine Nachbarn R&uuml;cksicht nehmen.&ldquo; Was meinst du?','die Ruhezeit &middot; R&uuml;cksicht nehmen','fest'],
+ ['Du beschwerst dich beim Nachbarn &uuml;ber L&auml;rm &mdash; freundlich, aber deutlich.','der L&auml;rm &middot; die Ruhezeit &middot; st&ouml;ren','tuer'],
+ ['Dein Vermieter erh&ouml;ht die Miete. F&uuml;hre das Telefonat mit ihm.','die Mieterh&ouml;hung &middot; begr&uuml;nden &middot; nicht einverstanden','vertrag'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;Miete&ldquo; und &bdquo;Nebenkosten&ldquo;.','enthalten &middot; zus&auml;tzlich &middot; die Abrechnung','vertrag']
 ],
 schwierig: [
- ['&bdquo;Wer schweigt, stimmt zu.&ldquo;','das Schweigen &middot; die Zustimmung'],
- ['&bdquo;Technik l&ouml;st keine gesellschaftlichen Probleme.&ldquo;','die Ursache &middot; l&ouml;sen &middot; das Symptom'],
- ['&bdquo;Bildung ist der wirksamste Hebel gegen Ungleichheit.&ldquo;','der Hebel &middot; die Ungleichheit'],
- ['&bdquo;Ein Mensch ist mehr als die Summe seiner Leistungen.&ldquo;','sich definieren &uuml;ber &middot; der Wert'],
- ['&bdquo;Jede Generation h&auml;lt sich f&uuml;r die letzte vern&uuml;nftige.&ldquo;','die Generation &middot; sich einbilden'],
- ['&bdquo;Meinungsfreiheit braucht Grenzen.&ldquo;','eine Grenze ziehen &middot; der Schutz &middot; missbrauchen'],
- ['&bdquo;Wohlstand macht tr&auml;ge.&ldquo;','der Wohlstand &middot; tr&auml;ge &middot; der Antrieb'],
- ['&bdquo;Erinnerung ist immer auch Erfindung.&ldquo;','die Erinnerung &middot; verkl&auml;ren'],
- ['&bdquo;Wer alles versteht, verzeiht zu schnell.&ldquo;','verzeihen &middot; nachvollziehen &middot; die Konsequenz'],
- ['&bdquo;Globalisierung kostet mehr, als sie bringt.&ldquo;','abw&auml;gen &middot; der Preis &middot; der Nutzen'],
- ['&bdquo;Ohne Verzicht kein Klimaschutz.&ldquo;','der Verzicht &middot; zumutbar &middot; der Wandel'],
- ['&bdquo;Arbeit soll Sinn stiften, nicht nur Geld bringen.&ldquo;','Sinn stiften &middot; der Anspruch']
+ ['Wem geh&ouml;rt die Stadt &mdash; denen, die dort wohnen, oder denen, die dort investieren?','die Spekulation &middot; verdr&auml;ngen &middot; das Viertel','stadt'],
+ ['Wie viel Anonymit&auml;t braucht ein Mensch in seiner Nachbarschaft?','die Anonymit&auml;t &middot; die N&auml;he &middot; die Grenze','nachbarn'],
+ ['Sollte Wohnraum st&auml;rker reguliert werden?','die Mietpreisbremse &middot; eingreifen &middot; der Markt','amt'],
+ ['Soll man ein gewachsenes Viertel bewahren oder neu und dichter bauen?','bewahren &middot; verdichten &middot; der Wandel','stadt'],
+ ['Lieber hohe Miete und kurze Wege oder niedrige Miete und langes Pendeln?','pendeln &middot; die Lebenszeit &middot; abw&auml;gen','waage'],
+ ['Erz&auml;hl von einem Ort, der sich stark ver&auml;ndert hat, seit du ihn kennst.','sich ver&auml;ndern &middot; wiedererkennen','stadt'],
+ ['Erz&auml;hl von einem Umzug, der mehr war als nur ein Wohnungswechsel.','der Wendepunkt &middot; zur&uuml;cklassen','koffer'],
+ ['&bdquo;Eigentum verpflichtet.&ldquo; Was bedeutet dieser Satz f&uuml;r dich?','das Eigentum &middot; verpflichten &middot; die Allgemeinheit','haus'],
+ ['&bdquo;Gute Nachbarschaft l&auml;sst sich nicht organisieren.&ldquo; Stimmst du zu?','entstehen &middot; von selbst &middot; der Anlass','nachbarn'],
+ ['Du vertrittst in einer Hausversammlung einen unpopul&auml;ren Vorschlag.','der Vorschlag &middot; nachvollziehbar &middot; die Mehrheit','team'],
+ ['Du verhandelst mit einem Vermieter &uuml;ber die Bedingungen des Vertrags.','verhandeln &middot; die Bedingung &middot; das Zugest&auml;ndnis','vertrag'],
+ ['Erkl&auml;r &bdquo;Gentrifizierung&ldquo;, ohne die W&ouml;rter &bdquo;teuer&ldquo; und &bdquo;Mieter&ldquo; zu benutzen.','das Viertel &middot; sich wandeln &middot; verdr&auml;ngen','stadt']
 ]},
 
-situation: {
+essen: {
 einfach: [
- ['Du bist beim B&auml;cker. Bestell drei Dinge.','ich h&auml;tte gern &middot; ein St&uuml;ck &middot; bitte'],
- ['Du bist beim Arzt. Sag, was dir weh tut.','der Hals &middot; seit gestern &middot; Schmerzen haben'],
- ['Frag nach dem Weg zum Bahnhof.','geradeaus &middot; links &middot; wie weit'],
- ['Ruf an und sag einen Termin ab.','absagen &middot; leider &middot; ein anderer Termin'],
- ['Dein Paket ist nicht angekommen. Frag nach.','das Paket &middot; bestellt &middot; noch nicht'],
- ['Du kaufst ein Geschenk. Lass dich beraten.','empfehlen &middot; f&uuml;r meine Mutter &middot; ungef&auml;hr'],
- ['Im Restaurant: Das Essen ist kalt.','kalt &middot; zur&uuml;ckgeben &middot; entschuldigen'],
- ['Stell dich neuen Nachbarn vor.','ich wohne &middot; nebenan &middot; sich freuen'],
- ['Bitte einen Kollegen um Hilfe.','k&ouml;nntest du &middot; kurz &middot; danke'],
- ['Lad jemanden zum Essen ein.','einladen &middot; am Samstag &middot; Lust haben'],
- ['Gib eine Jacke im Gesch&auml;ft zur&uuml;ck.','umtauschen &middot; der Kassenbon &middot; zu klein'],
- ['Erkl&auml;r am Telefon, wo du wohnst.','in der N&auml;he von &middot; die dritte Stra&szlig;e']
+ ['Was isst du am liebsten? Erz&auml;hl auch, wer es kocht.','schmecken &middot; die Zutaten &middot; selbst kochen','kochen'],
+ ['Wo kaufst du normalerweise ein, und was kaufst du oft?','der Supermarkt &middot; das Brot &middot; die Milch','einkauf'],
+ ['Was isst du zum Fr&uuml;hst&uuml;ck?','das Br&ouml;tchen &middot; der Kaffee &middot; morgens','brot'],
+ ['Kochst du lieber selbst, oder gehst du lieber essen?','das Restaurant &middot; bequem &middot; sparen','restaurant'],
+ ['Trinkst du lieber Kaffee oder lieber Tee? Sag auch, warum.','lieber &middot; weil &middot; am Morgen','kaffee'],
+ ['Erz&auml;hl von einem Essen, das du nie vergisst.','probiert &middot; geschmeckt &middot; zum ersten Mal','restaurant'],
+ ['Erz&auml;hl, wie du zum ersten Mal in Deutschland eingekauft hast.','der Einkaufswagen &middot; die Kasse &middot; fremd','einkauf'],
+ ['&bdquo;Jeder sollte kochen k&ouml;nnen.&ldquo; Stimmst du zu?','selbst kochen &middot; gesund &middot; sparen','kochen'],
+ ['&bdquo;Gutes Essen muss nicht teuer sein.&ldquo; Siehst du das auch so?','g&uuml;nstig &middot; frisch &middot; die Zutaten','apfel'],
+ ['Du bist beim B&auml;cker und bestellst drei Dinge.','ich h&auml;tte gern &middot; ein St&uuml;ck &middot; bitte','brot'],
+ ['Im Restaurant ist dein Essen kalt. Sag es der Bedienung.','kalt &middot; zur&uuml;ckgeben &middot; entschuldigen','restaurant'],
+ ['Nenne f&uuml;nf Lebensmittel und beschreib eines, ohne es zu nennen.','s&uuml;&szlig; &middot; rot &middot; wachsen','apfel']
 ],
 komplexer: [
- ['Bitte deinen Chef um einen freien Tag.','dringend &middot; vertreten &middot; die Bitte'],
- ['Dein Vermieter erh&ouml;ht die Miete. Reagiere.','die Mieterh&ouml;hung &middot; begr&uuml;nden &middot; nicht einverstanden'],
- ['Ein Freund hat dich entt&auml;uscht. Sprich es an.','ansprechen &middot; verletzt &middot; mir ist aufgefallen'],
- ['Reklamiere ein kaputtes Ger&auml;t.','die Reklamation &middot; die Garantie &middot; der Mangel'],
- ['Vorstellungsgespr&auml;ch: Stell dich vor.','die Erfahrung &middot; die St&auml;rke &middot; sich bewerben'],
- ['&Uuml;berzeug jemanden, mit dir Sport zu machen.','&uuml;berzeugen &middot; gemeinsam &middot; die Ausrede'],
- ['Sag h&ouml;flich Nein zu einer Einladung.','es passt leider nicht &middot; ein andermal'],
- ['Erkl&auml;r einem Kollegen, wie er etwas machen soll.','zuerst &middot; achte darauf &middot; anschlie&szlig;end'],
- ['Beschwer dich beim Nachbarn &uuml;ber L&auml;rm.','der L&auml;rm &middot; R&uuml;cksicht nehmen &middot; die Ruhezeit'],
- ['Berate jemanden bei der Wohnungssuche.','die Kaution &middot; besichtigen &middot; der Vertrag'],
- ['Bitte um eine Gehaltserh&ouml;hung.','die Gehaltserh&ouml;hung &middot; die Leistung &middot; das Argument'],
- ['Vermittle in einem Streit zwischen zwei Freunden.','vermitteln &middot; die Sicht &middot; der Kompromiss']
+ ['Wie hat sich dein Essen ver&auml;ndert, seit du in einem anderen Land lebst?','sich ver&auml;ndern &middot; vermissen &middot; die Zutat','kochen'],
+ ['Welche Rolle spielt gemeinsames Essen in deinem Leben?','zusammen essen &middot; der Tisch &middot; die Zeit','restaurant'],
+ ['Achtest du beim Einkaufen auf Herkunft und Preis? Erz&auml;hl davon.','die Herkunft &middot; regional &middot; der Preis','einkauf'],
+ ['Kaufst du lieber im kleinen Laden oder im gro&szlig;en Supermarkt?','die Auswahl &middot; die Beratung &middot; der Preis','einkauf'],
+ ['Kochst du lieber jeden Tag frisch oder einmal f&uuml;r die ganze Woche?','vorkochen &middot; frisch &middot; die Zeit','kochen'],
+ ['Erz&auml;hl von einem Gericht aus deiner Heimat und erkl&auml;r, wie man es macht.','zuerst &middot; danach &middot; die Zutat','kochen'],
+ ['Erz&auml;hl von einem Essen, das dich &uuml;berrascht hat &mdash; im Guten oder im Schlechten.','&uuml;berrascht &middot; ungew&ouml;hnlich &middot; der Geschmack','restaurant'],
+ ['&bdquo;Was jemand isst, ist seine Privatsache.&ldquo; Stimmst du zu?','der Verzicht &middot; die Umwelt &middot; die Entscheidung','salat'],
+ ['&bdquo;Essen gehen ist zum Luxus geworden.&ldquo; Was meinst du dazu?','der Luxus &middot; der Preis &middot; sich leisten','geld'],
+ ['Du reklamierst eine Ware, die schon schlecht geworden ist.','die Reklamation &middot; das Haltbarkeitsdatum &middot; umtauschen','kasse'],
+ ['Du l&auml;dst jemanden zum Essen ein und erkl&auml;rst, was es geben wird.','einladen &middot; es gibt &middot; magst du','geschenk'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;satt&ldquo; und &bdquo;voll&ldquo;.','satt &middot; der Magen &middot; genug','restaurant']
 ],
 schwierig: [
- ['Erkl&auml;r einem Bewerber eine Absage.','die Absage &middot; begr&uuml;nden &middot; wertsch&auml;tzend'],
- ['Verhandle die Bedingungen eines Vertrags.','verhandeln &middot; die Bedingung &middot; das Zugest&auml;ndnis'],
- ['Widersprich h&ouml;flich einem Vorgesetzten.','widersprechen &middot; zu bedenken geben'],
- ['Halt eine kurze Rede zum Abschied einer Kollegin.','w&uuml;rdigen &middot; im Namen aller'],
- ['Erkl&auml;r dem Team eine unpopul&auml;re Entscheidung.','nachvollziehbar &middot; die Konsequenz'],
- ['&Uuml;berbring eine schlechte Nachricht einf&uuml;hlsam.','einf&uuml;hlsam &middot; behutsam &middot; bedauern'],
- ['Moderiere eine Diskussion mit zwei Gegenpositionen.','das Wort erteilen &middot; zusammenfassen'],
- ['Reklamiere dieselbe Sache schriftlich und m&uuml;ndlich.','der Ton &middot; sachlich &middot; der Unterschied'],
- ['Lehn einen Auftrag ab, ohne den Kunden zu verlieren.','ablehnen &middot; die Kapazit&auml;t &middot; alternativ'],
- ['Bitte um eine zweite Chance.','einsehen &middot; zusichern &middot; die Chance'],
- ['Erkl&auml;r einem Kunden einen Fehler deiner Firma.','einr&auml;umen &middot; eine L&ouml;sung anbieten'],
- ['Halt ein Pl&auml;doyer f&uuml;r ein Projekt, an das niemand glaubt.','das Pl&auml;doyer &middot; der Nutzen &middot; &uuml;berzeugen']
+ ['Wie viel Verantwortung tr&auml;gt der Einzelne f&uuml;r die Folgen seines Konsums?','der Konsum &middot; die Folgen &middot; die Verantwortung','einkauf'],
+ ['Ist Essen heute mehr Identit&auml;t als Nahrung?','die Identit&auml;t &middot; sich definieren &uuml;ber','restaurant'],
+ ['Sollten ungesunde Lebensmittel h&ouml;her besteuert werden?','die Steuer &middot; lenken &middot; die Bevormundung','amt'],
+ ['Regionale Produkte oder g&uuml;nstige Preise &mdash; was wiegt f&uuml;r dich schwerer?','regional &middot; der Preis &middot; abw&auml;gen','waage'],
+ ['Lieber strenge Vorschriften f&uuml;r Hersteller oder m&uuml;ndige Verbraucher?','die Vorschrift &middot; m&uuml;ndig &middot; die Eigenverantwortung','waage'],
+ ['Erz&auml;hl von einem Essen, das f&uuml;r dich mit einer Erinnerung verbunden ist.','verbunden sein mit &middot; die Erinnerung','herz'],
+ ['Erz&auml;hl, wie sich die Esskultur in deinem Land ver&auml;ndert hat.','die Esskultur &middot; sich wandeln &middot; fr&uuml;her','kochen'],
+ ['&bdquo;Lebensmittel wegzuwerfen ist unmoralisch.&ldquo; Stimmst du zu?','wegwerfen &middot; die Verschwendung &middot; unmoralisch','muell'],
+ ['&bdquo;Wer gut isst, lebt l&auml;nger.&ldquo; Wie belastbar ist dieser Satz?','belastbar &middot; der Zusammenhang &middot; die Studie','salat'],
+ ['Du erkl&auml;rst einem Gast, warum ihr auf etwas verzichtet, ohne ihn zu belehren.','verzichten &middot; belehren &middot; die Entscheidung','sprechen'],
+ ['Du verhandelst als Gastwirt mit einem Lieferanten &uuml;ber die Preise.','verhandeln &middot; die Marge &middot; das Zugest&auml;ndnis','vertrag'],
+ ['Erkl&auml;r &bdquo;Nachhaltigkeit&ldquo; am Beispiel eines Einkaufs, ohne das Wort &bdquo;Umwelt&ldquo;.','die Ressource &middot; schonen &middot; der Kreislauf','einkauf']
 ]},
 
-spiel: {
+unterwegs: {
 einfach: [
- ['Nenne f&uuml;nf Dinge in deiner K&uuml;che.','der Topf &middot; der L&ouml;ffel &middot; der K&uuml;hlschrank'],
- ['Beschreib das Wort, ohne es zu sagen: <b>der Regenschirm</b>.','der Regen &middot; halten &middot; nass'],
- ['Nenne f&uuml;nf Berufe.','der Arzt &middot; die Lehrerin &middot; der B&auml;cker'],
- ['Tabu: Erkl&auml;r <b>Bahnhof</b> ohne &bdquo;Zug&ldquo; und &bdquo;fahren&ldquo;.','ankommen &middot; das Gleis &middot; warten'],
- ['Nenne f&uuml;nf W&ouml;rter zum Thema Wetter.','die Sonne &middot; der Wind &middot; der Schnee'],
- ['Beschreib dein Lieblingskleidungsst&uuml;ck.','die Farbe &middot; bequem &middot; tragen'],
- ['Nenne f&uuml;nf Lebensmittel, die du oft kaufst.','das Brot &middot; die Milch &middot; der Apfel'],
- ['Tabu: Erkl&auml;r <b>Urlaub</b> ohne &bdquo;Reise&ldquo; und &bdquo;frei&ldquo;.','der Koffer &middot; das Meer &middot; sich erholen'],
- ['Nenne f&uuml;nf K&ouml;rperteile.','der Kopf &middot; die Hand &middot; das Bein'],
- ['Beschreib einen Raum in deiner Wohnung.','das Fenster &middot; der Tisch &middot; hell'],
- ['Nenne f&uuml;nf Verben, die man morgens macht.','aufstehen &middot; duschen &middot; fr&uuml;hst&uuml;cken'],
- ['Tabu: Erkl&auml;r <b>Nachbar</b> ohne &bdquo;wohnen&ldquo; und &bdquo;Haus&ldquo;.','nebenan &middot; gr&uuml;&szlig;en &middot; die T&uuml;r']
+ ['Wie kommst du jeden Tag von zu Hause zur Arbeit oder zum Unterricht?','der Bus &middot; zu Fu&szlig; &middot; dauern','bus'],
+ ['Wohin m&ouml;chtest du einmal reisen, und warum?','das Meer &middot; die Berge &middot; besuchen','karte'],
+ ['Was nimmst du immer in den Urlaub mit?','der Koffer &middot; einpacken &middot; wichtig','koffer'],
+ ['F&auml;hrst du im Urlaub lieber in die Berge oder ans Meer?','wandern &middot; schwimmen &middot; die Aussicht','berg'],
+ ['Reist du lieber mit dem Zug oder mit dem Flugzeug?','der Zug &middot; das Flugzeug &middot; schneller','zug'],
+ ['Erz&auml;hl von deinem letzten Urlaub.','gefahren &middot; gesehen &middot; es war','urlaub'],
+ ['Erz&auml;hl von deiner ersten Reise ganz allein.','allein &middot; aufgeregt &middot; zum ersten Mal','koffer'],
+ ['&bdquo;Im Urlaub soll man gar nichts planen.&ldquo; Stimmst du zu?','planen &middot; spontan &middot; entspannt','karte'],
+ ['&bdquo;In der Stadt braucht man kein Auto.&ldquo; Siehst du das auch so?','der Bus &middot; parken &middot; die Bahn','auto'],
+ ['Du fragst auf der Stra&szlig;e nach dem Weg zum Bahnhof.','geradeaus &middot; links &middot; wie weit','karte'],
+ ['Du kaufst am Schalter eine Fahrkarte und fragst nach der Verbindung.','die Fahrkarte &middot; umsteigen &middot; die Verbindung','zug'],
+ ['Nenne f&uuml;nf Dinge, die in einen Koffer geh&ouml;ren, und beschreib eines.','die Zahnb&uuml;rste &middot; die Jacke &middot; der Pass','koffer']
 ],
 komplexer: [
- ['Erkl&auml;r den Unterschied: <b>Miete</b> und <b>Nebenkosten</b>.','enthalten &middot; zus&auml;tzlich &middot; der Unterschied'],
- ['Nenne f&uuml;nf W&ouml;rter, die es nur in deiner Sprache gibt.','schwer zu &uuml;bersetzen &middot; bedeuten'],
- ['Tabu: Erkl&auml;r <b>Bewerbung</b> ohne &bdquo;Job&ldquo; und &bdquo;schreiben&ldquo;.','die Stelle &middot; die Unterlagen &middot; sich vorstellen'],
- ['Erkl&auml;r <b>Feierabend</b> einem Anf&auml;nger.','aufh&ouml;ren &middot; die Freizeit &middot; der Feierabend'],
- ['Nenne f&uuml;nf Redewendungen mit K&ouml;rperteilen.','die Nase voll haben &middot; Hand und Fu&szlig;'],
- ['Erkl&auml;r den Unterschied: <b>Termin</b> und <b>Verabredung</b>.','offiziell &middot; privat &middot; vereinbaren'],
- ['Tabu: Erkl&auml;r <b>Versicherung</b> ohne &bdquo;Geld&ldquo; und &bdquo;zahlen&ldquo;.','der Schaden &middot; der Schutz &middot; im Fall'],
- ['Nenne f&uuml;nf W&ouml;rter zum Thema Beh&ouml;rde.','das Amt &middot; der Antrag &middot; die Bescheinigung'],
- ['Erkl&auml;r <b>schwarzfahren</b> &mdash; und woher es kommt.','ohne Fahrschein &middot; die Kontrolle &middot; erwischen'],
- ['Nenne f&uuml;nf zusammengesetzte W&ouml;rter mit <b>Haus</b>.','der Hausarzt &middot; die Hausaufgabe'],
- ['Erkl&auml;r den Unterschied: <b>gem&uuml;tlich</b> und <b>bequem</b>.','die Atmosph&auml;re &middot; der Sessel'],
- ['Tabu: Erkl&auml;r <b>Vorurteil</b> ohne &bdquo;denken&ldquo; und &bdquo;Menschen&ldquo;.','im Voraus &middot; das Urteil &middot; ungerecht']
+ ['Was ist f&uuml;r dich der Unterschied zwischen Reisen und Urlaub?','der Unterschied &middot; sich erholen &middot; entdecken','karte'],
+ ['Wie planst du eine Reise &mdash; lieber genau oder lieber grob?','die Planung &middot; grob &middot; der Zufall','kalender'],
+ ['Was w&uuml;rdest du jemandem zeigen, der dein Land zum ersten Mal besucht?','zeigen &middot; typisch &middot; sich lohnen','stadt'],
+ ['W&uuml;rdest du lieber immer an denselben Ort fahren oder jedes Mal woandershin?','vertraut &middot; entdecken &middot; die Abwechslung','karte'],
+ ['Reist du lieber allein oder lieber in einer Gruppe?','allein &middot; die Gruppe &middot; R&uuml;cksicht nehmen','team'],
+ ['Erz&auml;hl von einer Reise, die ganz anders lief als geplant.','schiefgehen &middot; umplanen &middot; zum Gl&uuml;ck','flugzeug'],
+ ['Erz&auml;hl von einer Begegnung unterwegs, die dir geblieben ist.','die Begegnung &middot; ausgerechnet &middot; sich unterhalten','freunde'],
+ ['&bdquo;Reisen bildet mehr als Lesen.&ldquo; Stimmst du zu?','bilden &middot; die Erfahrung &middot; der Horizont','buch'],
+ ['&bdquo;Fliegen sollte deutlich teurer sein.&ldquo; Was meinst du dazu?','der Preis &middot; die Umwelt &middot; sich leisten','flugzeug'],
+ ['Dein Zug f&auml;llt aus. Frag am Schalter nach einer L&ouml;sung.','ausfallen &middot; die Alternative &middot; erstatten','zug'],
+ ['Du beschwerst dich im Hotel &uuml;ber ein Zimmer, das nicht dem Angebot entspricht.','entsprechen &middot; gebucht &middot; eine L&ouml;sung','hotel'],
+ ['Erkl&auml;r das Wort &bdquo;schwarzfahren&ldquo; und woher es kommt.','ohne Fahrschein &middot; die Kontrolle &middot; erwischen','zug']
 ],
 schwierig: [
- ['Erkl&auml;r den Unterschied: <b>Wirkung</b> und <b>Auswirkung</b>.','unmittelbar &middot; die Folge'],
- ['Nenne f&uuml;nf Nomen auf <b>-keit</b> und erkl&auml;r eines.','die Gerechtigkeit &middot; die F&auml;higkeit'],
- ['Tabu: Erkl&auml;r <b>Kompromiss</b> ohne &bdquo;einigen&ldquo; und &bdquo;Mitte&ldquo;.','nachgeben &middot; beide Seiten'],
- ['Erkl&auml;r <b>Verantwortung &uuml;bernehmen</b> an einem Beispiel.','einstehen f&uuml;r &middot; die Folgen'],
- ['Nenne f&uuml;nf Verben mit <b>ver-</b> und ihre Bedeutung.','verlernen &middot; verschieben &middot; verlaufen'],
- ['Erkl&auml;r den Unterschied: <b>Ursache</b> und <b>Anlass</b>.','zugrunde liegen &middot; ausl&ouml;sen'],
- ['Tabu: Erkl&auml;r <b>Nachhaltigkeit</b> ohne &bdquo;Umwelt&ldquo; und &bdquo;Zukunft&ldquo;.','die Ressource &middot; schonen'],
- ['Erkl&auml;r: <b>den Teufel an die Wand malen</b>.','schwarzsehen &middot; das Schlimmste'],
- ['Nenne f&uuml;nf W&ouml;rter aus der Arbeitswelt, die oft missverstanden werden.','die Befristung &middot; die Abmahnung'],
- ['Erkl&auml;r den Unterschied: <b>scheinbar</b> und <b>anscheinend</b>.','der Anschein &middot; tats&auml;chlich'],
- ['Tabu: Erkl&auml;r <b>Integration</b> ohne &bdquo;Land&ldquo; und &bdquo;Menschen&ldquo;.','dazugeh&ouml;ren &middot; miteinander'],
- ['Erkl&auml;r <b>Mut</b> und <b>&Uuml;bermut</b> an einem Beispiel.','die Grenze &middot; leichtsinnig']
+ ['Ist Reisen heute ein Privileg oder eine Selbstverst&auml;ndlichkeit geworden?','das Privileg &middot; selbstverst&auml;ndlich','flugzeug'],
+ ['Was macht Tourismus mit den Orten, die bereist werden?','der Tourismus &middot; verdr&auml;ngen &middot; die Belastung','stadt'],
+ ['Kann man einen Ort wirklich kennenlernen, wenn man nur zwei Wochen dort ist?','oberfl&auml;chlich &middot; der Eindruck &middot; eintauchen','karte'],
+ ['Fliegen oder Bahn &mdash; was wiegt f&uuml;r dich schwerer, die Zeit oder die Umwelt?','abw&auml;gen &middot; die Bilanz &middot; der Aufwand','waage'],
+ ['Lieber offene Grenzen oder strenge Kontrollen?','die Grenze &middot; die Kontrolle &middot; die Freiz&uuml;gigkeit','amt'],
+ ['Erz&auml;hl von einem Ort, an den du bewusst nicht zur&uuml;ckkehren m&ouml;chtest.','bewusst &middot; zur&uuml;ckkehren &middot; der Grund','karte'],
+ ['Erz&auml;hl von einem kulturellen Unterschied unterwegs, der dich irritiert hat.','irritieren &middot; nachvollziehen &middot; die Norm','denken'],
+ ['&bdquo;Wer viel reist, wird toleranter.&ldquo; Stimmt dieser Satz?','tolerant &middot; die Begegnung &middot; die Annahme','herz'],
+ ['&bdquo;Flugscham ist blo&szlig;e Symbolpolitik.&ldquo; Was meinst du dazu?','die Symbolpolitik &middot; der Beitrag &middot; wirksam','flugzeug'],
+ ['Du moderierst eine Diskussion zwischen Bef&uuml;rwortern und Gegnern von Billigfl&uuml;gen.','moderieren &middot; das Wort erteilen &middot; zusammenfassen','sprechen'],
+ ['Du reklamierst eine Reise, die nicht dem Prospekt entsprach &mdash; sachlich und bestimmt.','sachlich &middot; entsprechen &middot; die Minderung','vertrag'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;fremd&ldquo; und &bdquo;unbekannt&ldquo;.','fremd &middot; vertraut &middot; der Unterschied','denken']
+]},
+
+gesundheit: {
+einfach: [
+ ['Was machst du, wenn du dich nicht wohlf&uuml;hlst?','sich ausruhen &middot; der Tee &middot; schlafen','schlaf'],
+ ['Wie viel Sport machst du in der Woche?','sich bewegen &middot; laufen &middot; zweimal','sport'],
+ ['Schl&auml;fst du gut? Erz&auml;hl von deinem Abend.','einschlafen &middot; m&uuml;de &middot; das Bett','bett'],
+ ['Ist dir Sport oder gesundes Essen wichtiger?','sich bewegen &middot; gesund essen','waage'],
+ ['Gehst du lieber fr&uuml;h zum Arzt oder wartest du lieber ab?','abwarten &middot; der Termin &middot; die Schmerzen','arzt'],
+ ['Erz&auml;hl von einem Tag, an dem du krank warst.','krank &middot; das Fieber &middot; im Bett','krank'],
+ ['Erz&auml;hl, wie du dich am besten entspannst.','sich entspannen &middot; die Ruhe &middot; der Spaziergang','gefuehl'],
+ ['&bdquo;Sport ist wichtiger als jede Di&auml;t.&ldquo; Stimmst du zu?','sich bewegen &middot; gesund bleiben','sport'],
+ ['&bdquo;Wir schlafen heute alle zu wenig.&ldquo; Siehst du das auch so?','der Schlaf &middot; m&uuml;de &middot; die Zeit','schlaf'],
+ ['Du bist beim Arzt und erkl&auml;rst, was dir weh tut.','der Hals &middot; seit gestern &middot; Schmerzen haben','arzt'],
+ ['Du holst ein Medikament in der Apotheke und fragst nach der Einnahme.','das Rezept &middot; einnehmen &middot; dreimal am Tag','medizin'],
+ ['Nenne f&uuml;nf K&ouml;rperteile und beschreib einen, ohne ihn zu nennen.','der Kopf &middot; die Hand &middot; damit kann man','hand']
+],
+komplexer: [
+ ['Wie gut sorgst du f&uuml;r deine Gesundheit &mdash; und woran scheitert es manchmal?','vorsorgen &middot; scheitern &middot; der Alltag','arzt'],
+ ['Welche Rolle spielt Bewegung in deinem Alltag?','die Bewegung &middot; der Ausgleich &middot; regelm&auml;&szlig;ig','sport'],
+ ['Redest du offen &uuml;ber seelische Gesundheit, oder eher nicht?','offen &middot; das Tabu &middot; ansprechen','gefuehl'],
+ ['Lieber Vorsorge ohne Beschwerden oder erst zum Arzt, wenn etwas weh tut?','die Vorsorge &middot; die Beschwerden','waage'],
+ ['Lieber ein langes ruhiges Leben oder ein kurzes intensives?','intensiv &middot; die Lebenszeit &middot; abw&auml;gen','waage'],
+ ['Erz&auml;hl von einer Zeit, in der du besonders auf dich achten musstest.','auf sich achten &middot; k&uuml;rzertreten','herz'],
+ ['Erz&auml;hl von einer Gewohnheit, die dir wirklich gutgetan hat.','guttun &middot; dranbleiben &middot; sp&uuml;ren','sport'],
+ ['&bdquo;Jeder ist f&uuml;r seine Gesundheit selbst verantwortlich.&ldquo; Stimmst du zu?','die Eigenverantwortung &middot; die Umst&auml;nde','waage'],
+ ['&bdquo;&Uuml;ber Ersch&ouml;pfung sollte man reden wie &uuml;ber eine Grippe.&ldquo; Was meinst du?','die Ersch&ouml;pfung &middot; das Tabu &middot; ernst nehmen','gefuehl'],
+ ['Du erkl&auml;rst einem Arzt deine Beschwerden genau und stellst zwei R&uuml;ckfragen.','die Beschwerden &middot; die R&uuml;ckfrage &middot; die Nebenwirkung','arzt'],
+ ['Du &uuml;berzeugst jemanden, regelm&auml;&szlig;ig mit dir Sport zu machen.','&uuml;berzeugen &middot; gemeinsam &middot; die Ausrede','sport'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;m&uuml;de&ldquo; und &bdquo;ersch&ouml;pft&ldquo;.','m&uuml;de &middot; ersch&ouml;pft &middot; sich erholen','schlaf']
+],
+schwierig: [
+ ['Wo endet die Eigenverantwortung f&uuml;r die Gesundheit, und wo beginnt die der Gesellschaft?','die Eigenverantwortung &middot; die Solidarit&auml;t','waage'],
+ ['Wie ver&auml;ndert der st&auml;ndige Vergleich in sozialen Medien das K&ouml;rperbild?','das K&ouml;rperbild &middot; der Vergleich &middot; der Druck','handy'],
+ ['Sollte Gesundheitsvorsorge verpflichtend sein?','verpflichtend &middot; die Bevormundung &middot; freiwillig','amt'],
+ ['L&auml;nger leben oder besser leben &mdash; was w&uuml;rdest du w&auml;hlen?','die Lebensqualit&auml;t &middot; die Lebenszeit &middot; abw&auml;gen','waage'],
+ ['Strenge Regeln f&uuml;r die Gesundheit oder Vertrauen in die Vernunft?','die Vernunft &middot; die Vorschrift &middot; sich bew&auml;hren','waage'],
+ ['Erz&auml;hl von einem Moment, in dem dein K&ouml;rper dir eine Grenze gezeigt hat.','die Grenze &middot; sp&uuml;ren &middot; k&uuml;rzertreten','krank'],
+ ['Erz&auml;hl von einem Menschen, dessen Umgang mit Krankheit dich beeindruckt hat.','der Umgang &middot; die Haltung &middot; beeindrucken','herz'],
+ ['&bdquo;Wer alles &uuml;ber Gesundheit wei&szlig;, lebt noch lange nicht gesund.&ldquo; Stimmst du zu?','das Wissen &middot; das Handeln &middot; die L&uuml;cke','buch'],
+ ['&bdquo;Krankheit ist nie nur k&ouml;rperlich.&ldquo; Was meinst du dazu?','k&ouml;rperlich &middot; seelisch &middot; der Zusammenhang','gefuehl'],
+ ['Du &uuml;berbringst einem Freund eine beunruhigende Nachricht einf&uuml;hlsam.','einf&uuml;hlsam &middot; behutsam &middot; da sein','herz'],
+ ['Du widersprichst einem Fachmann h&ouml;flich, weil du etwas anders erlebst.','widersprechen &middot; zu bedenken geben','arzt'],
+ ['Erkl&auml;r &bdquo;Resilienz&ldquo; an einem Beispiel, ohne das Wort &bdquo;stark&ldquo; zu benutzen.','der R&uuml;ckschlag &middot; sich aufrichten &middot; aushalten','denken']
+]},
+
+freizeit: {
+einfach: [
+ ['Was machst du am liebsten in deiner Freizeit?','gern &middot; am liebsten &middot; meistens','musik'],
+ ['Wie hast du deinen besten Freund kennengelernt?','kennenlernen &middot; damals &middot; zusammen','freunde'],
+ ['Was machst du am Wochenende normalerweise?','am Samstag &middot; danach &middot; abends','fest'],
+ ['Liest du lieber ein Buch, oder siehst du lieber einen Film?','sich vorstellen &middot; spannend','film'],
+ ['Feierst du lieber zu Hause oder lieber drau&szlig;en?','gem&uuml;tlich &middot; die Party &middot; die Leute','party'],
+ ['Erz&auml;hl von einem sch&ouml;nen Tag mit Freunden.','zusammen &middot; gelacht &middot; es war','lachen'],
+ ['Erz&auml;hl von einem Hobby, das du fr&uuml;her einmal hattest.','fr&uuml;her &middot; aufh&ouml;ren &middot; Spa&szlig; machen','musik'],
+ ['&bdquo;Fernsehen ist Zeitverschwendung.&ldquo; Stimmst du zu?','die Zeit &middot; sich entspannen &middot; ich finde','film'],
+ ['&bdquo;Freunde sind wichtiger als Geld.&ldquo; Siehst du das auch so?','sich verlassen auf &middot; wichtig','freunde'],
+ ['Du l&auml;dst Freunde zu dir ein und sagst, wann sie kommen und was es gibt.','einladen &middot; am Samstag &middot; es gibt','geschenk'],
+ ['Ein Freund sagt kurzfristig ab. Reagiere freundlich.','absagen &middot; schade &middot; ein andermal','telefon'],
+ ['Nenne f&uuml;nf Hobbys und beschreib eines, ohne es zu nennen.','drau&szlig;en &middot; mit den H&auml;nden &middot; jede Woche','musik']
+],
+komplexer: [
+ ['Wie viel Freizeit brauchst du, um dich wirklich zu erholen?','sich erholen &middot; abschalten &middot; genug','gefuehl'],
+ ['Wie haltet ihr Freundschaften &uuml;ber gro&szlig;e Entfernungen?','in Kontakt bleiben &middot; die Entfernung','handy'],
+ ['Was ist f&uuml;r dich ein guter Freund?','sich verlassen auf &middot; ehrlich &middot; zuh&ouml;ren','freunde'],
+ ['Verbringst du freie Zeit lieber aktiv oder lieber ruhig?','aktiv &middot; die Ruhe &middot; der Ausgleich','sport'],
+ ['Lieber wenige enge Freunde oder viele lose Kontakte?','eng &middot; der Kontakt &middot; die Tiefe','freunde'],
+ ['Erz&auml;hl von einer Freundschaft, die zerbrochen ist, und was du daraus gelernt hast.','zerbrechen &middot; sich entfernen &middot; daraus lernen','streit'],
+ ['Erz&auml;hl von einem Hobby, das dir etwas &uuml;ber dich selbst gezeigt hat.','die Geduld &middot; dranbleiben &middot; merken','musik'],
+ ['&bdquo;Soziale Netzwerke machen einsam.&ldquo; Stimmst du zu?','einsam &middot; der Vergleich &middot; oberfl&auml;chlich','handy'],
+ ['&bdquo;Man muss nicht zu jeder Einladung Ja sagen.&ldquo; Was meinst du dazu?','absagen &middot; die Erwartung &middot; die Grenze','kalender'],
+ ['Ein Freund hat dich entt&auml;uscht. Sprich es an, ohne ihn anzugreifen.','ansprechen &middot; verletzt &middot; mir ist aufgefallen','sprechen'],
+ ['Du vermittelst in einem Streit zwischen zwei Freunden.','vermitteln &middot; die Sicht &middot; der Kompromiss','streit'],
+ ['Erkl&auml;r den Unterschied zwischen &bdquo;Bekannter&ldquo; und &bdquo;Freund&ldquo;.','der Bekannte &middot; der Freund &middot; die N&auml;he','freunde']
+],
+schwierig: [
+ ['Ist Freizeit heute zu einer weiteren Leistung geworden?','die Leistung &middot; optimieren &middot; der Druck','zeit'],
+ ['Was h&auml;lt Freundschaften &uuml;ber Jahrzehnte zusammen?','zusammenhalten &middot; sich ver&auml;ndern &middot; die Treue','herz'],
+ ['Wie ver&auml;ndert sich Freundschaft, wenn Lebenswege auseinandergehen?','auseinandergehen &middot; die Lebensphase','freunde'],
+ ['Lieber Zeit mit Menschen oder bewusst Zeit allein?','die Einsamkeit &middot; das Alleinsein &middot; der Unterschied','waage'],
+ ['Lieber ein Hobby in der Tiefe oder viele an der Oberfl&auml;che?','in die Tiefe gehen &middot; die Abwechslung','waage'],
+ ['Erz&auml;hl von einem Menschen, dessen Haltung du bewunderst.','die Haltung &middot; bewundern &middot; aufrecht','stern'],
+ ['Erz&auml;hl von einem Augenblick v&ouml;lliger Ruhe, an den du dich erinnerst.','der Augenblick &middot; zur Ruhe kommen','gefuehl'],
+ ['&bdquo;Wer schweigt, stimmt zu.&ldquo; Gilt das auch unter Freunden?','das Schweigen &middot; die Zustimmung &middot; widersprechen','sprechen'],
+ ['&bdquo;Echte Freundschaft h&auml;lt jede Meinungsverschiedenheit aus.&ldquo; Stimmst du zu?','die Meinungsverschiedenheit &middot; aushalten','streit'],
+ ['Du sagst einem Freund eine unbequeme Wahrheit, ohne die Freundschaft zu gef&auml;hrden.','unbequem &middot; gef&auml;hrden &middot; behutsam','sprechen'],
+ ['Du h&auml;ltst eine kurze Rede zum Geburtstag eines langj&auml;hrigen Freundes.','w&uuml;rdigen &middot; im Namen aller &middot; die Rede','party'],
+ ['Erkl&auml;r &bdquo;Vertrauen&ldquo;, ohne die W&ouml;rter &bdquo;glauben&ldquo; und &bdquo;sicher&ldquo; zu benutzen.','sich verlassen auf &middot; die Verl&auml;sslichkeit','hand']
 ]}
 };
 
@@ -560,6 +682,7 @@ function zeigen(pos){
     '<span aria-hidden="true">' + b.zeichen + '</span>' + b.name
     + ' <span class="lvtag ' + niveau + '">' + niveau + '</span>';
   document.getElementById('gkNr').innerHTML = 'Karte ' + (pos + 1);
+  document.getElementById('gkBild').innerHTML = Z[k[2]] || b.zeichen;
   document.getElementById('gkText').innerHTML = k[0];
   var hilfe = document.getElementById('gkHilfe');
   if (k[1]) { hilfe.style.display = ''; document.getElementById('gkHilfeT').innerHTML = k[1]; }
