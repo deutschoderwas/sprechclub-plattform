@@ -543,9 +543,13 @@
   ];
   function ensureShadow(){ if(!window.UEBUNGEN||!UEBUNGEN.skills)return;
     if(UEBUNGEN.skills.some(function(s){return s.id==='shadowing';}))return;
-    UEBUNGEN.skills.push({id:'shadowing',name:'Shadowing',emoji:'🗣️',color:'#7C3AED',themes:[
+    /* Seit 28.10.2026: zehn Themen in Julias Stimme, nach Niveau
+       sortiert (shadowing-neu.js). Fehlt die Datei, bleibt der alte
+       Satz-Pool als ein Thema. */
+    var th=(window.SHADOWING_THEMEN&&window.SHADOWING_THEMEN.length)?window.SHADOWING_THEMEN:[
       {id:'shadowing',title:'Aussprache: Nachsprechen & Aufnehmen',level:'A1–C1',emoji:'🎙️',exercises:SHADOW_ITEMS}
-    ]}); }
+    ];
+    UEBUNGEN.skills.push({id:'shadowing',name:'Shadowing',emoji:'🗣️',color:'#7C3AED',themes:th}); }
 
   function renderUeben(){
     injectCSS();
