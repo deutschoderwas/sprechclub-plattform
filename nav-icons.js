@@ -41,6 +41,7 @@
     regler:    '<path d="M5.4 3.6v5.2M5.4 14.4v6M12 3.6v3.2M12 12.4v8M18.6 3.6v8.6M18.6 17.8v2.6"/><circle cx="5.4" cy="11.6" r="2.3"/><circle cx="12" cy="9.6" r="2.3"/><circle cx="18.6" cy="15" r="2.3"/>',
     wuerfel:   '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.8"/><circle cx="8.6" cy="8.6" r="1.15"/><circle cx="15.4" cy="8.6" r="1.15"/><circle cx="8.6" cy="15.4" r="1.15"/><circle cx="15.4" cy="15.4" r="1.15"/>',
     blasen:    '<path d="M3.4 9.4a4.6 4.6 0 0 1 4.6-4.6h3.8a4.6 4.6 0 0 1 0 9.2H8.6l-3.4 2.4v-2.9a4.6 4.6 0 0 1-1.8-3.7z"/><path d="M15.4 11.6a4.4 4.4 0 0 1 3.6 6.9v2.3l-2.9-1.7h-1.5"/>',
+    krone:     '<path d="M3.2 8.4 6.6 12l3.2-5.2L12 3.6l2.2 3.2L17.4 12l3.4-3.6 -1.4 9.2a1.6 1.6 0 0 1-1.6 1.4H6a1.6 1.6 0 0 1-1.6-1.4z"/>',
     stern:     '<path d="m12 3.6 2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.7-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/>'
   };
 
@@ -103,6 +104,15 @@
   }
 
   function name(el){
+    /* Gruppenkoepfe in der Seitenleiste haben kein data-view — sie
+       oeffnen ja keine Ansicht, sondern klappen auf. Ohne diesen Weg
+       fand name() nichts, malen() brach ab, und das farbige Plaettchen
+       blieb leer: ein gefuelltes Viereck ohne Zeichen.
+       Julia, 28.10.2026: "auch hier in der Leiste muessen die Buttons
+       ein Zeichen bekommen, ein passendes, und nicht einfach eine
+       Farbe." */
+    var z = el.getAttribute('data-zeichen');
+    if(z && P[z]) return z;
     var v = el.getAttribute('data-view');
     if(v && ZU_ANSICHT[v]) return ZU_ANSICHT[v];
     var h = el.getAttribute('href')||'';
@@ -120,6 +130,16 @@
     var t = (el.textContent||'').toLowerCase();
     if(t.indexOf('buchen')>=0 || t.indexOf('book')>=0) return 'rot';
     if(t.indexOf('abmelden')>=0 || t.indexOf('log out')>=0) return 'grau';
+    /* Farbe am Eintrag oder an der Gruppe, in der er steht. Seit die
+       Leiste in Gruppen gegliedert ist, gibt es die alten
+       Zwischenueberschriften (.cl-grp) nicht mehr — rubrikenAusmessen()
+       zaehlte also nichts mehr und gab allen dieselbe erste Farbe.
+       Darum war die Leiste auf einmal durchgehend grau.
+       Julia: "sieht so langweilig aus." */
+    var tf = el.getAttribute('data-farbe');
+    if(tf) return tf;
+    var gruppe = el.closest ? el.closest('[data-farbe]') : null;
+    if(gruppe) return gruppe.getAttribute('data-farbe');
     var r = el.getAttribute('data-rubrik-farbe');
     if(r) return r;
     var v = el.getAttribute('data-view');
@@ -139,6 +159,7 @@
     + '.sidebar .navlink .ic.f-rot {background:#FBE3E3;color:#C33030}'
     + '.sidebar .navlink .ic.f-gold{background:#F6F9FA;color:#B57900}'
     + '.sidebar .navlink .ic.f-grau{background:#F6F9FA;color:#5B6A70}'
+    + '.sidebar .navlink .ic.f-mint{background:#E1F7F1;color:#0B8571}'
     + '.sidebar .navlink:hover .ic{transform:translateY(-2px) rotate(-4deg);'
     +   'box-shadow:0 6px 14px -6px rgba(40,53,59,.5)}'
     /* Der aktive Eintrag: das Plättchen wird kräftig und bekommt einen Ring */
@@ -147,6 +168,7 @@
     + '.sidebar .navlink.active .ic.f-rot {background:#D83636}'
     + '.sidebar .navlink.active .ic.f-gold{background:#E39A00}'
     + '.sidebar .navlink.active .ic.f-grau{background:#28353B}'
+    + '.sidebar .navlink.active .ic.f-mint{background:#0E9E86}'
     + '.sidebar .navlink{gap:11px}'
     /* In der Fußzeile etwas kleiner, damit sie nicht laut wird */
     + '.sidebar .side-foot .navlink .ic{width:29px;height:29px;border-radius:10px}'
