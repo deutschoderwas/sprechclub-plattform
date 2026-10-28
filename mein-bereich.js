@@ -1,19 +1,40 @@
 /* ============================================================
    mein-bereich.js — die eigene Akte des Schülers
 
-   Bisher stand unter „Mein Bereich" nur die Abzeichen-Wand. Hier
-   kommt alles zusammen, was dieser eine Mensch auf der Plattform
-   gemacht hat: seine Mitgliedschaft, der Unterricht, den er besucht
-   hat, wo er im Kurs steht, seine Wörter, seine Texte, seine Fehler
-   und das Material aus seinen Stunden.
+   Hier kommt alles zusammen, was dieser eine Mensch auf der
+   Plattform gemacht hat: seine Mitgliedschaft, sein Niveau, der
+   Unterricht, den er besucht hat, wo er im Kurs steht, seine
+   Wörter, seine Texte, seine Fehler und das Material aus seinen
+   Stunden. Dieselbe Akte, die die Lehrkraft im Admin sieht — nur
+   aus seiner Sicht und in seiner Sprache.
 
-   Es ist dieselbe Akte, die die Lehrkraft im Admin sieht — nur aus
-   seiner Sicht und in seiner Sprache.
+   Umgebaut am 28.10.2026. Julia: "Mein Bereich sieht überhaupt
+   nicht übersichtlich aus, wo können die Schüler das Niveau
+   eintragen? wo kann man alles groß und strukturiert sehen? Das
+   ist alles zu viel und zu unübersichtlich."
+
+   Sie hatte recht. Vorher standen elf gleich aussehende Karten
+   untereinander — alle gleich groß, alle gleich wichtig, man
+   scrollte an allem vorbei. Und das Niveau liess sich nur in
+   Konto → Profil eintragen, drei Klicks weit weg von der Seite,
+   auf der es steht.
+
+   Jetzt drei Ebenen statt einer Liste:
+     1. Der Kopf: wer bin ich, was habe ich, WO STEHE ICH. Niveau
+        und Ziel sind sechs grosse Knoepfe, ein Klick speichert.
+        Wer noch nichts eingetragen hat, sieht einen gelben Kasten
+        statt einer leeren Zeile.
+     2. Vier Zahlen, gross.
+     3. Drei Reiter — Unterricht · Lernstand · Meine Sachen. Pro
+        Reiter zwei bis vier Karten statt elf am Stueck. Welcher
+        Reiter offen war, merkt sich der Browser.
 
    Was schon im Speicher liegt (Buchungen, Material, Übungsstand),
    wird sofort gezeichnet. Die vier Tabellen, die nur hier gebraucht
    werden (Korrekturen, Übungsstand je Fertigkeit, Fehler-Trainer,
-   Lektionen), tragen sich danach nach.
+   Lektionen), tragen sich danach nach. Sie stehen in allen Reitern
+   im HTML, auch im zugeklappten — sonst liefe das Nachtragen ins
+   Leere, wenn jemand den Reiter erst spaeter aufmacht.
    ============================================================ */
 (function(){
   'use strict';
@@ -30,22 +51,59 @@
 
   /* Kopf */
   + '.mb-kopf{background:linear-gradient(135deg,#F6FCFE,#FFFFFF);border:1px solid #BDE7F2;'
-  +   'border-radius:18px;padding:18px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}'
+  +   'border-radius:20px;padding:22px 24px}'
+  + '.mb-kopf .oben{display:flex;gap:16px;align-items:center;flex-wrap:wrap}'
   + '.mb-kopf .wer{flex:1;min-width:200px}'
-  + '.mb-kopf h1{margin:0;font-family:"Space Grotesk",system-ui,sans-serif;font-size:24px;font-weight:700;'
-  +   'letter-spacing:-.02em;color:var(--ink)}'
-  + '.mb-kopf p{margin:4px 0 0;font-size:14px;color:var(--leise);line-height:1.5}'
+  + '.mb-kopf h1{margin:0;font-family:"Space Grotesk",system-ui,sans-serif;font-size:28px;font-weight:700;'
+  +   'letter-spacing:-.02em;color:var(--ink);line-height:1.15}'
+  + '@media(max-width:560px){.mb-kopf{padding:18px 16px}.mb-kopf h1{font-size:23px}}'
+  + '.mb-kopf p{margin:5px 0 0;font-size:14px;color:var(--leise);line-height:1.5}'
   + '.mb-tarif{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--tint);'
-  +   'color:var(--tint);border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700}'
+  +   'color:var(--tint);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700}'
+
+  /* Niveau und Ziel — der eigentliche Grund, warum es diesen Kopf gibt */
+  + '.mb-niv{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}'
+  + '@media(max-width:720px){.mb-niv{grid-template-columns:1fr}}'
+  + '.mb-nivf{background:#fff;border:1px solid var(--linie);border-radius:14px;padding:13px 15px}'
+  + '.mb-nivf.offen{border-color:#E8C65A;background:#FFFCF0}'
+  + '.mb-nivf .l{display:block;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;'
+  +   'color:var(--leise);margin-bottom:9px}'
+  + '.mb-nivf.offen .l{color:#8A6608}'
+  /* Sechs Spalten, immer. Mit flex-wrap sprang C2 auf dem Handy in
+     eine eigene Zeile und wurde ueber die ganze Breite gezogen — eine
+     Stufe sah dann wichtiger aus als die anderen fuenf. */
+  + '.mb-nivf .w{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}'
+  + '@media(max-width:420px){.mb-nivf .w{gap:5px}.mb-nivf .st{font-size:14px}}'
+  + '.mb-nivf .st{width:100%;height:42px;padding:0;border:1px solid var(--linie);background:#F8FBFC;'
+  +   'border-radius:11px;font-family:"Space Grotesk",system-ui,sans-serif;font-size:15px;font-weight:700;'
+  +   'color:var(--ink);cursor:pointer;line-height:1;transition:background .12s,border-color .12s}'
+  + '.mb-nivf .st:hover{border-color:var(--tint);background:#fff}'
+  + '.mb-nivf .st.an{background:var(--tint);border-color:var(--tint);color:#fff}'
+  + '.mb-nivf .st:focus-visible{outline:2px solid var(--tint);outline-offset:2px}'
+  + '.mb-nivf .h{display:block;font-size:12.5px;color:var(--leise);margin-top:9px;line-height:1.5}'
+  + '.mb-nivf .h a{color:var(--tint);font-weight:700;cursor:pointer;text-decoration:none}'
+  + '.mb-nivf .h a:hover{text-decoration:underline}'
 
   /* Zahlenband */
   + '.mb-zahlen{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linie);'
   +   'border:1px solid var(--linie);border-radius:16px;overflow:hidden}'
   + '@media(max-width:700px){.mb-zahlen{grid-template-columns:repeat(2,1fr)}}'
-  + '.mb-zahlen > div{background:#fff;padding:14px 16px}'
-  + '.mb-zahlen .v{font-family:"Space Grotesk",system-ui,sans-serif;font-size:26px;font-weight:700;'
+  + '.mb-zahlen > div{background:#fff;padding:16px 18px}'
+  + '.mb-zahlen .v{font-family:"Space Grotesk",system-ui,sans-serif;font-size:32px;font-weight:700;'
   +   'color:var(--ink);line-height:1.1;font-variant-numeric:tabular-nums}'
   + '.mb-zahlen .l{font-size:12.5px;color:var(--leise);margin-top:3px}'
+
+  /* Reiter — damit nicht elf Karten am Stueck dastehen */
+  + '.mb-reiter{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}'
+  + '.mb-reiter::-webkit-scrollbar{display:none}'
+  + '.mb-reiter button{flex:0 0 auto;border:1px solid var(--linie);background:#fff;border-radius:999px;'
+  +   'padding:10px 18px;font-family:inherit;font-size:14px;font-weight:700;color:var(--leise);cursor:pointer;'
+  +   'white-space:nowrap;transition:background .12s,color .12s,border-color .12s}'
+  + '.mb-reiter button:hover{border-color:var(--tint);color:var(--tint)}'
+  + '.mb-reiter button.an{background:var(--tint);border-color:var(--tint);color:#fff}'
+  + '.mb-reiter button:focus-visible{outline:2px solid var(--tint);outline-offset:2px}'
+  + '.mb-fach{display:flex;flex-direction:column;gap:16px}'
+  + '.mb-fach[hidden]{display:none}'
 
   /* Karten */
   + '.mb-k{background:#fff;border:1px solid var(--linie);border-radius:16px;overflow:hidden}'
@@ -132,15 +190,101 @@
     try{ rang = (stats.rank && stats.rank.name) || ''; punkte = stats.points || 0; }catch(e){}
 
     return '<div class="mb-kopf">'
-      + '<div class="wer">'
-      +   '<h1>' + (name ? E(name) + ' — ' : '') + T('mb_h1','dein Bereich') + '</h1>'
-      +   '<p>' + T('mb_sub','Alles, was du hier gemacht hast, an einer Stelle.')
-      +     (rang ? ' · ' + E(rang) + ' · ' + punkte + ' ' + T('mb_punkte','Punkte') : '') + '</p>'
+      + '<div class="oben">'
+      +   '<div class="wer">'
+      +     '<h1>' + (name ? E(name) + ' — ' : '') + T('mb_h1','dein Bereich') + '</h1>'
+      +     '<p>' + T('mb_sub','Alles, was du hier gemacht hast, an einer Stelle.')
+      +       (rang ? ' · ' + E(rang) + ' · ' + punkte + ' ' + T('mb_punkte','Punkte') : '') + '</p>'
+      +   '</div>'
+      +   (tarif ? '<span class="mb-tarif">' + E(tarif)
+                   + (bis ? ' · ' + T('mb_bis','bis') + ' ' + E(bis) : '') + '</span>' : '')
       + '</div>'
-      + (tarif ? '<span class="mb-tarif">' + E(tarif)
-                 + (bis ? ' · ' + T('mb_bis','bis') + ' ' + E(bis) : '') + '</span>' : '')
+      + '<div id="mbNiveau">' + niveauFelder() + '</div>'
       + '</div>';
   }
+
+  /* ---------- 1b. Niveau und Ziel ----------
+     Julia, 28.10.2026: "wo können die Schüler das Niveau eintragen?"
+     Bisher: nur in Konto → Profil, hinter zwei Klicks, in einem
+     Auswahlmenue zwischen Geburtstag und Muttersprache. Hier steht es
+     jetzt an der Stelle, an der der Schueler ohnehin nachsieht, wo er
+     steht — und es ist ein Klick, kein Menue. */
+
+  var STUFEN = ['A1','A2','B1','B2','C1','C2'];
+
+  function niveauFeld(art, label, wert, hinweis){
+    var knoepfe = STUFEN.map(function(st){
+      return '<button type="button" class="st' + (st === wert ? ' an' : '') + '"'
+        + ' aria-pressed="' + (st === wert ? 'true' : 'false') + '"'
+        + ' onclick="mbNiveau(\'' + art + '\',\'' + st + '\')">' + st + '</button>';
+    }).join('');
+    return '<div class="mb-nivf' + (wert ? '' : ' offen') + '">'
+      + '<span class="l">' + label + '</span>'
+      + '<div class="w">' + knoepfe + '</div>'
+      + (wert ? '' : '<span class="h">' + hinweis + '</span>')
+      + '</div>';
+  }
+
+  function niveauFelder(){
+    var jetzt = '', ziel = '';
+    try{
+      var pr = window.profile || {};
+      jetzt = String(pr.level || pr.stufe || '').toUpperCase().slice(0,2);
+      ziel  = String(pr.target_level || '').toUpperCase().slice(0,2);
+    }catch(e){}
+    if(STUFEN.indexOf(jetzt) < 0) jetzt = '';
+    if(STUFEN.indexOf(ziel)  < 0) ziel  = '';
+    return '<div class="mb-niv">'
+      + niveauFeld('level', T('mb_nivjetzt','Mein Niveau — wo stehe ich?'), jetzt,
+          T('mb_nivleer','Noch nichts eingetragen. Tipp auf deine Stufe — dann kann Julia dich in die passende Gruppe einteilen.')
+          + ' <a href="niveau-test.html">' + T('mb_nivtest','Unsicher? Mach den Einstufungstest →') + '</a>')
+      + niveauFeld('target', T('mb_nivziel','Mein Ziel — wo will ich hin?'), ziel,
+          T('mb_zielleer','Such dir ein Ziel aus. Es steht danach auch auf deinem Lernpfad.'))
+      + '</div>';
+  }
+
+  /* Ein Klick speichert sofort. Erst auf dem Bildschirm, dann in der
+     Datenbank — wer tippt, soll nicht auf das Netz warten. Geht das
+     Speichern schief, wird der alte Wert zurueckgesetzt und gesagt,
+     dass es nicht geklappt hat; nichts Schlimmeres als eine Angabe,
+     die der Schueler gemacht zu haben glaubt und die nirgends steht.
+     Gespeichert wird ueber dieselbe Funktion wie im Profil
+     (update_my_profile), damit es nur einen Weg gibt. */
+  window.mbNiveau = function(art, wert){
+    var pr = window.profile || {};
+    var feld = (art === 'target') ? 'target_level' : 'level';
+    var vorher = pr[feld] || null;
+    if(vorher === wert) return;
+
+    pr[feld] = wert;
+    var kasten = document.getElementById('mbNiveau');
+    if(kasten) kasten.innerHTML = niveauFelder();
+
+    if(!window.sb){ return; }
+    window.sb.rpc('update_my_profile', {
+      p_name:            pr.name || '',
+      p_goal:            pr.goal || null,
+      p_target_level:    pr.target_level || null,
+      p_native_language: pr.native_language || null,
+      p_birthday:        pr.birthday || null,
+      p_level:           pr.level || null
+    }).then(function(r){
+      if(r && r.error){
+        pr[feld] = vorher;
+        var k2 = document.getElementById('mbNiveau');
+        if(k2) k2.innerHTML = niveauFelder();
+        if(window.toast) toast('Konnte nicht speichern.');
+        return;
+      }
+      if(window.toast) toast(art === 'target' ? 'Ziel gespeichert ✓' : 'Niveau gespeichert ✓');
+      try{ if(window.computeStats) computeStats(); }catch(e){}
+    }, function(){
+      pr[feld] = vorher;
+      var k3 = document.getElementById('mbNiveau');
+      if(k3) k3.innerHTML = niveauFelder();
+      if(window.toast) toast('Konnte nicht speichern.');
+    });
+  };
 
   function zahlen(){
     var s = window.stats || {};
@@ -376,6 +520,61 @@
       "go('materialien')", T('mb_allesmat','Alle Materialien →'));
   }
 
+  /* ---------- 7. Die drei Reiter ----------
+     Elf Karten untereinander waren elf Mal dieselbe Form in derselben
+     Groesse — nichts stand vorn, nichts hinten. Drei Faecher mit
+     klaren Namen tun das, was die Liste nicht konnte: sie sagen schon
+     vor dem Lesen, was wo liegt.
+
+     Alle drei stehen vollstaendig im HTML, auch die zugeklappten. Das
+     kostet nichts (die Daten sind ohnehin geladen) und erspart die
+     Falle, dass nachladen() in ein Fach schreibt, das es noch gar
+     nicht gibt. Umgeschaltet wird mit hidden, nicht neu gezeichnet. */
+
+  var FAECHER = ['unterricht','lernstand','sachen'];
+  var FACH_SPEICHER = 'dow-mb-fach';
+
+  function fachLesen(){
+    try{
+      var f = localStorage.getItem(FACH_SPEICHER);
+      if(FAECHER.indexOf(f) >= 0) return f;
+    }catch(e){}
+    return 'unterricht';
+  }
+
+  window.mbFach = function(welches){
+    if(FAECHER.indexOf(welches) < 0) welches = 'unterricht';
+    try{ localStorage.setItem(FACH_SPEICHER, welches); }catch(e){}
+    FAECHER.forEach(function(f){
+      var fach = document.getElementById('mbF-' + f);
+      if(fach) fach.hidden = (f !== welches);
+      var knopf = document.getElementById('mbR-' + f);
+      if(knopf){
+        if(f === welches) knopf.classList.add('an'); else knopf.classList.remove('an');
+        knopf.setAttribute('aria-selected', f === welches ? 'true' : 'false');
+      }
+    });
+  };
+
+  function reiter(offen){
+    function r(k, text){
+      return '<button type="button" id="mbR-' + k + '" role="tab"'
+        + ' aria-selected="' + (k === offen ? 'true' : 'false') + '"'
+        + ' class="' + (k === offen ? 'an' : '') + '"'
+        + ' onclick="mbFach(\'' + k + '\')">' + text + '</button>';
+    }
+    return '<div class="mb-reiter" role="tablist">'
+      + r('unterricht', T('mb_r1','Mein Unterricht'))
+      + r('lernstand',  T('mb_r2','Mein Lernstand'))
+      + r('sachen',     T('mb_r3','Meine Sachen'))
+      + '</div>';
+  }
+
+  function fach(k, offen, inhalt){
+    return '<div class="mb-fach" id="mbF-' + k + '" role="tabpanel"'
+      + (k === offen ? '' : ' hidden') + '>' + inhalt + '</div>';
+  }
+
   /* ---------- Die Seite ---------- */
 
   window.renderMeinBereich = function(){
@@ -383,16 +582,17 @@
     var ziel = document.getElementById('v-fortschritt');
     if(!ziel) return;
 
-    ziel.innerHTML = '<div class="mb">'
-      + kopf()
-      + zahlen()
-      + unterricht()
-      + kursStand()
+    var offen = fachLesen();
+
+    var fachUnterricht = unterricht() + material();
+
+    var fachLernstand = kursStand()
       + karte(T('mb_fert','Meine Fertigkeiten'),
               '<div id="mbFert"><div class="mb-leer">' + T('mb_ladet','Wird geladen …') + '</div></div>',
               "go('fertigkeit')", T('mb_zufert','Zu den Fertigkeiten →'))
-      + woerter()
-      + karte(T('mb_lektionen','Zuletzt bearbeitet'),
+      + woerter();
+
+    var fachSachen = karte(T('mb_lektionen','Zuletzt bearbeitet'),
               '<div id="mbLektionen"><div class="mb-leer">' + T('mb_ladet','Wird geladen …') + '</div></div>',
               "go('kurse')", T('mb_zubib','Zur Kursbibliothek →'))
       + karte(T('mb_texte','Meine Texte'),
@@ -401,12 +601,19 @@
       + karte(T('mb_fehler','Meine Merksätze'),
               '<div id="mbFehler"><div class="mb-leer">' + T('mb_ladet','Wird geladen …') + '</div></div>',
               "go('fehler')", T('mb_zufehler','Zum Fehler-Trainer →'))
-      + material()
-      + '<div id="mbAbzeichen"></div>'
+      + '<div id="mbAbzeichen"></div>';
+
+    ziel.innerHTML = '<div class="mb">'
+      + kopf()
+      + zahlen()
+      + reiter(offen)
+      + fach('unterricht', offen, fachUnterricht)
+      + fach('lernstand',  offen, fachLernstand)
+      + fach('sachen',     offen, fachSachen)
       + '</div>';
 
-    /* Die Abzeichen-Wand gab es schon — sie zeichnet sich jetzt in
-       den Kasten unten hinein statt über die ganze Seite. */
+    /* Die Abzeichen-Wand gab es schon — sie zeichnet sich in den
+       Kasten unter "Meine Sachen" hinein statt über die ganze Seite. */
     try{ if(window.renderFortschritt) window.renderFortschritt(); }catch(e){ console.error('Abzeichen:', e); }
     try{ nachladen(); }catch(e){ console.error('Mein Bereich:', e); }
   };
