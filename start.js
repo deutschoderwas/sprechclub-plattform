@@ -300,9 +300,143 @@
     + '@media(max-width:560px){.st-kf{font-size:12.5px;padding:9px 9px;gap:7px}'
     +   '.st-kf .z{width:27px;height:27px;font-size:15px}}';
 
+
+  /* ============================================================
+     Die Startseite am Handy — vier Bloecke, mehr nicht
+
+     Julia, 28.10.2026, nach vier Bildschirmen von Finanzguru: "so muss
+     es auch bei uns sein: NICHT ZU VIEL ... aber klar und strukturiert
+     und professionell und robust." Und zu den Farben: "das ist ja mein
+     Logo, das sind meine eigentlichen Farben."
+
+     Am Rechner bleibt die Startseite, wie sie war — zwei Spalten,
+     Strom, Termine, Begleiter. Am Handy (bis 760 Punkte) steht
+     stattdessen das hier:
+
+       1. Deine naechste Stunde   eine Angabe, gross
+       2. Frag Amanda             Feld, Mikrofon, vier Vorschlaege
+       3. Deine Fertigkeiten      Ringe, aus ueben_stand
+       4. Dein Unterricht         was gebucht ist, Vorbereitung
+
+     Die Farben sind aus dem Logo gemessen: #80D8F0 hell, #3FBDDC
+     mittel, #1FA6C6 fuer Boegen auf Weiss, #0E6D85 fuer Text.
+     Die Zeichen kommen aus Lucide (MIT) und liegen inline im
+     Dokument — Emoji sehen auf jedem Geraet anders aus.
+     ============================================================ */
+  var CSS_HANDY = ''
+    + '.hs{--grund:#F2EFE6;--karte:#fff;--ink:#14232A;--ink2:#5B6A70;--ink3:#93A2A8;'
+    +   '--rand:#E8E2D4;--rand2:#F1ECE1;--tq:#80D8F0;--tq-m:#3FBDDC;--tq-b:#1FA6C6;'
+    +   '--tq-t:#0E6D85;--tq-soft:#E8F7FC;--gold:#FFCE00;--rot:#DD0000;'
+    +   'display:flex;flex-direction:column;gap:14px}'
+    + '.hs *{box-sizing:border-box}'
+    + '.hs button{font-family:inherit;color:inherit;cursor:pointer}'
+    + '.hs .druck{transition:transform .13s cubic-bezier(.2,.7,.3,1)}'
+    + '.hs .druck:active{transform:scale(.973)}'
+    + '@media (prefers-reduced-motion: reduce){.hs .druck,.hs .druck:active{transition:none;transform:none}}'
+    + '.hs .z{width:20px;height:20px;flex:none;stroke-width:1.75;display:block}'
+    + '.hs .z-s{width:16px;height:16px} .hs .z-l{width:22px;height:22px}'
+
+    /* Kopf */
+    + '.hs-kopf h1{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:700;'
+    +   'letter-spacing:-.025em;line-height:1.14;margin:0;color:var(--ink)}'
+    + '.hs-kopf p{display:flex;align-items:center;gap:6px;margin:6px 0 0;font-size:14px;color:var(--ink2)}'
+    + '.hs-kopf p .z{color:var(--rot)}'
+    + '.hs-stufe{display:inline-flex;align-items:center;gap:6px;background:var(--tq-soft);'
+    +   'color:var(--tq-t);border:1px solid #CCEDF7;border-radius:999px;padding:5px 12px;'
+    +   'font-size:12.5px;font-weight:700;margin-top:10px}'
+
+    /* 1. Naechste Stunde */
+    /* .hs .hs-woche statt .hs-woche: die Regel .hs button{color:inherit}
+       weiter oben ist staerker und hat den weissen Text im dunklen
+       Block wieder auf die dunkle Grundfarbe gezogen. */
+    + '.hs .hs-woche{background:linear-gradient(140deg,#0E6D85,#0A4E62);border-radius:22px;'
+    +   'padding:16px 18px 18px;color:#fff;border:none;text-align:left;width:100%;display:block;'
+    +   'box-shadow:0 12px 26px rgba(10,78,98,.24)}'
+    + '.hs-woche .oben{display:flex;align-items:center;gap:8px;margin-bottom:10px}'
+    + '.hs-woche .marke{background:var(--gold);color:#1A1A1A;font-size:11px;font-weight:700;'
+    +   'border-radius:6px;padding:3px 7px}'
+    + '.hs-woche .was{font-size:13.5px;font-weight:600}'
+    + '.hs-woche .rechts{margin-left:auto;display:flex;align-items:center;gap:2px;font-size:13px;color:#A9DEEE}'
+    + '.hs-woche .gross{font-family:"Space Grotesk",sans-serif;font-size:27px;font-weight:700;line-height:1.1}'
+    + '.hs-woche .klein{display:block;font-size:13.5px;color:#A9DEEE;margin-top:5px;line-height:1.45}'
+
+    /* 2. Amanda */
+    + '.hs-am .band{display:flex;align-items:center;gap:8px;margin-bottom:9px}'
+    + '.hs-am .band b{display:flex;align-items:center;gap:7px;font-family:"Space Grotesk",sans-serif;'
+    +   'font-size:16px;font-weight:700;flex:1;min-width:0;color:var(--ink)}'
+    + '.hs-am .band b .z{color:var(--tq-m)}'
+    + '.hs-am .band .mehr{display:inline-flex;align-items:center;gap:2px;font-size:13px;font-weight:600;'
+    +   'color:var(--tq-t);background:none;border:none;white-space:nowrap}'
+    + '.hs-karte{background:var(--karte);border:1px solid var(--rand);border-radius:20px;'
+    +   'box-shadow:0 1px 2px rgba(20,35,42,.04),0 8px 22px rgba(20,35,42,.05)}'
+    + '.hs-am .feld{padding:13px 13px 14px}'
+    + '.hs-am .eingabe{display:flex;align-items:flex-end;gap:9px;background:#F6F3EB;'
+    +   'border:1px solid var(--rand2);border-radius:15px;padding:11px 11px 11px 13px}'
+    + '.hs-am textarea{flex:1;min-width:0;border:none;background:none;resize:none;outline:none;'
+    +   'font-family:inherit;font-size:15px;line-height:1.45;color:var(--ink);max-height:92px;padding:0}'
+    + '.hs-am textarea::placeholder{color:var(--ink3)}'
+    + '.hs-am .mik{flex:none;width:34px;height:34px;border-radius:999px;border:none;background:none;'
+    +   'color:var(--ink2);display:grid;place-items:center}'
+    + '.hs-am .send{flex:none;width:38px;height:38px;border-radius:999px;border:none;'
+    +   'background:linear-gradient(135deg,var(--tq),var(--tq-m));color:#053A47;display:grid;place-items:center}'
+    + '.hs-am .oder{margin:12px 0 8px;font-size:12.5px;color:var(--ink2)}'
+    + '.hs-am .chips{display:grid;grid-template-columns:1fr 1fr;gap:7px}'
+    + '@media(max-width:340px){.hs-am .chips{grid-template-columns:1fr}}'
+    + '.hs-am .chip{display:flex;align-items:center;gap:7px;min-width:0;text-align:left;'
+    +   'background:#F6F3EB;border:1px solid var(--rand2);border-radius:12px;padding:9px 11px;'
+    +   'font-size:13px;font-weight:600;color:var(--ink)}'
+    + '.hs-am .chip .z{width:15px;height:15px;color:var(--tq-t)}'
+    + '.hs-am .chip > span:last-child{min-width:0;overflow-wrap:break-word}'
+
+    /* 3. Ringe */
+    + '.hs-ring-k{padding:16px 0 12px}'
+    + '.hs-kopfz{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:0 16px}'
+    + '.hs-kopfz h2{font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:700;flex:1;min-width:0;margin:0}'
+    + '.hs-kopfz .mehr{display:inline-flex;align-items:center;gap:2px;font-size:13px;font-weight:600;'
+    +   'color:var(--tq-t);background:none;border:none;white-space:nowrap}'
+    + '.hs-feld{position:relative}'
+    + '.hs-feld::after{content:"";position:absolute;top:0;right:0;bottom:0;width:34px;'
+    +   'background:linear-gradient(90deg,rgba(255,255,255,0),#fff 72%);pointer-events:none}'
+    + '.hs-ringe{display:flex;gap:4px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;'
+    +   '-webkit-overflow-scrolling:touch}'
+    + '.hs-ringe::-webkit-scrollbar{display:none}'
+    + '.hs .hs-ring{color:var(--ink);flex:0 0 auto;width:74px;text-align:center;border:none;background:none;padding:2px 0 4px}'
+    + '.hs-ring .kreis{position:relative;display:block;width:60px;height:60px;margin:0 auto}'
+    + '.hs-ring svg.bogen{transform:rotate(-90deg);display:block}'
+    + '.hs-ring .scheibe{position:absolute;inset:11px;border-radius:999px;display:grid;place-items:center}'
+    + '.hs-ring .scheibe .z{width:20px;height:20px;stroke-width:2}'
+    + '.hs-ring b{display:block;font-size:11.5px;font-weight:600;color:var(--ink);margin-top:7px;line-height:1.25}'
+    + '.hs-ring i{display:block;font-family:"Space Grotesk",sans-serif;font-style:normal;font-size:11.5px;'
+    +   'font-weight:700;margin-top:1px;font-variant-numeric:tabular-nums}'
+    + '.hs-ring.gut .scheibe{background:#DFF5EF;color:#0E7E99} .hs-ring.gut i{color:#0E7E99}'
+    + '.hs-ring.mitte .scheibe{background:#FFF4CC;color:#9A7100} .hs-ring.mitte i{color:#9A7100}'
+    + '.hs-ring.wenig .scheibe{background:#FDECEB;color:#C21C14} .hs-ring.wenig i{color:#C21C14}'
+    + '.hs-leer{padding:0 16px 6px;font-size:13.5px;color:var(--ink2);line-height:1.5}'
+
+    /* 4. Unterricht */
+    + '.hs-titel{font-family:"Space Grotesk",sans-serif;font-size:20px;font-weight:700;'
+    +   'letter-spacing:-.025em;margin:10px 0 -2px;color:var(--ink)}'
+    + '.hs-liste{overflow:hidden}'
+    + '.hs .hs-z{color:var(--ink);display:flex;align-items:center;gap:11px;padding:13px 15px;width:100%;border:none;'
+    +   'border-bottom:1px solid var(--rand2);background:var(--karte);text-align:left}'
+    + '.hs-z:last-child{border-bottom:none}'
+    + '.hs-z .kachel{flex:none;width:38px;height:38px;border-radius:12px;background:var(--tq-soft);'
+    +   'display:grid;place-items:center;color:var(--tq-t)}'
+    + '.hs-z .kachel.rot{background:#FDECEB;color:var(--rot)} .hs-z .kachel.gold{background:#FFF4CC;color:#8A6608}'
+    + '.hs-z .tx{flex:1;min-width:0}'
+    + '.hs-z .tx b{display:block;font-size:14.5px;font-weight:600;line-height:1.35}'
+    + '.hs-z .tx span{display:block;font-size:12.5px;color:var(--ink2);margin-top:1px}'
+    + '.hs-schild{font-size:11px;font-weight:700;border-radius:999px;padding:4px 9px;white-space:nowrap}'
+    + '.hs-schild.jetzt{background:var(--rot);color:#fff}'
+    + '.hs-schild.frei{background:var(--tq-soft);color:var(--tq-t)}'
+    + '.hs-z .pfeil{color:var(--ink3)}'
+    ;
+
+  var HANDY_ZEICHEN = '<symbol id="s-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /> <path d="M8 14h.01" /> <path d="M12 14h.01" /> <path d="M16 14h.01" /> <path d="M8 18h.01" /> <path d="M12 18h.01" /> <path d="M16 18h.01" /></symbol><symbol id="s-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol><symbol id="s-mic" viewBox="0 0 24 24"><path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" /></symbol><symbol id="s-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></symbol><symbol id="s-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="s-ear" viewBox="0 0 24 24"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0" /> <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4" /></symbol><symbol id="s-book-open" viewBox="0 0 24 24"><path d="M12 7v14" /> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></symbol><symbol id="s-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol><symbol id="s-brain" viewBox="0 0 24 24"><path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path d="M18 18a4 4 0 0 0 2-7.464" /> <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path d="M6 18a4 4 0 0 1-2-7.464" /> <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></symbol><symbol id="s-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol><symbol id="s-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></symbol><symbol id="s-file-text" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /> <path d="M14 2v4a2 2 0 0 0 2 2h4" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></symbol><symbol id="s-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /> <path d="M22 10v6" /> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></symbol><symbol id="s-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /> <path d="m14.5 12.5 2-2" /> <path d="m11.5 9.5 2-2" /> <path d="m8.5 6.5 2-2" /> <path d="m17.5 15.5 2-2" /></symbol><symbol id="s-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol><symbol id="s-radio" viewBox="0 0 24 24"><path d="M16.247 7.761a6 6 0 0 1 0 8.478" /> <path d="M19.075 4.933a10 10 0 0 1 0 14.134" /> <path d="M4.925 19.067a10 10 0 0 1 0-14.134" /> <path d="M7.753 16.239a6 6 0 0 1 0-8.478" /> <circle cx="12" cy="12" r="2" /></symbol><symbol id="s-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /></symbol>';
+
   function stil(){
     if(document.getElementById('startStil')) return;
-    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED+CSS_KARTE;
+    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED+CSS_KARTE+CSS_HANDY;
     document.head.appendChild(s);
   }
 
@@ -324,12 +458,250 @@
      der Datenbank kommt (Beitraege, buchbare Stunden), traegt sich
      danach nach — die Seite steht also sofort und zappelt nicht.
      ============================================================ */
+
+  /* ---------- Die Startseite am Handy ---------- */
+
+  function zeichenEinhaengen(){
+    if(document.getElementById('hsZeichen')) return;
+    var d = document.createElement('div');
+    d.innerHTML = '<svg id="hsZeichen" width="0" height="0" style="position:absolute" aria-hidden="true">'
+      + '<defs>' + HANDY_ZEICHEN + '</defs></svg>';
+    document.body.appendChild(d.firstChild);
+  }
+  function ikon(name, klasse){
+    return '<svg class="z ' + (klasse||'') + '" fill="none" stroke="currentColor">'
+      + '<use href="#s-' + name + '"/></svg>';
+  }
+
+  function istHandy(){
+    try{ return window.matchMedia('(max-width:760px)').matches; }catch(e){ return false; }
+  }
+
+  /* Wann ist die naechste Stunde — als Satz, den man sofort versteht. */
+  function wannSatz(iso){
+    var d = new Date(iso); if(isNaN(d)) return '';
+    var heute = new Date(); heute.setHours(0,0,0,0);
+    var tag = new Date(d); tag.setHours(0,0,0,0);
+    var tage = Math.round((tag - heute) / 86400000);
+    var uhr = (window.fmtTimeK ? fmtTimeK(d) : d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}));
+    if(tage === 0) return 'Heute · ' + uhr + ' Uhr';
+    if(tage === 1) return 'Morgen · ' + uhr + ' Uhr';
+    return d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}) + ' · ' + uhr + ' Uhr';
+  }
+  function tageBis(iso){
+    var d = new Date(iso); if(isNaN(d)) return null;
+    var heute = new Date(); heute.setHours(0,0,0,0);
+    var tag = new Date(d); tag.setHours(0,0,0,0);
+    return Math.round((tag - heute) / 86400000);
+  }
+
+  /* 1. Die grosse Karte: die naechste Stunde. Gibt es keine, steht da,
+        was dann zu tun ist — nicht eine leere Flaeche. */
+  function hsWoche(k, s){
+    var naechste = (s.upcoming || [])[0];
+    var stufe = '';
+    try{ stufe = String((k.profile && (k.profile.level || k.profile.stufe)) || '').toUpperCase().slice(0,2); }catch(e){}
+    if(!naechste){
+      return '<button class="hs-woche druck" onclick="go(\'kalender\')">'
+        + '<span class="oben">' + (stufe ? '<span class="marke">' + E(stufe) + '</span>' : '')
+        +   '<span class="was">Sprechclub</span>'
+        +   '<span class="rechts">Wochenplan ' + ikon('chevron-right','z-s') + '</span></span>'
+        + '<span class="gross">Noch keine Stunde gebucht</span>'
+        + '<span class="klein">Such dir im Wochenplan eine Stunde aus — kleine Gruppen, echte Lehrerin.</span>'
+        + '</button>';
+    }
+    var tage = tageBis(naechste.starts_at);
+    var rechts = tage === 0 ? 'heute' : (tage === 1 ? 'morgen' : 'in ' + tage + ' Tagen');
+    return '<button class="hs-woche druck" onclick="go(\'stunden\')">'
+      + '<span class="oben">' + (stufe ? '<span class="marke">' + E(stufe) + '</span>' : '')
+      +   '<span class="was">Deine nächste Stunde</span>'
+      +   '<span class="rechts">' + E(rechts) + ' ' + ikon('chevron-right','z-s') + '</span></span>'
+      + '<span class="gross">' + E(wannSatz(naechste.starts_at)) + '</span>'
+      + '<span class="klein">' + E(naechste.topic || naechste.title || 'Sprechclub') + '</span>'
+      + '</button>';
+  }
+
+  /* 2. Frag Amanda. Der Text wird mitgenommen: go('amanda') zeichnet die
+        Ansicht, danach uebergibt amSenden() die Frage. */
+  window.hsFragen = function(vorgabe){
+    var feld = document.getElementById('hsAmText');
+    var text = String(vorgabe || (feld && feld.value) || '').trim();
+    try{ go('amanda'); }catch(e){ return; }
+    if(!text) return;
+    if(feld) feld.value = '';
+    var versuche = 0;
+    (function warten(){
+      versuche++;
+      if(document.getElementById('amText') && typeof window.amSenden === 'function'){
+        try{ window.amSenden(text); }catch(e){}
+        return;
+      }
+      if(versuche < 25) setTimeout(warten, 120);
+    })();
+  };
+
+  function hsAmanda(){
+    var vor = [
+      ['ruler',          'Dativ erklären'],
+      ['pen-line',       'Satz prüfen'],
+      ['graduation-cap', 'Übung bauen'],
+      ['message-circle', 'Höflich sagen']
+    ];
+    return '<section class="hs-am">'
+      + '<div class="band"><b>' + ikon('sparkles','z-s') + 'Frag Amanda</b>'
+      +   '<button class="mehr druck" onclick="go(\'amanda\')">Letzte Gespräche ' + ikon('chevron-right','z-s') + '</button></div>'
+      + '<div class="hs-karte feld">'
+      +   '<div class="eingabe">'
+      +     '<textarea id="hsAmText" rows="2" placeholder="Frag mich etwas auf Deutsch …"></textarea>'
+      +     '<button class="mik druck" onclick="go(\'amandasprechen\')" aria-label="Sprechen statt tippen">' + ikon('mic') + '</button>'
+      +     '<button class="send druck" onclick="hsFragen()" aria-label="Abschicken">' + ikon('arrow-up','z-s') + '</button>'
+      +   '</div>'
+      +   '<p class="oder">Oder tipp auf einen Vorschlag:</p>'
+      +   '<div class="chips">' + vor.map(function(v){
+            return '<button class="chip druck" onclick="hsFragen(' + JSON.stringify(v[1]) + ')">'
+              + ikon(v[0]) + '<span>' + v[1] + '</span></button>';
+          }).join('') + '</div>'
+      + '</div></section>';
+  }
+
+  /* 3. Die Ringe. Die Werte kommen aus ueben_stand und tragen sich nach;
+        bis dahin steht ein Satz da, keine leere Karte. */
+  var HS_FERTIG = [
+    ['hoeren',    'Hören',     'ear'],
+    ['sprechen',  'Sprechen',  'mic'],
+    ['lesen',     'Lesen',     'book-open'],
+    ['schreiben', 'Schreiben', 'pen-line'],
+    ['wortschatz','Wörter',    'brain'],
+    ['grammatik', 'Grammatik', 'ruler']
+  ];
+  function hsRing(name, ikonName, wert){
+    var stand = wert >= 70 ? 'gut' : (wert >= 40 ? 'mitte' : 'wenig');
+    var farbe = { gut:'#1FA6C6', mitte:'#E8A700', wenig:'#DD0000' }[stand];
+    var umfang = 2 * Math.PI * 26;
+    var anteil = Math.max(wert, 7) / 100;
+    return '<button class="hs-ring druck ' + stand + '" onclick="go(\'fertigkeit\')"'
+      + ' aria-label="' + E(name) + ': ' + wert + ' Prozent">'
+      + '<span class="kreis"><svg class="bogen" width="60" height="60" aria-hidden="true">'
+      +   '<circle cx="30" cy="30" r="26" fill="none" stroke="#EFE9DE" stroke-width="6"/>'
+      +   '<circle cx="30" cy="30" r="26" fill="none" stroke="' + farbe + '" stroke-width="6"'
+      +     ' stroke-linecap="round" stroke-dasharray="' + umfang.toFixed(1) + '"'
+      +     ' stroke-dashoffset="' + (umfang * (1 - anteil)).toFixed(1) + '"/></svg>'
+      + '<span class="scheibe">' + ikon(ikonName) + '</span></span>'
+      + '<b>' + E(name) + '</b><i>' + wert + ' %</i></button>';
+  }
+  function hsFertigkeiten(){
+    return '<section class="hs-karte hs-ring-k">'
+      + '<div class="hs-kopfz"><h2>Deine Fertigkeiten</h2>'
+      +   '<button class="mehr druck" onclick="go(\'fertigkeit\')">Alle anzeigen ' + ikon('chevron-right','z-s') + '</button></div>'
+      + '<div id="hsRinge" class="hs-leer">Wird geladen …</div>'
+      + '</section>';
+  }
+  function hsRingeFuellen(){
+    var c = window.sb, id = null;
+    try{ id = window.user && user.id; }catch(e){}
+    var ziel = document.getElementById('hsRinge');
+    if(!ziel) return;
+    if(!c || !id){ ziel.innerHTML = ''; return; }
+    c.from('ueben_stand').select('skill,best').eq('user_id', id).then(function(r){
+      var reihen = (r && r.data) || [];
+      var ziel2 = document.getElementById('hsRinge'); if(!ziel2) return;
+      if(!reihen.length){
+        ziel2.className = 'hs-leer';
+        ziel2.innerHTML = 'Hier steht bald, wie du in Hören, Lesen, Schreiben und Sprechen stehst — '
+          + 'sobald du die ersten Übungen gemacht hast.';
+        return;
+      }
+      var je = {};
+      reihen.forEach(function(x){
+        var k = x.skill || 'sonst';
+        if(!je[k]) je[k] = { summe:0, n:0 };
+        je[k].summe += (x.best || 0); je[k].n++;
+      });
+      var stuecke = HS_FERTIG.filter(function(f){ return je[f[0]]; }).map(function(f){
+        var d = je[f[0]];
+        return hsRing(f[1], f[2], Math.round(d.summe / Math.max(1, d.n)));
+      });
+      if(!stuecke.length){ ziel2.className='hs-leer'; ziel2.innerHTML='Noch keine Übungen gemacht.'; return; }
+      ziel2.className = 'hs-feld';
+      ziel2.innerHTML = '<div class="hs-ringe">' + stuecke.join('') + '</div>';
+    }).catch(function(){
+      var z = document.getElementById('hsRinge');
+      if(z){ z.className='hs-leer'; z.innerHTML = 'Konnte gerade nicht geladen werden.'; }
+    });
+  }
+
+  /* 4. Dein Unterricht */
+  function hsUnterricht(k, s){
+    var kommend = (s.upcoming || []).slice(0, 3);
+    var zeilen = kommend.map(function(b){
+      var tage = tageBis(b.starts_at);
+      var laeuft = tage === 0;
+      return '<button class="hs-z druck" onclick="go(\'stunden\')">'
+        + '<span class="kachel' + (laeuft ? ' rot' : '') + '">' + ikon(laeuft ? 'radio' : 'calendar-days') + '</span>'
+        + '<span class="tx"><b>' + E(b.topic || b.title || 'Sprechclub') + '</b>'
+        +   '<span>' + E(wannSatz(b.starts_at)) + (b.level ? ' · ' + E(b.level) : '') + '</span></span>'
+        + '<span class="hs-schild ' + (laeuft ? 'jetzt' : 'frei') + '">' + (laeuft ? 'heute' : 'gebucht') + '</span>'
+        + '</button>';
+    }).join('');
+    if(!zeilen){
+      zeilen = '<button class="hs-z druck" onclick="go(\'kalender\')">'
+        + '<span class="kachel">' + ikon('calendar-days') + '</span>'
+        + '<span class="tx"><b>Stunde aussuchen</b><span>Der Wochenplan zeigt alle Termine</span></span>'
+        + ikon('chevron-right','pfeil') + '</button>';
+    }
+    zeilen += '<button class="hs-z druck" onclick="go(\'materialien\')">'
+      + '<span class="kachel gold">' + ikon('file-text') + '</span>'
+      + '<span class="tx"><b>Material und Vorbereitung</b><span>Wortschatz, Merksätze und Übungen zur Stunde</span></span>'
+      + ikon('chevron-right','pfeil') + '</button>';
+    return '<h2 class="hs-titel">Dein Unterricht</h2>'
+      + '<section class="hs-karte hs-liste">' + zeilen + '</section>';
+  }
+
+  function hsKopf(k, s){
+    var name = (k.name || '').split(' ')[0];
+    var std = new Date().getHours();
+    var gruss = std < 11 ? 'Guten Morgen' : (std < 18 ? 'Hallo' : 'Guten Abend');
+    var serie = 0;
+    try{ serie = (s && s.streak) || 0; }catch(e){}
+    var stufe = '';
+    try{ stufe = String((k.profile && (k.profile.level || k.profile.stufe)) || '').toUpperCase().slice(0,2); }catch(e){}
+    var datum = new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+    return '<header class="hs-kopf"><h1>' + gruss + (name ? ',<br>' + E(name) : '') + '</h1>'
+      + '<p>' + (serie ? ikon('flame','z-s') : '') + E(datum)
+      +   (serie ? ' · Tag ' + serie + ' in Folge' : '') + '</p>'
+      + (stufe
+          ? '<span class="hs-stufe">' + ikon('target','z-s') + 'Dein Niveau: ' + E(stufe) + '</span>'
+          : '<button class="hs-stufe druck" onclick="go(\'fortschritt\')">' + ikon('target','z-s')
+            + 'Niveau eintragen</button>')
+      + '</header>';
+  }
+
+  function handyStart(ziel, k, s){
+    zeichenEinhaengen();
+    ziel.innerHTML = '<div class="hs">'
+      + hsKopf(k, s)
+      + hsWoche(k, s)
+      + hsAmanda()
+      + hsFertigkeiten()
+      + hsUnterricht(k, s)
+      + '</div>';
+    try{ hsRingeFuellen(); }catch(e){ console.error('Fertigkeiten:', e); }
+  }
+
   STARTSEITE.zeichne = function(ziel, k){
     if(!ziel) return;
     stil();
     k = k || {};
     var s = k.stats || {upcoming:[],past:[],streak:0,known:0,vocabTotal:0};
     var name = (k.name||'').split(' ')[0];
+
+    /* Am Handy die vier Bloecke, am Rechner die gewohnte Seite.
+       Julia, 28.10.2026: "NICHT ZU VIEL ... aber klar und strukturiert
+       und professionell und robust." */
+    if (istHandy()) {
+      try { handyStart(ziel, k, s); return; }
+      catch (e) { console.error('Handy-Start:', e); }   // im Zweifel die alte Seite
+    }
 
     ziel.innerHTML = ''
       + '<div class="sf">'
