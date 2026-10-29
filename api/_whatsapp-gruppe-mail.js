@@ -91,6 +91,12 @@ export function gruppeHtml(name, email) {
         Wir freuen uns so oder so, dass du dabei bist.
       </p>
 
+      <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
+        Und falls du Fragen hast — zur Gruppe oder zu irgendetwas anderem:
+        Schreib mir einfach direkt,
+        <a href="https://wa.me/4917643425306" style="color:#0F766E;font-weight:700;">+49 176 43425306</a>.
+      </p>
+
       <p style="margin:0 0 26px;font-size:16px;line-height:1.65;">
         Bis bald,<br>Julia
       </p>
