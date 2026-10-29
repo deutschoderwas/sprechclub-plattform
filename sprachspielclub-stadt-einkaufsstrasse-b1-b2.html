@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--pink:#E69CB3;--sand:#E7ECEE;}
+:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--pink:#E69CB3;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;--green:#2E9E5B;--green-soft:#EAF7EF;}
 *{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
 body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
 .wrapper{max-width:1180px;margin:0 auto;padding:2.5rem 1.6rem 5rem;}
@@ -63,8 +63,59 @@ h2.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-siz
 .debate-q{font-family:'Space Grotesk',sans-serif;font-weight:700;font-style:italic;color:var(--ink);font-size:.98rem;margin-top:.3rem;}
 footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1.5rem;margin-top:3rem;}
 footer strong{color:var(--ink);}
+.levelbar{display:flex;flex-direction:column;align-items:center;gap:.35rem;margin:1.3rem auto 0;}
+.levelbar .lab{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);}
+.levelsw{display:inline-flex;gap:.4rem;background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem;box-shadow:0 4px 14px rgba(38,32,25,.08);}
+.levelsw button{font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;border:none;background:transparent;color:var(--ink);padding:.45rem 1rem;border-radius:999px;cursor:pointer;transition:.18s;}
+.levelsw button:hover{background:var(--cream-warm);}
+.levelsw button.on[data-l=einfach]{background:#E0A400;color:#5a3d00;}
+.levelsw button.on[data-l=komplexer]{background:var(--der);color:#fff;}
+.levelsw button.on[data-l=schwierig]{background:var(--das);color:#fff;}
+.lv{display:none;}
+body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[data-lvl=komplexer],body[data-level=schwierig] .lv[data-lvl=schwierig]{display:block;}
+.lvtag{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.18rem .6rem;margin-bottom:.6rem;}
+.lvtag.e{background:var(--yellow-soft);color:#8a6400;}
+.lvtag.k{background:#E4EEFB;color:#1e4f91;}
+.lvtag.s{background:#E4F6EC;color:#1d6c3e;}
+.quiz-runden{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1.1rem 0 1.5rem;}
+@media(max-width:900px){.quiz-runden{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.quiz-runden{grid-template-columns:repeat(2,1fr);}}
+.qr{background:var(--paper);border:2px solid var(--sand);border-radius:14px;padding:.65rem .8rem;cursor:pointer;transition:.12s;text-align:left;font-family:'Inter',sans-serif;}
+.qr:hover{border-color:var(--ink);transform:translateY(-1px);}
+.qr.active{border-color:var(--red);background:var(--red-soft);}
+.qr.fertig{border-color:var(--green);background:var(--green-soft);}
+.qr-i{font-size:1.25rem;line-height:1;}
+.qr-t{font-weight:700;font-size:.92rem;margin-top:.2rem;}
+.qr-d{font-size:.74rem;color:var(--ink-mute);}
+.quiz-buehne{background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:6px 6px 0 rgba(38,32,25,.13);max-width:740px;margin:0 auto;}
+.quiz-kopf{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.quiz-zaehler{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.quiz-punkte{font-size:.86rem;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:999px;padding:.2rem .8rem;}
+.quiz-balken{height:8px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:1.2rem;border:1.5px solid var(--ink);}
+.quiz-balken i{display:block;height:100%;background:var(--red);transition:width .3s;}
+.quiz-frage{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.42rem);line-height:1.35;margin-bottom:1.1rem;min-height:2.7em;}
+.gq-opts{display:grid;gap:.5rem;}
+.qo{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand);border-radius:14px;padding:.75rem 1rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s;}
+.qo:hover:not(.aus){border-color:var(--ink);}
+.qo .qo-b{flex:0 0 26px;height:26px;border-radius:999px;background:var(--paper);border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--ink-mute);}
+.qo.richtig{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+.qo.richtig .qo-b{background:var(--green);border-color:var(--green);color:#fff;}
+.qo.falsch{background:var(--red-soft);border-color:var(--red);color:#B01813;}
+.qo.falsch .qo-b{background:var(--red);border-color:var(--red);color:#fff;}
+.qo.aus{cursor:default;}
+.quiz-erkl{margin-top:1rem;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;font-size:.94rem;line-height:1.6;display:none;}
+.quiz-erkl.an{display:block;animation:fade .3s ease;}
+.quiz-erkl b{color:var(--red);}
+.quiz-fuss{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.quiz-ende{text-align:center;padding:1.2rem .5rem;}
+.quiz-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:3rem;color:var(--green);line-height:1;}
+.quiz-ende p{color:var(--ink-soft);margin:.6rem 0 1.1rem;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter',sans-serif;}
+.btn:hover{background:#C8211D;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper);}
 </style></head>
-<body><div class="wrapper">
+<body data-level="komplexer"><div class="wrapper">
 <div class="eyebrow">deutschoderwas · Sprachspielclub · B1/B2</div>
 <div class="title-wrap"><h1 class="title">In der <span class="hl">Stadt</span></h1></div>
 <p class="subtitle">In der Einkaufsstraße ist richtig viel los. Findet die Dinge und Personen und sagt <b>genau</b>, wo sie sind — danach eine Runde <b>Tabu</b>.</p>
@@ -74,12 +125,21 @@ footer strong{color:var(--ink);}
 <span class="hero-tag">🔤 <b>Tabu</b></span>
 <span class="hero-tag">🗣️ <b>Frei sprechen</b></span>
 </div>
+<div class="levelbar">
+  <span class="lab">Niveau wählen</span>
+  <div class="levelsw">
+    <button data-l="einfach" onclick="setLevel('einfach')">🟨 A2/B1</button>
+    <button data-l="komplexer" class="on" onclick="setLevel('komplexer')">🟦 B1/B2</button>
+    <button data-l="schwierig" onclick="setLevel('schwierig')">🟩 B2/C1</button>
+  </div>
+</div>
 <nav class="tabs">
 <button class="tab active" data-tab="0">🔍 Das Bild</button>
 <button class="tab" data-tab="1">🎁 Rate-Spiel</button>
 <button class="tab" data-tab="2">📍 Präpositionen</button>
 <button class="tab" data-tab="3">🔤 Tabu</button>
 <button class="tab" data-tab="4">🗣️ Sprechen</button>
+<button class="tab" data-tab="5">🏆 Großes Quiz</button>
 </nav>
 <section class="section active" data-section="0">
 <h2 class="section-title">Was gibt es <em>alles</em> zu sehen?</h2>
@@ -90,39 +150,52 @@ footer strong{color:var(--ink);}
 <div class="tip">🔍 <strong>Such-Spiel:</strong> Eine Person nennt etwas aus der Liste — die anderen suchen es im Bild und beschreiben im ganzen Satz, wo es ist. Wer es zuerst richtig beschreibt, ist als Nächstes dran.</div>
 <h2 class="section-title">Findet diese <em>Sachen</em></h2>
 <p class="section-sub">Tippt ein Wort an, wenn ihr es gefunden und die Lage beschrieben habt.</p>
-<div class="find-grid" id="findGrid">
-<div class="find"><span class="art">die</span> Bäckerei</div>
+<div class="lv" data-lvl="einfach">
+<span class="lvtag e">A2/B1</span>
+<div class="find-grid">
 <div class="find"><span class="art">das</span> Brot</div>
-<div class="find"><span class="art">die</span> Apotheke</div>
 <div class="find"><span class="art">die</span> Bank</div>
 <div class="find"><span class="art">das</span> Café</div>
-<div class="find"><span class="art">der</span> Sonnenschirm</div>
 <div class="find"><span class="art">die</span> Tasse</div>
-<div class="find"><span class="art">der</span> Blumenstand</div>
 <div class="find"><span class="art">die</span> Blumen</div>
+<div class="find"><span class="art">das</span> Fahrrad</div>
+<div class="find"><span class="art">der</span> Rucksack</div>
+<div class="find"><span class="art">der</span> Hund</div>
+<div class="find"><span class="art">der</span> Hut</div>
+<div class="find"><span class="art">der</span> Bus</div>
+<div class="find"><span class="art">die</span> Ampel</div>
+<div class="find"><span class="art">die</span> Sonnenbrille</div>
+<div class="find"><span class="art">der</span> Baum</div>
+</div>
+</div>
+<div class="lv" data-lvl="komplexer">
+<span class="lvtag k">B1/B2</span>
+<div class="find-grid">
+<div class="find"><span class="art">die</span> Bäckerei</div>
+<div class="find"><span class="art">die</span> Apotheke</div>
+<div class="find"><span class="art">der</span> Sonnenschirm</div>
+<div class="find"><span class="art">der</span> Blumenstand</div>
 <div class="find"><span class="art">der</span> Kiosk</div>
 <div class="find"><span class="art">der</span> Brunnen</div>
 <div class="find"><span class="art">die</span> Laterne</div>
 <div class="find"><span class="art">die</span> Sitzbank</div>
-<div class="find"><span class="art">das</span> Fahrrad</div>
 <div class="find"><span class="art">der</span> Briefkasten</div>
+<div class="find"><span class="art">die</span> Bushaltestelle</div>
+<div class="find"><span class="art">der</span> Straßenmusiker</div>
+</div>
+</div>
+<div class="lv" data-lvl="schwierig">
+<span class="lvtag s">B2/C1</span>
+<div class="find-grid">
 <div class="find"><span class="art">der</span> Mülleimer</div>
 <div class="find"><span class="art">die</span> Einkaufstüte</div>
-<div class="find"><span class="art">der</span> Rucksack</div>
-<div class="find"><span class="art">der</span> Hund</div>
 <div class="find"><span class="art">die</span> Leine</div>
 <div class="find"><span class="art">die</span> Taube</div>
-<div class="find"><span class="art">der</span> Straßenmusiker</div>
 <div class="find"><span class="art">die</span> Gitarre</div>
-<div class="find"><span class="art">der</span> Hut</div>
-<div class="find"><span class="art">der</span> Bus</div>
-<div class="find"><span class="art">die</span> Bushaltestelle</div>
-<div class="find"><span class="art">die</span> Ampel</div>
 <div class="find"><span class="art">der</span> Zebrastreifen</div>
 <div class="find"><span class="art">der</span> Radfahrer</div>
-<div class="find"><span class="art">die</span> Sonnenbrille</div>
 <div class="find"><span class="art">der</span> Kirchturm</div>
-<div class="find"><span class="art">der</span> Baum</div>
+</div>
 </div>
 </section>
 <section class="section" data-section="1">
