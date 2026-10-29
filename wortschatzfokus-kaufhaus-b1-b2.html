@@ -105,6 +105,43 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 .quiz-chip.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);text-decoration:line-through;}
 .quiz-explain{margin-top:.6rem;font-size:.86rem;color:var(--das);background:#E4F6EC;padding:.5rem .8rem;border-radius:10px;display:none;}
 .quiz-explain.show{display:block;}
+.quiz-runden{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1.1rem 0 1.5rem;}
+@media(max-width:900px){.quiz-runden{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.quiz-runden{grid-template-columns:repeat(2,1fr);}}
+.qr{background:var(--paper);border:2px solid var(--sand);border-radius:14px;padding:.65rem .8rem;cursor:pointer;transition:.12s;text-align:left;font-family:'Inter',sans-serif;}
+.qr:hover{border-color:var(--ink);transform:translateY(-1px);}
+.qr.active{border-color:var(--red);background:var(--red-soft);}
+.qr.fertig{border-color:var(--teal);background:var(--teal-soft);}
+.qr-i{font-size:1.25rem;line-height:1;}
+.qr-t{font-weight:700;font-size:.92rem;margin-top:.2rem;}
+.qr-d{font-size:.74rem;color:var(--ink-mute);}
+.quiz-buehne{background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:6px 6px 0 rgba(38,32,25,.13);max-width:740px;margin:0 auto;}
+.quiz-kopf{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.quiz-zaehler{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.quiz-punkte{font-size:.86rem;font-weight:700;color:var(--teal);background:var(--teal-soft);border-radius:999px;padding:.2rem .8rem;}
+.quiz-balken{height:8px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:1.2rem;border:1.5px solid var(--ink);}
+.quiz-balken i{display:block;height:100%;background:var(--red);transition:width .3s;}
+.quiz-frage{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.42rem);line-height:1.35;margin-bottom:1.1rem;min-height:2.7em;}
+.gq-opts{display:grid;gap:.5rem;}
+.qo{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand);border-radius:14px;padding:.75rem 1rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s;}
+.qo:hover:not(.aus){border-color:var(--ink);}
+.qo .qo-b{flex:0 0 26px;height:26px;border-radius:999px;background:var(--paper);border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--ink-mute);}
+.qo.richtig{background:var(--teal-soft);border-color:var(--teal);color:var(--teal);}
+.qo.richtig .qo-b{background:var(--teal);border-color:var(--teal);color:#fff;}
+.qo.falsch{background:var(--red-soft);border-color:var(--red);color:#B01813;}
+.qo.falsch .qo-b{background:var(--red);border-color:var(--red);color:#fff;}
+.qo.aus{cursor:default;}
+.quiz-erkl{margin-top:1rem;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;font-size:.94rem;line-height:1.6;display:none;}
+.quiz-erkl.an{display:block;animation:fade .3s ease;}
+.quiz-erkl b{color:var(--red);}
+.quiz-fuss{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.quiz-ende{text-align:center;padding:1.2rem .5rem;}
+.quiz-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:3rem;color:var(--teal);line-height:1;}
+.quiz-ende p{color:var(--ink-soft);margin:.6rem 0 1.1rem;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter',sans-serif;}
+.btn:hover{background:#C8211D;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper);}
 .morewords{margin:1.1rem 0 .3rem;}
 .morewords h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:.2rem 0 .3rem;}
 .mw-note{font-size:.84rem;color:#6b5c4e;margin-bottom:.5rem;}
@@ -140,6 +177,7 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <button class="tab" data-tab="3">🔤 Tabu</button>
 <button class="tab" data-tab="4">🗣️ Sprechen</button>
 <button class="tab" data-tab="5">✏️ Übungen</button>
+<button class="tab" data-tab="6">🏆 Großes Quiz</button>
 </nav>
 <section class="section active" data-section="0">
 <h2 class="section-title">Was gibt es <em>alles</em> zu sehen?</h2>
@@ -317,6 +355,23 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_120513_7625a02c-6b49-49a6-ad1e-59dd6823eb8d.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der Vorhang</button><button class="quiz-chip">die Umkleidekabine</button><button class="quiz-chip">das Preisschild</button></div><div class="quiz-explain">„✓ das Preisschild"</div></div>
 </div>
 </section>
+<section class="section" data-section="6">
+<h2 class="section-title">🏆 Das <em>große Quiz</em></h2>
+<p class="section-sub">Mehrere Runden rund ums Kaufhaus: Wortschatz, Artikel, <strong>Wo? &amp; Wohin?</strong> und Einkaufs-Alltag. Pro Frage gibt es genau eine richtige Antwort — das Quiz passt sich eurem <strong>Niveau</strong> an.</p>
+<div class="quiz-runden" id="quizRunden"></div>
+<div class="quiz-buehne">
+  <div class="quiz-kopf"><span class="quiz-zaehler" id="quizZaehler">Runde 1 · Frage 1</span><span class="quiz-punkte" id="quizPunkte">0 von 6</span></div>
+  <div class="quiz-balken"><i id="quizBalken" style="width:0%"></i></div>
+  <div id="quizInhalt">
+    <div class="quiz-frage" id="quizFrage"></div>
+    <div class="gq-opts" id="quizOpts"></div>
+    <div class="quiz-erkl" id="quizErkl"></div>
+    <div class="quiz-fuss"><button class="btn ghost" onclick="quizRundeStart(qRunde)">↺ Runde neu</button><button class="btn" onclick="quizWeiter()">Weiter →</button></div>
+  </div>
+  <div class="quiz-ende" id="quizEnde" style="display:none"></div>
+</div>
+<div class="tip teal">🏅 <strong>Als Wettkampf:</strong> Zwei Teams, abwechselnd. Wer die richtige Antwort hat, muss zusätzlich <u>einen eigenen Satz</u> mit dem Wort bilden — erst dann gibt es den Punkt.</div>
+</section>
 </div>
 <footer><strong>deutschoderwas</strong> — Wortschatzfokus · B1/B2 · Im Kaufhaus</footer>
 <script>
@@ -330,10 +385,106 @@ var secQ=makeQueue(WORDS[curLevel].length),secP=0;
 document.getElementById('secretNew').onclick=function(){var list=WORDS[curLevel];if(secP>=secQ.length){secQ=makeQueue(list.length);secP=0;}var w=list[secQ[secP++]];document.getElementById('secretWord').innerHTML=artSpan(w);var im=document.getElementById('secretImg');im.src=w.img;im.style.display='block';};
 var tabQ=makeQueue(WORDS[curLevel].length),tabP=0;
 document.getElementById('tabooNew').onclick=function(){var list=WORDS[curLevel];if(tabP>=tabQ.length){tabQ=makeQueue(list.length);tabP=0;}var w=list[tabQ[tabP++]];document.getElementById('tabooWord').innerHTML=artSpan(w);var im=document.getElementById('tabooImg');im.src=w.img;im.style.display='block';document.getElementById('tabooList').innerHTML=w.f.map(function(x){return '<li>'+x+'</li>';}).join('');};
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';}
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';qFertig=[];quizRundenBauen();quizRundeStart(0);}
 function _sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=[].slice.call(opts.querySelectorAll('.quiz-chip'));var correct=chips[c];_sh(chips);chips.forEach(function(ch){opts.appendChild(ch);});opts.dataset.c=chips.indexOf(correct);});
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=opts.querySelectorAll('.quiz-chip');var exp=opts.parentElement.querySelector('.quiz-explain');chips.forEach(function(chip,i){chip.onclick=function(){if(opts.dataset.done)return;opts.dataset.done='1';if(i===c)chip.classList.add('correct');else{chip.classList.add('wrong');chips[c].classList.add('correct');}if(exp)exp.classList.add('show');};});});
+var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
+function QZ(){return QUIZ[curLevel];}
+function quizRundenBauen(){var qg=document.getElementById('quizRunden');qg.innerHTML='';QZ().forEach(function(R,i){var b=document.createElement('button');b.className='qr';b.dataset.i=i;b.innerHTML='<div class="qr-i">'+R.i+'</div><div class="qr-t">'+R.t+'</div><div class="qr-d">'+R.d+' · '+R.q.length+' Fragen</div>';b.addEventListener('click',function(){quizRundeStart(i);});qg.appendChild(b);});}
+function quizRundeStart(i){qRunde=i;qNr=0;qPunkte=0;qOffen=false;document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0 && +b.dataset.i!==i);});document.getElementById('quizEnde').style.display='none';document.getElementById('quizInhalt').style.display='block';quizFrage();}
+function quizFrage(){var R=QZ()[qRunde];if(!R)return;if(qNr>=R.q.length){quizEnde();return;}var f=R.q[qNr];qOffen=true;document.getElementById('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;document.getElementById('quizPunkte').textContent=qPunkte+' von '+R.q.length;document.getElementById('quizBalken').style.width=(qNr/R.q.length*100)+'%';document.getElementById('quizFrage').innerHTML=f.f;var paare=f.o.map(function(t,j){return {t:t,ok:j===f.r};});for(var j=paare.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var h=paare[j];paare[j]=paare[k];paare[k]=h;}var buch='ABCD',opts=document.getElementById('quizOpts');opts.innerHTML='';paare.forEach(function(p,j){var b=document.createElement('button');b.className='qo';b.dataset.ok=p.ok?'1':'0';b.innerHTML='<span class="qo-b">'+buch[j]+'</span><span>'+p.t+'</span>';b.addEventListener('click',function(){quizAntwort(b,f);});opts.appendChild(b);});var e=document.getElementById('quizErkl');e.className='quiz-erkl';e.innerHTML='';}
+function quizAntwort(btn,f){if(!qOffen)return;qOffen=false;var ok=btn.dataset.ok==='1';document.querySelectorAll('#quizOpts .qo').forEach(function(b){b.classList.add('aus');if(b.dataset.ok==='1')b.classList.add('richtig');});if(!ok)btn.classList.add('falsch');if(ok)qPunkte++;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;var e=document.getElementById('quizErkl');e.innerHTML=(ok?'✅ Richtig. ':'❌ Nicht ganz. ')+f.e;e.className='quiz-erkl an';}
+function quizWeiter(){if(qOffen){var b=document.getElementById('quizOpts').querySelector('.qo[data-ok="1"]');if(b){quizAntwort(b,QZ()[qRunde].q[qNr]);qPunkte--;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;return;}}qNr++;quizFrage();}
+function quizEnde(){var R=QZ()[qRunde],n=R.q.length;if(qFertig.indexOf(qRunde)<0)qFertig.push(qRunde);document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0);});document.getElementById('quizBalken').style.width='100%';document.getElementById('quizInhalt').style.display='none';var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));var naechste=(qRunde+1)%QZ().length;document.getElementById('quizEnde').style.display='block';document.getElementById('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+'<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+'<button class="btn" onclick="quizRundeStart('+naechste+')">'+QZ()[naechste].i+' Weiter: '+QZ()[naechste].t+' →</button></div>';}
+var QUIZ={
+"einfach":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Was trägt man an den Füßen?","o":["die Schuhe","den Hut","den Schal"],"r":0,"e":"Schuhe trägt man an den Füßen. Den Hut setzt man auf den Kopf, und den Schal bindet man um den Hals."},
+{"f":"Was zieht man an, wenn es draußen kalt ist?","o":["die Jacke","die Handtasche","den Rock"],"r":0,"e":"Die Jacke hält warm, wenn es kalt ist. In der Handtasche trägt man Dinge, und der Rock ist ein Kleidungsstück für die Beine."},
+{"f":"Worin trägt eine Frau ihr Geld und ihren Schlüssel?","o":["in der Handtasche","im Mantel","im Hut"],"r":0,"e":"In der Handtasche trägt man kleine Dinge wie Geld und Schlüssel. Der Mantel und der Hut sind Kleidungsstücke."},
+{"f":"Welches Kleidungsstück ist lang und warm und trägt man im Winter über allem?","o":["der Mantel","die Bluse","der Schuh"],"r":0,"e":"Der Mantel ist lang und warm und kommt über die anderen Sachen. Die Bluse ist ein leichtes Oberteil."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Kleid?","o":["das","der","die"],"r":0,"e":"Es heißt das Kleid."},
+{"f":"Welcher Artikel passt: ___ Bluse?","o":["die","der","das"],"r":0,"e":"Es heißt die Bluse."},
+{"f":"Welcher Artikel passt: ___ Mantel?","o":["der","die","das"],"r":0,"e":"Es heißt der Mantel."},
+{"f":"Welcher Artikel passt: ___ Handtasche?","o":["die","der","das"],"r":0,"e":"Es heißt die Handtasche. Das Grundwort entscheidet: die Tasche wird zu die Handtasche."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Die Pullover liegen auf ___ Tisch.","o":["dem","den","das"],"r":0,"e":"Wo? = Dativ: auf dem Tisch. Die Pullover bewegen sich nicht."},
+{"f":"Die Verkäuferin steht an ___ Kasse.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Kasse wird im Dativ zu der Kasse."},
+{"f":"Ich lege den Schal auf ___ Tisch.","o":["den","dem","das"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: auf den Tisch."},
+{"f":"Die Kundin geht in ___ Umkleidekabine.","o":["die","der","dem"],"r":0,"e":"Wohin? = Akkusativ: in die Umkleidekabine."}
+]},
+{"t":"Einkaufen & Alltag","d":"Alltag","i":"🛍️","q":[
+{"f":"Wo bezahlt man im Kaufhaus seine Sachen?","o":["an der Kasse","in der Umkleidekabine","am Spiegel"],"r":0,"e":"An der Kasse bezahlt man. In der Umkleidekabine probiert man Kleidung an, und im Spiegel sieht man sich."},
+{"f":"Was macht man in der Umkleidekabine?","o":["Kleidung anprobieren","Geld abheben","Essen kochen"],"r":0,"e":"In der Umkleidekabine probiert man Kleidung an, bevor man sie kauft."},
+{"f":"Eine Verkäuferin fragt: „Kann ich Ihnen helfen?“ Was möchte sie?","o":["dir beim Einkaufen helfen","dir etwas verbieten","nach Hause gehen"],"r":0,"e":"„Kann ich Ihnen helfen?“ ist ein höfliches Angebot, bei der Suche oder Beratung zu helfen."}
+]}
+],
+"komplexer":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"An welchem Möbelstück hängen im Laden viele Kleider auf Bügeln?","o":["an der Kleiderstange","an der Kasse","am Regal"],"r":0,"e":"An der Kleiderstange hängen die Kleider auf Bügeln. An der Kasse bezahlt man, und ins Regal stellt man Dinge."},
+{"f":"Worin trägt die Kundin ihre gekauften Sachen nach Hause?","o":["in der Einkaufstüte","im Spiegel","im Regal"],"r":0,"e":"In der Einkaufstüte trägt man die gekauften Sachen. Der Spiegel und das Regal gehören zur Einrichtung."},
+{"f":"Wie heißt die Person, die im Laden berät und verkauft?","o":["die Verkäuferin","die Kundin","die Schaufensterpuppe"],"r":0,"e":"Die Verkäuferin berät und verkauft. Die Kundin kauft ein, und die Schaufensterpuppe zeigt Kleidung."},
+{"f":"Woran hängt man ein einzelnes Kleidungsstück zum Aufhängen?","o":["an den Kleiderbügel","an die Rolltreppe","an die Tüte"],"r":0,"e":"An den Kleiderbügel hängt man ein Kleidungsstück. Die Rolltreppe fährt zwischen den Etagen."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Kleiderstange?","o":["die","der","das"],"r":0,"e":"Es heißt die Kleiderstange. Das Grundwort entscheidet: die Stange wird zu die Kleiderstange."},
+{"f":"Welcher Artikel passt: ___ Spiegel?","o":["der","die","das"],"r":0,"e":"Es heißt der Spiegel."},
+{"f":"Welcher Artikel passt: ___ Regal?","o":["das","der","die"],"r":0,"e":"Es heißt das Regal."},
+{"f":"Welcher Artikel passt: ___ Kundin?","o":["die","der","das"],"r":0,"e":"Es heißt die Kundin. Die Endung -in macht eine weibliche Person: der Kunde wird zu die Kundin."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Die Kleider hängen an ___ Kleiderstange.","o":["der","die","den"],"r":0,"e":"Wo? = Dativ: an der Kleiderstange. Die Kleider bewegen sich nicht."},
+{"f":"Ich hänge das Kleid an ___ Kleiderstange.","o":["die","der","dem"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: an die Kleiderstange."},
+{"f":"Ich stelle den Einkaufskorb auf ___ Tisch.","o":["den","dem","das"],"r":0,"e":"Wohin? = Akkusativ: auf den Tisch."},
+{"f":"Die Schaufensterpuppe steht zwischen ___ Kleiderstangen.","o":["den","die","der"],"r":0,"e":"Wo? = Dativ Plural: zwischen den Kleiderstangen (+n im Dativ Plural)."}
+]},
+{"t":"Einkaufen & Umtausch","d":"Alltag","i":"🛍️","q":[
+{"f":"Was ist ein Rabatt?","o":["ein Preisnachlass beim Kauf","eine Art Kassenbon","eine Umkleidekabine"],"r":0,"e":"Ein Rabatt ist ein Preisnachlass — die Ware wird billiger. Der Kassenbon ist der Beleg nach dem Kauf."},
+{"f":"Die Jacke passt nicht. Was sagst du an der Kasse?","o":["Ich möchte die Jacke gern umtauschen.","Ich möchte die Jacke gern anziehen.","Ich möchte die Jacke gern waschen."],"r":0,"e":"Beim Umtausch gibt man die Ware zurück und bekommt eine andere oder das Geld. „Umtauschen“ ist hier das richtige Verb."},
+{"f":"Wozu dient die Anprobe?","o":["um Kleidung vor dem Kauf zu testen","um an der Kasse zu bezahlen","um die Ware einzupacken"],"r":0,"e":"Bei der Anprobe testet man in der Umkleidekabine, ob die Kleidung passt, bevor man sie kauft."}
+]},
+{"t":"Redewendungen","d":"rund ums Geld","i":"💬","q":[
+{"f":"Was bedeutet „etwas kostet ein Vermögen“?","o":["etwas ist sehr teuer","etwas ist umsonst","etwas ist kaputt"],"r":0,"e":"Wenn etwas ein Vermögen kostet, ist es sehr teuer. Das Gegenteil wäre, es kostet fast nichts."},
+{"f":"Was bedeutet „die Katze im Sack kaufen“?","o":["etwas ungeprüft kaufen und sich täuschen","eine Katze im Tierladen kaufen","sehr günstig einkaufen"],"r":0,"e":"Wer die Katze im Sack kauft, kauft etwas, ohne es vorher zu prüfen — und erlebt oft eine böse Überraschung."},
+{"f":"Eine Verkäuferin sagt: „Das ist reduziert.“ Was heißt das?","o":["Der Preis wurde gesenkt.","Die Ware ist ausverkauft.","Die Ware ist kaputt."],"r":0,"e":"„Reduziert“ heißt, der Preis wurde heruntergesetzt — die Ware ist jetzt günstiger."}
+]}
+],
+"schwierig":[
+{"t":"Wortschatz","d":"Seltenere Wörter","i":"🔤","q":[
+{"f":"Wie heißt der Beleg, den man nach dem Bezahlen an der Kasse bekommt?","o":["der Kassenbon","das Preisschild","der Gutschein"],"r":0,"e":"Der Kassenbon (auch Beleg oder Quittung) bestätigt den Kauf. Das Preisschild nennt den Preis, der Gutschein ist ein Wertbon."},
+{"f":"Wie nennt man die gesamte Auswahl an Waren in einem Geschäft?","o":["das Sortiment","die Auslage","die Umtauschfrist"],"r":0,"e":"Das Sortiment ist die gesamte Warenauswahl. Die Auslage ist die präsentierte Ware, und die Umtauschfrist ist eine Zeitspanne."},
+{"f":"Wie heißt die Zeitspanne, in der man gekaufte Ware zurückgeben darf?","o":["die Umtauschfrist","der Diebstahlschutz","die Kundschaft"],"r":0,"e":"Die Umtauschfrist ist die Frist, innerhalb derer man umtauschen kann. Der Diebstahlschutz sichert die Ware."},
+{"f":"Womit fährt man in einem großen Kaufhaus bequem zwischen den Etagen?","o":["mit der Rolltreppe","mit dem Einkaufskorb","mit der Schaufensterpuppe"],"r":0,"e":"Mit der Rolltreppe (oder dem Aufzug) wechselt man die Etage. Der Einkaufskorb sammelt die Ware."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Schaufensterpuppe?","o":["die","der","das"],"r":0,"e":"Es heißt die Schaufensterpuppe. Das Grundwort entscheidet: die Puppe wird zu die Schaufensterpuppe."},
+{"f":"Welcher Artikel passt: ___ Preisschild?","o":["das","der","die"],"r":0,"e":"Es heißt das Preisschild. Das Grundwort entscheidet: das Schild wird zu das Preisschild."},
+{"f":"Welcher Artikel passt: ___ Einkaufskorb?","o":["der","die","das"],"r":0,"e":"Es heißt der Einkaufskorb. Das Grundwort entscheidet: der Korb wird zu der Einkaufskorb."},
+{"f":"Welcher Artikel passt: ___ Gutschein?","o":["der","die","das"],"r":0,"e":"Es heißt der Gutschein."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Der Vorhang hängt vor ___ Umkleidekabine.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ: vor der Umkleidekabine. Der Vorhang bewegt sich nicht."},
+{"f":"Ich hänge das Preisschild an ___ Mantel.","o":["den","dem","der"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: an den Mantel."},
+{"f":"Gegenüber ___ Kasse befindet sich die Rolltreppe.","o":["der","die","den"],"r":0,"e":"Die Präposition gegenüber steht mit dem Dativ: gegenüber der Kasse."},
+{"f":"Oberhalb ___ Kleiderstange hängt ein Werbeschild.","o":["der","die","dem"],"r":0,"e":"Die Präposition oberhalb steht mit dem Genitiv: oberhalb der Kleiderstange."}
+]},
+{"t":"Einkaufen & Umtausch","d":"ab B2","i":"🛍️","q":[
+{"f":"Was bedeutet „Ware auf Kommission zurücklegen lassen“ am ehesten?","o":["die Verkäuferin legt die Ware für dich zur Seite","die Ware wird sofort bezahlt","die Ware wird weggeworfen"],"r":0,"e":"Beim Zurücklegen reserviert die Verkäuferin die Ware, damit du sie später holen und bezahlen kannst."},
+{"f":"Du hast den Kassenbon verloren und willst umtauschen. Was ist meist das Problem?","o":["ohne Beleg ist der Umtausch oft schwierig","die Ware wird teurer","die Rolltreppe steht still"],"r":0,"e":"Der Kassenbon ist der Kaufnachweis. Ohne ihn kann das Geschäft den Umtausch verweigern oder erschweren."},
+{"f":"Was ist ein „Fehlkauf“?","o":["ein Kauf, den man später bereut","ein Kauf mit Rabatt","ein besonders guter Kauf"],"r":0,"e":"Ein Fehlkauf ist etwas, das man gekauft hat und später bereut — zum Beispiel, weil es nicht passt oder nicht gefällt."}
+]},
+{"t":"Redewendungen","d":"Feinheiten","i":"💬","q":[
+{"f":"Was bedeutet „tief in die Tasche greifen müssen“?","o":["viel Geld bezahlen müssen","die Handtasche verlieren","nach Kleingeld suchen"],"r":0,"e":"Wer tief in die Tasche greifen muss, muss viel Geld ausgeben. Die Redewendung meint hohe Kosten."},
+{"f":"Was bedeutet „das ist (preislich) ein Schnäppchen“?","o":["ein sehr günstiges Angebot","ein sehr teures Stück","eine kaputte Ware"],"r":0,"e":"Ein Schnäppchen ist ein besonders günstiges Angebot — ein guter Kauf für wenig Geld."},
+{"f":"Was bedeutet „jemandem etwas andrehen“?","o":["jemandem etwas aufschwatzen, das er kaum braucht","jemandem ein Geschenk machen","jemandem den Weg zeigen"],"r":0,"e":"Jemandem etwas andrehen heißt, ihn mit Überredung zum Kauf von etwas Unnötigem zu bringen. Es klingt leicht negativ."}
+]}
+]
+};
+quizRundenBauen();quizRundeStart(0);
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <style>.tab-level-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif;font-weight:800;font-size:.82rem;padding:.34rem .72rem;border-radius:999px;margin-right:.15rem;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1);align-self:center;}</style>

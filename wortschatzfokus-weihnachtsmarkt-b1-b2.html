@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;}
+:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;--green:#2E9E5B;--green-soft:#E4F6EC;}
 *{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
 body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
 .wrapper{max-width:1180px;margin:0 auto;padding:2.5rem 1.6rem 5rem;}
@@ -114,6 +114,43 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 .mw-card .m{display:block;color:#5C4E3E;font-size:.84rem;margin-top:.1rem;}
 .mw-card .en{display:block;color:#0A7D72;font-size:.78rem;font-weight:600;}
 .mw-card .en::before{content:"🇬🇧 ";}
+.quiz-runden{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1.1rem 0 1.5rem;}
+@media(max-width:900px){.quiz-runden{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.quiz-runden{grid-template-columns:repeat(2,1fr);}}
+.qr{background:var(--paper);border:2px solid var(--sand);border-radius:14px;padding:.65rem .8rem;cursor:pointer;transition:.12s;text-align:left;font-family:'Inter',sans-serif;}
+.qr:hover{border-color:var(--ink);transform:translateY(-1px);}
+.qr.active{border-color:var(--red);background:var(--red-soft);}
+.qr.fertig{border-color:var(--green);background:var(--green-soft);}
+.qr-i{font-size:1.25rem;line-height:1;}
+.qr-t{font-weight:700;font-size:.92rem;margin-top:.2rem;}
+.qr-d{font-size:.74rem;color:var(--ink-mute);}
+.quiz-buehne{background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:6px 6px 0 rgba(38,32,25,.13);max-width:740px;margin:0 auto;}
+.quiz-kopf{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.quiz-zaehler{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.quiz-punkte{font-size:.86rem;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:999px;padding:.2rem .8rem;}
+.quiz-balken{height:8px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:1.2rem;border:1.5px solid var(--ink);}
+.quiz-balken i{display:block;height:100%;background:var(--red);transition:width .3s;}
+.quiz-frage{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.42rem);line-height:1.35;margin-bottom:1.1rem;min-height:2.7em;}
+.gq-opts{display:grid;gap:.5rem;}
+.qo{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand);border-radius:14px;padding:.75rem 1rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s;}
+.qo:hover:not(.aus){border-color:var(--ink);}
+.qo .qo-b{flex:0 0 26px;height:26px;border-radius:999px;background:var(--paper);border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--ink-mute);}
+.qo.richtig{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+.qo.richtig .qo-b{background:var(--green);border-color:var(--green);color:#fff;}
+.qo.falsch{background:var(--red-soft);border-color:var(--red);color:#B01813;}
+.qo.falsch .qo-b{background:var(--red);border-color:var(--red);color:#fff;}
+.qo.aus{cursor:default;}
+.quiz-erkl{margin-top:1rem;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;font-size:.94rem;line-height:1.6;display:none;}
+.quiz-erkl.an{display:block;animation:fade .3s ease;}
+.quiz-erkl b{color:var(--red);}
+.quiz-fuss{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.quiz-ende{text-align:center;padding:1.2rem .5rem;}
+.quiz-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:3rem;color:var(--green);line-height:1;}
+.quiz-ende p{color:var(--ink-soft);margin:.6rem 0 1.1rem;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter',sans-serif;}
+.btn:hover{background:#C8211D;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper);}
 </style></head>
 <body data-level="komplexer"><div class="wrapper">
 <div class="eyebrow">deutschoderwas · Wortschatzfokus · B1/B2</div>
@@ -140,6 +177,7 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <button class="tab" data-tab="3">🔤 Tabu</button>
 <button class="tab" data-tab="4">🗣️ Sprechen</button>
 <button class="tab" data-tab="5">✏️ Übungen</button>
+<button class="tab" data-tab="6">🏆 Großes Quiz</button>
 </nav>
 <section class="section active" data-section="0">
 <h2 class="section-title">Was gibt es <em>alles</em> zu sehen?</h2>
@@ -317,6 +355,23 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_132634_19a00d6a-1686-4d69-b1f1-c8e945cb6e75.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">der Kranz</button><button class="quiz-chip">die Mandeln</button><button class="quiz-chip">der Tannenzweig</button></div><div class="quiz-explain">„✓ der Tannenzweig"</div></div>
 </div>
 </section>
+<section class="section" data-section="6">
+<h2 class="section-title">🏆 Das <em>große Quiz</em></h2>
+<p class="section-sub">Mehrere Runden rund um den Weihnachtsmarkt: Wortschatz, Artikel, <strong>Wo? &amp; Wohin?</strong>, Bräuche &amp; Essen und Redewendungen. Pro Frage gibt es genau eine richtige Antwort — das Quiz passt sich eurem <strong>Niveau</strong> an.</p>
+<div class="quiz-runden" id="quizRunden"></div>
+<div class="quiz-buehne">
+  <div class="quiz-kopf"><span class="quiz-zaehler" id="quizZaehler">Runde 1 · Frage 1</span><span class="quiz-punkte" id="quizPunkte">0 von 6</span></div>
+  <div class="quiz-balken"><i id="quizBalken" style="width:0%"></i></div>
+  <div id="quizInhalt">
+    <div class="quiz-frage" id="quizFrage"></div>
+    <div class="gq-opts" id="quizOpts"></div>
+    <div class="quiz-erkl" id="quizErkl"></div>
+    <div class="quiz-fuss"><button class="btn ghost" onclick="quizRundeStart(qRunde)">↺ Runde neu</button><button class="btn" onclick="quizWeiter()">Weiter →</button></div>
+  </div>
+  <div class="quiz-ende" id="quizEnde" style="display:none"></div>
+</div>
+<div class="tip teal">🏅 <strong>Als Wettkampf:</strong> Zwei Teams, abwechselnd. Wer die richtige Antwort hat, muss zusätzlich <u>einen eigenen Satz</u> mit dem Wort bilden — erst dann gibt es den Punkt.</div>
+</section>
 </div>
 <footer><strong>deutschoderwas</strong> — Wortschatzfokus · B1/B2 · Auf dem Weihnachtsmarkt</footer>
 <script>
@@ -330,10 +385,102 @@ var secQ=makeQueue(WORDS[curLevel].length),secP=0;
 document.getElementById('secretNew').onclick=function(){var list=WORDS[curLevel];if(secP>=secQ.length){secQ=makeQueue(list.length);secP=0;}var w=list[secQ[secP++]];document.getElementById('secretWord').innerHTML=artSpan(w);var im=document.getElementById('secretImg');im.src=w.img;im.style.display='block';};
 var tabQ=makeQueue(WORDS[curLevel].length),tabP=0;
 document.getElementById('tabooNew').onclick=function(){var list=WORDS[curLevel];if(tabP>=tabQ.length){tabQ=makeQueue(list.length);tabP=0;}var w=list[tabQ[tabP++]];document.getElementById('tabooWord').innerHTML=artSpan(w);var im=document.getElementById('tabooImg');im.src=w.img;im.style.display='block';document.getElementById('tabooList').innerHTML=w.f.map(function(x){return '<li>'+x+'</li>';}).join('');};
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';}
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';qFertig=[];quizRundenBauen();quizRundeStart(0);}
 function _sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=[].slice.call(opts.querySelectorAll('.quiz-chip'));var correct=chips[c];_sh(chips);chips.forEach(function(ch){opts.appendChild(ch);});opts.dataset.c=chips.indexOf(correct);});
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=opts.querySelectorAll('.quiz-chip');var exp=opts.parentElement.querySelector('.quiz-explain');chips.forEach(function(chip,i){chip.onclick=function(){if(opts.dataset.done)return;opts.dataset.done='1';if(i===c)chip.classList.add('correct');else{chip.classList.add('wrong');chips[c].classList.add('correct');}if(exp)exp.classList.add('show');};});});
+var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
+function QZ(){return QUIZ[curLevel];}
+function quizRundenBauen(){var qg=document.getElementById('quizRunden');qg.innerHTML='';QZ().forEach(function(R,i){var b=document.createElement('button');b.className='qr';b.dataset.i=i;b.innerHTML='<div class="qr-i">'+R.i+'</div><div class="qr-t">'+R.t+'</div><div class="qr-d">'+R.d+' · '+R.q.length+' Fragen</div>';b.addEventListener('click',function(){quizRundeStart(i);});qg.appendChild(b);});}
+function quizRundeStart(i){qRunde=i;qNr=0;qPunkte=0;qOffen=false;document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0 && +b.dataset.i!==i);});document.getElementById('quizEnde').style.display='none';document.getElementById('quizInhalt').style.display='block';quizFrage();}
+function quizFrage(){var R=QZ()[qRunde];if(!R)return;if(qNr>=R.q.length){quizEnde();return;}var f=R.q[qNr];qOffen=true;document.getElementById('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;document.getElementById('quizPunkte').textContent=qPunkte+' von '+R.q.length;document.getElementById('quizBalken').style.width=(qNr/R.q.length*100)+'%';document.getElementById('quizFrage').innerHTML=f.f;var paare=f.o.map(function(t,j){return {t:t,ok:j===f.r};});for(var j=paare.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var h=paare[j];paare[j]=paare[k];paare[k]=h;}var buch='ABCD',opts=document.getElementById('quizOpts');opts.innerHTML='';paare.forEach(function(p,j){var b=document.createElement('button');b.className='qo';b.dataset.ok=p.ok?'1':'0';b.innerHTML='<span class="qo-b">'+buch[j]+'</span><span>'+p.t+'</span>';b.addEventListener('click',function(){quizAntwort(b,f);});opts.appendChild(b);});var e=document.getElementById('quizErkl');e.className='quiz-erkl';e.innerHTML='';}
+function quizAntwort(btn,f){if(!qOffen)return;qOffen=false;var ok=btn.dataset.ok==='1';document.querySelectorAll('#quizOpts .qo').forEach(function(b){b.classList.add('aus');if(b.dataset.ok==='1')b.classList.add('richtig');});if(!ok)btn.classList.add('falsch');if(ok)qPunkte++;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;var e=document.getElementById('quizErkl');e.innerHTML=(ok?'✅ Richtig. ':'❌ Nicht ganz. ')+f.e;e.className='quiz-erkl an';}
+function quizWeiter(){if(qOffen){var b=document.getElementById('quizOpts').querySelector('.qo[data-ok="1"]');if(b){quizAntwort(b,QZ()[qRunde].q[qNr]);qPunkte--;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;return;}}qNr++;quizFrage();}
+function quizEnde(){var R=QZ()[qRunde],n=R.q.length;if(qFertig.indexOf(qRunde)<0)qFertig.push(qRunde);document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0);});document.getElementById('quizBalken').style.width='100%';document.getElementById('quizInhalt').style.display='none';var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));var naechste=(qRunde+1)%QZ().length;document.getElementById('quizEnde').style.display='block';document.getElementById('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+'<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+'<button class="btn" onclick="quizRundeStart('+naechste+')">'+QZ()[naechste].i+' Weiter: '+QZ()[naechste].t+' →</button></div>';}
+var QUIZ={
+"einfach":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Was trägt man im Winter um den Hals, damit es warm bleibt?","o":["den Schal","die Mütze","die Kerze"],"r":0,"e":"Den Schal bindet man sich um den Hals. Die Mütze kommt auf den Kopf, und die Kerze gibt Licht."},
+{"f":"Was setzt man sich auf den Kopf, wenn es kalt ist?","o":["die Mütze","den Stern","die Tasse"],"r":0,"e":"Die Mütze wärmt den Kopf. Der Stern leuchtet oben am Baum, und aus der Tasse trinkt man."},
+{"f":"Woraus trinkt man auf dem Markt sein heißes Getränk?","o":["aus der Tasse","aus dem Schnee","aus der Kerze"],"r":0,"e":"Aus der Tasse trinkt man, zum Beispiel heißen Punsch. Schnee ist kalt und weiß, und die Kerze brennt."},
+{"f":"Was baut man aus Schnee und gibt ihm eine Nase aus einer Karotte?","o":["einen Schneemann","einen Stern","eine Kerze"],"r":0,"e":"Den Schneemann rollt man aus Schnee. Der Stern gehört an die Baumspitze, und die Kerze gibt Licht."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Weihnachtsbaum?","o":["der","das","die"],"r":0,"e":"Es heißt der Weihnachtsbaum. Das Grundwort entscheidet: der Baum wird zu der Weihnachtsbaum."},
+{"f":"Welcher Artikel passt: ___ Kugel?","o":["die","der","das"],"r":0,"e":"Es heißt die Kugel."},
+{"f":"Welcher Artikel passt: ___ Kerze?","o":["die","der","das"],"r":0,"e":"Es heißt die Kerze. Viele Wörter auf -e sind feminin."},
+{"f":"Welcher Artikel passt: ___ Stern?","o":["der","das","die"],"r":0,"e":"Es heißt der Stern."}
+]},
+{"t":"Wo ist das?","d":"Dativ","i":"📍","q":[
+{"f":"Der Stern ist auf ___ Weihnachtsbaum.","o":["dem","den","der"],"r":0,"e":"Wo? fragt nach der Lage, also Dativ: auf dem Weihnachtsbaum."},
+{"f":"Der Glühwein ist in ___ Tasse.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Tasse wird im Dativ zu der Tasse."},
+{"f":"Die Mütze ist auf ___ Schneemann.","o":["dem","den","der"],"r":0,"e":"Wo? = Dativ: auf dem Schneemann."}
+]},
+{"t":"Weihnachten & Winter","d":"Bräuche","i":"🎄","q":[
+{"f":"Welches Getränk ist auf dem Weihnachtsmarkt typisch und wird heiß getrunken?","o":["Glühwein","Eistee","Limonade"],"r":0,"e":"Glühwein ist heißer, gewürzter Wein und gehört zum Weihnachtsmarkt. Eistee und Limonade trinkt man kalt."},
+{"f":"Was sagt man am 24. Dezember zur Begrüßung?","o":["Frohe Weihnachten!","Guten Appetit!","Gute Besserung!"],"r":0,"e":"„Frohe Weihnachten!“ wünscht man zum Fest. „Guten Appetit“ sagt man vor dem Essen, „Gute Besserung“ zu Kranken."},
+{"f":"Was macht man gern, wenn viel Schnee liegt?","o":["einen Schneemann bauen","im See schwimmen","Rad fahren im T-Shirt"],"r":0,"e":"Bei Schnee baut man einen Schneemann oder rodelt. Schwimmen und T-Shirt-Wetter passen eher zum Sommer."}
+]}
+],
+"komplexer":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Welches Fahrgeschäft dreht sich hoch oben und hat Gondeln?","o":["das Riesenrad","das Karussell","der Grill"],"r":0,"e":"Das Riesenrad dreht sich hoch mit Gondeln. Das Karussell dreht sich unten mit Pferden, und auf dem Grill brät man Würstchen."},
+{"f":"Worauf brät man die Bratwürste auf dem Markt?","o":["auf dem Grill","auf der Laterne","auf dem Lebkuchen"],"r":0,"e":"Auf dem Grill brät man die Würste über der Hitze. Die Laterne spendet Licht, und der Lebkuchen ist süßes Gebäck."},
+{"f":"Welches süße, oft herzförmige Gebäck gibt es mit Zuckerguss am Stand?","o":["der Lebkuchen","die Bratwurst","die Lichterkette"],"r":0,"e":"Der Lebkuchen ist süß und oft herzförmig verziert. Die Bratwurst ist herzhaft, und die Lichterkette leuchtet."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Glühwein?","o":["der","das","die"],"r":0,"e":"Es heißt der Glühwein, wie der Wein."},
+{"f":"Welcher Artikel passt: ___ Bratwurst?","o":["die","der","das"],"r":0,"e":"Es heißt die Bratwurst, wie die Wurst."},
+{"f":"Welcher Artikel passt: ___ Karussell?","o":["das","der","die"],"r":0,"e":"Es heißt das Karussell."},
+{"f":"Welcher Artikel passt: ___ Lichterkette?","o":["die","der","das"],"r":0,"e":"Es heißt die Lichterkette, wie die Kette."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Die Bratwurst liegt auf ___ Grill.","o":["dem","den","das"],"r":0,"e":"Wo? = Dativ: auf dem Grill. Die Wurst bewegt sich nicht."},
+{"f":"Ich gieße den Glühwein in ___ Tasse.","o":["die","der","dem"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: in die Tasse."},
+{"f":"Ich lege die Bratwurst auf ___ Grill.","o":["den","dem","das"],"r":0,"e":"Wohin? = Akkusativ: auf den Grill."},
+{"f":"Die Laterne hängt an ___ Bude.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Bude wird im Dativ zu der Bude."}
+]},
+{"t":"Bräuche & Essen","d":"Landeskunde","i":"🎄","q":[
+{"f":"Was ist ein Adventskranz?","o":["ein Kranz mit vier Kerzen für die Zeit vor Weihnachten","ein Kuchen aus Marzipan","ein Spielzeug für Kinder"],"r":0,"e":"Auf dem Adventskranz stehen vier Kerzen; an jedem Adventssonntag zündet man eine mehr an. Mit Kuchen oder Spielzeug hat er nichts zu tun."},
+{"f":"Was isst man typischerweise warm aus der Tüte auf dem Weihnachtsmarkt?","o":["gebrannte Mandeln","einen Salat","ein Eis"],"r":0,"e":"Gebrannte Mandeln sind süß, warm und kommen in der Tüte. Salat und Eis passen nicht zum kalten Markt."},
+{"f":"Warum besucht man im Dezember einen Weihnachtsmarkt?","o":["um die festliche Stimmung zu genießen","um Urlaub am Strand zu machen","um Ski zu fahren"],"r":0,"e":"Man geht wegen Glühwein, Lichtern und der gemütlichen Stimmung hin. Strand und Skipiste sind ganz andere Orte."}
+]},
+{"t":"Redewendungen","d":"Advent","i":"💬","q":[
+{"f":"Was bedeutet „sich auf etwas freuen wie ein Kind auf Weihnachten“?","o":["sich sehr stark auf etwas freuen","etwas langweilig finden","Angst vor etwas haben"],"r":0,"e":"Die Redewendung beschreibt große Vorfreude, so wie Kinder das Fest kaum erwarten können."},
+{"f":"Was bedeutet „jetzt ist Weihnachten und Ostern an einem Tag“?","o":["es passieren gleich mehrere schöne Dinge auf einmal","es regnet den ganzen Tag","es ist ein ganz normaler Tag"],"r":0,"e":"Die Wendung meint, dass mehrere seltene gute Dinge zusammenfallen. Mit dem Wetter hat sie nichts zu tun."},
+{"f":"Jemand sagt: „Das ist mir dieses Jahr zu viel Rummel.“ Was meint die Person?","o":["zu viel Trubel und Hektik","zu wenig Essen","zu wenig Licht"],"r":0,"e":"Rummel meint hier den Trubel und das Gedränge. Die Person findet es zu hektisch."}
+]}
+],
+"schwierig":[
+{"t":"Wortschatz","d":"Seltenere Wörter","i":"🔤","q":[
+{"f":"Wie nennt man die stille, nachdenkliche Stimmung in der Vorweihnachtszeit?","o":["die Besinnlichkeit","das Gedränge","der Budenzauber"],"r":0,"e":"Die Besinnlichkeit ist die ruhige, nachdenkliche Stimmung. Das Gedränge meint viele Menschen, und der Budenzauber die festliche Marktatmosphäre."},
+{"f":"Wie heißt die Person, die ihre Waren von Hand herstellt und am Stand verkauft?","o":["der Kunsthandwerker","der Besucher","der Weihnachtsmann"],"r":0,"e":"Der Kunsthandwerker fertigt die Waren selbst. Der Besucher ist ein Gast, und der Weihnachtsmann bringt Geschenke."},
+{"f":"Welches Wort beschreibt überlieferte Traditionen rund um das Fest?","o":["das Brauchtum","das Gedränge","die Laterne"],"r":0,"e":"Das Brauchtum umfasst alle überlieferten Sitten und Traditionen. Gedränge und Laterne meinen etwas ganz anderes."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Kranz?","o":["der","das","die"],"r":0,"e":"Es heißt der Kranz."},
+{"f":"Welcher Artikel passt: ___ Bude?","o":["die","der","das"],"r":0,"e":"Es heißt die Bude."},
+{"f":"Welcher Artikel passt: ___ Brauchtum?","o":["das","der","die"],"r":0,"e":"Es heißt das Brauchtum. Wörter auf -tum sind meist Neutrum."}
+]},
+{"t":"Wo? oder Wohin?","d":"Feinheiten","i":"📍","q":[
+{"f":"Ich hänge den Kranz an ___ Tür.","o":["die","der","dem"],"r":0,"e":"Hängen mit Bewegung = Wohin? = Akkusativ: an die Tür."},
+{"f":"Der Kranz hängt an ___ Tür.","o":["der","die","den"],"r":0,"e":"Hängen ohne Bewegung = Wo? = Dativ: an der Tür. Gleiches Verb, anderer Fall."},
+{"f":"Der Weihnachtsbaum steht zwischen ___ Buden.","o":["den","die","der"],"r":0,"e":"Wo? = Dativ Plural: zwischen den Buden (mit -n am Ende)."},
+{"f":"Oberhalb ___ Buden dreht sich das Riesenrad.","o":["der","den","die"],"r":0,"e":"Die Präposition oberhalb steht mit dem Genitiv: oberhalb der Buden."}
+]},
+{"t":"Bräuche & Landeskunde","d":"ab B2","i":"🎄","q":[
+{"f":"Welcher Weihnachtsmarkt gilt als einer der ältesten und bekanntesten Deutschlands?","o":["der Nürnberger Christkindlesmarkt","der Hamburger Fischmarkt","das Münchner Oktoberfest"],"r":0,"e":"Der Nürnberger Christkindlesmarkt ist weltberühmt. Der Fischmarkt und das Oktoberfest sind ganz andere Veranstaltungen."},
+{"f":"Wer bringt in vielen süddeutschen Regionen traditionell die Geschenke?","o":["das Christkind","der Osterhase","der Nikolaus allein"],"r":0,"e":"In katholisch geprägten Regionen bringt das Christkind die Geschenke, im Norden eher der Weihnachtsmann. Der Osterhase gehört zu Ostern."},
+{"f":"Was bezeichnet man als „Budenzauber“?","o":["die festliche, stimmungsvolle Atmosphäre der Marktstände","einen Zaubertrick auf der Bühne","ein Feuerwerk um Mitternacht"],"r":0,"e":"Der Budenzauber meint das stimmungsvolle Flair der leuchtenden, geschmückten Stände. Mit echter Zauberei hat es nichts zu tun."}
+]},
+{"t":"Redewendungen & Nuance","d":"Feinheiten","i":"💬","q":[
+{"f":"Was bedeutet „etwas brennt jemandem unter den Nägeln“?","o":["etwas ist sehr dringend","etwas ist völlig unwichtig","etwas riecht verbrannt"],"r":0,"e":"Wenn etwas unter den Nägeln brennt, ist es sehr dringend und drängt. Mit echtem Feuer hat die Wendung nichts zu tun."},
+{"f":"Worin unterscheiden sich „Vorfreude“ und „Besinnlichkeit“?","o":["Vorfreude ist das Sich-Freuen auf etwas, Besinnlichkeit die ruhige, nachdenkliche Stimmung.","Beide bedeuten genau dasselbe.","Vorfreude ist immer negativ."],"r":0,"e":"Vorfreude richtet sich auf etwas Kommendes, Besinnlichkeit beschreibt eine innere Ruhe. Beide gehören zur Adventszeit, meinen aber Verschiedenes."},
+{"f":"Welches Verb passt am besten: über dem Markt ___ der Duft von Zimt und gebrannten Mandeln.","o":["liegt","läuft","springt"],"r":0,"e":"Ein Duft liegt in der Luft oder über einem Ort. Laufen und springen passen nicht zu einem Geruch."}
+]}
+]
+};
+quizRundenBauen();quizRundeStart(0);
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <style>.tab-level-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif;font-weight:800;font-size:.82rem;padding:.34rem .72rem;border-radius:999px;margin-right:.15rem;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1);align-self:center;}</style>

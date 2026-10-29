@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;}
+:root{--cream:#F6F9FA;--cream-warm:#F6F9FA;--paper:#FFFFFF;--ink:#262019;--ink-soft:#5C4E3E;--ink-mute:#7A6A54;--red:#D42A21;--red-soft:#FCE5E3;--teal:#0A7D72;--teal-soft:#D7F0EC;--yellow:#FFD24A;--yellow-soft:#FFF1C2;--sand:#E7ECEE;--der:#2F72C9;--das:#2E9E5B;--die:#D42A21;--green:#2E9E5B;--green-soft:#E4F6EC;}
 *{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
 body{background:linear-gradient(180deg,#FDE6E0 0%,var(--cream) 14%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
 .wrapper{max-width:1180px;margin:0 auto;padding:2.5rem 1.6rem 5rem;}
@@ -105,6 +105,43 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 .quiz-chip.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);text-decoration:line-through;}
 .quiz-explain{margin-top:.6rem;font-size:.86rem;color:var(--das);background:#E4F6EC;padding:.5rem .8rem;border-radius:10px;display:none;}
 .quiz-explain.show{display:block;}
+.quiz-runden{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1.1rem 0 1.5rem;}
+@media(max-width:900px){.quiz-runden{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.quiz-runden{grid-template-columns:repeat(2,1fr);}}
+.qr{background:var(--paper);border:2px solid var(--sand);border-radius:14px;padding:.65rem .8rem;cursor:pointer;transition:.12s;text-align:left;font-family:'Inter',sans-serif;}
+.qr:hover{border-color:var(--ink);transform:translateY(-1px);}
+.qr.active{border-color:var(--red);background:var(--red-soft);}
+.qr.fertig{border-color:var(--green);background:var(--green-soft);}
+.qr-i{font-size:1.25rem;line-height:1;}
+.qr-t{font-weight:700;font-size:.92rem;margin-top:.2rem;}
+.qr-d{font-size:.74rem;color:var(--ink-mute);}
+.quiz-buehne{background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;padding:1.5rem 1.4rem;box-shadow:6px 6px 0 rgba(38,32,25,.13);max-width:740px;margin:0 auto;}
+.quiz-kopf{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.quiz-zaehler{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);}
+.quiz-punkte{font-size:.86rem;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:999px;padding:.2rem .8rem;}
+.quiz-balken{height:8px;background:var(--sand);border-radius:999px;overflow:hidden;margin-bottom:1.2rem;border:1.5px solid var(--ink);}
+.quiz-balken i{display:block;height:100%;background:var(--red);transition:width .3s;}
+.quiz-frage{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.1rem,2.4vw,1.42rem);line-height:1.35;margin-bottom:1.1rem;min-height:2.7em;}
+.gq-opts{display:grid;gap:.5rem;}
+.qo{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;background:var(--cream);border:2px solid var(--sand);border-radius:14px;padding:.75rem 1rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s;}
+.qo:hover:not(.aus){border-color:var(--ink);}
+.qo .qo-b{flex:0 0 26px;height:26px;border-radius:999px;background:var(--paper);border:1.5px solid var(--sand);display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--ink-mute);}
+.qo.richtig{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+.qo.richtig .qo-b{background:var(--green);border-color:var(--green);color:#fff;}
+.qo.falsch{background:var(--red-soft);border-color:var(--red);color:#B01813;}
+.qo.falsch .qo-b{background:var(--red);border-color:var(--red);color:#fff;}
+.qo.aus{cursor:default;}
+.quiz-erkl{margin-top:1rem;background:var(--yellow-soft);border:2px dashed var(--yellow);border-radius:14px;padding:.8rem 1.1rem;font-size:.94rem;line-height:1.6;display:none;}
+.quiz-erkl.an{display:block;animation:fade .3s ease;}
+.quiz-erkl b{color:var(--red);}
+.quiz-fuss{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.quiz-ende{text-align:center;padding:1.2rem .5rem;}
+.quiz-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:3rem;color:var(--green);line-height:1;}
+.quiz-ende p{color:var(--ink-soft);margin:.6rem 0 1.1rem;}
+.btn{background:var(--red);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;font-size:.9rem;font-family:'Inter',sans-serif;}
+.btn:hover{background:#C8211D;}
+.btn.ghost{background:var(--paper);color:var(--ink);border:2px solid var(--sand);}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper);}
 .morewords{margin:1.1rem 0 .3rem;}
 .morewords h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:.2rem 0 .3rem;}
 .mw-note{font-size:.84rem;color:#6b5c4e;margin-bottom:.5rem;}
@@ -140,6 +177,7 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <button class="tab" data-tab="3">🔤 Tabu</button>
 <button class="tab" data-tab="4">🗣️ Sprechen</button>
 <button class="tab" data-tab="5">✏️ Übungen</button>
+<button class="tab" data-tab="6">🏆 Großes Quiz</button>
 </nav>
 <section class="section active" data-section="0">
 <h2 class="section-title">Was gibt es <em>alles</em> zu sehen?</h2>
@@ -317,6 +355,23 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 <div class="quiz"><div class="quiz-q"><img class="quiz-img" src="https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/medien/hf_20261008_132150_9647bd27-0842-4af6-8a25-5a53382e064f.webp" alt="">Was ist das?</div><div class="quiz-opts" data-c="2"><button class="quiz-chip">das Springseil</button><button class="quiz-chip">die Hantelablage</button><button class="quiz-chip">die Yogamatte</button></div><div class="quiz-explain">„✓ die Yogamatte"</div></div>
 </div>
 </section>
+<section class="section" data-section="6">
+<h2 class="section-title">🏆 Das <em>große Quiz</em></h2>
+<p class="section-sub">Mehrere Runden rund ums Fitnessstudio: Wortschatz, Artikel, <strong>Wo? &amp; Wohin?</strong> und Trainings-Alltag. Pro Frage gibt es genau eine richtige Antwort — das Quiz passt sich eurem <strong>Niveau</strong> an.</p>
+<div class="quiz-runden" id="quizRunden"></div>
+<div class="quiz-buehne">
+  <div class="quiz-kopf"><span class="quiz-zaehler" id="quizZaehler">Runde 1 · Frage 1</span><span class="quiz-punkte" id="quizPunkte">0 von 6</span></div>
+  <div class="quiz-balken"><i id="quizBalken" style="width:0%"></i></div>
+  <div id="quizInhalt">
+    <div class="quiz-frage" id="quizFrage"></div>
+    <div class="gq-opts" id="quizOpts"></div>
+    <div class="quiz-erkl" id="quizErkl"></div>
+    <div class="quiz-fuss"><button class="btn ghost" onclick="quizRundeStart(qRunde)">↺ Runde neu</button><button class="btn" onclick="quizWeiter()">Weiter →</button></div>
+  </div>
+  <div class="quiz-ende" id="quizEnde" style="display:none"></div>
+</div>
+<div class="tip teal">🏅 <strong>Als Wettkampf:</strong> Zwei Teams, abwechselnd. Wer die richtige Antwort hat, muss zusätzlich <u>einen eigenen Satz</u> mit dem Wort bilden — erst dann gibt es den Punkt.</div>
+</section>
 </div>
 <footer><strong>deutschoderwas</strong> — Wortschatzfokus · B1/B2 · Im Fitnessstudio</footer>
 <script>
@@ -330,10 +385,103 @@ var secQ=makeQueue(WORDS[curLevel].length),secP=0;
 document.getElementById('secretNew').onclick=function(){var list=WORDS[curLevel];if(secP>=secQ.length){secQ=makeQueue(list.length);secP=0;}var w=list[secQ[secP++]];document.getElementById('secretWord').innerHTML=artSpan(w);var im=document.getElementById('secretImg');im.src=w.img;im.style.display='block';};
 var tabQ=makeQueue(WORDS[curLevel].length),tabP=0;
 document.getElementById('tabooNew').onclick=function(){var list=WORDS[curLevel];if(tabP>=tabQ.length){tabQ=makeQueue(list.length);tabP=0;}var w=list[tabQ[tabP++]];document.getElementById('tabooWord').innerHTML=artSpan(w);var im=document.getElementById('tabooImg');im.src=w.img;im.style.display='block';document.getElementById('tabooList').innerHTML=w.f.map(function(x){return '<li>'+x+'</li>';}).join('');};
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';}
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(WORDS[curLevel].length);secP=0;tabQ=makeQueue(WORDS[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('secretImg').style.display='none';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooImg').style.display='none';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';qFertig=[];quizRundenBauen();quizRundeStart(0);}
 function _sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=[].slice.call(opts.querySelectorAll('.quiz-chip'));var correct=chips[c];_sh(chips);chips.forEach(function(ch){opts.appendChild(ch);});opts.dataset.c=chips.indexOf(correct);});
 document.querySelectorAll('.quiz-opts').forEach(function(opts){var c=parseInt(opts.dataset.c);var chips=opts.querySelectorAll('.quiz-chip');var exp=opts.parentElement.querySelector('.quiz-explain');chips.forEach(function(chip,i){chip.onclick=function(){if(opts.dataset.done)return;opts.dataset.done='1';if(i===c)chip.classList.add('correct');else{chip.classList.add('wrong');chips[c].classList.add('correct');}if(exp)exp.classList.add('show');};});});
+var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
+function QZ(){return QUIZ[curLevel];}
+function quizRundenBauen(){var qg=document.getElementById('quizRunden');qg.innerHTML='';QZ().forEach(function(R,i){var b=document.createElement('button');b.className='qr';b.dataset.i=i;b.innerHTML='<div class="qr-i">'+R.i+'</div><div class="qr-t">'+R.t+'</div><div class="qr-d">'+R.d+' · '+R.q.length+' Fragen</div>';b.addEventListener('click',function(){quizRundeStart(i);});qg.appendChild(b);});}
+function quizRundeStart(i){qRunde=i;qNr=0;qPunkte=0;qOffen=false;document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0 && +b.dataset.i!==i);});document.getElementById('quizEnde').style.display='none';document.getElementById('quizInhalt').style.display='block';quizFrage();}
+function quizFrage(){var R=QZ()[qRunde];if(!R)return;if(qNr>=R.q.length){quizEnde();return;}var f=R.q[qNr];qOffen=true;document.getElementById('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;document.getElementById('quizPunkte').textContent=qPunkte+' von '+R.q.length;document.getElementById('quizBalken').style.width=(qNr/R.q.length*100)+'%';document.getElementById('quizFrage').innerHTML=f.f;var paare=f.o.map(function(t,j){return {t:t,ok:j===f.r};});for(var j=paare.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var h=paare[j];paare[j]=paare[k];paare[k]=h;}var buch='ABCD',opts=document.getElementById('quizOpts');opts.innerHTML='';paare.forEach(function(p,j){var b=document.createElement('button');b.className='qo';b.dataset.ok=p.ok?'1':'0';b.innerHTML='<span class="qo-b">'+buch[j]+'</span><span>'+p.t+'</span>';b.addEventListener('click',function(){quizAntwort(b,f);});opts.appendChild(b);});var e=document.getElementById('quizErkl');e.className='quiz-erkl';e.innerHTML='';}
+function quizAntwort(btn,f){if(!qOffen)return;qOffen=false;var ok=btn.dataset.ok==='1';document.querySelectorAll('#quizOpts .qo').forEach(function(b){b.classList.add('aus');if(b.dataset.ok==='1')b.classList.add('richtig');});if(!ok)btn.classList.add('falsch');if(ok)qPunkte++;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;var e=document.getElementById('quizErkl');e.innerHTML=(ok?'✅ Richtig. ':'❌ Nicht ganz. ')+f.e;e.className='quiz-erkl an';}
+function quizWeiter(){if(qOffen){var b=document.getElementById('quizOpts').querySelector('.qo[data-ok="1"]');if(b){quizAntwort(b,QZ()[qRunde].q[qNr]);qPunkte--;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;return;}}qNr++;quizFrage();}
+function quizEnde(){var R=QZ()[qRunde],n=R.q.length;if(qFertig.indexOf(qRunde)<0)qFertig.push(qRunde);document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0);});document.getElementById('quizBalken').style.width='100%';document.getElementById('quizInhalt').style.display='none';var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));var naechste=(qRunde+1)%QZ().length;document.getElementById('quizEnde').style.display='block';document.getElementById('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+'<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+'<button class="btn" onclick="quizRundeStart('+naechste+')">'+QZ()[naechste].i+' Weiter: '+QZ()[naechste].t+' →</button></div>';}
+var QUIZ={
+"einfach":[
+{"t":"Wortschatz","d":"Bild & Wort","i":"🔤","q":[
+{"f":"Worauf läuft oder geht man beim Ausdauertraining?","o":["auf dem Laufband","auf dem Heimtrainer","auf der Hantelbank"],"r":0,"e":"Auf dem Laufband läuft man an einer Stelle. Der Heimtrainer ist ein Fahrrad zum Treten, und auf der Hantelbank liegt oder sitzt man."},
+{"f":"Woraus trinkt man beim Sport, wenn man Durst hat?","o":["aus der Wasserflasche","aus dem Handtuch","aus der Hantel"],"r":0,"e":"Aus der Wasserflasche trinkt man Wasser. Mit dem Handtuch wischt man den Schweiß ab, und die Hantel hebt man."},
+{"f":"Womit wischt man sich den Schweiß vom Gesicht?","o":["mit dem Handtuch","mit der Uhr","mit dem Fenster"],"r":0,"e":"Mit dem Handtuch trocknet man den Schweiß. Die Uhr zeigt die Zeit, und durch das Fenster kommt Licht."},
+{"f":"Was hebt man, um die Arme zu trainieren?","o":["die Hantel","die Pflanze","die Uhr"],"r":0,"e":"Die Hantel hebt man für die Muskeln. Die Pflanze ist grün, und die Uhr zeigt die Zeit."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Laufband?","o":["das","der","die"],"r":0,"e":"Es heißt das Laufband. Das Grundwort entscheidet: das Band wird zu das Laufband."},
+{"f":"Welcher Artikel passt: ___ Hantel?","o":["die","der","das"],"r":0,"e":"Es heißt die Hantel."},
+{"f":"Welcher Artikel passt: ___ Heimtrainer?","o":["der","das","die"],"r":0,"e":"Es heißt der Heimtrainer, genau wie der Trainer."},
+{"f":"Welcher Artikel passt: ___ Fenster?","o":["das","der","die"],"r":0,"e":"Es heißt das Fenster. Wörter auf -ster sind oft Neutrum."}
+]},
+{"t":"Wo ist das?","d":"Dativ","i":"📍","q":[
+{"f":"Die Wasserflasche steht auf ___ Boden.","o":["dem","den","der"],"r":0,"e":"Wo? fragt nach der Lage, also Dativ: auf dem Boden."},
+{"f":"Die Uhr hängt an ___ Wand.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Wand wird im Dativ zu der Wand."},
+{"f":"Das Handtuch liegt auf ___ Hantelbank.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ: auf der Hantelbank."}
+]},
+{"t":"Training & Alltag","d":"Alltag","i":"💪","q":[
+{"f":"Was sagt man, bevor man mit dem Training beginnt?","o":["Ich wärme mich auf.","Ich mache Feierabend.","Ich gehe schlafen."],"r":0,"e":"Vor dem Sport wärmt man sich auf, damit die Muskeln locker werden."},
+{"f":"Wohin geht man, um sich nach dem Sport umzuziehen?","o":["in die Umkleide","in das Laufband","in die Wasserflasche"],"r":0,"e":"In der Umkleide zieht man sich um. Laufband und Wasserflasche sind keine Räume."},
+{"f":"Was macht man mit einer Hantel?","o":["Man hebt sie.","Man trinkt sie.","Man liest sie."],"r":0,"e":"Die Hantel hebt man, um Kraft zu trainieren."}
+]}
+],
+"komplexer":[
+{"t":"Wortschatz","d":"Geräte & Wort","i":"🔤","q":[
+{"f":"Welches lange Gerät mit Scheiben an beiden Enden hebt man mit beiden Händen?","o":["die Langhantel","der Gymnastikball","der Ventilator"],"r":0,"e":"Die Langhantel ist eine lange Stange mit Gewichten. Der Gymnastikball ist rund, und der Ventilator macht Wind."},
+{"f":"Worauf legt oder setzt man sich, um mit Gewichten zu trainieren?","o":["auf die Hantelbank","auf das Kraftgerät","auf den Spiegel"],"r":0,"e":"Auf der Hantelbank liegt oder sitzt man beim Training. Am Kraftgerät zieht man an einem Seil, und der Spiegel hängt an der Wand."},
+{"f":"Was sorgt im Studio für frische Luft und Abkühlung?","o":["der Ventilator","der Gymnastikball","die Langhantel"],"r":0,"e":"Der Ventilator dreht sich und pustet kühle Luft. Der Gymnastikball ist zum Sitzen und Rollen, die Langhantel zum Heben."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Kraftgerät?","o":["das","der","die"],"r":0,"e":"Es heißt das Kraftgerät. Das Grundwort entscheidet: das Gerät wird zu das Kraftgerät."},
+{"f":"Welcher Artikel passt: ___ Langhantel?","o":["die","der","das"],"r":0,"e":"Es heißt die Langhantel, wie die Hantel."},
+{"f":"Welcher Artikel passt: ___ Spiegel?","o":["der","das","die"],"r":0,"e":"Es heißt der Spiegel."},
+{"f":"Welcher Artikel passt: ___ Sportlerin?","o":["die","der","das"],"r":0,"e":"Es heißt die Sportlerin. Die Endung -in macht eine weibliche Person: der Sportler wird zu die Sportlerin."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Die Hantelbank steht vor ___ Spiegel.","o":["dem","den","das"],"r":0,"e":"Wo? = Dativ: vor dem Spiegel. Die Bank bewegt sich nicht."},
+{"f":"Ich lege das Handtuch auf ___ Hantelbank.","o":["die","der","dem"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: auf die Hantelbank."},
+{"f":"Ich stelle mich an ___ Kraftgerät.","o":["das","dem","der"],"r":0,"e":"Wohin? = Akkusativ: an das (ans) Kraftgerät."},
+{"f":"Der Ventilator hängt an ___ Wand.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Wand wird im Dativ zu der Wand."}
+]},
+{"t":"Training-Alltag & Redewendungen","d":"Alltag","i":"💪","q":[
+{"f":"Was bedeutet es, einen Muskelkater zu haben?","o":["Die Muskeln schmerzen nach dem Training.","Man hat eine Katze im Studio.","Man ist besonders stark."],"r":0,"e":"Muskelkater sind die Schmerzen in den Muskeln ein, zwei Tage nach anstrengendem Sport."},
+{"f":"Was macht man beim Aufwärmen?","o":["Man bereitet den Körper locker aufs Training vor.","Man kocht sich etwas Warmes.","Man geht in die Sauna."],"r":0,"e":"Beim Aufwärmen bringt man den Körper mit lockeren Übungen in Schwung, bevor es richtig losgeht."},
+{"f":"Eine Trainerin sagt: „Noch drei Wiederholungen!“ Was meint sie?","o":["Mach die Übung noch drei Mal.","Trink drei Flaschen Wasser.","Lauf drei Kilometer."],"r":0,"e":"Eine Wiederholung ist ein einmaliges Ausführen der Übung. Drei Wiederholungen heißt, die Bewegung noch drei Mal zu machen."}
+]},
+{"t":"Funktion & Verben","d":"Was passt?","i":"🖼️","q":[
+{"f":"Welches Verb passt: Vor dem Training muss ich mich erst ___.","o":["aufwärmen","ausdrucken","abtrocknen"],"r":0,"e":"Vor dem Sport wärmt man sich auf. Ausdrucken passt zum Drucker, abtrocknen zum Handtuch."},
+{"f":"Was gehört nicht ins Fitnessstudio?","o":["der Kochtopf","die Langhantel","das Laufband"],"r":0,"e":"Der Kochtopf steht in der Küche. Langhantel und Laufband gehören ins Studio."},
+{"f":"Was macht man auf dem Heimtrainer?","o":["in die Pedale treten","Gewichte stemmen","Seil springen"],"r":0,"e":"Auf dem Heimtrainer tritt man wie beim Fahrrad in die Pedale."}
+]}
+],
+"schwierig":[
+{"t":"Wortschatz","d":"Seltenere Wörter","i":"🔤","q":[
+{"f":"Wie heißt die runde Metallscheibe, die man auf die Langhantel steckt?","o":["die Hantelscheibe","die Hantelablage","das Springseil"],"r":0,"e":"Die Hantelscheibe ist das runde Gewicht auf der Stange. Die Hantelablage ist das Regal dafür, und das Springseil dreht man zum Hüpfen."},
+{"f":"Wo stellt oder legt man die Hanteln ordentlich ab?","o":["auf die Hantelablage","auf die Yogamatte","an das Bild"],"r":0,"e":"Auf der Hantelablage (einem Regal) legt man die Hanteln ab. Die Yogamatte liegt am Boden, das Bild hängt an der Wand."},
+{"f":"Worauf legt man sich zum Dehnen und für Bodenübungen?","o":["auf die Yogamatte","auf die Hantelscheibe","auf das Springseil"],"r":0,"e":"Die Yogamatte rollt man am Boden aus. Die Hantelscheibe ist ein Gewicht, das Springseil zum Hüpfen."}
+]},
+{"t":"Der, die oder das?","d":"Artikel","i":"🧭","q":[
+{"f":"Welcher Artikel passt: ___ Springseil?","o":["das","der","die"],"r":0,"e":"Es heißt das Springseil. Das Grundwort entscheidet: das Seil wird zu das Springseil."},
+{"f":"Welcher Artikel passt: ___ Hantelscheibe?","o":["die","der","das"],"r":0,"e":"Es heißt die Hantelscheibe, wie die Scheibe."},
+{"f":"Welcher Artikel passt: ___ Hantelablage?","o":["die","der","das"],"r":0,"e":"Es heißt die Hantelablage, wie die Ablage."}
+]},
+{"t":"Wo? oder Wohin?","d":"Feinheiten","i":"📍","q":[
+{"f":"Ich rolle die Yogamatte auf ___ Boden.","o":["den","dem","das"],"r":0,"e":"Rollen mit Bewegung = Wohin? = Akkusativ: auf den Boden."},
+{"f":"Die Yogamatte liegt auf ___ Boden.","o":["dem","den","das"],"r":0,"e":"Liegen ohne Bewegung = Wo? = Dativ: auf dem Boden. Gleiches Bild, anderer Fall."},
+{"f":"Ich hänge das Bild über ___ Hantelablage.","o":["die","der","dem"],"r":0,"e":"Hängen mit Bewegung = Wohin? = Akkusativ: über die Hantelablage."},
+{"f":"Das Springseil liegt zwischen ___ Hanteln.","o":["den","die","der"],"r":0,"e":"Wo? = Dativ Plural: zwischen den Hanteln (mit -n im Dativ Plural)."}
+]},
+{"t":"Redewendungen","d":"ab B2","i":"💬","q":[
+{"f":"Was bedeutet „die Hanteln stemmen“?","o":["schwere Gewichte heben","leicht spazieren gehen","sich ausruhen"],"r":0,"e":"Hanteln stemmen heißt, schwere Gewichte mit Kraft nach oben zu drücken."},
+{"f":"Was bedeutet „am Ball bleiben“?","o":["etwas beharrlich weiterverfolgen","einen Ball kaufen","sofort aufhören"],"r":0,"e":"Am Ball bleiben heißt, dranzubleiben und nicht aufzugeben — passt gut zum regelmäßigen Training."},
+{"f":"Was bedeutet „über seinen Schatten springen“?","o":["die eigene Hemmung überwinden","sehr hoch springen","im Schatten trainieren"],"r":0,"e":"Über seinen Schatten springen heißt, sich zu überwinden und etwas zu tun, vor dem man Scheu hatte."},
+{"f":"Was bedeutet „die Zähne zusammenbeißen“?","o":["sich trotz Anstrengung durchbeißen","etwas Hartes essen","ganz leise sprechen"],"r":0,"e":"Die Zähne zusammenbeißen heißt, eine anstrengende oder schmerzhafte Situation tapfer durchzuhalten."}
+]},
+{"t":"Nuance & Wortbildung","d":"Feinheiten","i":"🖼️","q":[
+{"f":"Was ist der Unterschied zwischen der Kurzhantel und der Langhantel?","o":["Die Kurzhantel hält man in einer Hand, die Langhantel ist eine lange Stange für beide Hände.","Die Kurzhantel ist immer schwerer.","Es gibt keinen Unterschied."],"r":0,"e":"Die Kurzhantel ist klein und für eine Hand, die Langhantel ist eine lange Stange für beide Hände."},
+{"f":"Welches Wort ist ein zusammengesetztes Nomen (Kompositum)?","o":["das Krafttraining","die Hantel","das Bild"],"r":0,"e":"Das Krafttraining ist aus Kraft und Training zusammengesetzt. Hantel und Bild sind einfache Wörter."},
+{"f":"Welches Verb passt am besten: ein Springseil ___.","o":["schwingen","gießen","braten"],"r":0,"e":"Ein Springseil schwingt (dreht) man beim Seilspringen. Gießen passt zur Pflanze, braten zum Essen."}
+]}
+]
+};
+quizRundenBauen();quizRundeStart(0);
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <style>.tab-level-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif;font-weight:800;font-size:.82rem;padding:.34rem .72rem;border-radius:999px;margin-right:.15rem;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1);align-self:center;}</style>
