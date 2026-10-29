@@ -418,6 +418,7 @@ REGELN:
 - "exercises": 8-12 abwechslungsreiche Übungen/Tests (type "choice" mit 3 Optionen, "answer"=Index 0-basiert; und "gap"). Viele Tests!
 - "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
 - "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler zeigt; sonst [].
+- SPRACHLICHE SORGFALT: Keine Regel mit „nur", „immer" oder „nie", wenn sie nicht sicher stimmt. Verben, die es trennbar UND untrennbar gibt (ueberfuehren, uebersetzen, umfahren, umgehen, durchbrechen, durchschauen, unterstellen, wiederholen), nie pauschal in eine Schublade stecken — oft entscheidet die Bedeutung, manchmal sind beide Formen richtig. Beispiel: ueberfuehren ist untrennbar bei „jemandem eine Tat nachweisen", beim Transportieren sind laut Duden beide Formen richtig (ueberfuehrt und uebergefuehrt). Im Zweifel das Beispiel zeigen statt eine Regel aufstellen.
 - WICHTIG fuer das JSON: Benutze im Text NIEMALS das gerade Anfuehrungszeichen \" — es zerbricht die Antwort mitten im Satz. Schreib Zitate und hervorgehobene Woerter entweder ganz ohne Anfuehrungszeichen oder mit den deutschen Zeichen \u201e und \u201c.
 - Deutsch, freundlich, klar. Nur reines JSON.`;
 }
