@@ -17,6 +17,17 @@
 
 const PAKETE = 'https://www.deutschoderwas-club.de/index.html#preise';
 
+/* Wie die Stufe in der Mail heisst. Bis zum 29.10.2026 stand hier
+   ueberall fest "Premium" — damals bekam nur Premium diese Mail.
+   Seit dem Uebergang der alten Schueler haben auch Community-Zugaenge
+   ein Ende, und die wollen nicht lesen, ihr Premium laufe aus. */
+function stufenName(tier) {
+  const t = String(tier || '').toLowerCase();
+  if (t === 'community') return 'Community-Zugang';
+  if (t === 'premiumplus' || t === 'premium_plus') return 'Premium Plus';
+  return 'Premium';
+}
+
 function datumLang(d) {
   try {
     return new Date(d).toLocaleDateString('de-DE',
@@ -33,8 +44,9 @@ function E(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-export function abloufHtml(vorname, datum) {
+export function abloufHtml(vorname, datum, stufe) {
   const d = E(datum);
+  const st = E(stufe || 'Premium');
   return `<!doctype html><html lang="de"><body style="margin:0;background:#FFF8E0;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:28px 12px;">
 <tr><td align="center">
@@ -49,11 +61,11 @@ export function abloufHtml(vorname, datum) {
     <tr><td style="padding:14px 28px 0;">
       <h1 style="margin:0 0 14px;font-family:'Space Grotesk',Inter,sans-serif;
                  font-size:23px;line-height:1.3;color:#1A1A1A;">
-        Dein Premium läuft am ${d} aus
+        Dein ${st} läuft am ${d} aus
       </h1>
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">Hallo ${E(vorname)},</p>
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
-        eine kurze Nachricht, damit es dich nicht überrascht: Dein Premium-Zugang
+        eine kurze Nachricht, damit es dich nicht überrascht: Dein ${st}
         läuft am <b>${d}</b> aus.
       </p>
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
@@ -116,6 +128,7 @@ export async function abloufLauf(sb, auftrag) {
 
   const datum = datumLang(p.abo_ende);
   const vorname = vornameVon(p.name, p.email);
+  const stufe = stufenName(p.tier);
 
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -124,11 +137,11 @@ export async function abloufLauf(sb, auftrag) {
       sender: { name: 'Julia · deutschoderwas club',
                 email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
       to: [{ email: p.email, name: p.name || undefined }],
-      subject: `Dein Premium läuft am ${datum} aus`,
-      htmlContent: abloufHtml(vorname, datum),
+      subject: `Dein ${stufe} läuft am ${datum} aus`,
+      htmlContent: abloufHtml(vorname, datum, stufe),
     }),
   });
   const antwort = await r.text().catch(() => '');
   if (!r.ok) return { ok: false, grund: 'brevo_fehler', http: r.status, antwort: antwort.slice(0, 200) };
-  return { ok: true, an: p.email, name: p.name, abo_ende: p.abo_ende, datum };
+  return { ok: true, an: p.email, name: p.name, abo_ende: p.abo_ende, datum, stufe };
 }
