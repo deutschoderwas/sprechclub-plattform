@@ -318,43 +318,151 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 </div>
 <div class="tip">🔑 <strong>Redemittel:</strong> „Ganz vorne / hinten sieht man …", „Direkt daneben …", „Mitten im Bild / in der Ecke …", „Links / rechts von … befindet sich …", „Im Vordergrund / im Hintergrund …"</div>
 </section>
+<section class="section" data-section="5">
+<h2 class="section-title">🏆 Das <em>große Quiz</em></h2>
+<p class="section-sub">Mehrere Runden rund um die Stadt: Wortschatz, Geschäfte &amp; Orte, <strong>Wo? &amp; Wohin?</strong>, Verkehr und Redewendungen. Pro Frage gibt es genau eine richtige Antwort — das Quiz passt sich eurem <strong>Niveau</strong> an.</p>
+<div class="quiz-runden" id="quizRunden"></div>
+<div class="quiz-buehne">
+  <div class="quiz-kopf"><span class="quiz-zaehler" id="quizZaehler">Runde 1 · Frage 1</span><span class="quiz-punkte" id="quizPunkte">0 von 6</span></div>
+  <div class="quiz-balken"><i id="quizBalken" style="width:0%"></i></div>
+  <div id="quizInhalt">
+    <div class="quiz-frage" id="quizFrage"></div>
+    <div class="gq-opts" id="quizOpts"></div>
+    <div class="quiz-erkl" id="quizErkl"></div>
+    <div class="quiz-fuss"><button class="btn ghost" onclick="quizRundeStart(qRunde)">↺ Runde neu</button><button class="btn" onclick="quizWeiter()">Weiter →</button></div>
+  </div>
+  <div class="quiz-ende" id="quizEnde" style="display:none"></div>
+</div>
+<div class="tip teal">🏅 <strong>Als Wettkampf:</strong> Zwei Teams, abwechselnd. Wer die richtige Antwort hat, muss zusätzlich <u>einen eigenen Satz</u> mit dem Wort bilden — erst dann gibt es den Punkt.</div>
+</section>
 </div>
 <footer><strong>deutschoderwas</strong> — Sprachspielclub · B1/B2 · Suchbild &amp; Tabu · Wo? &amp; Wohin? · In der Stadt</footer>
 <script>
-document.querySelectorAll('.tab').forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');
-    var _n=document.querySelector('.tabs');window.scrollTo({top:_n.offsetTop-8,behavior:'instant'});
-  };
-});
-document.querySelectorAll('#findGrid .find').forEach(el=>{el.onclick=()=>el.classList.toggle('done');});
-const GEG=["der Brunnen","die Laterne","der Briefkasten","der Mülleimer","die Sitzbank","das Fahrrad","die Gitarre","der Sonnenschirm","die Tasse","der Blumenstand","die Ampel","der Bus","der Kiosk","die Markise","der Baum","der Hund","die Taube","der Kirchturm","die Einkaufstüte","der Rucksack","die Sonnenbrille","der Zebrastreifen"];
-let lastG=-1;
-document.getElementById('secretNew').onclick=()=>{let i;do{i=Math.floor(Math.random()*GEG.length);}while(i===lastG&&GEG.length>1);lastG=i;document.getElementById('secretWord').textContent=GEG[i];};
-const TABU=[
- {w:"die Apotheke",f:["Medikament","Kreuz","krank","Tablette","grün"]},
+const GEG={
+"einfach":["das Fahrrad","die Tasse","der Bus","der Baum","der Hund","die Ampel","der Rucksack","die Sonnenbrille"],
+"komplexer":["der Brunnen","die Laterne","der Briefkasten","der Sonnenschirm","der Blumenstand","der Kiosk","die Sitzbank"],
+"schwierig":["der Mülleimer","die Gitarre","die Markise","die Taube","der Kirchturm","die Einkaufstüte","der Zebrastreifen"]
+};
+const TABU={
+"einfach":[
+ {w:"die Ampel",f:["rot","grün","Straße","stehen","gehen"]},
+ {w:"das Fahrrad",f:["fahren","Räder","treten","Lenker","Pedale"]},
  {w:"die Bäckerei",f:["Brot","Brötchen","backen","Bäcker","Mehl"]},
+ {w:"die Apotheke",f:["Medikament","Kreuz","krank","Tablette","grün"]},
+ {w:"der Sonnenschirm",f:["Sonne","Schatten","Café","rund","aufspannen"]}
+],
+"komplexer":[
  {w:"der Briefkasten",f:["Post","rot","Brief","einwerfen","gelb"]},
  {w:"der Brunnen",f:["Wasser","Mitte","Platz","spritzen","rund"]},
- {w:"der Straßenmusiker",f:["Gitarre","spielen","Geld","Hut","Musik"]},
- {w:"die Ampel",f:["rot","grün","Straße","stehen","gehen"]},
  {w:"die Bushaltestelle",f:["Bus","warten","Schild","H","einsteigen"]},
+ {w:"der Blumenstand",f:["Blumen","kaufen","Verkäufer","bunt","Strauß"]}
+],
+"schwierig":[
+ {w:"der Straßenmusiker",f:["Gitarre","spielen","Geld","Hut","Musik"]},
  {w:"der Zebrastreifen",f:["Straße","weiß","überqueren","Streifen","laufen"]},
- {w:"der Blumenstand",f:["Blumen","kaufen","Verkäufer","bunt","Strauß"]},
- {w:"das Fahrrad",f:["fahren","Räder","treten","Lenker","Pedale"]},
- {w:"der Kiosk",f:["Zeitung","kaufen","klein","Postkarten","Süßigkeiten"]},
- {w:"der Sonnenschirm",f:["Sonne","Schatten","Café","rund","aufspannen"]}
-];
-let last=-1;
-document.getElementById('tabooNew').onclick=()=>{
-  let i;do{i=Math.floor(Math.random()*TABU.length);}while(i===last&&TABU.length>1);last=i;
-  const k=TABU[i];
-  document.getElementById('tabooWord').textContent=k.w;
-  document.getElementById('tabooList').innerHTML=k.f.map(x=>'<li>'+x+'</li>').join('');
+ {w:"der Kiosk",f:["Zeitung","kaufen","klein","Postkarten","Süßigkeiten"]}
+]
 };
+var curLevel='komplexer';
+document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});document.querySelectorAll('.section').forEach(function(x){x.classList.remove('active');});b.classList.add('active');document.querySelector('[data-section="'+b.dataset.tab+'"]').classList.add('active');var n=document.querySelector('.tabs');window.scrollTo({top:n.offsetTop-8,behavior:'instant'});};});
+document.querySelectorAll('.find').forEach(function(el){el.onclick=function(){el.classList.toggle('done');};});
+function makeQueue(n){var a=[];for(var i=0;i<n;i++)a.push(i);for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var secQ=makeQueue(GEG[curLevel].length),secP=0;
+document.getElementById('secretNew').onclick=function(){var list=GEG[curLevel];if(secP>=secQ.length){secQ=makeQueue(list.length);secP=0;}document.getElementById('secretWord').textContent=list[secQ[secP++]];};
+var tabQ=makeQueue(TABU[curLevel].length),tabP=0;
+document.getElementById('tabooNew').onclick=function(){var list=TABU[curLevel];if(tabP>=tabQ.length){tabQ=makeQueue(list.length);tabP=0;}var k=list[tabQ[tabP++]];document.getElementById('tabooWord').textContent=k.w;document.getElementById('tabooList').innerHTML=k.f.map(function(x){return '<li>'+x+'</li>';}).join('');};
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});secQ=makeQueue(GEG[curLevel].length);secP=0;tabQ=makeQueue(TABU[curLevel].length);tabP=0;document.getElementById('secretWord').textContent='Bereit?';document.getElementById('tabooWord').textContent='Bereit?';document.getElementById('tabooList').innerHTML='<li>Tippe auf „Neue Karte"</li>';qFertig=[];quizRundenBauen();quizRundeStart(0);}
+var qRunde=-1,qNr=0,qPunkte=0,qOffen=false,qFertig=[];
+function QZ(){return QUIZ[curLevel];}
+function quizRundenBauen(){var qg=document.getElementById('quizRunden');qg.innerHTML='';QZ().forEach(function(R,i){var b=document.createElement('button');b.className='qr';b.dataset.i=i;b.innerHTML='<div class="qr-i">'+R.i+'</div><div class="qr-t">'+R.t+'</div><div class="qr-d">'+R.d+' · '+R.q.length+' Fragen</div>';b.addEventListener('click',function(){quizRundeStart(i);});qg.appendChild(b);});}
+function quizRundeStart(i){qRunde=i;qNr=0;qPunkte=0;qOffen=false;document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0 && +b.dataset.i!==i);});document.getElementById('quizEnde').style.display='none';document.getElementById('quizInhalt').style.display='block';quizFrage();}
+function quizFrage(){var R=QZ()[qRunde];if(!R)return;if(qNr>=R.q.length){quizEnde();return;}var f=R.q[qNr];qOffen=true;document.getElementById('quizZaehler').textContent='Runde '+(qRunde+1)+' · '+R.t+' · Frage '+(qNr+1)+' von '+R.q.length;document.getElementById('quizPunkte').textContent=qPunkte+' von '+R.q.length;document.getElementById('quizBalken').style.width=(qNr/R.q.length*100)+'%';document.getElementById('quizFrage').innerHTML=f.f;var paare=f.o.map(function(t,j){return {t:t,ok:j===f.r};});for(var j=paare.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1));var h=paare[j];paare[j]=paare[k];paare[k]=h;}var buch='ABCD',opts=document.getElementById('quizOpts');opts.innerHTML='';paare.forEach(function(p,j){var b=document.createElement('button');b.className='qo';b.dataset.ok=p.ok?'1':'0';b.innerHTML='<span class="qo-b">'+buch[j]+'</span><span>'+p.t+'</span>';b.addEventListener('click',function(){quizAntwort(b,f);});opts.appendChild(b);});var e=document.getElementById('quizErkl');e.className='quiz-erkl';e.innerHTML='';}
+function quizAntwort(btn,f){if(!qOffen)return;qOffen=false;var ok=btn.dataset.ok==='1';document.querySelectorAll('#quizOpts .qo').forEach(function(b){b.classList.add('aus');if(b.dataset.ok==='1')b.classList.add('richtig');});if(!ok)btn.classList.add('falsch');if(ok)qPunkte++;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;var e=document.getElementById('quizErkl');e.innerHTML=(ok?'✅ Richtig. ':'❌ Nicht ganz. ')+f.e;e.className='quiz-erkl an';}
+function quizWeiter(){if(qOffen){var b=document.getElementById('quizOpts').querySelector('.qo[data-ok="1"]');if(b){quizAntwort(b,QZ()[qRunde].q[qNr]);qPunkte--;document.getElementById('quizPunkte').textContent=qPunkte+' von '+QZ()[qRunde].q.length;return;}}qNr++;quizFrage();}
+function quizEnde(){var R=QZ()[qRunde],n=R.q.length;if(qFertig.indexOf(qRunde)<0)qFertig.push(qRunde);document.querySelectorAll('.qr').forEach(function(b){b.classList.toggle('fertig',qFertig.indexOf(+b.dataset.i)>=0);});document.getElementById('quizBalken').style.width='100%';document.getElementById('quizInhalt').style.display='none';var lob=qPunkte===n?'Alles richtig — perfekt!':(qPunkte>=n-1?'Fast alles — stark!':(qPunkte>=n/2?'Gut gemacht. Die Erklärungen noch einmal ansehen, dann sitzt es.':'Diese Runde noch einmal — beim zweiten Mal bleibt es hängen.'));var naechste=(qRunde+1)%QZ().length;document.getElementById('quizEnde').style.display='block';document.getElementById('quizEnde').innerHTML='<div class="gross">'+qPunkte+'/'+n+'</div><p>'+lob+'</p>'+'<div class="controls"><button class="btn ghost" onclick="quizRundeStart('+qRunde+')">↺ Diese Runde nochmal</button>'+'<button class="btn" onclick="quizRundeStart('+naechste+')">'+QZ()[naechste].i+' Weiter: '+QZ()[naechste].t+' →</button></div>';}
+var QUIZ={
+"einfach":[
+{"t":"Wortschatz","d":"Stadt-Objekte","i":"🔤","q":[
+{"f":"Woran muss man warten, bis es grün wird?","o":["an der Ampel","am Brunnen","am Baum"],"r":0,"e":"Die Ampel zeigt rot, gelb und grün. Am Brunnen plätschert Wasser, und der Baum ist eine Pflanze."},
+{"f":"Womit fährt man umweltfreundlich durch die Stadt und tritt in die Pedale?","o":["mit dem Fahrrad","mit dem Bus","mit dem Rucksack"],"r":0,"e":"Beim Fahrrad tritt man in die Pedale. Der Bus hat einen Motor, und der Rucksack hängt auf dem Rücken."},
+{"f":"Woraus trinkt man im Café seinen Kaffee?","o":["aus der Tasse","aus der Ampel","aus dem Hut"],"r":0,"e":"Aus der Tasse trinkt man Kaffee oder Tee."}
+]},
+{"t":"Geschäfte & Orte","d":"Was kauft man wo?","i":"🏪","q":[
+{"f":"Wo kauft man frisches Brot und Brötchen?","o":["in der Bäckerei","in der Apotheke","im Café"],"r":0,"e":"In der Bäckerei gibt es Brot und Brötchen. In der Apotheke bekommt man Medikamente, im Café Kaffee."},
+{"f":"Wo setzt man sich hin und bestellt einen Kaffee?","o":["im Café","in der Bank","am Zebrastreifen"],"r":0,"e":"Im Café bestellt man Getränke und setzt sich. In der Bank regelt man Geld."},
+{"f":"Wo bekommt man Medikamente?","o":["in der Apotheke","in der Bäckerei","am Kiosk"],"r":0,"e":"Medikamente gibt es in der Apotheke."}
+]},
+{"t":"Wo ist das?","d":"Dativ","i":"📍","q":[
+{"f":"Die Tasse steht auf ___ Tisch.","o":["dem","den","der"],"r":0,"e":"Wo? fragt nach der Lage, also Dativ: auf dem Tisch."},
+{"f":"Der Hund liegt unter ___ Bank.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Bank wird im Dativ zu der Bank."},
+{"f":"Die Blumen stehen vor ___ Fenster.","o":["dem","den","der"],"r":0,"e":"Wo? = Dativ: vor dem Fenster."}
+]},
+{"t":"Verkehr & Schilder","d":"Unterwegs","i":"🚦","q":[
+{"f":"Wo wartet man auf den Bus?","o":["an der Bushaltestelle","am Brunnen","in der Bäckerei"],"r":0,"e":"An der Bushaltestelle wartet man auf den Bus; sie hat ein Schild mit einem H."},
+{"f":"Wie überquert man sicher die Straße?","o":["auf dem Zebrastreifen","im Café","auf dem Fahrrad"],"r":0,"e":"Auf dem Zebrastreifen (den weißen Streifen) überquert man die Straße."},
+{"f":"Welche Farbe der Ampel bedeutet „Gehen“?","o":["grün","rot","gelb"],"r":0,"e":"Grün heißt gehen, rot heißt stehen bleiben."}
+]}
+],
+"komplexer":[
+{"t":"Wortschatz","d":"Stadt-Objekte","i":"🔤","q":[
+{"f":"Wie heißt die Säule mit einer Lampe, die abends die Straße beleuchtet?","o":["die Laterne","der Briefkasten","der Brunnen"],"r":0,"e":"Die Laterne spendet abends Licht. Der Briefkasten ist für Post, der Brunnen für Wasser."},
+{"f":"Wo wirft man einen Brief ein, damit die Post ihn abholt?","o":["in den Briefkasten","in den Mülleimer","in den Brunnen"],"r":0,"e":"Briefe wirft man in den Briefkasten. In den Mülleimer kommt Abfall."},
+{"f":"Wie heißt der kleine Laden, an dem man Zeitungen und Süßigkeiten kauft?","o":["der Kiosk","die Bäckerei","die Apotheke"],"r":0,"e":"Der Kiosk ist ein kleiner Verkaufsstand für Zeitungen, Getränke und Süßigkeiten."}
+]},
+{"t":"Geschäfte & Orte","d":"Was kauft man wo?","i":"🏪","q":[
+{"f":"Wo kauft man einen bunten Blumenstrauß?","o":["am Blumenstand","in der Apotheke","am Kiosk"],"r":0,"e":"Am Blumenstand verkauft man Blumen und Sträuße."},
+{"f":"Du brauchst ein Schmerzmittel. Wohin gehst du?","o":["in die Apotheke","in die Bäckerei","ins Café"],"r":0,"e":"Medikamente und Schmerzmittel bekommt man nur in der Apotheke."},
+{"f":"Wo setzt man sich draußen unter einen Sonnenschirm und bestellt etwas?","o":["im Café","in der Bank","an der Haltestelle"],"r":0,"e":"Im Café sitzt man oft draußen unter Sonnenschirmen."}
+]},
+{"t":"Wo? oder Wohin?","d":"Wechselpräpositionen","i":"📍","q":[
+{"f":"Die Sitzbank steht vor ___ Brunnen.","o":["dem","den","das"],"r":0,"e":"Wo? = Dativ: vor dem Brunnen. Die Bank bewegt sich nicht."},
+{"f":"Die Frau geht in ___ Apotheke.","o":["die","der","dem"],"r":0,"e":"Wohin? zeigt eine Bewegung, also Akkusativ: in die Apotheke."},
+{"f":"Der Musiker legt den Hut auf ___ Boden.","o":["den","dem","das"],"r":0,"e":"Wohin? = Akkusativ: auf den Boden."},
+{"f":"Die Fahrräder stehen neben ___ Laterne.","o":["der","die","dem"],"r":0,"e":"Wo? = Dativ, und die Laterne wird im Dativ zu der Laterne."}
+]},
+{"t":"Verkehr & Schilder","d":"Unterwegs","i":"🚦","q":[
+{"f":"An der Bushaltestelle steht ein Schild mit einem großen Buchstaben. Welchem?","o":["H","B","P"],"r":0,"e":"Das H steht für Haltestelle. P steht für Parkplatz."},
+{"f":"Was bedeutet eine gelbe Ampel (nach Grün)?","o":["gleich wird es rot – langsam anhalten","sofort losfahren","parken erlaubt"],"r":0,"e":"Gelb nach Grün heißt: gleich wird es rot, also anhalten, wenn es noch sicher geht."},
+{"f":"Wo müssen Autos halten, damit Fußgänger die Straße überqueren können?","o":["am Zebrastreifen","am Kiosk","am Blumenstand"],"r":0,"e":"Am Zebrastreifen haben Fußgänger Vorrang; Autos müssen halten."}
+]},
+{"t":"Redewendungen","d":"Stadt & Alltag","i":"💬","q":[
+{"f":"Was bedeutet „etwas über den Ladentisch gehen“?","o":["etwas wird verkauft","etwas fällt herunter","etwas wird repariert"],"r":0,"e":"Wenn Ware über den Ladentisch geht, wird sie verkauft."},
+{"f":"Was bedeutet „einen Schaufensterbummel machen“?","o":["durch die Stadt gehen und Auslagen anschauen","schnell einkaufen","Geld abheben"],"r":0,"e":"Beim Schaufensterbummel schlendert man gemütlich an den Schaufenstern entlang, ohne unbedingt zu kaufen."},
+{"f":"Jemand sagt: „Das ist mir zu teuer.“ Was meint die Person?","o":["sie findet den Preis zu hoch","sie hat kein Interesse am Produkt","sie möchte mehr davon"],"r":0,"e":"„Zu teuer“ bezieht sich auf den Preis, der der Person zu hoch ist."}
+]}
+],
+"schwierig":[
+{"t":"Wortschatz","d":"Seltenere Wörter","i":"🔤","q":[
+{"f":"Wie heißt das ausfahrbare Dach über einem Schaufenster, das Schatten spendet?","o":["die Markise","die Laterne","der Zebrastreifen"],"r":0,"e":"Die Markise ist das sonnenschützende Dach über Fenstern und Läden."},
+{"f":"Wie nennt man eine Person, die in der Stadt mit dem Fahrrad fährt?","o":["der Radfahrer","der Straßenmusiker","der Fußgänger"],"r":0,"e":"Der Radfahrer fährt Rad. Der Fußgänger geht zu Fuß, der Straßenmusiker macht Musik."},
+{"f":"Welcher graue Stadtvogel sitzt oft auf Plätzen und pickt Krümel?","o":["die Taube","der Hund","die Gitarre"],"r":0,"e":"Die Taube ist ein typischer Stadtvogel. Der Hund ist ein Säugetier, die Gitarre ein Instrument."}
+]},
+{"t":"Geschäfte & Orte","d":"Feinheiten","i":"🏪","q":[
+{"f":"Welches Verb passt: In der Apotheke lässt man sich ___.","o":["beraten","backen","parken"],"r":0,"e":"In der Apotheke lässt man sich zu Medikamenten beraten. Backen passt zur Bäckerei."},
+{"f":"Welches Wort ist der Oberbegriff für Bäckerei, Apotheke und Kiosk?","o":["das Geschäft","der Brunnen","die Laterne"],"r":0,"e":"Alle drei sind Geschäfte bzw. Verkaufsorte."},
+{"f":"Was macht ein Straßenmusiker, um Geld zu bekommen?","o":["er spielt Musik und sammelt Spenden im Hut","er verkauft Brot","er repariert Fahrräder"],"r":0,"e":"Der Straßenmusiker spielt auf der Straße und sammelt Münzen, oft im hingelegten Hut."}
+]},
+{"t":"Wo? oder Wohin?","d":"Feinheiten","i":"📍","q":[
+{"f":"Ich hänge das Plakat über ___ Schaufenster.","o":["das","dem","der"],"r":0,"e":"Hängen mit Bewegung = Wohin? = Akkusativ: über das Schaufenster."},
+{"f":"Das Plakat hängt über ___ Schaufenster.","o":["dem","das","den"],"r":0,"e":"Hängen ohne Bewegung = Wo? = Dativ: über dem Schaufenster. Gleiches Verb, anderer Fall."},
+{"f":"Der Briefkasten steht zwischen ___ Fahrrädern und dem Mülleimer.","o":["den","dem","der"],"r":0,"e":"Wo? = Dativ Plural: zwischen den Fahrrädern (mit -n im Dativ Plural)."},
+{"f":"Gegenüber ___ Apotheke liegt die Bäckerei.","o":["der","die","dem"],"r":0,"e":"Gegenüber steht mit Dativ: gegenüber der Apotheke."}
+]},
+{"t":"Verkehr & Schilder","d":"ab B2","i":"🚦","q":[
+{"f":"Was ist eine „Fußgängerzone“?","o":["ein autofreier Bereich nur für Fußgänger","eine Ampelkreuzung","ein Busbahnhof"],"r":0,"e":"In der Fußgängerzone dürfen keine Autos fahren; sie ist den Fußgängern vorbehalten."},
+{"f":"Was bedeutet das Schild mit einem roten Ring und einem durchgestrichenen Auto?","o":["Durchfahrt verboten","Parkplatz","Fahrradweg"],"r":0,"e":"Ein durchgestrichenes Auto im roten Ring bedeutet, dass die Durchfahrt für Autos verboten ist."},
+{"f":"Wer hat am Zebrastreifen Vorrang?","o":["die Fußgänger","die Autos","die Radfahrer auf der Fahrbahn"],"r":0,"e":"Am Zebrastreifen haben Fußgänger Vorrang; Fahrzeuge müssen anhalten."}
+]},
+{"t":"Redewendungen","d":"ab B2","i":"💬","q":[
+{"f":"Was bedeutet „die Bürgersteige werden hochgeklappt“?","o":["abends ist in der Stadt nichts mehr los","es regnet stark","die Geschäfte eröffnen"],"r":0,"e":"Die Redewendung beschreibt eine Stadt, in der abends alles schließt und nichts mehr los ist."},
+{"f":"Was bedeutet „etwas an den Mann / an die Frau bringen“?","o":["etwas erfolgreich verkaufen","etwas verlieren","jemanden begleiten"],"r":0,"e":"Etwas an den Mann bringen heißt, es (meist eine Ware) erfolgreich zu verkaufen."},
+{"f":"Was bedeutet „in der ganzen Stadt Gesprächsthema sein“?","o":["alle reden darüber","niemand kennt es","es ist geheim"],"r":0,"e":"Wenn etwas Stadtgespräch ist, reden alle darüber."}
+]}
+]
+};
+quizRundenBauen();quizRundeStart(0);
 </script>
 <script src="lektion-konto.js?v=1"></script>
+<style>.tab-level-chip{display:inline-flex;align-items:center;gap:.3rem;font-family:'Inter',sans-serif;font-weight:800;font-size:.82rem;padding:.34rem .72rem;border-radius:999px;margin-right:.15rem;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1);align-self:center;}</style>
+<script>(function(){var M={einfach:['A2/B1','#FFE9A8','#8a6400'],komplexer:['B1/B2','#D9EBFF','#1e4f91'],schwierig:['B2/C1','#D9F2E2','#1d6c3e']};function run(){var tabs=document.querySelector('.tabs');if(!tabs||document.getElementById('tabLevelChip'))return;var c=document.createElement('span');c.id='tabLevelChip';c.className='tab-level-chip';tabs.insertBefore(c,tabs.firstChild);function upd(){var l=(document.body&&document.body.dataset.level)||'komplexer';var m=M[l]||M.komplexer;c.textContent='Niveau: '+m[0];c.style.background=m[1];c.style.color=m[2];}upd();try{new MutationObserver(upd).observe(document.body,{attributes:true,attributeFilter:['data-level']});}catch(e){}}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);})();</script>
 </body></html>
