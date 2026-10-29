@@ -98,7 +98,7 @@ export function gruppeHtml(name, email) {
       </p>
 
       <p style="margin:0 0 26px;font-size:16px;line-height:1.65;">
-        Bis bald,<br>Julia
+        Bis bald,<br>Julia &amp; Team
       </p>
     </td></tr>
     <tr><td style="padding:0 28px 26px;border-top:1px solid #F0E5D8;">
