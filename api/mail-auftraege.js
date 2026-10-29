@@ -63,6 +63,16 @@ const ARTEN = {
   nachzuegler_mail:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', false),
   nachzuegler_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/nachzuegler-mail', true),
 
+  /* Die Einladung in die WhatsApp-Gruppe. Julia, 29.10.2026: "dass sie
+     gerne in unsere gemeinsame WhatsApp Gruppe kommen KÖNNEN, wenn sie
+     wollen ... wenn es manchmal schnell gehen muss, dann ist der Chat
+     auf WhatsApp immer am schnellsten."
+     Erst 'whatsapp_test' (eine Mail an Julia), dann auf ihr Wort
+     'whatsapp_gruppe' an alle Mitglieder. */
+  whatsapp_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe', true),
+  whatsapp_gruppe:   (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe', false),
+  whatsapp_test:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe?test=1', false),
+
   /* Eine Woche vor dem Ablauf eines Abos. Der Auftrag trägt die
      Person (ziel_user) und den Tag (faellig_am) und wird erst an
      diesem Tag angefasst. Julia, 25.10.2026, über Natalia
