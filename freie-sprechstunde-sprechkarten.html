@@ -747,6 +747,21 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+/* Aus dem Link: ?bereich=familie&niveau=komplexer
+   So kann jede Freitagsstunde auf ihr eigenes Thema zeigen. */
+try{
+  var par = new URLSearchParams(location.search);
+  var wb = par.get('bereich');
+  if (wb) for (var i = 0; i < BEREICHE.length; i++) if (BEREICHE[i].id === wb) bereich = wb;
+  var wn = par.get('niveau');
+  if (wn === 'einfach' || wn === 'komplexer' || wn === 'schwierig') {
+    niveau = wn;
+    Array.prototype.forEach.call(document.querySelectorAll('#lvsw button'), function(x){
+      x.classList.toggle('on', x.getAttribute('data-l') === wn);
+    });
+  }
+}catch(e){}
+
 tabsBauen();
 zeichnen();
 </script>
