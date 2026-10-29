@@ -1,25 +1,34 @@
 // ============================================================
 //  _whatsapp-gruppe-mail.js — die Einladung in die WhatsApp-Gruppe
 //
-//  Julia, 29.10.2026: "Wir müssen allen Premium Schülern jetzt eine
-//  Email schicken, eine schöne, zur Erinnerung, dass sie gerne in
-//  unsere gemeinsame WhatsApp Gruppe kommen KÖNNEN, wenn sie wollen.
-//  Es gibt zwar die Kommunikation im Community chat, aber wenn es
-//  manchmal schnell gehen muss, dann ist der Chat auf WhatsApp immer
-//  am schnellsten. Komm also gerne rein. Es sind nur Club Mitglieder
-//  drin."
+//  Julia, 29.10.2026: "Wir müssen allen Club-Mitgliedern eine Email
+//  schicken, zur Erinnerung, dass sie gerne in unsere gemeinsame
+//  WhatsApp Gruppe kommen KÖNNEN, wenn sie wollen. Es gibt zwar die
+//  Kommunikation im Community chat, aber wenn es manchmal schnell
+//  gehen muss, dann ist der Chat auf WhatsApp immer am schnellsten.
+//  Komm also gerne rein. Es sind nur Club Mitglieder drin."
 //
-//  Auf die Frage, wer sie bekommt: alle Mitglieder, Premium und
-//  Community — in der Gruppe sind ja "nur Club-Mitglieder", und das
-//  sind Community-Leute auch.
+//  Ergänzungen von ihr beim Gegenlesen: "WENN du noch nicht drin
+//  bist", "wenn du schon drin bist, dann ist super", ihre Nummer für
+//  Rückfragen, und die Unterschrift "Julia & Team".
+//
+//  Und zuletzt, nach der Testmail: "Kannst du es einfach weiß machen?
+//  Wie eine normale Mail von Julia, nichts Professionelles."
+//
+//  Deshalb KEIN Briefkasten-Layout: kein Creme, keine Karte, kein
+//  Logo, kein türkiser Knopf. Weißer Grund, normale Schrift, der Link
+//  als Link. Das Ganze soll aussehen wie eine Mail, die Julia eben
+//  getippt hat — denn genau das ist es inhaltlich auch. Nur der
+//  Impressum-Fuß bleibt, der muss bei einer Rundmail dabei sein; er
+//  steht klein und leise am Ende.
 //
 //  Der Ton ist Einladung, nicht Aufforderung: zweimal steht da, dass
-//  es völlig in Ordnung ist, nicht mitzumachen. Wer den Chat auf der
-//  Plattform lieber mag, soll sich durch diese Mail nicht gedrängt
-//  fühlen.
+//  es völlig in Ordnung ist, nicht mitzumachen.
 // ============================================================
 
 export const GRUPPEN_LINK = 'https://chat.whatsapp.com/KkxQA5AAyNx48dR1bpX4Wk?mode=gi_t';
+export const JULIA_NUMMER = '+49 176 43425306';
+const JULIA_WA = 'https://wa.me/4917643425306';
 
 function vornameVon(name, email) {
   const n = String(name || '').trim();
@@ -37,78 +46,56 @@ export function gruppeBetreff() {
 
 export function gruppeHtml(name, email) {
   const v = E(vornameVon(name, email));
-  return `<!doctype html><html lang="de"><body style="margin:0;background:#FFF8E0;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:28px 12px;">
-<tr><td align="center">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-         style="max-width:560px;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:18px;
-                font-family:Inter,'Segoe UI',system-ui,sans-serif;color:#1A1A1A;">
-    <tr><td style="padding:26px 28px 6px;">
-      <div style="font-family:'Space Grotesk',Inter,sans-serif;font-weight:700;font-size:20px;">
-        <span style="color:#1A1A1A;">deutsch</span><span style="color:#14B8A6;">oderwas</span>
-      </div>
-    </td></tr>
-    <tr><td style="padding:14px 28px 0;">
-      <h1 style="margin:0 0 14px;font-family:'Space Grotesk',Inter,sans-serif;
-                 font-size:23px;line-height:1.3;color:#1A1A1A;">
-        Komm gern in unsere WhatsApp-Gruppe
-      </h1>
+  const schrift = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  const p = `margin:0 0 14px;font-size:16px;line-height:1.6;color:#222222;`;
+  return `<!doctype html><html lang="de"><body style="margin:0;padding:0;background:#ffffff;">
+<div style="max-width:560px;margin:0 auto;padding:26px 20px;font-family:${schrift};">
 
-      <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">Hallo ${v},</p>
+  <p style="${p}">Hallo ${v},</p>
 
-      <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
-        nur eine kurze Erinnerung — <b>falls du noch nicht drin bist</b>: Neben
-        dem Community-Chat auf der Plattform gibt es auch eine gemeinsame
-        <b>WhatsApp-Gruppe</b>. Und wenn es mal schnell gehen muss, bist du
-        dort am schnellsten dran.
-      </p>
+  <p style="${p}">
+    ich wollte dir nur kurz Bescheid sagen, falls du noch nicht drin bist: Wir
+    haben neben dem Chat auf der Plattform auch eine WhatsApp-Gruppe. Wenn es
+    mal schnell gehen muss, bist du da am schnellsten dran.
+  </p>
 
-      <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
-        Eine Frage kurz vor der Stunde, ein Satz, bei dem du unsicher bist,
-        ein „Wie sagt man das noch mal?“ — auf der Plattform ist alles in Ruhe
-        sortiert, auf WhatsApp geht es eben flott.
-      </p>
+  <p style="${p}">
+    Eine Frage kurz vor der Stunde, ein Satz, bei dem du unsicher bist, ein
+    &bdquo;Wie sagt man das noch mal?&ldquo; &mdash; einfach rein damit.
+  </p>
 
-      <p style="margin:0 0 20px;font-size:16px;line-height:1.65;">
-        In der Gruppe sind nur Club-Mitglieder. Komm gern dazu, wenn du magst.
-        Und wenn du schon drin bist: super, dann hast du diese Mail einfach
-        schon erledigt.
-      </p>
+  <p style="${p}">
+    Drin sind nur Club-Mitglieder. Hier ist der Link:<br>
+    <a href="${GRUPPEN_LINK}" style="color:#1155cc;">${GRUPPEN_LINK}</a>
+  </p>
 
-      <p style="margin:0 0 22px;">
-        <a href="${GRUPPEN_LINK}" style="display:inline-block;background:#2DD4BF;color:#06403A;
-           font-weight:700;font-size:16px;text-decoration:none;padding:13px 24px;border-radius:999px;">
-          Zur WhatsApp-Gruppe
-        </a>
-      </p>
+  <p style="${p}">
+    Und wenn du schon drin bist: super, dann hast du diese Mail einfach schon
+    erledigt.
+  </p>
 
-      <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
-        Und wenn du lieber im Chat auf der Plattform bleibst: auch völlig in
-        Ordnung. Dort liest du sowieso alles mit.
-      </p>
+  <p style="${p}">
+    Wenn du lieber im Chat auf der Plattform bleibst, ist das genauso in
+    Ordnung. Dort liest du sowieso alles mit.
+  </p>
 
-      <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
-        Wir freuen uns so oder so, dass du dabei bist.
-      </p>
+  <p style="${p}">
+    Falls du Fragen hast, zur Gruppe oder zu irgendetwas anderem, schreib mir
+    einfach direkt: <a href="${JULIA_WA}" style="color:#1155cc;">${JULIA_NUMMER}</a>
+  </p>
 
-      <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
-        Und falls du Fragen hast — zur Gruppe oder zu irgendetwas anderem:
-        Schreib mir einfach direkt,
-        <a href="https://wa.me/4917643425306" style="color:#0F766E;font-weight:700;">+49 176 43425306</a>.
-      </p>
+  <p style="${p}">
+    Bis bald,<br>
+    Julia &amp; Team
+  </p>
 
-      <p style="margin:0 0 26px;font-size:16px;line-height:1.65;">
-        Bis bald,<br>Julia &amp; Team
-      </p>
-    </td></tr>
-    <tr><td style="padding:0 28px 26px;border-top:1px solid #F0E5D8;">
-      <p style="margin:16px 0 0;font-size:12px;line-height:1.6;color:#6B7280;">
-        deutschoderwas · Julia Karackov · Wiesenstraße 38, 58119 Hagen, Deutschland<br>
-        E-Mail: deutschoderwas@gmail.com · USt-ID: DE676677898<br>
-        Du bekommst diese Nachricht, weil du Mitglied im deutschoderwas club bist.
-      </p>
-    </td></tr>
-  </table>
-</td></tr></table>
+  <p style="margin:26px 0 0;padding-top:12px;border-top:1px solid #e8e8e8;
+            font-size:11px;line-height:1.5;color:#999999;">
+    deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen,
+    Deutschland &middot; deutschoderwas@gmail.com &middot; USt-ID: DE676677898<br>
+    Du bekommst diese Nachricht, weil du Mitglied im deutschoderwas club bist.
+  </p>
+
+</div>
 </body></html>`;
 }
