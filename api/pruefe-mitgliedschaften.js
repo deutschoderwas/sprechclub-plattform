@@ -644,7 +644,7 @@ export default async function handler(req, res) {
   bericht.von_hand_geprueft = [];
   try {
     const { data: hand } = await sb.from('profiles')
-      .select('id,name,email,status,tier,pass_until,abo_ende,abo_stripe_status,bezahlt_von,bezahlt_hinweis')
+      .select('id,name,email,status,tier,pass_until,abo_ende,abo_stripe_status,bezahlt_von,bezahlt_hinweis,stripe_customer_id')
       .or('bezahlt_von.not.is.null,abo_stripe_status.eq.von_hand');
 
     for (const h of (hand || [])) {
@@ -683,11 +683,89 @@ export default async function handler(req, res) {
         continue;
       }
 
-      // Ueberweisung & Co: nicht anfassen, nur rechtzeitig erinnern.
       const endet = h.abo_ende ? Date.parse(h.abo_ende) : null;
       const tage = endet ? Math.round((endet - Date.now()) / 86400000) : null;
       bericht.von_hand_geprueft.push({ name: h.name || h.email, hinweis: h.bezahlt_hinweis || '',
         laeuft_bis: h.abo_ende ? String(h.abo_ende).slice(0, 10) : '—', tage_rest: tage });
+
+      /* Ist der Tag vorbei, wird zugemacht.
+
+         Julia, 29.10.2026, beim Uebergang der alten Schueler: "Danach
+         muss sie ein Abo abschliessen." Bis dahin sperrte ein
+         Enddatum hier gar nichts — es stand nur im Bericht, und der
+         Zugang blieb offen, bis jemand von Hand zumachte. Auf die
+         Frage, ob der Lauf das selbst erledigen soll: "Ich baue das
+         Zumachen ein."
+
+         Keine Abschiedsmail: Diese Leute haben eine Woche vorher
+         schon die Erinnerung bekommen (mail_auftraege,
+         art 'abo_ablauf_mail'). Eine zweite Mail am Stichtag waere
+         eine zu viel. Im Bericht steht es, damit Julia sieht, wen es
+         getroffen hat. */
+      const hatNochZugang = !!h.tier || ['aktiv', 'pause', 'urlaub'].includes(h.status || '');
+      if (endet && endet < Date.now() && hatNochZugang) {
+
+        /* Erst nachsehen, ob doch ein Abo laeuft.
+
+           Dmitry Kropotov ist der Grund: Er steht auf 'von_hand' mit
+           Enddatum 01.12.2026 — gesetzt, damit die falschen
+           Ablauf-Mails aufhoeren — und zahlt gleichzeitig bei Stripe
+           weiter. Schritt 1 ueberspringt ihn ja gerade wegen
+           'von_hand', sein Enddatum wird also nie nachgezogen. Ohne
+           diese Frage haette der 2. Dezember ihm den Zugang
+           zugemacht, obwohl er zahlt.
+
+           Findet sich ein laufendes Abo, wird nicht zugemacht,
+           sondern gemeldet: dann gehoert das Profil nicht mehr auf
+           'von Hand', und das entscheidet ein Mensch. */
+        let zahltDoch = null;
+        if (h.stripe_customer_id) {
+          try {
+            const subs = await stripe.subscriptions.list({ customer: h.stripe_customer_id, status: 'all', limit: 10 });
+            const echt = (subs.data || []).filter(x => !NIE_ZUSTANDE.includes(x.status));
+            zahltDoch = echt.find(x => LAEUFT.includes(x.status)) || echt.find(nochBezahlt) || null;
+          } catch (e) {
+            /* Keine Antwort von Stripe heisst NICHT "zahlt nicht".
+               Im Zweifel bleibt der Zugang offen. */
+            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, Stripe nicht erreichbar: ' + String((e && e.message) || e) });
+            continue;
+          }
+        }
+        if (zahltDoch) {
+          (bericht.von_hand_zahlt_doch = bericht.von_hand_zahlt_doch || []).push({
+            name: h.name || h.email, email: h.email,
+            lief_angeblich_bis: String(h.abo_ende).slice(0, 10),
+            abo: zahltDoch.status,
+            hinweis: 'Nicht zugemacht. Das Profil steht auf "von Hand", bei Stripe laeuft aber ein Abo — bitte ansehen.',
+          });
+          continue;
+        }
+
+        if (!trocken) {
+          const { error: zuErr } = await sb.from('profiles')
+            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
+            .eq('id', h.id);
+          if (zuErr) {
+            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, konnte nicht zumachen: ' + zuErr.message });
+            continue;
+          }
+          await sb.from('zugang_log').insert({
+            user_id: h.id, email: h.email, aktion: 'gekuendigt',
+            grund: 'von Hand gesetzte Mitgliedschaft abgelaufen (lief bis '
+              + String(h.abo_ende).slice(0, 10) + ')',
+            vorher:  { status: h.status, tier: h.tier },
+            nachher: { status: 'gekuendigt', tier: null },
+          });
+        }
+        bericht.gesperrt.push({
+          name: h.name || h.email, email: h.email,
+          letztes_abo: 'von Hand (' + (h.bezahlt_hinweis ? 'siehe Hinweis' : 'ohne Hinweis') + ')',
+          lief_bis: String(h.abo_ende).slice(0, 10),
+        });
+        continue;
+      }
+
+      // Laeuft noch: nicht anfassen, nur rechtzeitig erinnern.
       if (tage !== null && tage <= 14) {
         (bericht.bald_faellig = bericht.bald_faellig || []).push({
           name: h.name || h.email, email: h.email,
@@ -953,6 +1031,7 @@ export default async function handler(req, res) {
      und die neuen Faelle (nachgetragen, bald faellig) genauso. */
   const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
     || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length
+    || (bericht.von_hand_zahlt_doch || []).length
     || (bericht.zahlt_ohne_konto || []).length
     || (bericht.webhook && bericht.webhook.lebt === false);
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
@@ -971,6 +1050,7 @@ export default async function handler(req, res) {
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, ${x.takt}${x.preis ? ', ' + x.preis : ''}${x.naechste_zahlung ? ', nächste Zahlung ' + x.naechste_zahlung : ''}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
+      ((bericht.von_hand_zahlt_doch || []).length ? `<p><b>Steht auf „von Hand", zahlt aber bei Stripe — NICHT zugemacht:</b></p><ul>${bericht.von_hand_zahlt_doch.map(x => `<li>${x.name} (${x.email}) — Eintrag lief bis ${x.lief_angeblich_bis}, bei Stripe steht das Abo auf „${x.abo}". Bitte den Eintrag richtigstellen.</li>`).join('')}</ul>` : '') +
       ((bericht.zahlt_ohne_konto || []).length ? `<p><b>⚠️ Zahlt bei Stripe, hat bei uns aber kein Konto:</b></p><ul>${bericht.zahlt_ohne_konto.map(x => `<li><b>${x.email}</b> — ${x.tier || x.plan || 'Stufe unbekannt'}${x.preis ? ', ' + x.preis : ''}${x.takt ? ' pro ' + x.takt : ''}${x.seit ? ', seit ' + x.seit : ''}${x.laeuft_bis ? ', bezahlt bis ' + x.laeuft_bis : ''} <span style="color:#888">(${x.abo_id})</span></li>`).join('')}</ul>` : '') +
       ((bericht.zahlt_nicht_angemeldet || []).length ? `<p><b>Hat bezahlt, sich aber nie angemeldet:</b></p><ul>${bericht.zahlt_nicht_angemeldet.map(x => `<li>${x.email} — Abo ${x.abo}</li>`).join('')}</ul>` : '') +
       (bericht.unklar.length ? `<p><b>Unklar — Zugang bleibt offen, bitte bei Stripe nachsehen:</b></p><ul>${bericht.unklar.map(x => `<li>${x.name} (${x.email}) — ${x.hinweis}</li>`).join('')}</ul>` : '') +
