@@ -904,6 +904,7 @@ function zeichneAbzeichen(){
 let LEADS=[], LEAD_FILTER='offen';
 let LEAD_POST={};
 let LEAD_KONTO={};
+let LEAD_LETZTE_STUFE={};
 const LEAD_STATUS=[['neu','🆕 Neu'],['kontaktiert','✉️ Kontaktiert'],['probestunde','🎟️ Probestunde'],['gewonnen','🎉 Gewonnen'],['abgelehnt','⚪ Kein Interesse'],['adresse_pruefen','⚠️ Adresse prüfen']];
 const LEAD_BG={neu:'#FEF3C7',kontaktiert:'#DBEAFE',probestunde:'#FCE7F3',gewonnen:'#DCFCE7',abgelehnt:'#F1F1F1'};
 const LEAD_FMT=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
@@ -929,6 +930,30 @@ async function loadLeads(){
     (kk||[]).forEach(function(k){
       const key=String(k.email||'').toLowerCase().trim();
       if(key) LEAD_KONTO[key]=k;
+    });
+  }catch(e){}
+  /* Welche Stufe jemand hatte, BEVOR sein Zugang zuging.
+     Julia, 29.10.2026: "Diese Leute stehen auf Abo beendet, aber
+     einige hatten gar kein Premium, sondern nur Community."
+
+     Stimmt: Beim Zumachen wird tier auf null gesetzt, die Stufe ist
+     im Profil also weg. Auf der Karte stand daneben das gelbe
+     "Premium" — und das ist der Tarifwunsch aus der Warteliste, nicht
+     das, was die Person hatte. Zusammen gelesen ergab das "hatte
+     Premium, ist abgelaufen". Nedhal Moqbel und Ana Maria Liscano
+     hatten beide Community.
+
+     Das zugang_log hat es aufgehoben: in 'vorher' steht die Stufe von
+     vor dem Zumachen. */
+  LEAD_LETZTE_STUFE={};
+  try{
+    const { data:zl } = await sb.from('zugang_log')
+      .select('email,vorher,created_at').eq('aktion','gekuendigt')
+      .order('created_at', { ascending:true }).limit(3000);
+    (zl||[]).forEach(function(z){
+      const key=String(z.email||'').toLowerCase().trim();
+      const stufe=z.vorher && z.vorher.tier;
+      if(key && stufe) LEAD_LETZTE_STUFE[key]=stufe;   // spaeterer Eintrag gewinnt
     });
   }catch(e){}
   try{
@@ -994,7 +1019,7 @@ function leadKarte(l){
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <span class="pill" style="background:${LEAD_BG[st]||'#eee'};color:#1A1A1A;font-weight:700">${lbl}</span>
       <b style="font-size:16px">${esc(l.name||'–')}</b>
-      ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700">${esc(l.tarif)}</span>`:''}
+      ${l.tarif?`<span class="pill" style="background:#FFF0CC;color:#8A6608;font-weight:700" title="Das hat die Person bei der Anmeldung zur Warteliste angekreuzt — nicht unbedingt das, was sie dann gekauft hat">📝 wollte ${esc(l.tarif)}</span>`:''}
       ${l.niveau?`<span class="pill" style="background:#DFF6F8;color:#0F766E;font-weight:700">${esc(l.niveau)}</span>`:''}
       ${leadMailPille(l)}
       ${leadKontoPille(l)}
@@ -1091,6 +1116,14 @@ function leadKonto(l){
 }
 /* Und was daraus auf der Karte steht. Drei Zustaende, drei Farben:
    hat bezahlt, hat ein Konto aber kein Abo, hat noch gar nichts. */
+/* community -> Community, premium -> Premium, premiumplus -> Premium Plus */
+function stufenWort(tier){
+  const t=String(tier||'').toLowerCase();
+  if(t==='community') return 'Community';
+  if(t==='premiumplus'||t==='premium_plus') return 'Premium Plus';
+  if(t==='premium') return 'Premium';
+  return '';
+}
 function leadKontoPille(l){
   const k=leadKonto(l);
   if(!k) return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700" title="Noch kein Konto auf der Plattform">🕗 kein Konto</span>';
@@ -1101,7 +1134,12 @@ function leadKontoPille(l){
     return '<span class="pill" style="background:#DCFCE7;color:#15803D;font-weight:800" title="Hat ein Abo'+esc(wann)+'">🎉 '+esc(name)+'</span>';
   }
   const lage = leadLage(l);
-  if(lage === 'abgelaufen') return '<span class="pill" style="background:#FFE4E4;color:#B30000;font-weight:800" title="Hatte ein Abo, es ist abgelaufen">⌛ Abo abgelaufen</span>';
+  if(lage === 'abgelaufen'){
+    const was = stufenWort(LEAD_LETZTE_STUFE[String(l.email||'').toLowerCase().trim()]);
+    return '<span class="pill" style="background:#FFE4E4;color:#B30000;font-weight:800" title="'
+      + (was ? esc(was)+'-Zugang gehabt, inzwischen abgelaufen' : 'Hatte ein Abo, es ist abgelaufen')
+      + '">⌛ ' + (was ? esc(was)+' abgelaufen' : 'Abo abgelaufen') + '</span>';
+  }
   if(lage === 'alt') return '<span class="pill" style="background:#E2EBC9;color:#3F6212;font-weight:800" title="Alter Schüler mit Guthaben">🎒 '+(k.credits||0)+' Stunden</span>';
   if(lage === 'weg') return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700">🗄️ beendet</span>';
   return '<span class="pill" style="background:#FEF3C7;color:#8A6608;font-weight:700" title="Konto angelegt, aber nie etwas gekauft">👤 nur angemeldet</span>';
