@@ -43,6 +43,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+import { kundeSuchen } from './_stripe-kunde.js';
 const LAEUFT = ['active', 'trialing'];
 
 export default async function handler(req, res) {
@@ -81,9 +82,21 @@ export default async function handler(req, res) {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const kunden = await stripe.customers.list({ email, limit: 10 });
+    const liste = (kunden.data || []).slice();
+    /* customers.list vergleicht zeichengenau. Kommt nichts zurueck,
+       noch einmal ueber die Suche und ueber die geparkte Kaufzeile —
+       sonst steht jemand mit laufendem Abo vor einer Registrierungs-
+       sperre, nur weil seine Adresse bei Stripe gross geschrieben ist. */
+    if (!liste.length) {
+      const gefunden = await kundeSuchen(stripe, email, sb);
+      if (gefunden) {
+        try { liste.push(await stripe.customers.retrieve(gefunden.id)); }
+        catch (e) { liste.push({ id: gefunden.id }); }
+      }
+    }
     let abo = null, kunde = null;
 
-    for (const k of (kunden.data || [])) {
+    for (const k of liste) {
       const abos = await stripe.subscriptions.list({ customer: k.id, status: 'all', limit: 20 });
       const lebt = (abos.data || []).find(a => LAEUFT.includes(a.status));
       if (lebt) { abo = lebt; kunde = k; break; }

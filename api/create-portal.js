@@ -15,6 +15,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+import { kundeSuchen } from './_stripe-kunde.js';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!process.env.STRIPE_SECRET_KEY) return res.status(500).json({ error: 'stripe_not_configured' });
@@ -36,12 +37,14 @@ export default async function handler(req, res) {
     let customerId = prof?.stripe_customer_id || null;
     if (!customerId) {
       const email = prof?.email || user.email;
-      if (email) {
-        const found = await stripe.customers.list({ email, limit: 1 });
-        if (found.data && found.data[0]) {
-          customerId = found.data[0].id;
-          await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
-        }
+      /* Nicht nur customers.list: die vergleicht die Adresse
+         zeichengenau und findet einen Kunden mit Grossbuchstaben in
+         der E-Mail nicht. Wer so einen hat, kam hier frueher gar nicht
+         ins Portal und konnte sein Abo nicht kuendigen. */
+      const gefunden = await kundeSuchen(stripe, email, sb);
+      if (gefunden) {
+        customerId = gefunden.id;
+        await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
       }
     }
     if (!customerId) return res.status(404).json({ error: 'no_subscription' });

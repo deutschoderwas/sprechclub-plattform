@@ -16,6 +16,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
+import { kundeSuchen } from './_stripe-kunde.js';
 const LAEUFT = ['active', 'trialing', 'past_due', 'paused', 'unpaid'];
 
 /* Stripe hat den Periodenwechsel von der Subscription auf die Posten
@@ -140,12 +141,13 @@ export default async function handler(req, res) {
     let customerId = (prof && prof.stripe_customer_id) || null;
     if (!customerId) {
       const email = (prof && prof.email) || user.email;
-      if (email) {
-        const found = await stripe.customers.list({ email, limit: 1 });
-        if (found.data && found.data[0]) {
-          customerId = found.data[0].id;
-          await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
-        }
+      /* Siehe _stripe-kunde.js: die blosse Liste findet einen Kunden
+         nicht, dessen E-Mail bei Stripe gross geschrieben steht. Dann
+         stand hier "kein_kunde", obwohl das Abo laeuft. */
+      const gefunden = await kundeSuchen(stripe, email, sb);
+      if (gefunden) {
+        customerId = gefunden.id;
+        await sb.from('profiles').update({ stripe_customer_id: customerId }).eq('id', user.id);
       }
     }
     if (!customerId) return res.status(200).json(Object.assign({ abo: null, grund: 'kein_kunde' }, basis));

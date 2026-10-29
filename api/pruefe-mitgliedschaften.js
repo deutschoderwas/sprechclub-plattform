@@ -30,6 +30,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { abschiedHtml, abschiedBetreff, abschiedDatum } from './_abschied-mail.js';
 
+import { kundeSuchen } from './_stripe-kunde.js';
 const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
 // 'premiumplus' heisst die Stufe im Checkout, 'premium_plus' stand an
 // aelteren Stellen. Beide pruefen, sonst faellt der erste Premium-Plus-
@@ -131,6 +132,13 @@ export default async function handler(req, res) {
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+  /* Siehe api/_stripe-kunde.js: drei Wege zum Stripe-Kunden, weil
+     customers.list({email}) die Adresse zeichengenau vergleicht und
+     einen Kunden mit Grossbuchstaben in der E-Mail nicht findet.
+     Dilnoza Utaeva, 27.10.2026, stand deshalb Nacht fuer Nacht unter
+     "ohne Stripe-Kunde", obwohl ihr Abo laeuft. */
+  const kundeVon = (profil) => kundeSuchen(stripe, profil && profil.email, sb);
+
   const FELDER = 'id,name,email,status,tier,stripe_customer_id,is_admin,is_teacher,pass_until,abo_stripe_status,abo_ende,bezahlt_von,bezahlt_hinweis';
   const { data: leute, error } = await sb.from('profiles').select(FELDER).in('tier', TIERS);
   if (error) return res.status(500).json({ ok: false, error: error.message });
@@ -178,12 +186,12 @@ export default async function handler(req, res) {
     try {
       // --- 1. Kunde finden
       let kunde = p.stripe_customer_id || null;
-      if (!kunde && p.email) {
-        const treffer = await stripe.customers.list({ email: p.email, limit: 3 });
-        if (treffer.data && treffer.data.length) {
-          kunde = treffer.data[0].id;
+      if (!kunde) {
+        const gefunden = await kundeVon(p);
+        if (gefunden) {
+          kunde = gefunden.id;
           if (!trocken) await sb.from('profiles').update({ stripe_customer_id: kunde }).eq('id', p.id);
-          bericht.kundennummer_ergaenzt.push(p.name || p.email);
+          bericht.kundennummer_ergaenzt.push((p.name || p.email) + ' (ueber ' + gefunden.weg + ')');
         }
       }
       if (!kunde) {
@@ -533,9 +541,9 @@ export default async function handler(req, res) {
       if (o.is_admin || o.is_teacher) continue;
       try {
         let kunde = o.stripe_customer_id || null;
-        if (!kunde && o.email) {
-          const treffer = await stripe.customers.list({ email: o.email, limit: 3 });
-          kunde = (treffer.data && treffer.data[0] && treffer.data[0].id) || null;
+        if (!kunde) {
+          const gefunden = await kundeVon(o);
+          kunde = gefunden ? gefunden.id : null;
           if (kunde && !trocken) await sb.from('profiles').update({ stripe_customer_id: kunde }).eq('id', o.id);
         }
         if (!kunde) continue;
