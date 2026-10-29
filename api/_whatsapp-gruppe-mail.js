@@ -57,9 +57,10 @@ export function gruppeHtml(name, email) {
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">Hallo ${v},</p>
 
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
-        nur eine kurze Erinnerung: Neben dem Community-Chat auf der Plattform
-        gibt es auch eine gemeinsame <b>WhatsApp-Gruppe</b> — und wenn es mal
-        schnell gehen muss, bist du dort am schnellsten dran.
+        nur eine kurze Erinnerung — <b>falls du noch nicht drin bist</b>: Neben
+        dem Community-Chat auf der Plattform gibt es auch eine gemeinsame
+        <b>WhatsApp-Gruppe</b>. Und wenn es mal schnell gehen muss, bist du
+        dort am schnellsten dran.
       </p>
 
       <p style="margin:0 0 14px;font-size:16px;line-height:1.65;">
@@ -70,6 +71,8 @@ export function gruppeHtml(name, email) {
 
       <p style="margin:0 0 20px;font-size:16px;line-height:1.65;">
         In der Gruppe sind nur Club-Mitglieder. Komm gern dazu, wenn du magst.
+        Und wenn du schon drin bist: super, dann hast du diese Mail einfach
+        schon erledigt.
       </p>
 
       <p style="margin:0 0 22px;">
@@ -82,6 +85,10 @@ export function gruppeHtml(name, email) {
       <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
         Und wenn du lieber im Chat auf der Plattform bleibst: auch völlig in
         Ordnung. Dort liest du sowieso alles mit.
+      </p>
+
+      <p style="margin:0 0 18px;font-size:16px;line-height:1.65;">
+        Wir freuen uns so oder so, dass du dabei bist.
       </p>
 
       <p style="margin:0 0 26px;font-size:16px;line-height:1.65;">
