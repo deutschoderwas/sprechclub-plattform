@@ -29,6 +29,18 @@ export function anleitungBetreff() {
   return 'So buchst du deine Stunden im Sprechclub';
 }
 
+/* Die Bilder liegen im Projekt unter /anleitung/ und werden von der
+   Seite ausgeliefert. Als Datei angehaengt oder als data-URL
+   eingebettet wuerden sie in den meisten Postfaechern gar nicht
+   erscheinen — Gmail wirft eingebettete Bilddaten heraus. */
+function bild(datei, alt, breite) {
+  const b = breite || 520;
+  return `<tr><td style="padding:2px 0 16px">
+    <img src="${SITE}/anleitung/${datei}" alt="${E(alt)}" width="${b}"
+         style="display:block;width:100%;max-width:${b}px;height:auto;border:1px solid #F0E5D8;border-radius:12px">
+  </td></tr>`;
+}
+
 function schritt(nummer, titel, text) {
   return `<tr><td style="padding:0 0 18px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
@@ -72,13 +84,17 @@ export function anleitungHtml(name, email) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       ${schritt(1, 'Melde dich an und &ouml;ffne den Wochenplan',
         'Du gehst auf <a href="' + SITE + '/schuelerbereich" style="color:#0F766E;font-weight:700;text-decoration:none">deutschoderwas-club.de</a> '
-        + 'und meldest dich an. Links im Men&uuml; findest du den Punkt <b>Wochenplan</b>. Dort stehen alle Stunden '
+        + 'und meldest dich an. Links im Men&uuml; klappst du <b>Sprechclub</b> auf und gehst auf <b>Wochenplan</b>. Dort stehen alle Stunden '
         + 'der kommenden Tage, jeden Tag von Montag bis Sonntag.')}
+
+      ${bild('buchen-1-menue.png', 'Das Menue: Sprechclub mit Wochenplan, Meine Stunden und Materialien', 300)}
 
       ${schritt(2, 'Such dir eine Stunde aus und tippe auf &bdquo;Buchen&ldquo;',
         'Bei jeder Stunde siehst du den Tag, die Uhrzeit und das Thema. Wenn dir eine gef&auml;llt, '
         + 'tippst du auf <b>Buchen</b>. Mehr ist es nicht. Du kannst dir ruhig mehrere Stunden in der '
         + 'Woche nehmen &mdash; sprich so oft du magst.')}
+
+      ${bild('buchen-2-stunden.png', 'Drei Stunden im Wochenplan, jede mit einem Knopf Buchen')}
 
       ${schritt(3, 'Deine gebuchten Stunden stehen unter &bdquo;Meine Stunden&ldquo;',
         'Alles, was du gebucht hast, findest du im Men&uuml; unter <b>Meine Stunden</b>. Dort siehst du '
@@ -112,11 +128,12 @@ export function anleitungHtml(name, email) {
   </td></tr>
 
   <tr><td style="padding:18px 30px 6px;font-family:${FF};font-size:15.5px;line-height:1.65;color:#1A1A1A">
-    Wenn etwas nicht klappt oder du eine Frage hast, antworte einfach auf diese E-Mail. Ich lese sie selbst.
+    Wenn etwas nicht klappt oder du eine Frage hast, antworte einfach auf diese E-Mail.
+    Wir lesen alle Nachrichten und beantworten sie.
   </td></tr>
 
   <tr><td style="padding:4px 30px 24px;font-family:${FF};font-size:15.5px;line-height:1.65;color:#1A1A1A">
-    Bis bald im Club,<br><b>Julia</b> &#128156;
+    Bis bald im Club,<br><b>Julia &amp; Team</b> &#128156;
   </td></tr>
 
   <tr><td style="background:#1A1A1A;padding:16px 30px;text-align:center">
