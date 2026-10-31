@@ -2257,7 +2257,34 @@ html.rmk .rcard>img.da,html.rmk .rabend-img img.da,html.rmk .rpod-liste.da{trans
   var ziel = Date.UTC(2026,10,1,18,0,0);
   var box=document.getElementById('rcount'); if(!box) return;
   function zwei(n){ return n<10 ? '0'+n : ''+n; }
+
+  /* Sind die Tueren zu, zaehlt hier nichts mehr herunter.
+     Julia, 31.10.2026, vor dem Kasten: "Der Sprechclub ist aktuell
+     voll, neue Plätze gibt es ab Mitte November. Trage dich jetzt in
+     die Warteliste ein, um sofort informiert zu sein und einen Platz
+     zu bekommen."
+
+     Der Kasten rechnete bis dahin stur auf den 1.11. um 19 Uhr und
+     schrieb darunter "Wer jetzt Mitglied wird, bekommt seinen Platz
+     zuerst" — ab Mitternacht wird niemand mehr Mitglied, der Satz
+     haette also den ganzen Tag ins Leere gezeigt. Die Rechnung steht
+     hier selbst und nicht in sparPhase(), weil dieser Block schon
+     laeuft, bevor sparPhase() im Dokument ueberhaupt definiert ist. */
+  var ZU_AB = Date.parse('2026-11-01T00:00:00+01:00');
+  function tuerenZu(){ var n=Date.now(), auf=window.TUEREN_AUF;
+    return n >= ZU_AB && (!auf || n < auf); }
+
   function tick(){
+    if(tuerenZu()){
+      box.innerHTML =
+        '<span class="rcount-l">Der Sprechclub ist aktuell voll</span>'
+      + '<span class="rcount-n">Neue Pl\u00e4tze gibt es ab <b>Mitte November</b>. Trag dich jetzt in die Warteliste ein, '
+      + 'um sofort informiert zu werden und einen Platz zu bekommen.</span>';
+      box.hidden=false;
+      box.style.cursor='pointer';
+      box.onclick=function(){ if(typeof zurWarteliste==='function') zurWarteliste('Premium'); };
+      return;
+    }
     var rest = ziel - Date.now();
     if(rest <= 0){
       var txt = (window.__I18N__ && window.__T && window.__T('nb45')) || 'Der Sprechclub läuft — täglich von Montag bis Sonntag.';
