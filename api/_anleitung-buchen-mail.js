@@ -65,11 +65,20 @@ export function anleitungHtml(name, email) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 14px"><tr><td align="center">
 <table role="presentation" width="580" cellpadding="0" cellspacing="0" style="max-width:580px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
-  <tr><td style="padding:24px 30px 0">
-    <span style="font-family:${FF};font-weight:800;font-size:20px;color:#1A1A1A">deutsch<span style="color:#14B8A6">oderwas</span></span>
+  <!-- Kopf wie in den uebrigen Clubmails: die drei Streifen in
+       Schwarz, Rot und Gold, darunter der Name mit dem roten "club".
+       Julia, 31.10.2026: "oben nicht nur deutschoderwas sondern
+       deutschoderwas club mit Deutschlandfarben oben, wie das Design
+       der Emails." -->
+  <tr><td style="height:6px;background:#1A1A1A;line-height:6px;font-size:0">&nbsp;</td></tr>
+  <tr><td style="height:6px;background:#DD0000;line-height:6px;font-size:0">&nbsp;</td></tr>
+  <tr><td style="height:6px;background:#FFCE00;line-height:6px;font-size:0">&nbsp;</td></tr>
+
+  <tr><td align="center" style="padding:22px 30px 2px">
+    <div style="font-family:${FF};font-weight:800;font-size:16px;letter-spacing:.04em;color:#1A1A1A">deutschoderwas <span style="color:#DD0000">club</span></div>
   </td></tr>
 
-  <tr><td style="padding:16px 30px 0">
+  <tr><td style="padding:14px 30px 0">
     <h1 style="font-family:${FF};font-weight:800;font-size:25px;line-height:1.25;margin:0 0 12px;color:#1A1A1A">
       So buchst du deine Stunden
     </h1>
