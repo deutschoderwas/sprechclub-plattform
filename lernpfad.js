@@ -297,7 +297,7 @@
       '<div class="lp-tx">' +
         '<small>Dein Auftrag für heute</small>' +
         '<h2>' + E(d.titel) + '</h2>' +
-        '<p>' + E(n.k.t) + ' · ' + E(d.lvl) + ' · ' + E(d.dauer || '20 Min') + '</p>' +
+        '<p>' + E(n.k.t) + ' · ' + E(d.lvl) + ' · ' + E(d.dauer || '4 Min') + '</p>' +
       '</div>' +
       '<button class="btn btn-primary" data-lp-start="' + E(d.id) + '">Loslegen →</button>' +
     '</div>';
@@ -413,7 +413,7 @@
     r.innerHTML = '<div class="lernpfad">' +
       '<div class="pagehead"><div class="kick">Schritt für Schritt</div>' +
       '<h1>Dein <span class="mark">Lernpfad</span></h1>' +
-      '<p>Sechs Kapitel je Niveau. Eine Szene dauert etwa 20 Minuten.</p></div>' +
+      '<p>Sechs Kapitel je Niveau. Eine Szene dauert nur 2 bis 6 Minuten.</p></div>' +
       heuteHtml(niveau) + standHtml(niveau) + pfadHtml(niveau) + '</div>';
     binde(r);
   }
