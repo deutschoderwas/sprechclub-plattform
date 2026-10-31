@@ -40,6 +40,29 @@ function E(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+/* ------------------------------------------------------------------
+   Derselbe Hinweis als Baustein fuer die Begruessungsmails.
+
+   Julia, 31.10.2026: "Wenn wir neue Premium Mitglieder bekommen, dass
+   sie in der Begruessungsmail auch die Info zu der WhatsApp Gruppe
+   bekommen. Das ist ganz wichtig."
+
+   Die Rundmail oben war einmalig. Ab jetzt haengt der Hinweis an den
+   Mails, die ohnehin jedes neue Mitglied bekommt — dann muss niemand
+   mehr daran denken. Der Baustein ist bewusst im hellen Markenlook
+   gehalten, weil er in genau diese Mails eingesetzt wird, nicht in
+   die weisse Handschrift-Mail von oben.
+------------------------------------------------------------------ */
+export function gruppeBlockHtml() {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FBFA;border:1px solid #CFEFEA;border-radius:16px">
+  <tr><td style="padding:16px 18px">
+    <p style="margin:0 0 8px;font-weight:700;font-size:15.5px;color:#0F766E">&#128172; Komm gern in unsere WhatsApp-Gruppe</p>
+    <p style="margin:0 0 12px;font-size:14.5px;line-height:1.6;color:#3f4650">Dort sind nur Club-Mitglieder. Wenn es mal schnell gehen muss &mdash; eine Frage kurz vor der Stunde oder ein Satz, bei dem du unsicher bist &mdash; bist du dort am schnellsten dran. Mitmachen ist freiwillig; im Chat auf der Plattform liest du sowieso alles mit.</p>
+    <p style="margin:0"><a href="${GRUPPEN_LINK}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:15px;text-decoration:none;padding:12px 24px;border-radius:999px">In die WhatsApp-Gruppe</a></p>
+  </td></tr>
+</table>`;
+}
+
 export function gruppeBetreff() {
   return 'Magst du in unsere WhatsApp-Gruppe?';
 }

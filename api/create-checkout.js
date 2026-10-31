@@ -4,6 +4,7 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { tuerenZu, istSprechclubPlan } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -246,6 +247,18 @@ export default async function handler(req, res) {
     const id = passId || packageId;
     const plan = aktuellerPlan(id);
     if (!plan) return res.status(400).json({ error: 'unknown_plan' });
+    /* Tueren zu: der Sprechclub laesst sich nicht kaufen, egal ueber
+       welche Seite jemand kommt. Der Riegel liegt bewusst hier und
+       nicht nur in der Oberflaeche — eine alte Seite im Browser-Cache,
+       ein gespeicherter Link oder eine Unterseite, die jemand beim
+       Umbauen uebersehen hat, kaeme sonst durch. Die Community bleibt
+       offen. */
+    if (istSprechclubPlan(id) && tuerenZu()) {
+      return res.status(403).json({ error: 'tueren_zu',
+        hinweis: 'Die Anmeldung für den Sprechclub ist gerade geschlossen. '
+          + 'Die Türen öffnen Mitte November — trag dich so lange auf die Warteliste ein, '
+          + 'dann bekommst du als Erste Bescheid: https://www.deutschoderwas-club.de/index.html#warteliste' });
+    }
     if (plan.alt) return res.status(400).json({ error: 'plan_abgelaufen',
       hinweis: 'Diesen Pass gibt es nicht mehr. Die aktuellen Preise stehen auf deutschoderwas-club.de/preise.' });
     // userId optional: "erst zahlen, dann anmelden" wird per E-Mail zugeordnet (webhook + pending_purchases).

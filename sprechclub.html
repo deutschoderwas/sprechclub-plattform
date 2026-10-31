@@ -730,7 +730,23 @@ async function bezahlen(passId, knopf, alterText){
   meldung('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
 }
 
+/* Tueren zu ab 1.11.2026, auf Mitte November. Zum Wiederaufmachen
+   TUEREN_AUF setzen — wie in index.html, preise.html und club.html.
+   Der Server sperrt ohnehin (api/_tueren.js); hier geht es darum,
+   dass der Knopf nicht in eine Fehlermeldung laeuft. */
+window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+function tuerenZu(){ var n = Date.now(), zu = Date.parse('2026-11-01T00:00:00+01:00');
+  return n >= zu && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
+document.addEventListener('DOMContentLoaded', function(){
+  if (!tuerenZu()) return;
+  var k = document.getElementById('pKnopf');
+  if (k) k.textContent = '\u{1F514} Auf die Warteliste';
+  var f = document.getElementById('pFahne');
+  if (f) { f.textContent = 'Anmeldung geschlossen'; f.style.display = ''; }
+});
+
 async function premiumKnopf(btn){
+  if (tuerenZu()) { location.href = '/index.html#warteliste'; return; }
   meldung('');
   var alt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Einen Moment …';

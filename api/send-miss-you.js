@@ -6,6 +6,7 @@
 // Wird täglich getriggert (Supabase pg_cron -> pg_net POST auf diese Route).
 // email_log (kind:'miss_you') verhindert Spam: max. 1 Mail pro Schüler in 30 Tagen.
 import { createClient } from '@supabase/supabase-js';
+import { GESPERRT } from './_zugang.js';
 
 export default async function handler(req, res) {
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok:false, skipped:'BREVO_API_KEY fehlt' });
@@ -19,7 +20,14 @@ export default async function handler(req, res) {
 
   // Kandidaten: echte Schüler, mind. 30 Tage registriert, kein Opt-out,
   // keine pausierten/beendeten Mitglieder
-  const INACTIVE_STATUS = ['pause', 'urlaub', 'beendet'];
+  /* Wer keinen Zugang mehr hat, bekommt auch keine Rueckhol-Mail.
+     Bis zum 31.10.2026 stand hier nur pause/urlaub/beendet — 'archiv'
+     fehlte, und damit waere am 1.11. ein archivierter Schueler mit
+     einer Reststunde angeschrieben worden. Statt die Liste von Hand
+     zu pflegen, nehmen wir jetzt dieselbe Sperrliste, die auch ueber
+     den Zugang entscheidet (api/_zugang.js), und legen die beiden
+     Pausen-Status dazu. */
+  const INACTIVE_STATUS = ['pause', 'urlaub', ...GESPERRT];
   const { data: profs } = await sb.from('profiles')
     .select('id,name,email,email_optout,is_admin,is_teacher,created_at,status,credits,tier')
     .eq('email_optout', false).eq('is_admin', false).eq('is_teacher', false)

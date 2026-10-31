@@ -28,7 +28,11 @@
 // ============================================================
 
 /* Diese Status sind zu, egal wie viel Guthaben noch dasteht. */
-const GESPERRT = ['beendet', 'archiv', 'inaktiv', 'geloescht', 'registriert', 'probeschuler', 'gekuendigt'];
+/* Wird seit dem 31.10.2026 auch ausserhalb gebraucht: api/send-miss-you.js
+   soll niemanden anschreiben, der keinen Zugang mehr hat. Eine zweite,
+   handgepflegte Kopie dieser Liste waere genau die Art Fehler, die dort
+   schon einmal drinsteckte. */
+export const GESPERRT = ['beendet', 'archiv', 'inaktiv', 'geloescht', 'registriert', 'probeschuler', 'gekuendigt'];
 const ZUGANG_TIER = ['community', 'premium', 'premiumplus', 'premium_plus'];
 const ZUGANG_STATUS = ['aktiv', 'urlaub', 'pause'];
 

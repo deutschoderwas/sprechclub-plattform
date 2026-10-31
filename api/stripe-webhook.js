@@ -3,6 +3,9 @@
 // Events: checkout.session.completed, invoice.paid, customer.subscription.deleted
 // Benötigt ENV: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 import Stripe from 'stripe';
+/* Die WhatsApp-Gruppe gehoert seit dem 31.10.2026 in jede
+   Begruessungsmail — Julia: "Das ist ganz wichtig." */
+import { gruppeBlockHtml } from './_whatsapp-gruppe-mail.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Roh-Body für die Signaturprüfung (kein JSON-Parsing durch Vercel)
@@ -331,6 +334,8 @@ async function sendPaymentMail(sub, inv) {
     </p>
   </td></tr>
 
+  <tr><td style="padding:0 30px 16px">${(abo || community) ? gruppeBlockHtml() : ''}</td></tr>
+
   ${APP_BLOCK}
 
   <tr><td style="padding:10px 30px 24px">
@@ -513,6 +518,7 @@ async function sendCommunityWelcome(email, name, abDatum) {
       <tr><td style="padding:12px 32px 4px">
         <p style="font-size:13px;line-height:1.6;color:#6B7280;margin:0">Deine Mitgliedschaft verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#35AFD0">Mitgliedschaft verwalten</a></p>
       </td></tr>
+      <tr><td style="padding:0 32px 16px">${gruppeBlockHtml()}</td></tr>
       ${APP_BLOCK}
       <tr><td style="padding:14px 32px 22px">
         <p style="font-size:16px;line-height:1.6;margin:0">Viel Freude beim Lernen!<br><strong>Julia</strong> &#128153;</p>

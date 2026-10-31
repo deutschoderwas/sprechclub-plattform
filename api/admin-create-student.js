@@ -18,6 +18,9 @@
 // 3) schreibt/aktualisiert das Profil (Name, Guthaben, Geburtstag, Status 'aktiv')
 // 4) erzeugt einen Passwort-Setzen-Link und schickt eine gebrandete Einladungs-Mail (Brevo)
 import { createClient } from '@supabase/supabase-js';
+/* Die WhatsApp-Gruppe gehoert seit dem 31.10.2026 in jede
+   Begruessungsmail — Julia: "Das ist ganz wichtig." */
+import { gruppeBlockHtml } from './_whatsapp-gruppe-mail.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
@@ -178,6 +181,7 @@ function welcomeEmail({ vorname, site, actionLink }) {
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#5C4E3E">
           <p style="margin:0">Der Link ist aus Sicherheitsgründen zeitlich begrenzt. Falls er abgelaufen ist, gehe auf <a href="${esc(site)}" style="color:#DD0000">deutschoderwas-club.de</a> und klicke auf „Passwort vergessen".</p>
         </td></tr>
+        <tr><td style="padding:16px 30px 4px">${gruppeBlockHtml()}</td></tr>
         <tr><td style="padding:16px 30px 4px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
           Bis bald im Club!<br><b>Julia</b> &amp; das deutschoderwas-Team
         </td></tr>

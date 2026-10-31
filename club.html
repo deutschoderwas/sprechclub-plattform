@@ -712,6 +712,17 @@ html.anim .cbox.tick b{transform:scale(1.14)}
 /* ---------- Countdown bis zum Start ----------
    Deutsche Zeit, damit überall dieselbe Zahl steht. */
 var START = new Date('2026-11-01T00:00:00+01:00');
+/* Ab dem 1.11.2026 sind die Tueren zu; sie oeffnen Mitte November.
+   Zum Wiederaufmachen hier UND in index.html und preise.html
+   TUEREN_AUF auf dasselbe Datum setzen. Der eigentliche Riegel liegt
+   im Server (api/_tueren.js), damit keine Seite ihn umgehen kann. */
+window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+function tuerenZu(){ var n = Date.now();
+  return n >= START.getTime() && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
+function zurWarteliste(){
+  var wl = document.getElementById('wl');
+  if (wl) { wl.classList.add('an'); wl.scrollIntoView({ behavior:'smooth', block:'center' }); }
+}
 function countdown(){
   var el = document.getElementById('count'); if(!el) return;
   var d = START - new Date();
@@ -759,14 +770,23 @@ function wartelisteSchalten(){
   var e = document.getElementById('hEyebrow');
   if (e) e.innerHTML = '\u{1F5E3} T\u00e4glich live \u00b7 <b>Mo bis So</b>';
   var v = document.getElementById('pVor');
-  if (v) v.innerHTML = 'Der Sprechclub ist gerade voll ausgebucht \u2014 trag dich auf die ' +
-                       'Warteliste ein, ich melde mich, sobald wieder ein Platz frei ist.';
+  if (v) v.innerHTML = 'Die T\u00fcren \u00f6ffnen Mitte November \u2014 mit noch mehr Live-Unterricht ' +
+                       'und noch mehr Flexibilit\u00e4t. Trag dich jetzt schon ein, dann bekommst du ' +
+                       'als Erste Bescheid. Die Pl\u00e4tze sind begrenzt.';
   var z = document.getElementById('hZeile');
   if (z) z.textContent = 'T\u00e4glich sprechen \u00b7 monatlich k\u00fcndbar';
   /* Die Preise neu zeichnen, jetzt mit normal === true. */
   setzeTakt(TAKT);
 
   var wl = document.getElementById('wl'); if (wl) wl.classList.add('an');
+
+  /* Der Premium-Knopf hiess bis zuletzt "Sofort anmelden" und fuehrte
+     in die Stripe-Kasse. Ab dem 1.11. gibt es nichts sofort
+     anzumelden — er fuehrt in die Warteliste. */
+  if (tuerenZu()) {
+    var kp = document.getElementById('kaufPremium');
+    if (kp) { kp.textContent = '\u{1F514} Auf die Warteliste'; kp.onclick = zurWarteliste; }
+  }
 }
 
 /* Die Eintragung geht an denselben Endpunkt wie die alte Warteliste:
@@ -881,6 +901,7 @@ function setzeTakt(was){
    eingebettete Kasse — auf einer Werbeseite zaehlt, dass der Knopf
    immer funktioniert, auch wenn Stripe.js nicht laedt. */
 async function kaufen(stufe){
+  if (stufe==='premium' && tuerenZu()) { zurWarteliste(); return; }
   var id = stufe==='premium'
     ? (TAKT==='jahr' ? 'premium_year'   : 'premium_month')
     : (TAKT==='jahr' ? 'community_year' : 'community_month');

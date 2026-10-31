@@ -321,7 +321,18 @@ function aufDieWarteliste(btn){
 
 var PREMIUM = 'jahr';
 var SPAR = { auf: Date.parse('2026-10-01T00:00:00+02:00'), ende: Date.parse('2026-11-01T00:00:00+01:00') };
-function sparPhase(){ var n = Date.now(); return n < SPAR.auf ? 0 : (n < SPAR.ende ? 1 : 2); }
+/* Phase 3 = Tueren zu. Ab dem 1.11.2026 ist der Sprechclub geschlossen;
+   er geht Mitte November wieder auf. Dann hier UND in index.html
+   TUEREN_AUF auf dasselbe Datum setzen, dann gilt wieder Phase 2.
+   Diese Seite kannte bis zum 31.10. nur 0, 1 und 2 und haette ab
+   Mitternacht munter "Premium buchen" angeboten — und der
+   Fruehbucher-Laufbalken hat den ganzen Oktober genau hierher
+   verlinkt. Der Riegel liegt zusaetzlich im Server
+   (api/_tueren.js, api/create-checkout.js); das hier ist die
+   Oberflaeche dazu. */
+window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+function sparPhase(){ var n = Date.now(), auf = window.TUEREN_AUF;
+  return n < SPAR.auf ? 0 : (n < SPAR.ende ? 1 : ((auf && n >= auf) ? 2 : 3)); }
 function setzePremium(was){
   PREMIUM = was;
   var j = (was === 'jahr'), ph = sparPhase(), $ = function(i){ return document.getElementById(i); };
@@ -342,10 +353,12 @@ function setzePremium(was){
   var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
   if (ph === 0) { f.textContent = 'Bis zu 60 % Rabatt · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
   else if (ph === 1) { f.textContent = proz + ' % Rabatt · nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
+  else if (ph === 3) { f.textContent = 'Anmeldung geschlossen'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Die Türen öffnen Mitte November — mit noch mehr Live-Unterricht und noch mehr Flexibilität. Trag dich jetzt ein, die Plätze sind begrenzt.'; }
   else { f.textContent = 'Sprechclub läuft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen'; kl.textContent = 'Sichere Zahlung über Stripe · monatlich kündbar'; }
 }
 async function premiumKnopf(btn){
-  if (sparPhase() === 0) { aufDieWarteliste(btn); return; }
+  var ph = sparPhase();
+  if (ph === 0 || ph === 3) { aufDieWarteliste(btn); return; }
   meldung('');
   if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); return; }
   var alt = btn.textContent; btn.disabled = true; btn.textContent = 'Einen Moment …';

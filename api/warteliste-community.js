@@ -108,7 +108,28 @@ async function schicke(email, name, brief) {
   return true;
 }
 
+
+/* ---------------------------------------------------------------------------
+   STILLGELEGT seit dem 31.10.2026.
+
+   Diese Rundmail war fuer EINEN Tag gedacht: "die Community ist jetzt
+   offen". Sie ist gelaufen. Liegen geblieben ist eine Adresse ohne
+   jede Pruefung — kein Schluessel, kein Admin-Token, nicht einmal eine
+   Methodenpruefung. Ein einziger Aufruf von aussen haette ab dem
+   1.11. an 207 Menschen geschrieben, der Club sei offen, waehrend die
+   Tueren zu sind.
+
+   Darum steht hier jetzt ein Riegel statt einer Bedingung: nicht "wenn
+   ein Schluessel gesetzt ist", denn ein leerer Schluessel macht so
+   eine Pruefung wirkungslos. Zum Wiederverwenden den Schalter unten
+   auf false setzen UND vorher eine echte Zugangspruefung einbauen.
+--------------------------------------------------------------------------- */
+const STILLGELEGT = true;
 export default async function handler(req, res) {
+  if (STILLGELEGT) return res.status(410).json({ ok: false,
+    grund: 'stillgelegt',
+    hinweis: 'Diese einmalige Rundmail ist gelaufen und bewusst abgeschaltet. Siehe Kommentar in api/warteliste-community.js.' });
+
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, skipped: 'BREVO_API_KEY fehlt' });
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 

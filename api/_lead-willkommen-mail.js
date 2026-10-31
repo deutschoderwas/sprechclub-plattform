@@ -42,10 +42,10 @@ export const rabattLaeuft = (jetzt = Date.now()) => jetzt < RABATT_ENDE;
    (Mitte November). Dann faellt die Mail von selbst auf die
    normale Fassung zum regulaeren Preis zurueck. Dasselbe Datum steht
    in index.html als window.TUEREN_AUF. */
-export const TUEREN_ZU_AB = Date.parse('2026-11-01T00:00:00+01:00');
-export const TUEREN_AUF   = null;   // z. B. Date.parse('2026-11-16T00:00:00+01:00')
-export const tuerenZu = (jetzt = Date.now()) =>
-  jetzt >= TUEREN_ZU_AB && (!TUEREN_AUF || jetzt < TUEREN_AUF);
+/* Die Rechnung selbst steht in api/_tueren.js — eine Stelle fuer
+   Kasse, Seite und Mail, damit nicht eine davon vergessen wird. */
+import { tuerenZu } from './_tueren.js';
+export { TUEREN_ZU_AB, TUEREN_AUF, tuerenZu } from './_tueren.js';
 
 export function willkommenBetreff(jetzt = Date.now()) {
   return tuerenZu(jetzt)

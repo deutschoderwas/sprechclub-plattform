@@ -1,7 +1,10 @@
 // Willkommens-Mail bei Selbst-Registrierung: erklärt, was man im Club bekommt + wie man startet.
 // POST { email, name }. Wird von index.html/live.html nach sb.auth.signUp aufgerufen.
 // Nur 1x pro E-Mail (Dedupe via email_log kind='welcome', ref=email). ENV: BREVO_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+/* Die WhatsApp-Gruppe gehoert seit dem 31.10.2026 in jede
+   Begruessungsmail — Julia: "Das ist ganz wichtig." */
 import { createClient } from '@supabase/supabase-js';
+import { gruppeBlockHtml } from './_whatsapp-gruppe-mail.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
@@ -58,6 +61,7 @@ async function sendWelcome(email, name) {
           </p>
         </div>
       </td></tr>
+      <tr><td style="padding:16px 32px 4px">${gruppeBlockHtml()}</td></tr>
       <tr><td style="padding:16px 32px 4px">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2FBFD;border:1px solid #C7E9F1;border-radius:16px">
           <tr><td style="padding:16px 18px">
