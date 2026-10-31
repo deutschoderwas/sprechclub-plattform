@@ -152,6 +152,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
         <select id="nLevel"><option>A2</option><option>B1/B2</option><option>B2/C1</option><option>ab B1</option></select>
         <select id="nTeacher" title="Hauptlehrer"><option value="">— Hauptlehrer —</option></select>
         <select id="nAssist" title="Assistenzlehrer (optional)"><option value="">— ohne Assistenz —</option></select>
+        <select id="nAssist2" title="2. Assistenzlehrer (optional)"><option value="">— ohne 2. Assistenz —</option></select>
       </div>
       <div class="formrow">
         <input id="nTopic" placeholder="Thema (optional)" style="flex:2">
@@ -1605,6 +1606,8 @@ async function loadTeachers(){
   if (sel) sel.innerHTML = teacherOptions('');
   const selA = document.getElementById('nAssist');
   if (selA) selA.innerHTML = assistOptions('');
+  const selA2 = document.getElementById('nAssist2');
+  if (selA2) selA2.innerHTML = assistOptions('');
 }
 function teacherOptions(selId){
   return '<option value="">— Hauptlehrer —</option>' + TEACHERS.filter(t=>t.active||t.id===selId).map(t=>`<option value="${t.id}" ${t.id===selId?'selected':''}>${esc(t.name)}</option>`).join('');
@@ -1755,7 +1758,7 @@ async function loadPlan(){
   let list=cls||[];
   if(tFilter==='__none') list=list.filter(c=>!c.teacher_id);
   else if(tFilter==='__self') list=[]; // Lehrer ohne verknüpften Account
-  else if(tFilter) list=list.filter(c=>c.teacher_id===tFilter || c.assist_teacher_id===tFilter);  // Haupt- ODER Assistenzlehrer
+  else if(tFilter) list=list.filter(c=>c.teacher_id===tFilter || c.assist_teacher_id===tFilter || c.assist_teacher2_id===tFilter);  // Haupt- ODER (2.) Assistenzlehrer
 
   const ids=list.map(c=>c.id);
   let parts={};
@@ -1824,7 +1827,7 @@ async function loadPlan(){
        damit bei vollen Stunden beide eingeteilt sind. Zugang zum Klassenraum haben
        beide ohnehin (hängt am is_teacher-Profil); das hier macht es im Plan sichtbar. */
     const teacherCell = isT
-      ? `<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>${esc(teacherName(c.teacher_id)||'—')}</span>`+(c.assist_teacher_id?` <span class="tchip" style="opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 ${esc(teacherName(c.assist_teacher_id))}</span>`:'')
+      ? `<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>${esc(teacherName(c.teacher_id)||'—')}</span>`+(c.assist_teacher_id?` <span class="tchip" style="opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 ${esc(teacherName(c.assist_teacher_id))}</span>`:'')+(c.assist_teacher2_id?` <span class="tchip" style="opacity:.85"><i style="background:${teacherColor(c.assist_teacher2_id)}"></i>🧑‍🏫 ${esc(teacherName(c.assist_teacher2_id))}</span>`:'')
       : `<select class="passign ${miss?'miss':''}" onchange="assignTeacher('${c.id}',this.value)" title="Hauptlehrer einteilen">
            <option value="">⚠️ Ohne Lehrer</option>
            ${TEACHERS.filter(t=>t.active||t.id===c.teacher_id).map(t=>`<option value="${t.id}" ${t.id===c.teacher_id?'selected':''}>${esc(t.name)}</option>`).join('')}
@@ -1832,6 +1835,10 @@ async function loadPlan(){
          <select class="passign" onchange="assignAssist('${c.id}',this.value)" title="Assistenzlehrer / 2. Lehrer (optional)" style="opacity:${c.assist_teacher_id?'1':'.75'}">
            <option value="">＋ Assistenz</option>
            ${TEACHERS.filter(t=>t.active||t.id===c.assist_teacher_id).map(t=>`<option value="${t.id}" ${t.id===c.assist_teacher_id?'selected':''}>🧑‍🏫 ${esc(t.name)}</option>`).join('')}
+         </select>
+         <select class="passign" onchange="assignAssist2('${c.id}',this.value)" title="2. Assistenzlehrer / 3. Lehrer (optional)" style="opacity:${c.assist_teacher2_id?'1':'.75'}">
+           <option value="">＋ 2. Assistenz</option>
+           ${TEACHERS.filter(t=>t.active||t.id===c.assist_teacher2_id).map(t=>`<option value="${t.id}" ${t.id===c.assist_teacher2_id?'selected':''}>🧑‍🏫 ${esc(t.name)}</option>`).join('')}
          </select>`;
     html += `<div style="margin-bottom:7px">
       <div class="prow ${miss?'pmiss':''}" style="margin-bottom:0;border-left-color:${miss?'#DD0000':col}">
@@ -1906,6 +1913,11 @@ async function assignTeacher(id,val){
 async function assignAssist(id,val){
   const { error } = await sb.from('classes').update({ assist_teacher_id: val||null }).eq('id',id);
   if(error){ alert('Assistenz einteilen fehlgeschlagen: '+error.message); return; }
+  loadPlan();
+}
+async function assignAssist2(id,val){
+  const { error } = await sb.from('classes').update({ assist_teacher2_id: val||null }).eq('id',id);
+  if(error){ alert('2. Assistenz einteilen fehlgeschlagen: '+error.message); return; }
   loadPlan();
 }
 
@@ -1986,6 +1998,7 @@ function renderKlassen(){
           <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
             ${c.teacher_id?`<span class="tchip" style="font-weight:700"><i style="background:${teacherColor(c.teacher_id)}"></i>👩‍🏫 ${esc(teacherName(c.teacher_id))}</span>`:'<span class="pill" style="background:#FCE5E3;color:#c00;font-weight:700">⚠️ Lehrer fehlt</span>'}
             ${c.assist_teacher_id?`<span class="tchip" style="font-weight:700;opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</span>`:''}
+            ${c.assist_teacher2_id?`<span class="tchip" style="font-weight:700;opacity:.85"><i style="background:${teacherColor(c.assist_teacher2_id)}"></i>🧑‍🏫 2. Assistenz: ${esc(teacherName(c.assist_teacher2_id))}</span>`:''}
             ${fokusLabel(c.topic)?`<span class="pill" style="background:#fff;border:1.5px solid ${fokusColor(c.topic)};color:${fokusColor(c.topic)};font-weight:700">${esc(fokusLabel(c.topic))}</span>`:''}
             <span class="pill" style="background:var(--bg);color:#555">${clubLabel(c.club)}</span>
           </div>
@@ -2060,6 +2073,7 @@ function renderKlassen(){
           <select id="eClub-${c.id}" style="flex:1">${clubOptions(c.club)}</select>
           <select id="eTeacher-${c.id}" style="flex:1" title="Hauptlehrer">${teacherOptions(c.teacher_id)}</select>
           <select id="eAssist-${c.id}" style="flex:1" title="Assistenzlehrer (optional)">${assistOptions(c.assist_teacher_id)}</select>
+          <select id="eAssist2-${c.id}" style="flex:1" title="2. Assistenzlehrer (optional)">${assistOptions(c.assist_teacher2_id)}</select>
         </div>
         <div class="formrow"><input id="ePre-${c.id}" placeholder="Übungen VOR dem Unterricht (Link)" value="${c.material_pre||''}" style="flex:1"><input id="eLive-${c.id}" placeholder="Material IM Unterricht (Link)" value="${c.material_live||''}" style="flex:1"></div>
         <div class="formrow"><input id="ePost-${c.id}" placeholder="Nachbearbeitung (Link)" value="${c.material_post||''}" style="flex:1"><input id="eZoom-${c.id}" placeholder="Google-Meet-Link" value="${c.zoom_link||''}" style="flex:1"></div>
@@ -2092,7 +2106,7 @@ function renderKlassen(){
     const isToday=(k===todayKey);
     const dayCards=(byDay[k]||[]).map(c=>{
       const p=parts[c.id]||[]; const lc=LEVEL_COLOR[c.level]||'#6B7280'; const full=p.length>=c.capacity;
-      const tch=(c.teacher_id?`<div class="klc-t" style="color:${teacherColor(c.teacher_id)}">👩‍🏫 ${esc(teacherName(c.teacher_id))}</div>`:`<div class="klc-t miss">⚠️ Lehrer fehlt</div>`)+(c.assist_teacher_id?`<div class="klc-t" style="color:${teacherColor(c.assist_teacher_id)};opacity:.85">🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</div>`:'');
+      const tch=(c.teacher_id?`<div class="klc-t" style="color:${teacherColor(c.teacher_id)}">👩‍🏫 ${esc(teacherName(c.teacher_id))}</div>`:`<div class="klc-t miss">⚠️ Lehrer fehlt</div>`)+(c.assist_teacher_id?`<div class="klc-t" style="color:${teacherColor(c.assist_teacher_id)};opacity:.85">🧑‍🏫 Assistenz: ${esc(teacherName(c.assist_teacher_id))}</div>`:'')+(c.assist_teacher2_id?`<div class="klc-t" style="color:${teacherColor(c.assist_teacher2_id)};opacity:.85">🧑‍🏫 2. Assistenz: ${esc(teacherName(c.assist_teacher2_id))}</div>`:'');
       return `<button class="klcard ${klOpenId===c.id?'open':''}" style="border-left-color:${lc}" onclick="openKl('${c.id}')">
         <div class="klc-time">${timeFmt.format(new Date(c.starts_at))}</div>
         <div class="klc-title">${esc(c.title)}</div>
@@ -2296,6 +2310,7 @@ async function saveClass(id){
     club: document.getElementById('eClub-'+id).value,
     teacher_id: document.getElementById('eTeacher-'+id).value || null,
     assist_teacher_id: (document.getElementById('eAssist-'+id)||{}).value || null,
+    assist_teacher2_id: (document.getElementById('eAssist2-'+id)||{}).value || null,
     material_pre: document.getElementById('ePre-'+id).value.trim() || null,
     material_live: document.getElementById('eLive-'+id).value.trim() || null,
     material_post: document.getElementById('ePost-'+id).value.trim() || null,
@@ -2378,6 +2393,7 @@ async function createClass(){
     club: document.getElementById('nClub').value,
     teacher_id: document.getElementById('nTeacher').value || null,
     assist_teacher_id: (document.getElementById('nAssist')||{}).value || null,
+    assist_teacher2_id: (document.getElementById('nAssist2')||{}).value || null,
     topic: document.getElementById('nTopic').value.trim() || null,
     capacity: parseInt(document.getElementById('nCap').value||'20',10),
     zoom_link: document.getElementById('nZoom').value.trim() || null,
