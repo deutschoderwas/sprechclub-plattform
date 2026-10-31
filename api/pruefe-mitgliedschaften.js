@@ -347,9 +347,20 @@ export default async function handler(req, res) {
 
       if (jungstes && (jungstes.cancel_at_period_end || ausklingend.includes(jungstes))
           && (LAEUFT.includes(jungstes.status) || nochBezahlt(jungstes))) {
+        /* Julia, 31.10.2026: "Wenn sie dann kuendigen, muss ich es auf
+           jeden Fall wissen — wann sie kuendigen und wann sie die
+           Verabschiedungsmail erhalten." Also steht hier nicht mehr nur
+           der Name, sondern der ganze Fahrplan: gekuendigt am, Zugang
+           bis, Erinnerung eine Woche vorher, Verabschiedung am Tag nach
+           dem Ablauf (dann macht dieser Lauf zu). */
+        const tagVon = (ms) => new Date(ms).toISOString().slice(0, 10);
+        const endeMs = abo.abo_ende ? Date.parse(abo.abo_ende) : null;
         bericht.gekuendigt_laeuft_aus.push({
-          name: p.name || p.email, email: p.email,
-          bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
+          name: p.name || p.email, email: p.email, tier: p.tier || '',
+          gekuendigt_am: abo.abo_gekuendigt_am ? String(abo.abo_gekuendigt_am).slice(0, 10) : null,
+          bis: endeMs ? tagVon(endeMs) : '?',
+          erinnerung_am: endeMs ? tagVon(endeMs - 7 * 86400000) : '?',
+          verabschiedung_am: endeMs ? tagVon(endeMs + 86400000) : '?',
         });
         /* Eine Woche vorher eine Mail, wie bei den von Hand gesetzten
            Mitgliedschaften. Julia, 31.10.2026, ueber Tetiana, deren
@@ -1098,7 +1109,12 @@ export default async function handler(req, res) {
   /* Julia, 18.10.2026: "ich bekomme IMMER EINE Mail, wenn ABO
      abgelaufen ist." Also loest jeder geschlossene Zugang die Mail aus —
      und die neuen Faelle (nachgetragen, bald faellig) genauso. */
-  const wichtig = bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
+  /* Eine Kuendigung ist fuer Julia eine Nachricht, auch wenn sonst
+     nichts passiert ist — sie will wissen, wer geht, bevor er weg
+     ist. (31.10.2026) */
+  const wichtig = (bericht.gekuendigt_laeuft_aus || []).length
+    || (bericht.vorwarnung_gesendet || []).length
+    || bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
     || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length
     || (bericht.von_hand_zahlt_doch || []).length
     || (bericht.zahlt_ohne_konto || []).length
@@ -1117,6 +1133,8 @@ export default async function handler(req, res) {
       (bericht.entsperrt.length ? `<p><b>Wieder geöffnet (Abo läuft doch):</b></p><ul>${bericht.entsperrt.map(zeile).join('')}</ul>` : '') +
       (bericht.archiviert.length ? `<p><b>Ins Archiv verschoben (alter Schüler ohne Guthaben):</b></p><ul>${bericht.archiviert.map(x => `<li>${x.name} (${x.email}) — letzte Guthaben-Bewegung: ${x.letzte_bewegung}</li>`).join('')}</ul>` : '') +
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
+      ((bericht.gekuendigt_laeuft_aus || []).length ? `<p><b>Gekündigt — der Zugang läuft noch:</b></p><ul>${bericht.gekuendigt_laeuft_aus.map(x => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.tier ? ' — ' + x.tier : ''}${x.gekuendigt_am ? ' — gekündigt am ' + x.gekuendigt_am : ''} — Zugang bis <b>${x.bis}</b>, Erinnerung am ${x.erinnerung_am}, Verabschiedung am ${x.verabschiedung_am}</li>`).join('')}</ul>` : '') +
+      ((bericht.vorwarnung_gesendet || []).length ? `<p style="color:#666">„Dein Zugang läuft aus" ist rausgegangen an: ${bericht.vorwarnung_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, ${x.takt}${x.preis ? ', ' + x.preis : ''}${x.naechste_zahlung ? ', nächste Zahlung ' + x.naechste_zahlung : ''}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
       ((bericht.von_hand_zahlt_doch || []).length ? `<p><b>Steht auf „von Hand", zahlt aber bei Stripe — NICHT zugemacht:</b></p><ul>${bericht.von_hand_zahlt_doch.map(x => `<li>${x.name} (${x.email}) — Eintrag lief bis ${x.lief_angeblich_bis}, bei Stripe steht das Abo auf „${x.abo}". Bitte den Eintrag richtigstellen.</li>`).join('')}</ul>` : '') +
