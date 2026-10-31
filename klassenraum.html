@@ -1025,6 +1025,42 @@
       dframe.updateReceiveSettings(rs);
     }catch(e){}
   }
+  // ===== Großraum-Absicherung (Julia, 31.10.2026) =====
+  // Ab GROSSRAUM_AB Teilnehmern NICHT mehr alle Kameras gleichzeitig dekodieren
+  // (das überlastet schwache Geräte). Stattdessen: Audio IMMER für alle (es ist
+  // ein Sprechclub), aber Live-Video nur für den aktiven Sprecher + die zuletzt
+  // Sprechenden + Bildschirm-Freigaben, max. LIVE_VIDEO_MAX gleichzeitig. Der
+  // Rest erscheint als Namens-Kachel (📷) — kein Dekodier-Aufwand, kein Ruckeln.
+  // So bleibt der Raum auch mit 30+ Leuten flüssig. Daily selbst trägt 200
+  // aktive Teilnehmer pro Raum, Grenze sind also die Geräte, nicht der Server.
+  const GROSSRAUM_AB = 16;      // ab so vielen im Raum → Spar-Modus
+  const LIVE_VIDEO_MAX = 6;     // so viele Live-Kameras gleichzeitig
+  window._bigMode = false;
+  window._lastSpeakers = [];
+  function manageSubscriptions(activeId){
+    if(!dframe || window._provider!=='daily') return;
+    let ps; try{ ps=dframe.participants(); }catch(e){ return; }
+    const remote = Object.keys(ps).filter(k=>k!=='local');
+    const big = (remote.length + 1) > GROSSRAUM_AB;
+    if(big !== window._bigMode){
+      window._bigMode = big;
+      try{ dframe.setSubscribeToTracksAutomatically(!big); }catch(e){}
+    }
+    if(!big){ dailyQuality(activeId); return; }   // normaler Modus: alle sichtbar, Qualität geregelt
+    // Großraum: nur wenige Live-Kameras. Zuletzt Sprechende vorne halten (LRU).
+    if(activeId && ps[activeId] && !ps[activeId].local){
+      window._lastSpeakers = [activeId, ...window._lastSpeakers.filter(id=>id!==activeId)].slice(0, LIVE_VIDEO_MAX);
+    }
+    const live = new Set(window._lastSpeakers.filter(id=>ps[id]));
+    // Bildschirm-Freigaben immer live zeigen
+    remote.forEach(id=>{ const st=ps[id].tracks&&ps[id].tracks.screenVideo; if(st&&(st.state==='playable'||st.state==='loading'||st.state==='sendable'||st.subscribed)) live.add(id); });
+    // Falls noch Plätze frei: mit den ersten Anwesenden auffüllen, damit der Raum nicht leer wirkt
+    if(live.size < LIVE_VIDEO_MAX){ for(const id of remote){ if(live.size>=LIVE_VIDEO_MAX) break; live.add(id); } }
+    const updates={};
+    remote.forEach(id=>{ updates[id] = { setSubscribedTracks: { audio:true, video: live.has(id), screenVideo:true } }; });
+    try{ dframe.updateParticipants(updates); }catch(e){}
+    renderGrid();
+  }
   function starteDaily(url, token, owner){
     window._provider='daily';
     const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
@@ -1033,16 +1069,16 @@
     dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500);
       // Begrüßungsmusik im Hauptraum beim Reinkommen (nur solange der Schalter an ist)
       if(window._musicOn && (window._currentGroup||0)===0) setTimeout(()=>{ if(typeof lobbyMusicStart==='function') lobbyMusicStart(); }, 400); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
-      // Bildqualität clever steuern: aktiver Sprecher scharf, Rest klein (spart Leistung bei vielen Kameras)
-      setTimeout(()=>dailyQuality(), 1500);
+      // Bildqualität/Abos clever steuern: wenige Kameras scharf, Großraum-Sparmodus ab 16 Leuten
+      setTimeout(()=>manageSubscriptions(), 1500);
       // Hauptraum: Schüler kommen stumm rein → einmal freundlich erklären, wie man das Mikro freischaltet.
       setTimeout(()=>{ try{ var lp=(dframe.participants&&dframe.participants().local); if(lp && lp.audio===false && !document.body.classList.contains('ingroup')){ showMicHint('🔇 <b>Du bist noch stumm.</b> Tippe unten auf <b>🎤 Mikro</b>, wenn du sprechen möchtest.'); } }catch(e){} }, 2600);
       // Geräuschunterdrückung: Hintergrundlärm/Tastatur/Hall aus dem Mikro filtern (Krisp)
       setTimeout(()=>{ try{ dframe.updateInputSettings({ audio:{ processor:{ type:'noise-cancellation' } } }); }catch(e){} }, 1800); });
     // Qualität nachsteuern, wenn jemand spricht / kommt / geht
-    dframe.on('active-speaker-change', (ev)=>{ try{ dailyQuality(ev && ev.activeSpeaker && ev.activeSpeaker.peerId); }catch(e){} });
-    dframe.on('participant-left', ()=>{ renderGrid(); dailyQuality(); if(istLehrer && typeof boRenderTeacher==='function') boRenderTeacher(); });
-    dframe.on('participant-joined', (ev)=>{ renderGrid(); dailyQuality(); if(istLehrer && typeof boLoadLevels==='function') boLoadLevels();
+    dframe.on('active-speaker-change', (ev)=>{ try{ manageSubscriptions(ev && ev.activeSpeaker && ev.activeSpeaker.peerId); }catch(e){} });
+    dframe.on('participant-left', ()=>{ renderGrid(); manageSubscriptions(); if(istLehrer && typeof boRenderTeacher==='function') boRenderTeacher(); });
+    dframe.on('participant-joined', (ev)=>{ renderGrid(); manageSubscriptions(); if(istLehrer && typeof boLoadLevels==='function') boLoadLevels();
       // Event-/Bühnen-Modus: neue Teilnehmer kommen stummgeschaltet rein (nur Lehrer schaltet stumm).
       try{ if(window._eventMode && window._meIsLehrer && ev && ev.participant && !ev.participant.local){ const o={}; o[ev.participant.session_id]={ setAudio:false }; dframe.updateParticipants(o); } }catch(e){}
     });
@@ -1212,7 +1248,7 @@
     if((window._currentGroup||0)!==0 && typeof lobbyMusicStop==='function') lobbyMusicStop();
     window._switching = false;
     if(istLehrer && typeof boBroadcastPos==='function') boBroadcastPos(group||0);   // Kollegen sehen, wo ich bin
-    setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
+    setTimeout(()=>{ renderGrid(); if(typeof manageSubscriptions==='function') manageSubscriptions(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
   }
   function handleBreakout(p){
     if(!p) return;
