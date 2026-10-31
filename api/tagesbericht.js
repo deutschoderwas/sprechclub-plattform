@@ -109,9 +109,17 @@ export default async function handler(req, res) {
          sie zu lesen.
      Uebrig bleibt genau das, was Julia sucht: Zugang ohne Spur einer
      Zahlung. */
+  /* Nur FRISCHE Kaeufe zaehlen hier. Eine Kaufzeile bleibt fuer immer
+     stehen, auch wenn das Abo laengst ausgelaufen ist — wer je einmal
+     gekauft hat, waere sonst auf Dauer von dieser Pruefung ausgenommen,
+     und genau den wuerde Julia nie wieder sehen. Sieben Tage decken
+     den Weg vom Kauf ueber die Registrierung bis zum ersten naechtlichen
+     Abgleich ab; danach muss die Zahlung im Profil stehen. */
+  const frischSeit = new Date(jetzt - 7 * 86400000).toISOString();
   let bezahlteAdressen = new Set();
   try {
-    const { data: kaeufe } = await sb.from('pending_purchases').select('email').limit(5000);
+    const { data: kaeufe } = await sb.from('pending_purchases')
+      .select('email,created_at').gte('created_at', frischSeit).limit(2000);
     bezahlteAdressen = new Set((kaeufe || []).map(k => String(k.email || '').toLowerCase()));
   } catch (e) { /* im Zweifel lieber melden als verschweigen */ }
 
