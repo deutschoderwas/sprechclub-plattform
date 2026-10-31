@@ -69,6 +69,15 @@ const ARTEN = {
      auf WhatsApp immer am schnellsten."
      Erst 'whatsapp_test' (eine Mail an Julia), dann auf ihr Wort
      'whatsapp_gruppe' an alle Mitglieder. */
+  /* Die Buchungsanleitung fuer die Premium-Mitglieder. Julia,
+     31.10.2026: "Jeder der PREMIUM hat muss jetzt eine Email bekommen
+     und zwar wie man den Unterricht bucht und wo man den gebuchten
+     Unterricht findet." Erst 'anleitung_test' (eine Mail an Julia),
+     dann auf ihr Wort 'anleitung_buchen' an alle. */
+  anleitung_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen', true),
+  anleitung_buchen:   (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen', false),
+  anleitung_test:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen?test=1', false),
+
   whatsapp_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe', true),
   whatsapp_gruppe:   (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe', false),
   whatsapp_test:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/whatsapp-gruppe?test=1', false),
