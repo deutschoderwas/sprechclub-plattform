@@ -312,3 +312,4 @@ Alle Fotos: Unsplash, Unsplash License (kostenlos, auch kommerziell, keine Namen
 - hf_20260811_075829_278c6bbe-81ee-4c96-a3-282abeb7.webp: https://unsplash.com/photos/1605497788044-5a32c7078486
 - hf_20260811_075829_9140ad9f-d09d-416c-80-021456dd.webp: https://unsplash.com/photos/1580674285054-bed31e145f59
 - hf_20260811_075829_bbbd331d-d247-4f2f-99-dccd7bb0.webp: https://unsplash.com/photos/1647140655214-e4a2d914971f
+- hf_20260809_211448_373a2f60-b6f0-4c5e-bf-d0f72a21.webp: https://unsplash.com/photos/1758519288905-38b7b00c1023
