@@ -3151,7 +3151,7 @@ function kalBook(id){
     <h3>Buchung bestätigen?</h3>
     <p class="hint">Möchtest du diese Stunde verbindlich buchen?</p>
     <div class="det"><b>${title}</b><span>${when}${sub?' · '+sub:''}</span></div>
-    <p class="hint">Storno kostenlos bis 6 Stunden vorher.${gratis?'':' Dein Guthaben wird erst nach der Teilnahme abgezogen.'}</p>
+    <p class="hint">Es wäre toll, wenn du die Stunde stornierst, falls du nicht kommen kannst.</p>
     <div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Abbrechen</button><button class="btn btn-primary" id="cfmGo">Buchung bestätigen</button></div>`;
   document.getElementById('cfmGo').onclick=()=>doBook(id);
   document.getElementById('cfmModal').classList.add('open');
@@ -3225,7 +3225,11 @@ function meineStundenHtml(){
   let html='';
   html+='<h2 class="sec"><span data-i18n="st_upc">Kommende Stunden</span></h2>';
   html += s.upcoming.length ? s.upcoming.map(b=>{
-    const start=new Date(b.starts_at); const cancellable=(start-s.now)>6*3600000;
+    const start=new Date(b.starts_at); /* Julia, 1.11.2026: "sie koennen auch 5 Minuten vorher stornieren,
+     das ist jetzt alles egal" — die Sechs-Stunden-Frist stammt aus der
+     Guthabenzeit. Jetzt zaehlt nur, dass abgesagt wird; nach dem
+     Beginn geht es nicht mehr (dasselbe sagt cancel_booking). */
+  const cancellable=(start-s.now)>0;
     const m=materials[b.class_id];
     return `<div class="card">
       <div class="head">
@@ -3282,7 +3286,7 @@ function renderStunden(){
 }
 
 async function cancelB(classId){
-  if(!confirm('Stunde wirklich stornieren? Du bekommst dein Guthaben zurück.')) return;
+  if(!confirm('Stunde wirklich stornieren?')) return;
   const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
   if(error||!data.ok){ toast(data?.error==='too_late'?'Storno nicht mehr möglich (unter 6 h).':'Storno fehlgeschlagen.'); return; }
   // Admin-Benachrichtigung an Julia (Brevo, fire-and-forget)
@@ -3300,11 +3304,11 @@ async function cancelB(classId){
 async function umbuchen(classId, titel){
   const t = titel ? '„'+titel+'"' : 'diese Stunde';
   if(!confirm('Du möchtest '+t+' auf einen anderen Termin legen?\n\n'
-    +'Die Stunde wird storniert und kommt sofort zurück auf dein Guthaben. '
+    +'Die Stunde wird storniert. '
     +'Danach suchst du dir im Kalender einen neuen Termin aus.')) return;
   const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
   if(error||!data||!data.ok){
-    toast(data&&data.error==='too_late' ? 'Umbuchen geht nur bis 6 Stunden vorher.' : 'Das hat nicht geklappt.');
+    toast(data&&data.error==='too_late' ? 'Die Stunde hat schon angefangen.' : 'Das hat nicht geklappt.');
     return;
   }
   try{

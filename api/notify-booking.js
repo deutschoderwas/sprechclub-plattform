@@ -184,8 +184,9 @@ function brandedBookingEmail({ vorname, cls, when, site, clubName, clubEmoji, cl
 
         <!-- Hinweis -->
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
-          Die Stunde wurde von deinem Guthaben abgebucht. Du kannst bis 6 Stunden vor Beginn in deinem
-          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> kostenlos stornieren – dann bekommst du die Stunde sofort zurück.
+          Es wäre toll, wenn du die Stunde
+          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">stornieren</a>
+          könntest, wenn du nicht kommen kannst.
         </td></tr>
 
         <!-- Gruß -->

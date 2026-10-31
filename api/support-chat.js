@@ -109,7 +109,7 @@ WAS DU NICHT TUST:
 
 WAS DU SICHER WEISST:
 - Eine gebuchte Stunde kostet eine Stunde Guthaben. Das Guthaben steht im Schuelerbereich unter „Mein Bereich".
-- Stornieren geht bis sechs Stunden vor Beginn, dann kommt die Stunde zurueck aufs Guthaben. Danach nicht mehr.
+- Stornieren geht bis zum Beginn der Stunde, auch noch kurz vorher. Es gibt keine Frist mehr; wer nicht kommen kann, soll einfach absagen.
 - Die eigenen gebuchten Stunden stehen unter „Meine Stunden", der Link in den Klassenraum steht direkt bei der Buchung.
 - Neues Guthaben gibt es ueber die Preisseite: https://www.deutschoderwas-club.de/preise
 - Passwort vergessen: auf der Startseite ueber „Passwort vergessen" eine neue E-Mail anfordern.

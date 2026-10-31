@@ -139,8 +139,9 @@ function brandedReminderEmail({ vorname, cls, when, site, clubName, clubEmoji, c
         </td></tr>
 
         <tr><td style="padding:14px 30px 4px;font-family:${ff};font-size:13px;line-height:1.6;color:#6B7280">
-          Klappt es doch nicht? Bis 2 Stunden vor Beginn kannst du in deinem
-          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a> stornieren.
+          Es wäre toll, wenn du die Stunde in deinem
+          <a href="${esc(site)}/schuelerbereich" style="color:#DD0000;font-weight:700;text-decoration:none">Schülerbereich</a>
+          stornieren könntest, wenn du nicht kommen kannst.
         </td></tr>
 
         <tr><td style="padding:16px 30px 4px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
