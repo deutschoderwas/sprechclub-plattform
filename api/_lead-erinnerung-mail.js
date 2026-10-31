@@ -31,9 +31,23 @@ export function tageBisEnde(jetzt) {
   const ziel = Date.parse('2026-10-31T00:00:00Z');
   return Math.max(0, Math.round((ziel - heute) / 86400000));
 }
+const ENDE_TAG = '2026-10-31';
+function tagBerlin(jetzt) {
+  const d = new Date(jetzt || Date.now());
+  try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' }).format(d); }
+  catch (e) { return d.toISOString().slice(0, 10); }
+}
+/* Der 31. Oktober selbst ist nicht "noch 0 Tage", sondern der letzte
+   Tag — und der klingt anders als jeder Tag davor. tageBisEnde()
+   kappt bei 0 und kann deshalb heute und uebermorgen nicht
+   auseinanderhalten; dafuer sind diese beiden da. */
+export function istLetzterTag(jetzt) { return tagBerlin(jetzt) === ENDE_TAG; }
+export function istVorbei(jetzt)     { return tagBerlin(jetzt) >   ENDE_TAG; }
+
 export function fristSatz(jetzt) {
+  if (istVorbei(jetzt)) return 'Der Frühbucherpreis ist abgelaufen';
+  if (istLetzterTag(jetzt)) return 'Heute ist der letzte Tag';
   const t = tageBisEnde(jetzt);
-  if (t <= 0) return 'Der Frühbucherpreis ist abgelaufen';
   if (t === 1) return 'Bis zum 31. Oktober — also nur noch <strong>einen Tag</strong>';
   return 'Bis zum 31. Oktober — also noch <strong>' + t + ' Tage</strong>';
 }
@@ -46,7 +60,9 @@ export function erinnerungHtml(vorname, jetzt, art) {
      Deshalb eine eigene erste Zeile und ein eigener dritter Kasten. */
   const istCommunity = art === 'community';
   const tage = tageBisEnde(jetzt);
-  const frist = tage <= 0 ? 'Der Fruehbucherpreis ist abgelaufen'
+  const letzter = istLetzterTag(jetzt);
+  const frist = istVorbei(jetzt) ? 'Der Fruehbucherpreis ist abgelaufen'
+    : letzter ? 'Heute um Mitternacht schlie&szlig;en die T&uuml;ren'
     : (tage === 1 ? 'Nur noch <b>ein Tag</b>' : 'Noch <b>' + tage + ' Tage</b>');
 
   /* Aufbau nach Julias Vorgabe vom 15.10.2026: "Kein blosser Text,
@@ -57,9 +73,9 @@ export function erinnerungHtml(vorname, jetzt, art) {
      Schluss. Die beiden Daten stehen in eigenen Kaesten, damit sie auch
      beim Durchscrollen haengen bleiben. */
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Noch ${tage} Tage</title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${letzter ? 'Heute ist der letzte Tag' : 'Noch ' + tage + ' Tage'}</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">Start am 1. November &middot; Rabatt nur bis 31. Oktober</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${letzter ? "Heute um Mitternacht schliessen die Tueren &middot; Start am 1. November" : "Start am 1. November &middot; Rabatt nur bis 31. Oktober"}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
@@ -69,11 +85,17 @@ export function erinnerungHtml(vorname, jetzt, art) {
 
   <tr><td style="padding:16px 30px 0">
     <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:0 0 12px">
-      ${frist}, ${v}. Dann wird <span style="color:#DD0000">gesprochen</span>.
+      ${letzter
+        ? `${frist}, ${v}.`
+        : `${frist}, ${v}. Dann wird <span style="color:#DD0000">gesprochen</span>.`}
     </h1>
-    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">${istCommunity
-      ? 'Du bist in der Community dabei &ndash; im Sprechclub noch nicht. Mit einem Klick wechselst du auf Premium, und zwei Daten sind daf&uuml;r wichtig:'
-      : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Daten sind jetzt wichtig f&uuml;r dich:'}
+    <p style="font-size:16px;line-height:1.65;margin:0 0 18px">${letzter
+      ? (istCommunity
+          ? 'Nur eine kurze Nachricht, weil heute der letzte Tag ist: Ab Mitternacht ist die Anmeldung zum Sprechclub zu. Du bist in der Community dabei &ndash; im Sprechclub noch nicht. Wenn du wechseln magst, ist heute der Tag daf&uuml;r.'
+          : 'Nur eine kurze Nachricht, weil heute der letzte Tag ist: Ab Mitternacht ist die Anmeldung zum Sprechclub zu. Wenn du den Fr&uuml;hbucherpreis noch nutzen magst, dann komm heute dazu.')
+      : (istCommunity
+          ? 'Du bist in der Community dabei &ndash; im Sprechclub noch nicht. Mit einem Klick wechselst du auf Premium, und zwei Daten sind daf&uuml;r wichtig:'
+          : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Daten sind jetzt wichtig f&uuml;r dich:')}
     </p>
   </td></tr>
 
@@ -87,13 +109,22 @@ export function erinnerungHtml(vorname, jetzt, art) {
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF3D6;border:2px solid #FFCE00;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
-        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#9203; Der gro&szlig;e Rabatt gilt nur bis zum <span style="color:#DD0000">31. Oktober</span></div>
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#9203; ${letzter ? 'Der gro&szlig;e Rabatt gilt nur noch <span style="color:#DD0000">heute</span>' : 'Der gro&szlig;e Rabatt gilt nur bis zum <span style="color:#DD0000">31. Oktober</span>'}</div>
         <div style="font-size:15px;line-height:1.55">
           <b>39&nbsp;&euro; statt 99&nbsp;&euro;</b> im Monat (Jahresabo) oder 49&nbsp;&euro; monatlich.
           Wer sp&auml;ter kommt, zahlt den vollen Preis. Dein Preis bleibt dir, solange du dabei bist.
         </div>
       </td></tr>
     </table>
+
+    ${letzter ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:12px">
+      <tr><td style="padding:16px 18px">
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#128274; Danach bleibt der Sprechclub erst einmal zu</div>
+        <div style="font-size:15px;line-height:1.55">
+          Die n&auml;chste Anmeldung ist erst <b>Mitte November</b> m&ouml;glich &ndash; dann zum regul&auml;ren Preis.
+        </div>
+      </td></tr>
+    </table>` : ''}
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
@@ -106,7 +137,7 @@ export function erinnerungHtml(vorname, jetzt, art) {
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${istCommunity ? 'Auf Premium wechseln' : 'Platz sichern'} &ndash; bis 31. Oktober</a>
+    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${istCommunity ? 'Auf Premium wechseln' : 'Platz sichern'} &ndash; ${letzter ? 'nur noch heute' : 'bis 31. Oktober'}</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">

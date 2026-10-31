@@ -222,7 +222,12 @@
   .bo-count .boc-x{ margin-left:12px; background:#fff; color:#B23C22; border:none; border-radius:999px; padding:5px 12px; font-family:'Inter'; font-weight:800; font-size:.8rem; cursor:pointer; }
   .bo-hr{ font-size:.82rem; font-weight:700; color:var(--anthrazit); opacity:.85; margin:2px 0 8px; }
   .bo-there{ display:inline-block; background:#1f7a4d; color:#fff; border-radius:999px; padding:1px 8px; font-size:.72rem; font-weight:800; margin-left:6px; }
+  .bo-there.konflikt{ background:#DD0000; animation:boBlink 1s steps(2,end) infinite; }
+  @keyframes boBlink{ 50%{ opacity:.55; } }
+  .bo-nobody{ display:inline-block; background:#ECEBE6; color:#8a8575; border-radius:999px; padding:1px 8px; font-size:.72rem; font-weight:800; margin-left:6px; }
+  .bo-niv-lbl{ display:inline-block; background:#fff; border:1px solid var(--rahmen); color:var(--weich); border-radius:999px; padding:1px 8px; font-size:.7rem; font-weight:800; margin-left:6px; }
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
+  .bo-grp.konflikt{ outline:2px solid #DD0000; outline-offset:1px; background:#FCECEC; }
   .bo-mv{ display:flex; align-items:center; gap:6px; margin:4px 0; font-size:.86rem; flex-wrap:wrap; }
   .bo-mv-n{ font-weight:700; }
   .bo-mv-lbl{ color:var(--anthrazit); opacity:.55; font-size:.76rem; margin-left:auto; }
@@ -557,6 +562,8 @@
         </div>
         <div id="jitsi"></div>
         <div class="rx-layer" id="rx-layer"></div>
+        <!-- Begrüßungsmusik (loopt, startet 2 Min vor Beginn, Lehrkraft stoppt) -->
+        <audio id="lobby-audio" src="warteraum-musik.mp3" loop preload="auto" style="display:none"></audio>
       </div>
       <div class="vid-controls" id="vid-controls">
         <button id="vc-mic" onclick="vcAudio()" title="Mikrofon an/aus">🎤 Mikro</button>
@@ -565,6 +572,7 @@
         <button id="vc-share" onclick="vcShare()" title="Bildschirm / Präsentation teilen">🖥️ Teilen</button>
         <button id="vc-muteall" onclick="vcMuteAll()" title="Alle Schüler stummschalten (bei Hintergrundgeräuschen)" style="display:none">🔇 Alle stumm</button>
         <button id="vc-bo" onclick="toggleBoPanel()" title="Kleingruppen (Breakout-Räume) bilden" style="display:none">👥 Gruppen</button>
+        <button id="vc-music" onclick="toggleLobbyMusic()" title="Begrüßungsmusik für alle an/aus" style="display:none">🎵 Musik aus</button>
         <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
       </div>
@@ -600,6 +608,7 @@
     const mb=document.getElementById('vc-muteall'); if(mb) mb.style.display = lehrer ? '' : 'none';
     const evb=document.getElementById('vc-event'); if(evb) evb.style.display = lehrer ? '' : 'none';
     const bob=document.getElementById('vc-bo'); if(bob) bob.style.display = lehrer ? '' : 'none';
+    const mub=document.getElementById('vc-music'); if(mub) mub.style.display = lehrer ? '' : 'none';
     const hb=document.getElementById('vc-hand'); if(hb) hb.style.display = lehrer ? 'none' : '';
     const tr=document.getElementById('tools-row'); if(tr) tr.classList.toggle('on', lehrer);
     if(typeof renderHands==='function') renderHands();
@@ -885,8 +894,11 @@
     // und die Schüler:innen sehen nur den Platzhalter „Noch keine Präsentation".
     try{ for(let i=0;i<20;i++){ const r=await sb.auth.getSession(); if(r&&r.data&&r.data.session) break; await new Promise(res=>setTimeout(res,150)); } }catch(e){}
     try{
-      const { data: kl } = await sb.from('classes').select('title,level,material_live').eq('id', STUNDE).maybeSingle();
-      if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level; }
+      const { data: kl } = await sb.from('classes').select('title,level,material_live,starts_at').eq('id', STUNDE).maybeSingle();
+      if(kl){ if(kl.title) _titel = kl.title; if(kl.level) _niveau = kl.level;
+        // Startzeit merken → Begrüßungsmusik beginnt 2 Min vor Beginn
+        if(kl.starts_at){ window._stundeStart = kl.starts_at; if(window._musicOn && window._inCall && (window._currentGroup||0)===0 && typeof lobbyMusicStart==='function') lobbyMusicStart(); }
+      }
       const { data: mat } = await sb.from('class_materials').select('content').eq('class_id', STUNDE).maybeSingle();
       // Präsentation: zuerst die verknüpfte interaktive Lektion, sonst der Admin-Link „Material IM Unterricht"
       const url = (mat && mat.content && mat.content.lesson_url) || (kl && kl.material_live) || '';
@@ -974,7 +986,9 @@
   function ladeDailyApi(ok, fehler){
     if(window.DailyIframe){ ok(); return; }
     const s=document.createElement('script');
-    s.src='https://unpkg.com/@daily-co/daily-js';
+    /* Julia, 31.10.2026: feste Daily-Version statt unversioniert — so kann
+       kein stilles Update den Klassenraum brechen. 0.94.0 = aktuell. */
+    s.src='https://unpkg.com/@daily-co/daily-js@0.94.0/dist/daily.js';
     s.onload=()=>ok();
     s.onerror=fehler;
     document.head.appendChild(s);
@@ -1016,7 +1030,9 @@
     const parent=document.getElementById('jitsi'); if(parent){ parent.innerHTML='<div class="dgrid" id="dgrid"></div>'; }
     // Eigenes Raster statt Standard-UI → wir können IMMER alle Teilnehmer (inkl. sich selbst) zeigen.
     dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
-    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
+    dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500);
+      // Begrüßungsmusik im Hauptraum beim Reinkommen (nur solange der Schalter an ist)
+      if(window._musicOn && (window._currentGroup||0)===0) setTimeout(()=>{ if(typeof lobbyMusicStart==='function') lobbyMusicStart(); }, 400); setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
       // Bildqualität clever steuern: aktiver Sprecher scharf, Rest klein (spart Leistung bei vielen Kameras)
       setTimeout(()=>dailyQuality(), 1500);
       // Hauptraum: Schüler kommen stumm rein → einmal freundlich erklären, wie man das Mikro freischaltet.
@@ -1044,6 +1060,60 @@
     const go=()=>{ document.querySelectorAll('#dgrid audio').forEach(a=>{ a.play&&a.play().catch(()=>{}); }); };
     window.addEventListener('click', go, { once:false });
     window.addEventListener('touchstart', go, { once:false });
+  }
+  // ===== Begrüßungsmusik beim Reinkommen (Julia, 31.10.2026) =====
+  // MP3 (warteraum-musik.mp3), läuft in Schleife. Alle hören sie beim Betreten
+  // des Hauptraums — ab 2 Minuten vor Unterrichtsbeginn. Die Lehrkraft schaltet
+  // sie per Knopf für ALLE aus (und wieder an). In Kleingruppen keine Musik.
+  window._musicOn = true;                 // an, bis die Lehrkraft sie wegmacht
+  window._stundeStart = window._stundeStart || null;   // Startzeit der Stunde (aus ladeLektion)
+  window._musicTimer = null;
+  const MUSIC_VORLAUF_MS = 2*60*1000;     // Musik beginnt 2 Min vor Beginn
+  const MUSIC_VOL = 0.5;                   // nicht zu leise, nicht zu laut
+  function lobbyAudioEl(){ return document.getElementById('lobby-audio'); }
+  function lobbyMusicPlayNow(){
+    if(!window._musicOn) return;
+    const a = lobbyAudioEl(); if(!a) return;
+    try{ a.volume = MUSIC_VOL; a.loop = true; }catch(e){}
+    const p = a.play && a.play();
+    // Falls der Browser Autoplay (noch) blockiert: beim nächsten Tippen/Klick erneut versuchen.
+    if(p && p.catch) p.catch(()=>{ const retry=()=>{ if(window._musicOn){ try{ a.play(); }catch(e){} } window.removeEventListener('pointerdown',retry); window.removeEventListener('touchstart',retry); }; window.addEventListener('pointerdown',retry,{once:true}); window.addEventListener('touchstart',retry,{once:true}); });
+  }
+  // Musik zur richtigen Zeit starten: ab 2 Min vor Beginn. Wer früher reinkommt,
+  // hört sie automatisch, sobald das Fenster beginnt.
+  function lobbyMusicStart(){
+    if(!window._musicOn) return;
+    clearTimeout(window._musicTimer);
+    const start = window._stundeStart ? new Date(window._stundeStart).getTime() : 0;
+    const now = Date.now();
+    if(start){
+      const ab = start - MUSIC_VORLAUF_MS;
+      if(now >= ab){ lobbyMusicPlayNow(); }
+      else { const a=lobbyAudioEl(); if(a){ try{ a.pause(); }catch(e){} } window._musicTimer = setTimeout(lobbyMusicPlayNow, ab-now); }
+    } else {
+      lobbyMusicPlayNow();   // Startzeit noch unbekannt → beim Reinkommen spielen
+    }
+  }
+  function lobbyMusicStop(){
+    clearTimeout(window._musicTimer);
+    const a = lobbyAudioEl(); if(!a) return;
+    try{ a.pause(); a.currentTime = 0; }catch(e){}
+  }
+  function musicBtnLabel(){ const b=document.getElementById('vc-music'); if(b) b.textContent = window._musicOn ? '🎵 Musik aus' : '🎵 Musik an'; }
+  // Lehrkraft: Musik für alle an/aus schalten
+  window.toggleLobbyMusic = function(){
+    window._musicOn = !window._musicOn;
+    if(window._musicOn){ if((window._currentGroup||0)===0) lobbyMusicStart(); }
+    else { lobbyMusicStop(); }
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'music', payload:{ on: window._musicOn } }); }catch(e){}
+    musicBtnLabel();
+  };
+  // Schüler/Kollegen empfangen den Schalter
+  function handleMusic(p){
+    if(!p) return;
+    window._musicOn = !!p.on;
+    if(window._musicOn){ if((window._currentGroup||0)===0) lobbyMusicStart(); } else { lobbyMusicStop(); }
+    musicBtnLabel();
   }
   // ===== Eigenes Kachel-Raster: ALLE Teilnehmer gleichzeitig, formatfüllend (kein Schwarzrand) =====
   function renderGrid(){
@@ -1138,6 +1208,8 @@
     const grid=document.getElementById('dgrid'); if(grid) grid.innerHTML='';
     try{ await dframe.join({ url:daily.url, token:daily.token }); window._currentGroup = group||0; }
     catch(e){ console.warn('Raumwechsel', e); }
+    // In einer Kleingruppe keine Begrüßungsmusik — da wird gearbeitet.
+    if((window._currentGroup||0)!==0 && typeof lobbyMusicStop==='function') lobbyMusicStop();
     window._switching = false;
     if(istLehrer && typeof boBroadcastPos==='function') boBroadcastPos(group||0);   // Kollegen sehen, wo ich bin
     setTimeout(()=>{ renderGrid(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
@@ -1294,10 +1366,16 @@
         const needs = window._helpGroups && window._helpGroups.has(String(g));
         const bands = [...new Set(groups[g].map(id=>boBand(boLv(id))).filter(bd=>bd!=='x'))];
         const mixed = bands.length>1;
+        /* Niveau der Gruppe im Kopf anzeigen — Gruppen werden ja nach Niveau
+           gebildet, also sofort sehen, welches Band in Gruppe X sitzt. */
+        const nivLabel = bands.length ? bands.map(bd=>BO_BANDS[bd].label).join(' + ') : 'kein Test';
         const th = teachersIn(g);
-        const thHtml = th.length?` <span class="bo-there" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}</span>`:'';
+        const konflikt = th.length>1;   // zwei Lehrkräfte in derselben Gruppe
+        const thHtml = th.length
+          ? ` <span class="bo-there${konflikt?' konflikt':''}" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}${konflikt?' ⚠️ 2 Lehrer!':''}</span>`
+          : ` <span class="bo-nobody" title="Hier ist noch keine Lehrkraft">👤 kein Lehrer</span>`;
         const mem = groups[g].map(id=>`<div class="bo-mv">${boBadge(id)} <span class="bo-mv-n">${esc(nameOf(id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" value="${esc(g)}" title="Diesen Schüler in eine andere Gruppe verschieben" onchange="boMoveLive('${esc(id)}', this.value)"></div>`).join('');
-        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
+        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}${konflikt?' konflikt':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b> <span class="bo-niv-lbl">${esc(nivLabel)} · ${groups[g].length} 👥</span>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
       html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boWarnThen('end')">⏹️ Alle zurückholen</button></div>`;
@@ -1339,7 +1417,19 @@
     if(window._currentGroup) wechsleRaum(0);
     boRenderTeacher();
   }
-  function boHop(g){ if(g && typeof clearHelp==='function') clearHelp(g); wechsleRaum(g||0); }
+  /* Namen anderer Lehrkräfte (nicht ich selbst) in Gruppe g. */
+  function teachersInExceptMe(g){ const now=Date.now(); const me=window._meId||'self'; return Object.entries(window._teacherPos||{}).filter(([id,t])=>id!==me && t && (t.group|0)===(g|0) && now-(t.ts||0)<=45000).map(([id,t])=>t.name); }
+  /* Julia, 31.10.2026: nicht zwei Lehrer in denselben Gruppenraum. Vor dem
+     Betreten prüfen, ob schon eine andere Lehrkraft drin ist, und nachfragen. */
+  function boHop(g){
+    g = g|0;
+    if(g>0){
+      const andere = teachersInExceptMe(g);
+      if(andere.length && !confirm('In Gruppe '+g+' ist schon '+andere.join(', ')+'.\n\nTrotzdem reingehen? (Dann sind zwei Lehrer in derselben Gruppe.)')) return;
+      if(typeof clearHelp==='function') clearHelp(g);
+    }
+    wechsleRaum(g||0);
+  }
   function showBoBanner(g){ const b=document.getElementById('bo-banner'); if(!b) return; const t=b.querySelector('.bo-txt'); if(t) t.textContent = g ? ('👥 Gruppenarbeit – du bist in Gruppe '+g) : '👥 Gruppenarbeit läuft – du bleibst im Hauptraum'; b.classList.add('show'); const cb=document.getElementById('bo-call'); if(cb){ cb.style.display=(g && !istLehrer)?'inline-block':'none'; cb.disabled=false; cb.textContent='🔔 Lehrer rufen'; } }
   function hideBoBanner(){ const b=document.getElementById('bo-banner'); if(b) b.classList.remove('show'); const cb=document.getElementById('bo-call'); if(cb) cb.style.display='none'; }
   // ---- 30-Sekunden-Vorwarnung vor Wechsel / Rückholung ----
@@ -2367,6 +2457,7 @@
       .on('broadcast', { event:'tpos' }, ({payload})=>{ if(typeof handleTpos==='function') handleTpos(payload); })
       .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
       .on('broadcast', { event:'evt' }, ({payload})=>{ if(typeof handleEvent==='function') handleEvent(payload); })
+      .on('broadcast', { event:'music' }, ({payload})=>{ if(typeof handleMusic==='function') handleMusic(payload); })
       .subscribe((status)=>{
         // Lehrer meldet seine Position (Hauptraum/Gruppe) und hält sie per Heartbeat aktuell
         if(status==='SUBSCRIBED' && istLehrer){

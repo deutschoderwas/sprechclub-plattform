@@ -1740,7 +1740,7 @@ async function loadPlan(){
   let list=cls||[];
   if(tFilter==='__none') list=list.filter(c=>!c.teacher_id);
   else if(tFilter==='__self') list=[]; // Lehrer ohne verknüpften Account
-  else if(tFilter) list=list.filter(c=>c.teacher_id===tFilter);
+  else if(tFilter) list=list.filter(c=>c.teacher_id===tFilter || c.assist_teacher_id===tFilter);  // Haupt- ODER Assistenzlehrer
 
   const ids=list.map(c=>c.id);
   let parts={};
@@ -1801,12 +1801,22 @@ async function loadPlan(){
     const miss=!c.teacher_id;
     const names=p.map(x=>esc((x&&(x.name||x.email))||'')).filter(Boolean);
     const free=(c.capacity||0)-p.length;
-    const freeHtml = free>0 ? `· <b style="color:#13A89A">${free} frei</b>` : '· <b style="color:#DD0000">ausgebucht</b>';
+    /* Julia, 31.10.2026: "ausgebucht" war irrefuehrend — Premium bucht
+       laut Regel immer rein, auch ueber die 20. Also echte Zahl zeigen
+       und klarstellen, dass Premium weiter reinkommt. */
+    const freeHtml = free>0 ? `· <b style="color:#13A89A">${free} frei</b>` : `· <b style="color:#E8820C">voll · Premium kommt rein (${p.length})</b>`;
+    /* Julia, 31.10.2026: zwei Lehrer-Plätze pro Stunde — Haupt- + Assistenzlehrer,
+       damit bei vollen Stunden beide eingeteilt sind. Zugang zum Klassenraum haben
+       beide ohnehin (hängt am is_teacher-Profil); das hier macht es im Plan sichtbar. */
     const teacherCell = isT
-      ? `<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>${esc(teacherName(c.teacher_id)||'—')}</span>`
-      : `<select class="passign ${miss?'miss':''}" onchange="assignTeacher('${c.id}',this.value)" title="Lehrer einteilen">
+      ? `<span class="tchip"><i style="background:${teacherColor(c.teacher_id)}"></i>${esc(teacherName(c.teacher_id)||'—')}</span>`+(c.assist_teacher_id?` <span class="tchip" style="opacity:.85"><i style="background:${teacherColor(c.assist_teacher_id)}"></i>🧑‍🏫 ${esc(teacherName(c.assist_teacher_id))}</span>`:'')
+      : `<select class="passign ${miss?'miss':''}" onchange="assignTeacher('${c.id}',this.value)" title="Hauptlehrer einteilen">
            <option value="">⚠️ Ohne Lehrer</option>
            ${TEACHERS.filter(t=>t.active||t.id===c.teacher_id).map(t=>`<option value="${t.id}" ${t.id===c.teacher_id?'selected':''}>${esc(t.name)}</option>`).join('')}
+         </select>
+         <select class="passign" onchange="assignAssist('${c.id}',this.value)" title="Assistenzlehrer / 2. Lehrer (optional)" style="opacity:${c.assist_teacher_id?'1':'.75'}">
+           <option value="">＋ Assistenz</option>
+           ${TEACHERS.filter(t=>t.active||t.id===c.assist_teacher_id).map(t=>`<option value="${t.id}" ${t.id===c.assist_teacher_id?'selected':''}>🧑‍🏫 ${esc(t.name)}</option>`).join('')}
          </select>`;
     html += `<div style="margin-bottom:7px">
       <div class="prow ${miss?'pmiss':''}" style="margin-bottom:0;border-left-color:${miss?'#DD0000':col}">
@@ -1876,6 +1886,11 @@ function planFilterChange(){ planTeacherFilter=document.getElementById('planFilt
 async function assignTeacher(id,val){
   const { error } = await sb.from('classes').update({ teacher_id: val||null }).eq('id',id);
   if(error){ alert('Einteilen fehlgeschlagen: '+error.message); return; }
+  loadPlan();
+}
+async function assignAssist(id,val){
+  const { error } = await sb.from('classes').update({ assist_teacher_id: val||null }).eq('id',id);
+  if(error){ alert('Assistenz einteilen fehlgeschlagen: '+error.message); return; }
   loadPlan();
 }
 
@@ -1961,7 +1976,7 @@ function renderKlassen(){
           </div>
           ${c.topic?`<div class="muted" style="margin-top:5px">📖 ${esc(c.topic)}</div>`:''}
         </div>
-        ${full?'<span class="pill" style="background:#DD0000;color:#fff;white-space:nowrap">🔒 Ausgebucht</span>':`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
+        ${full?`<span class="pill" style="background:#E8820C;color:#fff;white-space:nowrap">👥 ${p.length} · Premium kommt rein</span>`:`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
       </div>
 
       <div style="margin-top:12px">
@@ -2068,7 +2083,7 @@ function renderKlassen(){
         <div class="klc-title">${esc(c.title)}</div>
         <div class="klc-lvl" style="color:${fokusColor(c.topic)}">${esc(fokusLabel(c.topic))}</div>
         ${tch}
-        <div class="klc-b ${full?'full':''}">${full?'🔒 Ausgebucht':'👥 '+p.length}</div>
+        <div class="klc-b ${full?'full':''}">👥 ${p.length}${full?' · Prem.':''}</div>
       </button>`;
     }).join('') || '<div class="klc-empty">—</div>';
     cols += `<div class="klcol ${isToday?'today':''}"><h4>${wd[i]}<span class="d">${dnFmt.format(d)}${isToday?' · heute':''}</span></h4>${dayCards}</div>`;
@@ -2122,7 +2137,7 @@ async function rebookStudent(userId, fromClassId){
   const opts = (KL_ALL||[]).filter(c=>c.id!==fromClassId).slice().sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
   if(!opts.length){ alert('Keine andere Stunde in dieser Woche. Wechsle ggf. oben die Woche und versuche es erneut.'); return; }
   const tf = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  const sel = opts.map(c=>{ const n=(KL_PARTS[c.id]||[]).length; const voll=n>=c.capacity; return `<option value="${c.id}">${tf.format(new Date(c.starts_at))} · ${esc(c.title)} (${esc(c.level)}) · ${n}/${c.capacity}${voll?' VOLL':''}</option>`; }).join('');
+  const sel = opts.map(c=>{ const n=(KL_PARTS[c.id]||[]).length; const voll=n>=c.capacity; return `<option value="${c.id}">${tf.format(new Date(c.starts_at))} · ${esc(c.title)} (${esc(c.level)}) · ${n}/${c.capacity}${voll?' · Prem. offen':''}</option>`; }).join('');
   const ov=document.createElement('div');
   ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px';
   ov.innerHTML=`<div class="card" style="max-width:460px;width:100%;background:#fff">

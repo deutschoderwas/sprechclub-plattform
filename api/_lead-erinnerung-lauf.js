@@ -19,7 +19,7 @@
 //    3. minus alle, die sich bei Brevo abgemeldet haben
 //    4. minus alle, die diese Mail schon haben (email_log)
 // ============================================================
-import { erinnerungHtml, tageBisEnde } from './_lead-erinnerung-mail.js';
+import { erinnerungHtml, tageBisEnde, istLetzterTag } from './_lead-erinnerung-mail.js';
 
 /* Zweite Welle, 15.10.2026. Eigene Kennung, weil die erste
    ('lead_erinnerung_okt26', 138 Mails am 5. Oktober) sonst alle
@@ -131,9 +131,11 @@ export async function erinnerungLauf(sb, { senden = false, max = MAX } = {}) {
   if (!process.env.BREVO_API_KEY) return { ok: false, grund: 'kein_brevo_schluessel', ...bilanz };
 
   const tage = tageBisEnde();
-  const betreff = tage === 1
-    ? 'Nur noch morgen: der Rabatt läuft am 31. Oktober aus'
-    : 'Noch ' + tage + ' Tage — danach ist der Rabatt weg';
+  const betreff = istLetzterTag()
+    ? 'Heute um Mitternacht schließen die Türen'
+    : tage === 1
+      ? 'Nur noch morgen: der Rabatt läuft am 31. Oktober aus'
+      : 'Noch ' + tage + ' Tage — danach ist der Rabatt weg';
   let geschickt = 0, fehler = 0;
   const schiefgelaufen = [];
   for (const o of offen) {
