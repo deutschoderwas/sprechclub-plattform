@@ -2216,6 +2216,15 @@ async function openMaterial(path,a){
               bevorstehenden Stunde · Community und Premium mit Status
               aktiv · Lehrkräfte und Admin immer                        */
 const GESPERRT = ['beendet','archiv','inaktiv','geloescht','registriert','probeschuler','gekuendigt'];
+/* Julia, 31.10.2026: Material + Vorbereitung gibt es NUR fuer Premium.
+   Community-Schueler sehen den Hinweis aufs Premium-Abo. */
+function isPremium(){
+  if(profile && (profile.is_admin || profile.is_teacher)) return true;
+  const s = (profile && profile.status) || '';
+  if (GESPERRT.indexOf(s) >= 0) return false;
+  const tier = (profile && profile.tier) || '';
+  return tier==='premium' || tier==='premium_plus';
+}
 function isActive(){
   if(profile && (profile.is_admin || profile.is_teacher)) return true;
   const s = (profile && profile.status) || '';
@@ -2928,7 +2937,10 @@ function kalEv(c){
   else if(!stundeErlaubt(c.starts_at)){ btn=`<button class="ev-btn off" style="white-space:normal;line-height:1.25;text-align:left" onclick="erstAbStart()">Buche den Unterricht ab dem ${startTextKurz()}</button>`; }
   else if(free<=0 && !neuesSystem(c.starts_at)){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
-  const matBtn = (c.has_material && (isActive() || c.mine)) ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
+  /* Julia, 31.10.2026: "Alle Schueler muessen das Material und auch die
+     Vorbereitung dazu ansehen koennen." Material-Knopf jetzt fuer alle
+     eingeloggten Schueler, nicht nur aktive oder gebuchte. */
+  const matBtn = c.has_material ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
   const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
   let seats='';
@@ -3035,7 +3047,15 @@ function selectKalDay(k){kalSelDay=k;kalRenderMonth();}
 async function openClassMaterial(classId, booked){
   /* Das Material der eigenen gebuchten Stunde bleibt offen, auch ohne
      Guthaben — nur fremdes Material haengt am Paket. */
-  if(!isActive() && !booked){ toast('Material gibt es mit aktivem Guthaben — ich bring dich zu den Paketen 😊'); setTimeout(()=>{ location.href='live.html#pakete'; }, 900); return; }
+  /* Julia, 31.10.2026: Material + Vorbereitung nur fuer Premium. Community
+     bekommt ein Popup mit Upgrade-Knopf. Nach dem Upgrade (Stripe-Webhook
+     setzt tier=premium) sind sie automatisch Premium-Mitglied. */
+  if(!isPremium()){
+    openModal(`<h3 style="margin:0 0 8px">👑 Nur mit Premium</h3>
+      <p class="muted" style="margin:0 0 18px;line-height:1.5">Mit dem <b>Premium-Abo</b> kannst du den Unterricht buchen und das ganze Material inklusive Vorbereitung ansehen.</p>
+      <a class="btn btn-primary" href="live.html#pakete" style="display:inline-block">Jetzt auf Premium upgraden →</a>`);
+    return;
+  }
   let m=materials[classId];
   if(!m){
     const {data}=await sb.from('class_materials').select('content').eq('class_id',classId).maybeSingle();
@@ -3056,8 +3076,7 @@ async function openClassMaterial(classId, booked){
   let html=`<h3 style="margin-bottom:4px">📚 Material zur Stunde</h3>`;
   if(m.intro) html+=`<p class="muted" style="margin-bottom:12px">${esc(m.intro)}</p>`;
   if(m.lesson_url) html+=`<a class="btn btn-primary" href="${esc(m.lesson_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:12px">▶️ Interaktive Lektion öffnen</a>`;
-  if(booked && prepUrl) html+=`<a class="btn btn-ghost" href="${esc(prepUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin:0 0 12px 8px">📝 Vorbereitung öffnen (Handout)</a>`;
-  else if(!booked && prepUrl) html+=`<p class="muted" style="font-size:13px;margin:0 0 12px">📝 Die Vorbereitungs-Datei siehst du nach der Buchung.</p>`;
+  if(prepUrl) html+=`<a class="btn btn-ghost" href="${esc(prepUrl)}" target="_blank" rel="noopener" style="display:inline-block;margin:0 0 12px 8px">📝 Vorbereitung öffnen (Handout)</a>`;
   if(tip) html+=`<div class="tip-card"><b>📌 ${esc(tip.title||'Grammatik-Tipp')}</b>${esc(tip.text||'')}</div>`;
   if(Array.isArray(m.vocab)&&m.vocab.length){
     html+=`<h4 style="margin:14px 0 6px">🃏 Wortschatz</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">`+
