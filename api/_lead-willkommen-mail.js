@@ -24,9 +24,39 @@ const esc = (s) => String(s == null ? '' : s)
 export const RABATT_ENDE = Date.parse('2026-11-01T00:00:00+01:00');
 export const rabattLaeuft = (jetzt = Date.now()) => jetzt < RABATT_ENDE;
 
+/* Ab dem 1. November sind die Tueren zu.
+
+   Julia, 31.10.2026: "Am 31.10 um Mitternacht schliesse ich die
+   Tueren fuer den Sprechclub ... die Willkommensmail muss dann so
+   lauten, dass sich bald die Tueren fuer den Sprechclub wieder
+   oeffnen, diesmal mit NOCH MEHR Live Unterricht und noch mehr
+   Flexibilitaet. Solange kannst du in Ruhe die Lernplattform nutzen
+   (Community Mitgliedschaft) und dann einfach upgraden, wenn ich die
+   Tueren wieder oeffne."
+
+   Ohne diese Weiche haette ab morgen jeder neue Eintrag eine Mail
+   bekommen, die einen Platz anbietet, den es gerade nicht gibt —
+   mit Preis und Kaufknopf. Das Datum entscheidet, nicht ein Mensch.
+
+   WENN DIE TUEREN WIEDER AUFGEHEN: TUEREN_AUF auf das Datum setzen
+   (Mitte November). Dann faellt die Mail von selbst auf die
+   normale Fassung zum regulaeren Preis zurueck. Dasselbe Datum steht
+   in index.html als window.TUEREN_AUF. */
+export const TUEREN_ZU_AB = Date.parse('2026-11-01T00:00:00+01:00');
+export const TUEREN_AUF   = null;   // z. B. Date.parse('2026-11-16T00:00:00+01:00')
+export const tuerenZu = (jetzt = Date.now()) =>
+  jetzt >= TUEREN_ZU_AB && (!TUEREN_AUF || jetzt < TUEREN_AUF);
+
+export function willkommenBetreff(jetzt = Date.now()) {
+  return tuerenZu(jetzt)
+    ? 'Schön, dass du da bist — die Türen öffnen Mitte November'
+    : 'Du musst nicht warten — der Sprechclub ist offen';
+}
+
 export function willkommenHtml(vorname, jetzt = Date.now()) {
   const v = esc(vorname || 'du');
   const rabatt = rabattLaeuft(jetzt);
+  const zu = tuerenZu(jetzt);
 
   /* Gleicher Aufbau wie die Erinnerungsmail (Julia, 15.10.2026):
      zwei Saetze Begruessung, drei Kaesten, ein Knopf, ein Satz zum
@@ -49,9 +79,9 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     </table>`;
 
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sch&ouml;n, dass du da bist</title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${zu ? 'Die T&uuml;ren &ouml;ffnen Mitte November' : 'Sch&ouml;n, dass du da bist'}</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">Start am 1. November${rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : ''}</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${zu ? 'Die T&uuml;ren &ouml;ffnen Mitte November &middot; mit noch mehr Live-Unterricht' : 'Start am 1. November' + (rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : '')}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
@@ -61,33 +91,39 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
 
   <tr><td style="padding:16px 30px 0">
     <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:0 0 12px">
-      Sch&ouml;n, dass du da bist, ${v}. Jetzt wird <span style="color:#DD0000">gesprochen</span>.
+      ${zu
+        ? `Sch&ouml;n, dass du da bist, ${v}. Du stehst auf der <span style="color:#DD0000">Warteliste</span>.`
+        : `Sch&ouml;n, dass du da bist, ${v}. Jetzt wird <span style="color:#DD0000">gesprochen</span>.`}
     </h1>
     <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
-      Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Dinge sind jetzt wichtig f&uuml;r dich:
+      ${zu
+        ? 'Danke, dass du dich eingetragen hast. Der Sprechclub ist gerade geschlossen &ndash; aber nicht lange. Du bist dabei, sobald die T&uuml;ren wieder aufgehen, und die Pl&auml;tze sind begrenzt.'
+        : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Dinge sind jetzt wichtig f&uuml;r dich:'}
     </p>
   </td></tr>
 
   <tr><td style="padding:0 30px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
-        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#128197; Der Unterricht startet am 1. November</div>
-        <div style="font-size:15px;line-height:1.55;color:#06403A">Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.</div>
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Die T&uuml;ren &ouml;ffnen Mitte November' : '&#128197; Der Unterricht startet am 1. November'}</div>
+        <div style="font-size:15px;line-height:1.55;color:#06403A">${zu
+          ? 'Wir arbeiten gerade an noch mehr <b>Live-Unterricht</b> und noch mehr <b>Flexibilit&auml;t</b> &ndash; damit du den Sprechclub noch &ouml;fter und noch freier nutzen kannst.'
+          : 'Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.'}</div>
       </td></tr>
     </table>
 
-    ${preisKasten}
+    ${zu ? '' : preisKasten}
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
-        <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
-        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
+        <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; ${zu ? 'Solange kannst du in Ruhe die Lernplattform nutzen' : 'Die Lernplattform ist sofort offen'}</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist die <b>Community-Mitgliedschaft</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick auf Premium.' : ''}</div>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">Platz sichern${rabatt ? ' &ndash; bis 31. Oktober' : ''}</a>
+    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Die Lernplattform ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">
@@ -180,7 +216,7 @@ export async function willkommenSenden(sb, lead) {
         sender: { name: 'Julia · deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' },
         to: [{ email, name: String(lead.name || vorname).slice(0, 120) }],
-        subject: 'Du musst nicht warten — der Sprechclub ist offen',
+        subject: willkommenBetreff(),
         htmlContent: willkommenHtml(vorname),
       }),
     });
