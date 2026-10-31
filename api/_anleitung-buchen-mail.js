@@ -130,7 +130,14 @@ export function anleitungHtml(name, email) {
   </td></tr>
 
   <tr><td align="center" style="padding:20px 30px 4px">
-    <a href="${SITE}/schuelerbereich" style="display:inline-block;background:#2DD4BF;color:#06403A;
+    <!-- Der Knopf fuehrt direkt in den Wochenplan, nicht auf die
+         Startseite des Schuelerbereichs. Julia, 31.10.2026: "Und jetzt
+         erste Stunde buchen für wohin?" — Genau: wer auf der
+         Startseite landet, muss den Weg aus Schritt 1 noch einmal
+         selbst gehen, obwohl der Knopf ihn abkuerzen sollte.
+         #kalender ist die Ansicht, die im Menue "Wochenplan" heisst;
+         nachgesehen, sie oeffnet wirklich die Wochenuebersicht. -->
+    <a href="${SITE}/schuelerbereich#kalender" style="display:inline-block;background:#2DD4BF;color:#06403A;
        font-family:${FF};font-weight:800;font-size:16.5px;text-decoration:none;padding:15px 32px;border-radius:999px">
       Jetzt erste Stunde buchen
     </a>
