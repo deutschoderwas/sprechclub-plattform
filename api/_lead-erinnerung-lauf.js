@@ -127,15 +127,24 @@ export async function erinnerungLauf(sb, { senden = false, max = MAX } = {}) {
     tage_bis_ende: tageBisEnde(),
   };
 
-  if (!senden) return { ok: true, vorschau: true, ...bilanz, beispiele: offen.slice(0, 5).map((o) => o.email) };
-  if (!process.env.BREVO_API_KEY) return { ok: false, grund: 'kein_brevo_schluessel', ...bilanz };
-
+  /* Der Betreff wird HIER gebildet, vor dem Probelauf-Ausstieg, und
+     geht mit in den Bericht. Vorher rechnete die Vorschau im Admin
+     sich ihren eigenen Satz zusammen ("Bis zum 31. Oktober — also
+     noch 0 Tage") und lag am letzten Tag daneben: verschickt wurde
+     laengst "Heute um Mitternacht schliessen die Tueren". Eine
+     Vorschau, die etwas anderes zeigt als das Verschickte, ist
+     schlimmer als keine. */
   const tage = tageBisEnde();
   const betreff = istLetzterTag()
     ? 'Heute um Mitternacht schließen die Türen'
     : tage === 1
       ? 'Nur noch morgen: der Rabatt läuft am 31. Oktober aus'
       : 'Noch ' + tage + ' Tage — danach ist der Rabatt weg';
+  bilanz.betreff = betreff;
+  bilanz.letzter_tag = istLetzterTag();
+
+  if (!senden) return { ok: true, vorschau: true, ...bilanz, beispiele: offen.slice(0, 5).map((o) => o.email) };
+  if (!process.env.BREVO_API_KEY) return { ok: false, grund: 'kein_brevo_schluessel', ...bilanz };
   let geschickt = 0, fehler = 0;
   const schiefgelaufen = [];
   for (const o of offen) {

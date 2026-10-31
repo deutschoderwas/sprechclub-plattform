@@ -1489,7 +1489,13 @@ window.erinnerungFenster = async function(){
     + zeile(j.premium_uebersprungen, 'haben Premium — bekommen <b>nichts</b>')
     + zeile(j.abgemeldet_uebersprungen, 'haben sich abgemeldet — übersprungen')
     + zeile(j.schon_bekommen, 'haben diese Mail schon')
-    + '<div style="font-size:13px;color:#6B7280;margin-top:12px">Im Text steht: „Bis zum 31. Oktober — also noch <b>' + j.tage_bis_ende + ' Tage</b>“. Die Zahl wird beim Verschicken ausgerechnet.</div>'
+    /* Nicht selbst zusammenreimen: der Betreff kommt aus demselben
+       Lauf, der ihn spaeter auch verschickt. Hier stand frueher ein
+       nachgebauter Satz, und am letzten Tag zeigte er "noch 0 Tage",
+       waehrend die Mail "Heute um Mitternacht schliessen die Tueren"
+       hiess. */
+    + '<div style="font-size:13px;color:#6B7280;margin-top:12px">Betreff: <b>' + esc(j.betreff || ('Noch ' + j.tage_bis_ende + ' Tage — danach ist der Rabatt weg')) + '</b>'
+      + (j.letzter_tag ? ' &middot; heute ist der letzte Tag, die Mail sagt das auch so.' : ' &middot; die Zahl wird beim Verschicken ausgerechnet.') + '</div>'
     + (j.beispiele && j.beispiele.length ? '<div style="font-size:12.5px;color:#6B7280;margin-top:8px">Zum Beispiel: ' + j.beispiele.map(esc).join(', ') + ' …</div>' : '')
     + '<div id="er-info" style="font-size:13.5px;margin-top:14px"></div>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'
