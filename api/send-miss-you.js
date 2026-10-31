@@ -78,7 +78,7 @@ export default async function handler(req, res) {
         sender: { name:'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name:'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email:p.email, name:p.name || undefined }],
-        subject: 'Ich vermisse dich im Club 💛',
+        subject: 'Wir vermissen dich im Club 💛',
         htmlContent: html,
       }),
     });
@@ -110,7 +110,7 @@ function brandedMissYouEmail({ vorname, site, planUrl }) {
 
         <tr><td style="padding:10px 30px 0;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
           <p style="margin:0 0 10px">Hallo ${esc(vorname)},</p>
-          <p style="margin:0 0 10px">ich habe gemerkt, dass du schon eine Weile nicht mehr im Unterricht warst – und ehrlich: <b>ich vermisse dich im Club!</b> 🥹</p>
+          <p style="margin:0 0 10px">uns ist aufgefallen, dass du schon eine Weile nicht mehr im Unterricht warst – und ehrlich: <b>wir vermissen dich im Club!</b> 🥹</p>
           <p style="margin:0 0 10px">Deutsch sprechen klappt am besten, wenn man dranbleibt. Komm einfach wieder in eine Stunde – in lockerer Runde, ohne Druck, mit ganz viel Spaß.</p>
         </td></tr>
 
@@ -128,7 +128,7 @@ function brandedMissYouEmail({ vorname, site, planUrl }) {
         </td></tr>
 
         <tr><td style="padding:16px 30px 4px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
-          Schreib mir gern kurz zurück, wenn du Fragen hast oder nicht weiterweißt – ich freue mich, von dir zu hören. 🥰<br><br>
+          Schreib uns gern kurz zurück, wenn du Fragen hast oder nicht weiterweißt – wir freuen uns, von dir zu hören. 🥰<br><br>
           Bis ganz bald im Club!<br><b>Julia</b> &amp; das deutschoderwas-Team
         </td></tr>
 

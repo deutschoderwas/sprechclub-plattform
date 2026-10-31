@@ -117,7 +117,7 @@ async function sendGoodbyeMail(email, name) {
     const vorname = (name || '').trim().split(' ')[0] || 'du';
     const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"></head>
 <body style="margin:0;padding:0;background:#FFF8E0">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0">Schade, dass du gehst – ich hoffe, wir sehen uns bald wieder im Sprechclub. 💛</div>
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0">Schade, dass du gehst – wir sehen uns hoffentlich bald wieder im Sprechclub. 💛</div>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:28px 14px"><tr><td align="center">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 12px 36px rgba(26,26,26,.10)">
       <tr><td style="height:6px;line-height:6px;font-size:0;background:#1A1A1A">&nbsp;</td></tr>
@@ -130,14 +130,14 @@ async function sendGoodbyeMail(email, name) {
       </td></tr>
       <tr><td style="padding:10px 30px 0;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
         <p style="margin:0 0 10px">Hallo ${esc(vorname)},</p>
-        <p style="margin:0 0 10px">oh schade, dass du gehst! Dein Abo ist beendet. Ich hoffe sehr, dass wir uns <b>bald wieder im Sprechclub</b> sehen. 💛</p>
+        <p style="margin:0 0 10px">oh schade, dass du gehst! Dein Abo ist beendet. Wir hoffen sehr, dass wir uns <b>bald wieder im Sprechclub</b> sehen. 💛</p>
         <p style="margin:0 0 10px">Du bist jederzeit herzlich willkommen zurück — die Tür steht dir immer offen.</p>
       </td></tr>
       <tr><td style="padding:8px 30px 4px">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;border:1px solid #F0E5D8;border-left:5px solid #7ED8EA;border-radius:16px">
           <tr><td style="padding:16px 20px;font-family:${ff};font-size:15px;line-height:1.6;color:#1A1A1A">
-            <b>Magst du mir kurz Feedback geben?</b><br>
-            Was hat dir gefallen, was können wir besser machen? <b>Antworte einfach auf diese E-Mail</b> — dein Feedback hilft mir riesig. 🙏
+            <b>Magst du uns kurz Feedback geben?</b><br>
+            Was hat dir gefallen, was können wir besser machen? <b>Antworte einfach auf diese E-Mail</b> — dein Feedback hilft uns riesig. 🙏
           </td></tr>
         </table>
       </td></tr>
@@ -369,8 +369,8 @@ async function sendPaymentMail(sub, inv) {
 
   <tr><td style="padding:10px 30px 24px">
     <p style="font-size:15.5px;line-height:1.65;margin:0">
-      Fragen? Antworte einfach auf diese Mail, ich lese sie selbst.<br>
-      <b>Julia</b> &#128156;
+      Fragen? Antworte einfach auf diese Mail. Wir lesen alle Nachrichten und beantworten sie.<br>
+      <b>Julia &amp; Team</b> &#128156;
     </p>
   </td></tr>
 
