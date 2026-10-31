@@ -21,7 +21,17 @@ export default async function handler(req, res) {
      naechsten Morgen gerade. Er verschiebt ausschliesslich nach hinten
      und fasst nur Kaeufe von vor dem 1. November an; danach laeuft er
      ins Leere. */
-  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben'];
+  /* 'tagesbericht' steht bewusst ganz hinten: Er zaehlt nur, was in der
+     Datenbank steht, und die ist erst richtig, nachdem
+     pruefe-mitgliedschaften mit Stripe abgeglichen hat.
+
+     Julia, 31.10.2026: "Du musst mir jeden Tag berichten per E-Mail,
+     was der Stand der Dinge ist ... so dass keine Menschen drin
+     bleiben, die nicht bezahlt haben." Die Mail aus dem Abgleich kommt
+     nur, wenn etwas passiert ist — an einem ruhigen Tag weiss man dann
+     nicht, ob nichts war oder ob der Lauf ausgefallen ist. Dieser
+     Bericht kommt jeden Morgen, auch wenn nichts war. */
+  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben', 'tagesbericht'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }
