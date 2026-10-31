@@ -98,9 +98,28 @@ export default async function handler(req, res) {
           continue;
         }
 
-        const { data: notiz } = await sb.from('email_log')
-          .insert({ user_id: p.id, kind: KENNUNG, ref: KENNUNG })
+        /* ref MUSS je Person verschieden sein: auf email_log liegt
+           UNIQUE(kind, ref). Hier stand erst die Kennung selbst — fuer
+           alle dieselbe. Beim echten Versand am 31.10.2026 ging genau
+           EINE Zeile durch, die anderen 109 wurden von der Bedingung
+           abgewiesen; weil der Fehler nicht geprueft wurde, ging die
+           Mail trotzdem raus. Niemand bekam sie doppelt, aber der
+           Schutz dagegen war wirkungslos: ein zweiter Lauf haette 109
+           Menschen dieselbe Einladung noch einmal geschickt.
+           Die 110 Zeilen wurden von Hand nachgetragen. */
+        const { data: notiz, error: notizFehler } = await sb.from('email_log')
+          .insert({ user_id: p.id, kind: KENNUNG, ref: String(p.id) })
           .select('id').maybeSingle();
+        if (notizFehler || !notiz) {
+          /* Kein Protokolleintrag, also auch keine Mail. Lieber eine
+             zu wenig als eine zweimal. */
+          bericht.fehler.push({
+            name: p.name || p.email,
+            fehler: 'Protokolleintrag fehlgeschlagen, deshalb NICHT gesendet: '
+              + ((notizFehler && notizFehler.message) || 'kein Eintrag zurueckgekommen'),
+          });
+          continue;
+        }
         try {
           await senden(p.email, p.name);
         } catch (e) {
