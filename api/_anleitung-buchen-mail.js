@@ -74,7 +74,7 @@ export function anleitungHtml(name, email) {
       So buchst du deine Stunden
     </h1>
     <p style="font-family:${FF};font-size:16px;line-height:1.65;margin:0 0 4px;color:#1A1A1A">
-      Hallo ${v}, ab heute l&auml;uft der Sprechclub. Du hast Premium, also kannst du so viele
+      Hallo ${v}, ab Sonntag, dem 1. November, l&auml;uft der Sprechclub. Du hast Premium, also kannst du so viele
       Stunden besuchen, wie du m&ouml;chtest &mdash; es wird dir nichts abgezogen, du suchst dir
       einfach aus, wann du sprechen willst. Hier steht in vier Schritten, wie es geht.
     </p>
