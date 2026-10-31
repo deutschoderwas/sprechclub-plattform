@@ -124,7 +124,7 @@ ul.liste li > span{flex:1;min-width:0}
     <div class="eyebrow">Deine Mitgliedschaft</div>
     <h1>Zwei Wege, <span class="hl">mitzumachen</span></h1>
     <p class="unter">Die Community läuft ab sofort — du buchst heute und legst sofort los.
-      Der offene Sprechclub startet am 1. November.</p>
+      <span id="pUnterClub">Der offene Sprechclub startet am 1. November.</span></p>
   </div>
 
   <div class="karten">
@@ -186,7 +186,7 @@ ul.liste li > span{flex:1;min-width:0}
 
   <div class="fuss">
     <b>Du bist dir nicht sicher?</b> Fang mit der Community an. Du hast sofort die ganze Plattform,
-    zahlst monatlich und kannst jederzeit kündigen. Wenn der Sprechclub am 1. November startet,
+    zahlst monatlich und kannst jederzeit kündigen. Wenn der Sprechclub wieder öffnet,
     wechselst du mit einem Klick — alles, was du schon hast, bleibt.
   </div>
 
@@ -353,7 +353,9 @@ function setzePremium(was){
   var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
   if (ph === 0) { f.textContent = 'Bis zu 60 % Rabatt · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
   else if (ph === 1) { f.textContent = proz + ' % Rabatt · nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
-  else if (ph === 3) { f.textContent = 'Anmeldung geschlossen'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Die Türen öffnen Mitte November — mit noch mehr Live-Unterricht und noch mehr Flexibilität. Trag dich jetzt ein, die Plätze sind begrenzt.'; }
+  else if (ph === 3) { var u = $('pUnterClub');
+    if (u) u.textContent = 'Der Sprechclub ist aktuell voll — neue Plätze gibt es ab Mitte November.';
+    f.textContent = 'Anmeldung geschlossen'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Die Türen öffnen Mitte November — mit noch mehr Live-Unterricht und noch mehr Flexibilität. Trag dich jetzt ein, die Plätze sind begrenzt.'; }
   else { f.textContent = 'Sprechclub läuft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen'; kl.textContent = 'Sichere Zahlung über Stripe · monatlich kündbar'; }
 }
 async function premiumKnopf(btn){

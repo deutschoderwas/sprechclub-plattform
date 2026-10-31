@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Der Sprechclub — endlich Deutsch sprechen</title>
-<meta name="description" content="Jeden Tag mit echten Menschen Deutsch sprechen, in kleinen Gruppen, mit einem Lehrer, der live verbessert. Start: 1. November.">
+<meta name="description" content="Jeden Tag mit echten Menschen Deutsch sprechen, in kleinen Gruppen, mit einem Lehrer, der live verbessert.">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="Der Sprechclub — endlich Deutsch sprechen">
-<meta property="og:description" content="Jeden Tag sprechen, in kleinen Gruppen, mit echten Menschen. Start: 1. November.">
+<meta property="og:description" content="Jeden Tag sprechen, in kleinen Gruppen, mit echten Menschen.">
 <meta property="og:image" content="https://www.deutschoderwas-club.de/start-bilder/13-echte-live-gruppenstunde.jpg">
 <link rel="icon" href="/start-bilder/01-deutschoderwas-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -780,12 +780,30 @@ function wartelisteSchalten(){
 
   var wl = document.getElementById('wl'); if (wl) wl.classList.add('an');
 
-  /* Der Premium-Knopf hiess bis zuletzt "Sofort anmelden" und fuehrte
-     in die Stripe-Kasse. Ab dem 1.11. gibt es nichts sofort
-     anzumelden — er fuehrt in die Warteliste. */
+  /* Julia, 31.10.2026, ueber diese Seite: "hier auch nur die
+     Warteliste". Es reichte nicht, den einen Premium-Knopf
+     umzuhaengen: oben im Hero, unten im Schlussabsatz und in der
+     Klebeleiste stand weiter "Sofort anmelden", und der Hero-Knopf
+     trug sogar noch "49 € statt 99 €" — ein Preis, den es ab heute
+     nicht mehr gibt. Deshalb werden hier ALLE Knoepfe eingesammelt,
+     die in die Kasse oder zum Preis fuehren. */
   if (tuerenZu()) {
-    var kp = document.getElementById('kaufPremium');
-    if (kp) { kp.textContent = '\u{1F514} Auf die Warteliste'; kp.onclick = zurWarteliste; }
+    Array.prototype.forEach.call(document.querySelectorAll('button.knopf'), function(b){
+      var oc = b.getAttribute('onclick') || '';
+      if (!/zumPreis|kaufen\('premium'\)/.test(oc)) return;
+      b.removeAttribute('onclick');
+      b.innerHTML = '\u{1F514} Auf die Warteliste';
+      b.onclick = zurWarteliste;
+    });
+    /* 'section.ende', nicht '.ende': weiter oben gibt es ein
+       <div class="ende schmal"> um den Wochenplan, und genau dessen
+       Absatz hat querySelector zuerst erwischt — der Wochenplan-Text
+       wurde durch den Wartelisten-Satz ersetzt. Beim Nachsehen im
+       Browser aufgefallen. */
+    var ende = document.querySelector('section.ende .nach-h2');
+    if (ende) ende.textContent = 'Der Sprechclub ist aktuell voll. Neue Plätze gibt es ab '
+      + 'Mitte November — trag dich jetzt in die Warteliste ein, dann wirst du sofort '
+      + 'informiert und bekommst einen Platz.';
   }
 }
 
@@ -838,7 +856,8 @@ function wartelisteSenden(){
 }
 
 
-function zumPreis(){ document.getElementById('preis').scrollIntoView({behavior:'smooth', block:'start'}); }
+function zumPreis(){
+  if (typeof tuerenZu === 'function' && tuerenZu()) { zurWarteliste(); return; } document.getElementById('preis').scrollIntoView({behavior:'smooth', block:'start'}); }
 
 /* ---------- Preise ----------
    Die Zahlen stehen auch hier, damit die Seite ohne Nachladen steht.
