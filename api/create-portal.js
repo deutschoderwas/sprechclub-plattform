@@ -33,7 +33,16 @@ export default async function handler(req, res) {
     if (uErr || !user) return res.status(401).json({ error: 'not_authenticated' });
 
     // Stripe-Kundennummer holen — oder einmalig über die E-Mail in Stripe finden & merken.
-    const { data: prof } = await sb.from('profiles').select('stripe_customer_id,email').eq('id', user.id).maybeSingle();
+    const { data: prof } = await sb.from('profiles').select('stripe_customer_id,email,bezahlt_email').eq('id', user.id).maybeSingle();
+    /* Zahlt jemand anderes, fuehrt das Portal in dessen Stripe-Konto:
+       seine Karte, seine Rechnungen, sein Kuendigen-Knopf. Das geht
+       niemanden sonst etwas an — auch nicht die Person, fuer die
+       bezahlt wird. (31.10.2026) */
+    if (prof && prof.bezahlt_email) {
+      return res.status(403).json({ error: 'fremder_zahler',
+        hinweis: 'Dein Zugang wird über ' + prof.bezahlt_email + ' bezahlt. '
+          + 'Das Abo verwaltet, wer es abgeschlossen hat.' });
+    }
     let customerId = prof?.stripe_customer_id || null;
     if (!customerId) {
       const email = prof?.email || user.email;

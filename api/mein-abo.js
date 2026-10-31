@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     if (uErr || !user) return res.status(401).json({ error: 'not_authenticated' });
 
     const { data: prof } = await sb.from('profiles')
-      .select('stripe_customer_id,email,tier,tier_ab,status,pass_until,credits,abo_start,abo_ende,abo_stripe_status,abo_plan,bezahlt_von,bezahlt_hinweis')
+      .select('stripe_customer_id,email,tier,tier_ab,status,pass_until,credits,abo_start,abo_ende,abo_stripe_status,abo_plan,bezahlt_von,bezahlt_hinweis,bezahlt_email')
       .eq('id', user.id).maybeSingle();
 
     const basis = {
@@ -105,6 +105,15 @@ export default async function handler(req, res) {
           if (z.abo_ende) ende = Date.parse(z.abo_ende);
         }
       }
+      /* Zahlt jemand anderes ueber Stripe — Tetiana Bublik, 31.10.2026:
+         ihr Mann hat bezahlt —, gehoert das Zahlungskonto ihm. Wir
+         zeigen, bis wann es laeuft und wer zahlt, aber keinen Knopf,
+         der in sein Stripe-Konto fuehrt: dort stuende seine Karte, und
+         sein Abo liesse sich von hier aus kuendigen. */
+      if (prof && prof.bezahlt_email && !zahler) {
+        zahler = prof.bezahlt_email;
+        if (!hinweis) hinweis = 'Dein Zugang wird über ' + prof.bezahlt_email + ' bezahlt.';
+      }
       if (!ende && !hinweis) return null;
 
       return {
@@ -132,7 +141,7 @@ export default async function handler(req, res) {
       };
     }
 
-    if (prof && (prof.abo_stripe_status === 'von_hand' || prof.bezahlt_von)) {
+    if (prof && (prof.abo_stripe_status === 'von_hand' || prof.bezahlt_von || prof.bezahlt_email)) {
       const h = await vonHand();
       if (h) return res.status(200).json(Object.assign(h, basis));
     }

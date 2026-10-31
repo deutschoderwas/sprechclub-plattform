@@ -2715,7 +2715,7 @@ function bdayLabel(p){ if(!p.birthday) return '<span class="muted">–</span>'; 
 async function authToken(){ const { data } = await sb.auth.getSession(); return data?.session?.access_token || ''; }
 
 async function loadSchueler(){
-  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stripe_customer_id,stufe,amanda_minuten,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am,bezahlt_von,bezahlt_hinweis').limit(2000);
+  const { data } = await sb.from('profiles').select('id,name,email,credits,status,tier,tier_ab,birthday,inactive_until,level,notes,started_at,target_level,native_language,goal,is_admin,is_teacher,alt_schueler,created_at,pass_until,stripe_customer_id,stufe,amanda_minuten,abo_start,abo_ende,abo_gekuendigt_am,abo_stripe_status,abo_plan,abo_geprueft_am,bezahlt_von,bezahlt_hinweis,bezahlt_email').limit(2000);
   SCHUELER = data || [];
   document.getElementById('schueler').innerHTML = `
     <div class="card" style="margin-bottom:16px;background:#FFFCF5">
@@ -2941,7 +2941,7 @@ function aboBlock(p){
      zahlt. Julia, 18.10.2026 über Volha und Arina. Das muss ganz oben
      stehen: wer diese Zeile nicht sieht, sucht die Zahlung in Stripe
      und findet sie nie. */
-  var vonHand = p.abo_stripe_status === 'von_hand' || !!p.bezahlt_von;
+  var vonHand = p.abo_stripe_status === 'von_hand' || !!p.bezahlt_von || !!p.bezahlt_email;
 
   var z = [];
   var name = p.tier==='community' ? 'Community'
@@ -2972,6 +2972,12 @@ function aboBlock(p){
   }
   if (vonHand && p.bezahlt_hinweis){
     z.push(['Von Hand', '<b style="color:#8A3B00">'+esc(p.bezahlt_hinweis)+'</b>']);
+  }
+  /* Jemand anderes zahlt ueber Stripe. Ohne diese Zeile sucht man die
+     Zahlung unter ihrer Adresse und findet nichts. (31.10.2026) */
+  if (p.bezahlt_email){
+    z.push(['Bezahlt von', '<b style="color:#8A3B00">'+esc(p.bezahlt_email)+'</b> '
+      + '<span class="muted">— Abo l\u00e4uft auf diese Adresse, Stripe-Knopf im Konto ist aus</span>']);
   }
   if (p.abo_stripe_status){
     var klar = { active:'läuft', trialing:'läuft', past_due:'Zahlung offen', canceled:'bei Stripe beendet',
