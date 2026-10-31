@@ -112,8 +112,8 @@ export function anleitungHtml(name, email) {
       <tr><td style="padding:16px 18px;font-family:${FF}">
         <div style="font-weight:800;font-size:15.5px;color:#0F766E;margin-bottom:6px">Du musst an nichts denken</div>
         <div style="font-size:15px;line-height:1.65;color:#3f4650">
-          Eine Stunde vor dem Unterricht bekommst du von mir eine E-Mail mit dem Link, der dich direkt
-          in deinen Klassenraum bringt. Und jeden Sonntagabend schicke ich dir eine &Uuml;bersicht,
+          Eine Stunde vor dem Unterricht bekommst du von uns eine E-Mail mit dem Link, der dich direkt
+          in deinen Klassenraum bringt. Und jeden Sonntagabend schicken wir dir eine &Uuml;bersicht,
           welche Stunden du f&uuml;r die neue Woche gebucht hast.
         </div>
       </td></tr>

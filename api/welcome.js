@@ -73,7 +73,7 @@ async function sendWelcome(email, name) {
         </table>
       </td></tr>
       <tr><td style="padding:16px 32px 22px">
-        <p style="font-size:15px;line-height:1.6;margin:0">Bis bald im Club &amp; viel Spaß beim Deutschlernen,<br><strong>Julia</strong> 💛</p>
+        <p style="font-size:15px;line-height:1.6;margin:0">Bis bald im Club &amp; viel Spaß beim Deutschlernen,<br><strong>Julia &amp; Team</strong> 💛</p>
       </td></tr>
       <tr><td style="background:#1A1A1A;padding:18px 32px;text-align:center">
         <p style="font-size:12px;line-height:1.6;color:#b9b9b9;margin:0">deutschoderwas · <a href="https://deutschoderwas.de/#impressum" style="color:#FFCE00;text-decoration:none">Impressum</a></p>

@@ -128,8 +128,8 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
 
   <tr><td style="padding:0 30px 24px">
     <p style="font-size:15.5px;line-height:1.65;margin:0">
-      Fragen? Antworte einfach auf diese Mail, ich lese sie selbst.<br>
-      <b>Julia</b> &#128156;
+      Fragen? Antworte einfach auf diese Mail. Wir lesen alle Nachrichten und beantworten sie.<br>
+      <b>Julia &amp; Team</b> &#128156;
     </p>
   </td></tr>
 

@@ -197,7 +197,7 @@ export function planHtml(vorname, liste, site) {
   </td></tr>
 
   <tr><td style="padding:16px 30px 24px;font-family:${ff};font-size:15.5px;line-height:1.6;color:#1A1A1A">
-    Bis bald im Club,<br><b>Julia</b> 💛
+    Bis bald im Club,<br><b>Julia &amp; Team</b> 💛
   </td></tr>
 
   <tr><td style="background:#1A1A1A;padding:16px 30px;text-align:center">

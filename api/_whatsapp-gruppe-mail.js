@@ -77,7 +77,7 @@ export function gruppeHtml(name, email) {
   <p style="${p}">Hallo ${v},</p>
 
   <p style="${p}">
-    ich wollte dir nur kurz Bescheid sagen, falls du noch nicht drin bist: Wir
+    wir wollten dir nur kurz Bescheid sagen, falls du noch nicht drin bist: Wir
     haben neben dem Chat auf der Plattform auch eine WhatsApp-Gruppe. Wenn es
     mal schnell gehen muss, bist du da am schnellsten dran.
   </p>
