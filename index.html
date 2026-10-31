@@ -643,12 +643,36 @@ html[data-ph="1"] a.ph-nur[data-ph="1+"],html[data-ph="2"] a.ph-nur[data-ph="1+"
 html[data-ph="1"] button.ph-nur[data-ph="1+"],html[data-ph="2"] button.ph-nur[data-ph="1+"]{display:inline-flex}
 html[data-ph="1"] span.ph-nur[data-ph="1+"],html[data-ph="2"] span.ph-nur[data-ph="1+"]{display:inline}
 .ph-kauf{margin-top:14px}
-.ph-kauf .btn{margin-top:10px}</style>
+.ph-kauf .btn{margin-top:10px}
+/* Phase 3: was nur gilt, solange die Tueren offen sind, verschwindet;
+   was nur in der geschlossenen Zeit gilt, erscheint. */
+.zu-nur{display:none}
+html[data-ph="3"] .zu-nur{display:block}
+html[data-ph="3"] button.zu-nur,html[data-ph="3"] a.zu-nur{display:inline-flex}
+html[data-ph="3"] span.zu-nur{display:inline}
+html[data-ph="3"] .zu-weg{display:none !important}</style>
 <script>/* Phase 0 = vor dem 1.10. (Warteliste) · 1 = Anmeldung offen, Willkommenspreis · 2 = ab 1.11., regulaerer Preis.
    Steht als Attribut am <html>, damit das CSS ohne Flackern umschaltet. */
-(function(){var n=Date.now();
-document.documentElement.setAttribute('data-ph',
-  n<Date.parse('2026-10-01T00:00:00+02:00')?'0':(n<Date.parse('2026-11-01T00:00:00+01:00')?'1':'2'));})();</script>
+/* Phase 3 = die Tueren sind zu. Julia, 31.10.2026: "Am 31.10 um
+   Mitternacht schliesse ich die Tueren fuer den Sprechclub" und "auf
+   der Webseite muessen wir bei Premium die sofortige Moeglichkeit
+   sich anzumelden erstmal verstecken und NUR die Warteliste
+   anzeigen, so dass wir die Leute sammeln koennen".
+
+   Dafuer braucht es keine neue Mechanik: Phase 3 faellt auf das
+   Standard-CSS zurueck, und das zeigt genau die Warteliste
+   ([data-ph="0"]) und versteckt die Kaufknoepfe ([data-ph="1+"]).
+
+   WENN DIE TUEREN WIEDER AUFGEHEN: unten TUEREN_AUF auf das Datum
+   setzen (Mitte November), dann springt die Seite von selbst auf
+   Phase 2 — Anmeldung offen zum regulaeren Preis. Dasselbe Datum
+   steht in sparPhase() weiter unten; beide lesen window.TUEREN_AUF. */
+window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+(function(){var n=Date.now(), auf=window.TUEREN_AUF;
+var ph = n<Date.parse('2026-10-01T00:00:00+02:00') ? '0'
+       : n<Date.parse('2026-11-01T00:00:00+01:00') ? '1'
+       : (auf && n>=auf) ? '2' : '3';
+document.documentElement.setAttribute('data-ph', ph);})();</script>
 </head>
 <body>
 <div class="flagbar"></div>
@@ -689,7 +713,7 @@ document.documentElement.setAttribute('data-ph',
 <div class="rhero-txt">
 <span class="reyebrow" data-i18n="nb101">Der Sprechclub von deutschoderwas</span>
 <h1 data-i18n="x02">Deutsch <span class="markde">sprechen</span> lernt man nur durch Sprechen.</h1>
-<div class="rangebot">
+<div class="rangebot zu-weg">
 <span class="ra-l" data-i18n="kb1">👑 Sprechclub · Frühbucher</span>
 <div class="ra-p"><b>49 €</b><s>99 €</s><i>−50 %</i></div>
 </div>
@@ -697,7 +721,9 @@ document.documentElement.setAttribute('data-ph',
 <p class="rcafe">Wie ein <b>Sprachcafé</b> — nur im geschlossenen digitalen Raum.</p>
 <ul class="rchips"><li><i>🗣</i><span data-i18n="nb103">Mit echten Menschen sprechen</span></li><li><i>🕖</i><span data-i18n="nb104">Täglich von Mo bis So</span></li><li><i>✏️</i><span data-i18n="nb105">Lehrer verbessert live</span></li></ul>
 <div class="rcta">
-<button type="button" class="btn btn-kauf btn-lg" data-i18n="nb106" onclick="zuPreisen()">Platz im Sprechclub sichern</button>
+<button type="button" class="btn btn-kauf btn-lg zu-weg" data-i18n="nb106" onclick="zuPreisen()">Platz im Sprechclub sichern</button>
+<button type="button" class="btn btn-kauf btn-lg zu-nur" onclick="zurWarteliste('Premium')">🔔 Auf die Warteliste</button>
+<span class="ra-f zu-nur">Die Türen öffnen Mitte November — die Plätze sind begrenzt.</span>
 <a class="btn btn-o btn-lg" href="#ablauf" data-i18n="nb107">So funktioniert's</a>
 </div>
 <div class="rcount" id="rcount" hidden>
@@ -1334,8 +1360,8 @@ document.addEventListener('DOMContentLoaded', ekFuellen);
 @media(max-width:560px){.lcf .r{grid-template-columns:1fr}}
 </style>
 
-<section class="wl-sec" id="warteliste"><div class="wl-card"><div class="ph-nur" data-ph="0"><div class="wl-badge" data-i18n="x56">🚀 Community <b>ab sofort</b> · Premium <b>ab 1. November</b></div><h2 data-i18n="x57">Sei von Anfang an dabei</h2><p data-i18n="nk12">Die Warteliste ist für <b>Premium</b> — das startet am 1. November, und die Plätze sind begrenzt. Trag dich ein: Du bist <b>vor allen anderen dabei</b> und wir melden uns persönlich bei dir.</p></div><div class="ph-nur" data-ph="1+"><div class="wl-badge" data-i18n="phb">👑 Sprechclub · <b>Anmeldung offen</b></div><h2 data-i18n="pht">Sichere dir deinen Platz</h2><p data-i18n="php">Endlich Deutsch mit echten Menschen sprechen — täglich von Montag bis Sonntag, zu Themen, die wirklich interessieren. Ein Lehrer hört zu und verbessert dich direkt im Gespräch.</p><div class="ph-kauf"><button type="button" class="btn btn-kauf btn-lg" data-i18n="phc" onclick="zuPreisen()">👑 Jetzt Premium sichern</button></div><div class="nl-box"><h3 data-i18n="nlt">Keine Neuigkeiten mehr verpassen</h3><p data-i18n="nlp">Trag dich ein und sei die Erste, die Neuigkeiten von Julia bekommt.</p><form class="nl-form" onsubmit="return nlSenden(event)"><input type="email" name="nlmail" required placeholder="deine@e-mail.de" aria-label="E-Mail"><button type="submit" class="btn btn-kauf" data-i18n="nlc">Eintragen</button></form><div class="nl-ok" hidden data-i18n="nlok">🎉 Danke! Du stehst auf der Liste.</div></div></div><div class="wl-jetzt"><div><b data-i18n="nk13">Die Community musst du nicht abwarten.</b><span data-i18n="nk6">Community · 16 € im Monat · 12 € bei jährlicher Zahlung · jederzeit kündbar</span></div><button type="button" class="btn btn-kauf" data-i18n="nb01" onclick="zuPreisen()">Mitglied werden</button></div><details class="wl-auf ph-nur" data-ph="0"><summary data-i18n="x60">🔔 Jetzt auf die Warteliste →</summary><form class="wl-form" onsubmit="return wlSubmit(event)"><label data-i18n="x59">Woran hast du Interesse?</label>
-<div class="wl-levels wl-tarif"><label><input type="radio" name="wltarif" value="Premium" checked>Premium · Willkommenspreis 49 €/Monat oder 39 €/Monat im Jahresabo · Anmeldung ab 1.10.</label></div>
+<section class="wl-sec" id="warteliste"><div class="wl-card"><div class="ph-nur" data-ph="0"><div class="wl-badge" data-i18n="zu01">🔒 Sprechclub · <b>Anmeldung geschlossen</b></div><h2 data-i18n="zu02">Die Türen öffnen <span class="hl-t">Mitte November</span></h2><p data-i18n="zu03">Wir arbeiten gerade an noch mehr <b>Flexibilität</b> für euch — damit ihr den Sprechclub noch öfter und noch freier nutzen könnt. Trag dich jetzt schon in die Warteliste ein, dann bekommst du als Erste einen Platz. Die Plätze sind immer begrenzt.</p></div><div class="ph-nur" data-ph="1+"><div class="wl-badge" data-i18n="phb">👑 Sprechclub · <b>Anmeldung offen</b></div><h2 data-i18n="pht">Sichere dir deinen Platz</h2><p data-i18n="php">Endlich Deutsch mit echten Menschen sprechen — täglich von Montag bis Sonntag, zu Themen, die wirklich interessieren. Ein Lehrer hört zu und verbessert dich direkt im Gespräch.</p><div class="ph-kauf"><button type="button" class="btn btn-kauf btn-lg" data-i18n="phc" onclick="zuPreisen()">👑 Jetzt Premium sichern</button></div><div class="nl-box"><h3 data-i18n="nlt">Keine Neuigkeiten mehr verpassen</h3><p data-i18n="nlp">Trag dich ein und sei die Erste, die Neuigkeiten von Julia bekommt.</p><form class="nl-form" onsubmit="return nlSenden(event)"><input type="email" name="nlmail" required placeholder="deine@e-mail.de" aria-label="E-Mail"><button type="submit" class="btn btn-kauf" data-i18n="nlc">Eintragen</button></form><div class="nl-ok" hidden data-i18n="nlok">🎉 Danke! Du stehst auf der Liste.</div></div></div><div class="wl-jetzt"><div><b data-i18n="nk13">Die Community musst du nicht abwarten.</b><span data-i18n="nk6">Community · 16 € im Monat · 12 € bei jährlicher Zahlung · jederzeit kündbar</span></div><button type="button" class="btn btn-kauf" data-i18n="nb01" onclick="zuPreisen()">Mitglied werden</button></div><details class="wl-auf ph-nur" data-ph="0"><summary data-i18n="x60">🔔 Jetzt auf die Warteliste →</summary><form class="wl-form" onsubmit="return wlSubmit(event)"><label data-i18n="x59">Woran hast du Interesse?</label>
+<div class="wl-levels wl-tarif"><label><input type="radio" name="wltarif" value="Premium" checked>Premium · der Sprechclub. Die Anmeldung öffnet Mitte November — du hörst als Erste davon.</label></div>
 <label data-i18n="wl4">Dein Niveau</label><div class="wl-levels"><label><input type="radio" name="wlniveau" value="A2">A2</label><label><input type="radio" name="wlniveau" value="B1">B1</label><label><input type="radio" name="wlniveau" value="B2">B2</label><label><input type="radio" name="wlniveau" value="C1">C1</label><label><input type="radio" name="wlniveau" value="C2">C2</label></div><label data-i18n="wl5">Wo hast du noch Schwierigkeiten?</label><textarea name="wlschwierigkeiten"></textarea><label data-i18n="wl6">Mehr Fragen? (optional)</label><textarea name="wlmehr"></textarea><label data-i18n="wl7">Dein Name</label><input type="text" name="wlname" required><label data-i18n="wl8">Deine E-Mail</label><input type="email" name="wlemail" required><label data-i18n="wl9">Deine WhatsApp-Nummer</label><input type="text" name="wlwhatsapp" required><button type="submit" class="btn btn-primary btn-lg wl-submit" data-i18n="x60">🔔 Jetzt auf die Warteliste →</button></form><div class="wl-ok" hidden data-i18n="x61">🎉 Danke! Du stehst auf der Warteliste. Wir melden uns persönlich bei dir, sobald dein Paket startet.</div></details><div class="wl-alt"><span data-i18n="nk14">Lieber sofort loslegen?</span> <a href="#" data-i18n="nk15" onclick="zuPreisen();return false">Community für 16 € im Monat →</a></div></div></section><footer>
 <p class="frecht">
 <a href="https://www.deutschoderwas.de" data-i18n="nb53">Hauptseite</a>
@@ -1376,8 +1402,8 @@ document.addEventListener('DOMContentLoaded', ekFuellen);
 </div>
 <div class="toast" id="toast"></div>
 <!-- Preisfenster -->
-<div class="preise-win" id="preiseWin"><div class="pw-top"><div class="pw-brand">deutschoderwas <span>club</span></div><button class="pw-x" aria-label="Schließen" onclick="closePreise()">✕</button></div><div class="pw-body"><div id="pwSlot"></div><div class="wl-vor ph-nur" data-ph="0"><h3 data-i18n="nk16">Premium interessiert dich?</h3><p data-i18n="nk17">Dann trag dich hier ein — Premium startet am 1. November und die Plätze sind begrenzt.</p></div><section class="wl-sec wl-imfenster" id="warteliste-preise"><div class="wl-card"><div class="ph-nur" data-ph="0"><div class="wl-badge" data-i18n="x56">🚀 Community <b>ab sofort</b> · Premium <b>ab 1. November</b></div><h2 data-i18n="x57">Sei von Anfang an dabei</h2><p data-i18n="nk12">Die Warteliste ist für <b>Premium</b> — das startet am 1. November, und die Plätze sind begrenzt. Trag dich ein: Du bist <b>vor allen anderen dabei</b> und wir melden uns persönlich bei dir.</p></div><div class="ph-nur" data-ph="1+"><div class="wl-badge" data-i18n="phb">👑 Sprechclub · <b>Anmeldung offen</b></div><h2 data-i18n="pht">Sichere dir deinen Platz</h2><p data-i18n="php">Endlich Deutsch mit echten Menschen sprechen — täglich von Montag bis Sonntag, zu Themen, die wirklich interessieren. Ein Lehrer hört zu und verbessert dich direkt im Gespräch.</p><div class="ph-kauf"><button type="button" class="btn btn-kauf btn-lg" data-i18n="phc" onclick="zuPreisen()">👑 Jetzt Premium sichern</button></div><div class="nl-box"><h3 data-i18n="nlt">Keine Neuigkeiten mehr verpassen</h3><p data-i18n="nlp">Trag dich ein und sei die Erste, die Neuigkeiten von Julia bekommt.</p><form class="nl-form" onsubmit="return nlSenden(event)"><input type="email" name="nlmail" required placeholder="deine@e-mail.de" aria-label="E-Mail"><button type="submit" class="btn btn-kauf" data-i18n="nlc">Eintragen</button></form><div class="nl-ok" hidden data-i18n="nlok">🎉 Danke! Du stehst auf der Liste.</div></div></div><div class="wl-jetzt"><div><b data-i18n="nk13">Die Community musst du nicht abwarten.</b><span data-i18n="nk6">Community · 16 € im Monat · 12 € bei jährlicher Zahlung · jederzeit kündbar</span></div><button type="button" class="btn btn-kauf" data-i18n="nb01" onclick="zuPreisen()">Mitglied werden</button></div><div class="ph-nur" data-ph="0"><form class="wl-form" onsubmit="return wlSubmit(event)"><label data-i18n="x59">Woran hast du Interesse?</label>
-<div class="wl-levels wl-tarif"><label><input type="radio" name="wltarif" value="Premium" checked>Premium · Willkommenspreis 49 €/Monat oder 39 €/Monat im Jahresabo · Anmeldung ab 1.10.</label></div>
+<div class="preise-win" id="preiseWin"><div class="pw-top"><div class="pw-brand">deutschoderwas <span>club</span></div><button class="pw-x" aria-label="Schließen" onclick="closePreise()">✕</button></div><div class="pw-body"><div id="pwSlot"></div><div class="wl-vor ph-nur" data-ph="0"><h3 data-i18n="zu04">Premium interessiert dich?</h3><p data-i18n="zu05">Die Anmeldung ist gerade geschlossen — Mitte November öffnen wir wieder, mit noch mehr Flexibilität. Trag dich hier ein, dann bist du als Erste dran. Die Plätze sind begrenzt.</p></div><section class="wl-sec wl-imfenster" id="warteliste-preise"><div class="wl-card"><div class="ph-nur" data-ph="0"><div class="wl-badge" data-i18n="zu01">🔒 Sprechclub · <b>Anmeldung geschlossen</b></div><h2 data-i18n="zu02">Die Türen öffnen <span class="hl-t">Mitte November</span></h2><p data-i18n="zu03">Wir arbeiten gerade an noch mehr <b>Flexibilität</b> für euch — damit ihr den Sprechclub noch öfter und noch freier nutzen könnt. Trag dich jetzt schon in die Warteliste ein, dann bekommst du als Erste einen Platz. Die Plätze sind immer begrenzt.</p></div><div class="ph-nur" data-ph="1+"><div class="wl-badge" data-i18n="phb">👑 Sprechclub · <b>Anmeldung offen</b></div><h2 data-i18n="pht">Sichere dir deinen Platz</h2><p data-i18n="php">Endlich Deutsch mit echten Menschen sprechen — täglich von Montag bis Sonntag, zu Themen, die wirklich interessieren. Ein Lehrer hört zu und verbessert dich direkt im Gespräch.</p><div class="ph-kauf"><button type="button" class="btn btn-kauf btn-lg" data-i18n="phc" onclick="zuPreisen()">👑 Jetzt Premium sichern</button></div><div class="nl-box"><h3 data-i18n="nlt">Keine Neuigkeiten mehr verpassen</h3><p data-i18n="nlp">Trag dich ein und sei die Erste, die Neuigkeiten von Julia bekommt.</p><form class="nl-form" onsubmit="return nlSenden(event)"><input type="email" name="nlmail" required placeholder="deine@e-mail.de" aria-label="E-Mail"><button type="submit" class="btn btn-kauf" data-i18n="nlc">Eintragen</button></form><div class="nl-ok" hidden data-i18n="nlok">🎉 Danke! Du stehst auf der Liste.</div></div></div><div class="wl-jetzt"><div><b data-i18n="nk13">Die Community musst du nicht abwarten.</b><span data-i18n="nk6">Community · 16 € im Monat · 12 € bei jährlicher Zahlung · jederzeit kündbar</span></div><button type="button" class="btn btn-kauf" data-i18n="nb01" onclick="zuPreisen()">Mitglied werden</button></div><div class="ph-nur" data-ph="0"><form class="wl-form" onsubmit="return wlSubmit(event)"><label data-i18n="x59">Woran hast du Interesse?</label>
+<div class="wl-levels wl-tarif"><label><input type="radio" name="wltarif" value="Premium" checked>Premium · der Sprechclub. Die Anmeldung öffnet Mitte November — du hörst als Erste davon.</label></div>
 <label data-i18n="wl4">Dein Niveau</label><div class="wl-levels"><label><input type="radio" name="wlniveau" value="A2">A2</label><label><input type="radio" name="wlniveau" value="B1">B1</label><label><input type="radio" name="wlniveau" value="B2">B2</label><label><input type="radio" name="wlniveau" value="C1">C1</label><label><input type="radio" name="wlniveau" value="C2">C2</label></div><label data-i18n="wl5">Wo hast du noch Schwierigkeiten?</label><textarea name="wlschwierigkeiten"></textarea><label data-i18n="wl6">Mehr Fragen? (optional)</label><textarea name="wlmehr"></textarea><label data-i18n="wl7">Dein Name</label><input type="text" name="wlname" required><label data-i18n="wl8">Deine E-Mail</label><input type="email" name="wlemail" required><label data-i18n="wl9">Deine WhatsApp-Nummer</label><input type="text" name="wlwhatsapp" required><button type="submit" class="btn btn-primary btn-lg wl-submit" data-i18n="x60">🔔 Jetzt auf die Warteliste →</button></form><div class="wl-ok" hidden data-i18n="x61">🎉 Danke! Du stehst auf der Warteliste. Wir melden uns persönlich bei dir, sobald dein Paket startet.</div></div><div class="wl-alt"><span data-i18n="nk14">Lieber sofort loslegen?</span> <a href="#" data-i18n="nk15" onclick="zuPreisen();return false">Community für 16 € im Monat →</a></div></div></section></div></div><style>.co-bg{position:fixed;inset:0;z-index:820;display:none;background:rgba(15,12,8,.55);overflow-y:auto;padding:22px 14px}.co-bg.open{display:block}.co-win{max-width:560px;margin:20px auto;background:#FFF8E0;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.4);overflow:hidden}.co-top{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid #EADFC6}.co-brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#161616}.co-brand span{color:#1990A4}.co-x{width:40px;height:40px;border-radius:50%;border:none;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.14);font-size:18px;cursor:pointer;color:#161616}.co-lock{text-align:center;font-weight:800;font-size:15px;color:#10627A;padding:16px 20px 2px}.co-sub{text-align:center;color:#6B7280;font-size:13px;font-weight:600;padding:2px 22px 6px}.co-embed{background:#fff;margin:10px 16px;border-radius:16px;padding:6px;min-height:220px}.co-trust{text-align:center;color:#6B7280;font-size:12.5px;font-weight:600;padding:4px 20px 20px}</style><div class="co-bg" id="checkoutModal"><div class="co-win"><div class="co-top"><div class="co-brand">deutschoderwas <span>club</span></div><button class="co-x" aria-label="Schließen" onclick="closeEmbedded()">✕</button></div><div class="co-lock" data-i18n="co1">🔒 Sichere Bezahlung</div><div class="co-sub" data-i18n="co2">Deine Zahlung läuft verschlüsselt über Stripe.</div><div class="co-embed" id="stripe-embed"></div><div class="co-trust" data-i18n="co3">SSL-verschlüsselt · über Stripe · Ratenzahlung mit Klarna möglich</div></div></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="config.js"></script>
@@ -2502,7 +2528,10 @@ r.addEventListener('animationend',function(e){if(e.target===r)r.style.animation=
 </style>
 <script>
 var SPAR={auf:Date.parse('2026-10-01T00:00:00+02:00'),ende:Date.parse('2026-11-01T00:00:00+01:00')};
-function sparPhase(){var n=Date.now();return n<SPAR.auf?0:(n<SPAR.ende?1:2);}
+/* 0 = vor dem 1.10., 1 = Oktober mit Willkommenspreis, 2 = offen zum
+   regulaeren Preis, 3 = Tueren zu (ab 1.11., bis window.TUEREN_AUF). */
+function sparPhase(){var n=Date.now(),auf=window.TUEREN_AUF;
+  return n<SPAR.auf?0:(n<SPAR.ende?1:((auf&&n>=auf)?2:3));}
 function premiumAnzeigen(j){
   var ph=sparPhase(),$=function(i){return document.getElementById(i)};
   if(!$('preisP'))return;
@@ -2513,6 +2542,7 @@ function premiumAnzeigen(j){
      nov  = was ab dem 1.11. wirklich verlangt wird: monatlich 99 €,
             im Jahresabo 83 € (999 € geteilt durch 12) */
   var spar=j?39:49, reg=99, nov=j?83:99;
+  var zu = (ph===3);
   $('preisP').textContent=(ph<2?spar:nov)+' €';
   $('altP').textContent=reg+' €';
   /* Rabatt in Prozent, aus den Preisen gerechnet — nie von Hand gepflegt.
@@ -2526,10 +2556,19 @@ function premiumAnzeigen(j){
   var b=$('btnP'),f=$('feinP'),bd=$('badgeP');
   if(ph===0){bd.textContent='🎉 Bis zu 60 % Rabatt · Anmeldung ab 1. Oktober';b.className='np-btn np-btn-warte';b.textContent='🔔 Auf die Warteliste – Anmeldung ab 1.10.';f.textContent='Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am '+(j?'1. November 2027':'1. Dezember')+'. Ab 1. November kostet Premium für neue Mitglieder 99 € (83 € im Jahresabo).';}
   else if(ph===1){bd.textContent='🎉 '+proz+' % Rabatt · nur bis 31. Oktober';b.className='np-btn np-btn-kauf';b.textContent='Jetzt Premium sichern';f.textContent='Dein Preis bleibt für immer · nächste Zahlung am '+(j?'1. November 2027':'1. Dezember')+' · jederzeit kündbar';}
+  else if(zu){
+    /* Tueren zu: derselbe Knopf wie in Phase 0, aber mit dem ehrlichen
+       Preis von morgen statt dem Oktoberpreis. */
+    bd.textContent='🔒 Anmeldung geschlossen · Türen öffnen Mitte November';
+    b.className='np-btn np-btn-warte';
+    b.textContent='🔔 Auf die Warteliste setzen';
+    f.textContent='Wir arbeiten an noch mehr Flexibilität. Mitte November öffnen wir wieder — Wartelisten-Plätze zuerst, die Plätze sind begrenzt.';
+  }
   else {bd.textContent='Sprechclub · täglich von Montag bis Sonntag';b.className='np-btn np-btn-kauf';b.textContent='Premium buchen';f.textContent='Sichere Zahlung über Stripe';}
 }
 function premiumKaufen(){
-  if(sparPhase()===0){zurWarteliste('Premium');return;}
+  var ph=sparPhase();
+  if(ph===0||ph===3){zurWarteliste('Premium');return;}
   var bj=document.getElementById('abrJ');
   buyPass(bj&&bj.classList.contains('an')?'premium_year':'premium_month',false);
 }
