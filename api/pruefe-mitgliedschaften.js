@@ -29,6 +29,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { abschiedHtml, abschiedBetreff, abschiedDatum } from './_abschied-mail.js';
+import { ablaufMail } from './_abo-ablauf-mail.js';
 
 import { kundeSuchen } from './_stripe-kunde.js';
 const TIERS = ['community', 'premium', 'premiumplus', 'premium_plus'];
@@ -165,6 +166,9 @@ export default async function handler(req, res) {
   const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], kundennummer_gewechselt: [], stripe_bild: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
 
   const abschiedListe = [];
+  /* Wer bald auslaeuft, weil gekuendigt wurde, soll das vorher
+     erfahren — nicht erst, wenn die Tuer schon zu ist. */
+  const vorwarnListe = [];
 
   for (const p of leute || []) {
     bericht.geprueft++;
@@ -347,6 +351,20 @@ export default async function handler(req, res) {
           name: p.name || p.email, email: p.email,
           bis: abo.abo_ende ? String(abo.abo_ende).slice(0, 10) : '?',
         });
+        /* Eine Woche vorher eine Mail, wie bei den von Hand gesetzten
+           Mitgliedschaften. Julia, 31.10.2026, ueber Tetiana, deren
+           Mann zahlt: "Sobald er das Abo kuendigt, musst du auch beim
+           Ablaufen der Frist Tetiana den Zugang verbieten und ihr
+           vorher eine Mail schicken mit einer Verabschiedung wie bei
+           den anderen." Das galt vorher nur fuer die von Hand
+           Eingetragenen; bei einer Kuendigung ueber Stripe stand der
+           Ablauf nur im Bericht. */
+        const restTage = abo.abo_ende
+          ? Math.round((Date.parse(abo.abo_ende) - Date.now()) / 86400000) : null;
+        if (restTage !== null && restTage >= 0 && restTage <= 7) {
+          vorwarnListe.push({ id: p.id, name: p.name, email: p.email,
+                              tier: p.tier || '', abo_ende: abo.abo_ende });
+        }
       }
 
       // --- 4. Status angleichen
@@ -939,6 +957,57 @@ export default async function handler(req, res) {
      dem Senden geschrieben und bei einem Fehlschlag wieder entfernt —
      dieselbe Reihenfolge wie bei der Lead-Erinnerung. Lieber eine Mail
      zu wenig als zweimal "schade, dass du gehst" an denselben Menschen. */
+  /* --- Vorwarnung: das gekuendigte Abo laeuft in den naechsten Tagen
+     aus. Eine Mail pro Mensch und Enddatum; der Eintrag in email_log
+     steht VOR dem Senden und wird bei einem Fehlschlag wieder
+     entfernt — dieselbe Reihenfolge wie beim Abschied. */
+  bericht.vorwarnung_gesendet = [];
+  if (!trocken && process.env.BREVO_API_KEY) {
+    for (const v of vorwarnListe) {
+      try {
+        if (!v.email) continue;
+        const ref = 'ablauf:' + v.id + ':' + String(v.abo_ende || 'ohne').slice(0, 10);
+        const { data: schon } = await sb.from('email_log')
+          .select('id').eq('kind', 'abo_laeuft_aus').eq('ref', ref).maybeSingle();
+        if (schon) continue;
+
+        const { data: notiz, error: notizErr } = await sb.from('email_log')
+          .insert({ user_id: v.id, kind: 'abo_laeuft_aus', ref }).select('id').maybeSingle();
+        if (notizErr || !notiz) {
+          bericht.fehler.push({ name: v.name || v.email,
+            fehler: 'Vorwarnung nicht verschickt, Eintrag ins Mail-Log misslang: '
+                  + String((notizErr && notizErr.message) || 'kein Eintrag') });
+          continue;
+        }
+
+        const m = ablaufMail(v);
+        const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender: { name: 'Julia · deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+            replyTo: { email: 'deutschoderwas@gmail.com', name: 'Julia' },
+            to: [{ email: v.email, name: v.name || v.email }],
+            subject: m.betreff,
+            htmlContent: m.html,
+          }),
+        });
+        if (!r.ok) {
+          if (notiz && notiz.id) await sb.from('email_log').delete().eq('id', notiz.id);
+          bericht.fehler.push({ name: v.name || v.email, fehler: 'Vorwarnung: HTTP ' + r.status });
+          continue;
+        }
+        bericht.vorwarnung_gesendet.push({ name: v.name || v.email, email: v.email,
+                                           laeuft_aus: String(v.abo_ende || '').slice(0, 10) });
+      } catch (e) {
+        bericht.fehler.push({ name: v.name || v.email, fehler: 'Vorwarnung: ' + String((e && e.message) || e) });
+      }
+    }
+  } else if (trocken) {
+    bericht.vorwarnung_gesendet = vorwarnListe.map(v => ({ name: v.name || v.email, email: v.email,
+      laeuft_aus: String(v.abo_ende || '').slice(0, 10), hinweis: 'Probelauf — nichts verschickt' }));
+  }
+
   if (!trocken && process.env.BREVO_API_KEY) {
     for (const a of abschiedListe) {
       try {

@@ -69,7 +69,7 @@ async function sendAmandaAccess(s) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name }],
+        to: [ await anLernende(email, name) ],
         subject: '🎉 Dein Zugang zu Amanda Plus',
         htmlContent: html,
       }),
@@ -80,6 +80,35 @@ async function sendAmandaAccess(s) {
 }
 
 // --- Abschieds-/Feedback-Mail bei Abo-Kündigung (deutschoderwas-Design) ---
+/* ------------------------------------------------------------------
+   Zahlt jemand anderes, gehoeren die Schueler-Mails der lernenden
+   Person, nicht der zahlenden.
+
+   Julia, 31.10.2026, ueber Tetiana Bublyk, deren Mann das Abo zahlt:
+   "Es muss alles an Tetiana gehen, so dass die beiden verbunden sind."
+
+   Stripe kennt nur die zahlende Adresse. Steht sie bei genau einem
+   Profil als bezahlt_email, ist klar, wem die Mail gehoert. Zahlt
+   jemand fuer zwei Leute, ist es nicht klar — dann bleibt es beim
+   bisherigen Weg, lieber an die falsche als an die ungewisse Adresse.
+
+   Die Rechnung ist bewusst ausgenommen (sendRechnung): die gehoert
+   dem, von dessen Karte abgebucht wird.
+------------------------------------------------------------------ */
+async function anLernende(email, name) {
+  const sonst = { email, name: name || undefined };
+  try {
+    if (!email || !process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return sonst;
+    const sbL = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const { data } = await sbL.from('profiles')
+      .select('name,email').ilike('bezahlt_email', String(email).trim()).limit(2);
+    if (data && data.length === 1 && data[0].email) {
+      return { email: data[0].email, name: data[0].name || undefined };
+    }
+  } catch (e) { console.error('anLernende', e); }
+  return sonst;
+}
+
 async function sendGoodbyeMail(email, name) {
   try {
     if (!email || !process.env.BREVO_API_KEY) return;
@@ -129,7 +158,7 @@ async function sendGoodbyeMail(email, name) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name: name || undefined }],
+        to: [ await anLernende(email, name) ],
         subject: 'Schade, dass du gehst 💛',
         htmlContent: html,
       }),
@@ -190,7 +219,7 @@ async function sendTrialWelcome(s) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name }],
+        to: [ await anLernende(email, name) ],
         subject: 'Deine Gratis-Probestunde ist da 🎉',
         htmlContent: html,
       }),
@@ -358,7 +387,7 @@ async function sendPaymentMail(sub, inv) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name: name || undefined }],
+        to: [ await anLernende(email, name) ],
         subject: abo ? 'Du bist dabei 🎉 – deine Mitgliedschaft ist da'
           : (community ? 'Willkommen in der Community 🎉' : 'Zahlung erfolgreich 🎉 – deine Stunden sind da!'),
         htmlContent: html,
@@ -475,7 +504,7 @@ async function sendRegisterNow(email) {
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email }],
+        to: [ await anLernende(email) ],
         bcc: [{ email: JULIA }],
         subject: '\u{1F513} Nur noch 1 Schritt: registrier dich für deinen Zugang',
         htmlContent: html,
@@ -534,7 +563,7 @@ async function sendCommunityWelcome(email, name, abDatum) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name: vorname || undefined }],
+        to: [ await anLernende(email, vorname) ],
         bcc: [{ email: JULIA }],
         subject: 'Willkommen in der Community \u{1F389}',
         htmlContent: html,
@@ -600,7 +629,7 @@ async function sendVerlaengerung(email, name, tier, inv) {
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         replyTo: { name: 'Julia', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
-        to: [{ email, name: vorname || undefined }],
+        to: [ await anLernende(email, vorname) ],
         subject: 'Zahlung bestätigt – deine Mitgliedschaft läuft weiter',
         htmlContent: html,
       }),

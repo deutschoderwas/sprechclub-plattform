@@ -108,6 +108,18 @@ export function abloufHtml(vorname, datum, stufe) {
 
 /* Verschickt genau eine Mail an die Person aus auftrag.ziel_user.
    Gibt einen Bericht zurueck, der in der Auftragszeile landet. */
+/* Dieselbe Mail, aber ohne Auftrag — fuer den naechtlichen Lauf, der
+   von sich aus vorwarnt, wenn ein gekuendigtes Stripe-Abo auslaeuft.
+   (31.10.2026, auf Julias Frage, ob bei einer Kuendigung auch die
+   lernende Person vorher Bescheid bekommt.) */
+export function ablaufMail(p) {
+  const datum   = datumLang(p && p.abo_ende);
+  const vorname = vornameVon(p && p.name, p && p.email);
+  const stufe   = stufenName(p && p.tier);
+  return { betreff: `Dein ${stufe} läuft am ${datum} aus`,
+           html: abloufHtml(vorname, datum, stufe), datum, stufe };
+}
+
 export async function abloufLauf(sb, auftrag) {
   const ziel = auftrag && auftrag.ziel_user;
   if (!ziel) return { ok: false, grund: 'kein_ziel_user' };
