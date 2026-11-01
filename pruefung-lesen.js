@@ -54,7 +54,9 @@
 
   /* ---------- Datenzugriff ---------- */
 
-  var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1' };
+  var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1',
+                  /* 01.11.2026: eigene telc-Trainings */
+                  'telcB1':'LESEN_TELC_B1' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };
@@ -123,7 +125,7 @@
         if(p==null || p<r.aufgaben.length)
           return { was:'Teil '+t.nr+' — '+t.name+', Runde '+(k+1), klick:"lesenRunde("+t.nr+",'"+r.id+"')" }; } }
     for(var m=0;m<d.laeufe.length;m++){ var Lf=d.laeufe[m], sl=laufStand(niveau,Lf);
-      if(sl.punkte < sl.max) return { was:Lf.titel+' — 15 Aufgaben mit Uhr', klick:"lesenLauf('"+Lf.id+"')" }; }
+      if(sl.punkte < sl.max) return { was:Lf.titel+' — '+anzahlIn(Lf)+' Aufgaben mit Uhr', klick:"lesenLauf('"+Lf.id+"')" }; }
     return null;
   };
 
@@ -364,7 +366,7 @@
 
     } else if(art==='textwahl'){
       /* A2 Teil 1 und 3: ein längerer Text, dazu fünf Fragen mit drei Antworten. */
-      h += langtextHTML(e.text, zeigen?a.stelle:null);
+      h += langtextHTML(e.text, zeigen?a.stelle:null, a.luecke);
       h += frageHTML(a.frage, L.i+1);
       h += optHTML(a, zeigen);
 
@@ -455,7 +457,13 @@
     seite:   { z:'🌐', t:'Von einer Internetseite' }
   };
 
-  function langtextHTML(t, stelle){
+  /* telc-Sprachbausteine: Lücken „__(3)__" als Kästchen zeigen, die gefragte hervorheben. */
+  function luecken(html, aktiv){
+    if(html.indexOf('__(')<0) return html;
+    return html.replace(/__\((\d+)\)__/g, function(_, n){
+      return '<b class="pl-gap'+(+n===aktiv?' an':'')+'">'+n+'</b>'; });
+  }
+  function langtextHTML(t, stelle, aktiv){
     if(!t) return '';
     var k = LANG_KOPF[t.sorte] || LANG_KOPF.zeitung;
     var m = motivVon(heuhaufen(t.quelle, t.titel, t.zeilen), 'allgemein');
@@ -464,7 +472,7 @@
       +   '<span class="pl-text-m"><b>'+E(t.titel||t.quelle)+'</b>'
       +   '<span>'+E(t.quelle && t.titel ? t.quelle : k.t)+'</span></span></div>'
       + '<div class="pl-lang-k">'
-      +   t.zeilen.map(function(z){ return '<p>'+markiert(z, stelle)+'</p>'; }).join('')
+      +   t.zeilen.map(function(z){ return '<p>'+luecken(markiert(z, stelle), aktiv)+'</p>'; }).join('')
       + '</div></div>';
   }
 
@@ -717,6 +725,8 @@
   function vorbereiten(folge){
     /* Für zuordnen die rechte Spalte mischen, für luecke die Bank. */
     L.mix = folge.map(function(e){
+      /* fest: Reihenfolge wie in der Prüfung (telc-Überschriften a–j, Wörter a–o). */
+      if(e.a && e.a.fest) return null;
       if(e.art==='zuordnen') return mischen(e.a.paare.length);
       if(e.art==='luecke'){ var b=e.a.bank.slice();
         return mischen(b.length).map(function(i){ return b[i]; }); }
@@ -747,8 +757,9 @@
     if(!r) return;
     oeffnen();
     var folge = r.aufgaben.map(function(a){
+      /* telc Teil 1: jede Aufgabe hat ihren eigenen kurzen Text. */
       return { a:a, art:t.art, texte:r.texte||null,
-               text:r.text||null, tafel:r.tafel||null, anzeigen:r.anzeigen||null }; });
+               text:a.text||r.text||null, tafel:r.tafel||null, anzeigen:r.anzeigen||null }; });
     var nr = t.runden.indexOf(r)+1;
     L = { niveau:niveau, daten:d, modus:'runde', topf:teilNr, id:rundeId,
           titel:'Teil '+t.nr+' — '+t.name, unter:'Runde '+nr+' von '+t.runden.length,
@@ -765,7 +776,7 @@
     var folge = [];
     Lf.teile.forEach(function(t){
       t.aufgaben.forEach(function(a){ folge.push({ a:a, art:t.art, texte:t.texte||null,
-        text:t.text||null, tafel:t.tafel||null, anzeigen:t.anzeigen||null, teilNr:t.nr }); });
+        text:a.text||t.text||null, tafel:t.tafel||null, anzeigen:t.anzeigen||null, teilNr:t.nr }); });
     });
     L = { niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
           titel:Lf.titel, unter:folge.length+' Aufgaben · keine Hilfe zwischendurch',
@@ -1159,6 +1170,8 @@
 
 /* --- A2: sechs Anzeigen und das x --- */
 '@media(min-width:680px){ .pl-anz-6{ grid-template-columns:1fr 1fr } }',
+'.pl-gap{ display:inline-block; min-width:2.2em; padding:0 .4em; margin:0 .1em; border:1.5px dashed #9AA5B1; border-radius:6px; text-align:center; font-size:.85em; color:#5B6672 }',
+'.pl-gap.an{ border:2px solid #1B9BC0; background:#E3F5FA; color:#0E5E75; font-weight:800 }',
 '@media(min-width:940px){ .pl-anz-6{ grid-template-columns:1fr 1fr 1fr } }',
 '.pl-xzeile{ margin-top:13px }',
 '.pl-x{ width:100%; background:#fff; border:2px dashed #E7ECEE; border-radius:14px;',

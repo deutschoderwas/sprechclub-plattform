@@ -129,6 +129,7 @@
        Wo telc eine Zahl nicht nennt, steht hier auch keine. */
     { id:'telcb1', name:'telc Deutsch B1', anbieter:'telc · Zertifikat Deutsch', niveau:'B1',
       bild:'buero', kurs:'goethetelc', muster:'B1', telc:true, geprueft:true,
+      training:{ lesen:'telcB1' },
       fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber — das Zertifikat Deutsch von telc.',
       module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
                  t:'Drei Leseteile mit 20 Aufgaben, dann zwei Teile Sprachbausteine — Grammatik und Wortschatz im Text, 20 Lücken. Die 90 Minuten teilst du selbst ein.'},
@@ -354,7 +355,10 @@
      LESEN_B1 und Co. geladen danebenlagen.
      Wir nehmen das obere Niveau (darauf zielt die Pruefung) und fallen
      auf das untere zurueck, wenn es das obere nicht gibt. */
-  function trainingNiveau(p){
+  function trainingNiveau(p, modId){
+    /* telc-Seiten haben eigene Trainings je Fertigkeit (p.training), z. B.
+       { lesen:'telcB1' }. Was es noch nicht gibt, faellt aufs Niveau zurueck. */
+    if (p && p.training && modId && p.training[modId]) return p.training[modId];
     var roh = String((p && p.niveau) || '').trim();
     if (!/[–-]/.test(roh)) return roh;
     var teile = roh.split(/[–-]/).map(function(x){ return x.trim(); });
@@ -375,7 +379,7 @@
       /* Wo es echte Aufgaben gibt, zaehlt das echte Ergebnis.
          Bisher ist das nur Lesen A1 — der Rest faellt auf den
          Fortschritt der dahinterliegenden Lektionen zurueck. */
-      var nv = trainingNiveau(p);
+      var nv = trainingNiveau(p, mod && mod.id);
       if(mod && mod.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(nv)){
         var lp = window.lesenProzent(nv);
         if(lp!=null) return lp;
@@ -429,30 +433,30 @@
   }
 
   function trainingVon(p, m){
-    if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(trainingNiveau(p))){
-      return { klick:"lesenStart('"+E(trainingNiveau(p))+"')", knopf:'Lesen trainieren',
-               anzahl:aufgabenZahl((window.lesenDaten && window.lesenDaten(trainingNiveau(p))) || window.LESEN_A1),
+    if(m.id==='lesen' && window.lesenVorhanden && window.lesenVorhanden(trainingNiveau(p, m.id))){
+      return { klick:"lesenStart('"+E(trainingNiveau(p, m.id))+"')", knopf:'Lesen trainieren',
+               anzahl:aufgabenZahl((window.lesenDaten && window.lesenDaten(trainingNiveau(p, m.id))) || window.LESEN_A1),
                was:'Vier Stufen: erst der Wortschatz, dann die Strategie, '
                  + 'dann die Aufgabentypen, zuletzt die ganze Prüfung mit Uhr.' };
     }
-    if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(trainingNiveau(p))){
-      return { klick:"hoerenStart('"+E(trainingNiveau(p))+"')", knopf:'Hören trainieren',
-               anzahl:aufgabenZahl((window.hoerenDaten && window.hoerenDaten(trainingNiveau(p))) || window.HOEREN_A1),
+    if(m.id==='hoeren' && window.hoerenVorhanden && window.hoerenVorhanden(trainingNiveau(p, m.id))){
+      return { klick:"hoerenStart('"+E(trainingNiveau(p, m.id))+"')", knopf:'Hören trainieren',
+               anzahl:aufgabenZahl((window.hoerenDaten && window.hoerenDaten(trainingNiveau(p, m.id))) || window.HOEREN_A1),
                was:'Vier Stufen: erst Zahlen und Zeiten, dann die Signalwörter, '
                  + 'dann Gespräche, Durchsagen und Ansagen, zuletzt die ganze Prüfung.' };
     }
-    if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(trainingNiveau(p))){
-      return { klick:"sprechenStart('"+E(trainingNiveau(p))+"')", knopf:'Sprechen trainieren',
-               anzahl:aufgabenZahl((window.sprechenDaten && window.sprechenDaten(trainingNiveau(p))) || window.SPRECHEN_A1),
+    if(m.id==='sprechen' && window.sprechenVorhanden && window.sprechenVorhanden(trainingNiveau(p, m.id))){
+      return { klick:"sprechenStart('"+E(trainingNiveau(p, m.id))+"')", knopf:'Sprechen trainieren',
+               anzahl:aufgabenZahl((window.sprechenDaten && window.sprechenDaten(trainingNiveau(p, m.id))) || window.SPRECHEN_A1),
                was:'Vier Stufen: erst die Sätze über dich, dann Fragen und Bitten bauen, '
                  + 'dann die echten Prüfungskarten mit Aufnahme und Musterlösung, '
                  + 'zuletzt alle drei Teile mit Uhr.' };
     }
-    if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(trainingNiveau(p))){
-      return { klick:"schreibenStart('"+E(trainingNiveau(p))+"')", knopf:'Schreiben trainieren',
+    if(m.id==='schreiben' && window.schreibenVorhanden && window.schreibenVorhanden(trainingNiveau(p, m.id))){
+      return { klick:"schreibenStart('"+E(trainingNiveau(p, m.id))+"')", knopf:'Schreiben trainieren',
                /* Stand fest auf SCHREIBEN_A1: A2, B1 und B2 zeigten alle
                   "51 Aufgaben" statt 54, 60 und 60. */
-               anzahl:aufgabenZahl((window.schreibenDaten && window.schreibenDaten(trainingNiveau(p))) || window.SCHREIBEN_A1),
+               anzahl:aufgabenZahl((window.schreibenDaten && window.schreibenDaten(trainingNiveau(p, m.id))) || window.SCHREIBEN_A1),
                was:'Vier Stufen: erst die Wörter im Formular, dann die Bausteine einer '
                  + 'Mitteilung, dann echte Formulare und Nachrichten mit Korrektur, '
                  + 'zuletzt beides zusammen mit Uhr.' };
@@ -835,10 +839,17 @@
        und unsichtbar. Genau das will jemand wissen, der sich vorbereitet. */
     if(p.hinweis) hinweis += '<p class="pf-hinw">'+E(p.hinweis)+'</p>';
     if(p.punkte)  hinweis += '<p class="pf-hinw">'+E(p.punkte)+'</p>';
-    if(p.telc) hinweis += '<p class="pf-hinw pf-telc-hinw">ℹ️ Unsere Trainings unten üben Lesen, Hören, '
-      + 'Schreiben und Sprechen auf '+E(p.niveau)+' — die Aufgaben sind aber nach dem Goethe-Format gebaut '
-      + 'und sehen bei telc anders aus. Das echte telc-Format übst du mit dem kostenlosen Übungstest von telc'
-      + (p.uebungstest ? ' (unter „Musterprüfung")' : '') + '.</p>';
+    if(p.telc){
+      var NAMEN = { lesen:'Lesen und Sprachbausteine', hoeren:'Hören', schreiben:'Schreiben', sprechen:'Sprechen' };
+      var echt = [], noch = [];
+      p.module.forEach(function(m){ ((p.training && p.training[m.id]) ? echt : noch).push(NAMEN[m.id] || m.n); });
+      var und = function(l){ return l.length>1 ? l.slice(0,-1).join(', ')+' und '+l[l.length-1] : l.join(''); };
+      hinweis += '<p class="pf-hinw pf-telc-hinw">ℹ️ '
+        + (echt.length ? und(echt)+' übst du hier im echten telc-Format. ' : '')
+        + (noch.length ? 'Die Trainings für '+und(noch)+' sind '+(echt.length?'noch ':'')+'nach dem Goethe-Format gebaut — '
+          + 'sie üben dasselbe Niveau, aber die Aufgaben sehen bei telc anders aus. Die telc-Versionen bauen wir gerade. ' : '')
+        + (p.uebungstest ? 'Den offiziellen telc-Übungstest findest du unter „Musterprüfung".' : '') + '</p>';
+    }
     var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
     return hinweis + '<div class="pf-mods">'+karten+'</div>' + zu;
   }
