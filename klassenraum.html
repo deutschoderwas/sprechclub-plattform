@@ -228,6 +228,8 @@
   .bo-niv-lbl{ display:inline-block; background:#fff; border:1px solid var(--rahmen); color:var(--weich); border-radius:999px; padding:1px 8px; font-size:.7rem; font-weight:800; margin-left:6px; }
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
   .bo-grp.konflikt{ outline:2px solid #DD0000; outline-offset:1px; background:#FCECEC; }
+  .dtile.tile-hidden{ display:none !important; }
+  #dgrid-more{ display:block; margin:8px auto 0; padding:7px 16px; border:none; border-radius:999px; background:#0A7D72; color:#fff; font-weight:800; font-size:.85rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .bo-mv{ display:flex; align-items:center; gap:6px; margin:4px 0; font-size:.86rem; flex-wrap:wrap; }
   .bo-mv-n{ font-weight:700; }
   .bo-mv-lbl{ color:var(--anthrazit); opacity:.55; font-size:.76rem; margin-left:auto; }
@@ -1036,6 +1038,7 @@
   const GROSSRAUM_AB = 16;      // ab so vielen im Raum → Spar-Modus
   const LIVE_VIDEO_MAX = 6;     // so viele Live-Kameras gleichzeitig
   window._bigMode = false;
+  window._showAll = false;      // Großraum: sind gerade „weitere" aufgeklappt?
   window._lastSpeakers = [];
   function manageSubscriptions(activeId){
     if(!dframe || window._provider!=='daily') return;
@@ -1052,10 +1055,10 @@
       window._lastSpeakers = [activeId, ...window._lastSpeakers.filter(id=>id!==activeId)].slice(0, LIVE_VIDEO_MAX);
     }
     const live = new Set(window._lastSpeakers.filter(id=>ps[id]));
+    // Lehrkräfte immer live — man will die Lehrer sehen
+    remote.forEach(id=>{ if(ps[id] && ps[id].owner) live.add(id); });
     // Bildschirm-Freigaben immer live zeigen
     remote.forEach(id=>{ const st=ps[id].tracks&&ps[id].tracks.screenVideo; if(st&&(st.state==='playable'||st.state==='loading'||st.state==='sendable'||st.subscribed)) live.add(id); });
-    // Falls noch Plätze frei: mit den ersten Anwesenden auffüllen, damit der Raum nicht leer wirkt
-    if(live.size < LIVE_VIDEO_MAX){ for(const id of remote){ if(live.size>=LIVE_VIDEO_MAX) break; live.add(id); } }
     const updates={};
     remote.forEach(id=>{ updates[id] = { setSubscribedTracks: { audio:true, video: live.has(id), screenVideo:true } }; });
     try{ dframe.updateParticipants(updates); }catch(e){}
@@ -1157,10 +1160,25 @@
     const grid=document.getElementById('dgrid'); if(!grid) return;
     let ps; try{ ps=dframe.participants(); }catch(e){ return; }
     const ids=Object.keys(ps);
-    grid.style.setProperty('--n', ids.length);   // Anzahl → CSS passt Spalten an
     // Bildschirm-Freigaben (Teilen) erkennen – werden als große Kachel oben angezeigt
     const screenIds = ids.filter(id=>{ const st=ps[id].tracks && ps[id].tracks.screenVideo; return st && (st.state==='playable'||st.state==='loading'||st.state==='sendable'); });
     grid.classList.toggle('has-screen', screenIds.length>0);
+    /* Julia, 01.11.2026: Großraum (44 Leute) soll NICHT voll aussehen. Im
+       Hauptraum zeigen wir nur: mich, die Lehrkräfte, wer gerade spricht und
+       Bildschirm-Freigaben. Der Rest liegt hinter „👥 … weitere anzeigen".
+       WICHTIG: gehört werden ALLE — die Audio-Elemente bleiben für jeden
+       erhalten (nur optisch ausgeblendet). */
+    const total = ids.length;
+    const big = total > GROSSRAUM_AB;
+    let visibleSet;
+    if(!big || window._showAll){ visibleSet = new Set(ids); }
+    else {
+      visibleSet = new Set();
+      ids.forEach(id=>{ const p=ps[id]; if(p.local || p.owner) visibleSet.add(id); });   // ich + Lehrer
+      (window._lastSpeakers||[]).forEach(id=>{ if(ps[id]) visibleSet.add(id); });          // wer gerade spricht
+      screenIds.forEach(id=>visibleSet.add(id));
+    }
+    grid.style.setProperty('--n', visibleSet.size || 1);   // Spalten nach SICHTBAREN Kacheln
     // gültige Kacheln = Kameras + Bildschirme; alles andere entfernen
     const valid = ids.concat(screenIds.map(id=>'screen-'+id));
     Array.from(grid.children).forEach(t=>{ if(!valid.includes(t.dataset.id)) t.remove(); });
@@ -1224,7 +1242,21 @@
         if(a && atrack){ if(a.dataset.tid!==atrack.id){ try{ a.srcObject=new MediaStream([atrack]); }catch(e){} a.dataset.tid=atrack.id; a.play&&a.play().catch(()=>{}); } }
         else if(a && a.srcObject){ a.srcObject=null; a.dataset.tid=''; }
       }
+      // Im Großraum nur die ausgewählten Kacheln zeigen (Audio läuft trotzdem)
+      tile.classList.toggle('tile-hidden', !visibleSet.has(id));
     });
+    // „weitere anzeigen"-Knopf – nur im Großraum, wenn wirklich welche verborgen sind
+    const hidden = total - visibleSet.size;
+    let moreBtn = document.getElementById('dgrid-more');
+    if(big && (hidden>0 || window._showAll)){
+      if(!moreBtn){
+        moreBtn=document.createElement('button'); moreBtn.id='dgrid-more'; moreBtn.type='button';
+        moreBtn.onclick=()=>{ window._showAll=!window._showAll; renderGrid(); };
+        (grid.parentNode||grid).appendChild(moreBtn);
+      }
+      moreBtn.textContent = window._showAll ? '➖ Weniger anzeigen' : ('👥 '+hidden+' weitere anzeigen');
+      moreBtn.style.display='';
+    } else if(moreBtn){ moreBtn.style.display='none'; }
   }
   // Lehrkraft schaltet eine einzelne Person stumm (Daily: nur Moderator/owner darf das).
   // Wieder-Anschalten kann aus Datenschutzgründen nur die Person selbst.
@@ -1239,6 +1271,7 @@
     if(window._provider!=='daily' || !dframe) return;
     const daily = await holeDailyRaum(group||null);
     if(!daily) return;
+    window._showAll = false;   // beim Raumwechsel Ansicht wieder einklappen
     window._switching = true;
     try{ await dframe.leave(); }catch(e){}
     const grid=document.getElementById('dgrid'); if(grid) grid.innerHTML='';
