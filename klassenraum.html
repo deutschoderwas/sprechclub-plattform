@@ -228,6 +228,7 @@
   .bo-niv-lbl{ display:inline-block; background:#fff; border:1px solid var(--rahmen); color:var(--weich); border-radius:999px; padding:1px 8px; font-size:.7rem; font-weight:800; margin-left:6px; }
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
   .bo-grp.konflikt{ outline:2px solid #DD0000; outline-offset:1px; background:#FCECEC; }
+  .bo-grp.bo-ungrouped{ outline:2px dashed #E8820C; background:#FFF8EF; }
   .dtile.tile-hidden{ display:none !important; }
   #dgrid-more{ display:block; margin:8px auto 0; padding:7px 16px; border:none; border-radius:999px; background:#0A7D72; color:#fff; font-weight:800; font-size:.85rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .bo-mv{ display:flex; align-items:center; gap:6px; margin:4px 0; font-size:.86rem; flex-wrap:wrap; }
@@ -1307,8 +1308,20 @@
     }
     if(istLehrer) boRenderTeacher();
   }
-  function toggleBoPanel(){ const p=document.getElementById('bo-panel'); if(p){ boRenderTeacher(); if(typeof boLoadLevels==='function') boLoadLevels(); p.classList.toggle('open'); } }
-  function boParticipants(){ try{ const ps=dframe.participants(); return Object.values(ps).filter(x=>!x.local).map(x=>({ id:x.user_id||x.session_id, name:(x.user_name&&String(x.user_name).trim())||'Teilnehmer:in' })); }catch(e){ return []; } }
+  function toggleBoPanel(){ const p=document.getElementById('bo-panel'); if(p){ boRenderTeacher(); if(typeof boLoadLevels==='function') boLoadLevels(); if(typeof ladeRoster==='function') ladeRoster(); p.classList.toggle('open'); } }
+  function boParticipants(){ try{ const ps=dframe.participants(); const list=Object.values(ps).filter(x=>!x.local).map(x=>({ id:x.user_id||x.session_id, name:(x.user_name&&String(x.user_name).trim())||'Teilnehmer:in' })); window._roster=window._roster||{}; list.forEach(p=>{ if(p.id && p.name && p.name!=='Teilnehmer:in' && p.name!=='Schüler:in') window._roster[p.id]=p.name; }); return list; }catch(e){ return []; } }
+  // Namen aller gebuchten Schüler laden – so stehen Namen auch dann da, wenn die
+  // Leute schon in anderen Gruppen-Räumen sitzen (der Lehrer sieht die ja nicht live).
+  window._roster = window._roster || {};
+  async function ladeRoster(){
+    if(!sb || !STUNDE) return;
+    try{
+      const { data } = await sb.rpc('class_attendance', { p_class_id: STUNDE });
+      window._roster = window._roster || {};
+      (data||[]).forEach(r=>{ if(r && r.user_id && r.name) window._roster[r.user_id]=r.name; });
+    }catch(e){ /* RPC evtl. nur für Admin – dann greifen die Live-Namen aus dem Raum */ }
+    if(istLehrer && typeof boRenderTeacher==='function') boRenderTeacher();
+  }
   // ===== Niveau-Farben: Stufe (A1..C1) -> Band (gelb A2/B1, blau B1/B2, gruen B2/C1, grau kein Test) =====
   window._boLevels = window._boLevels || {};
   const BO_BANDS = { g:{label:'A2/B1',cls:'lv-g'}, b:{label:'B1/B2',cls:'lv-b'}, n:{label:'B2/C1',cls:'lv-n'}, x:{label:'kein Test',cls:'lv-x'} };
@@ -1372,6 +1385,19 @@
     if(istLehrer) boRenderTeacher();
   }
   // Automatisch nach Niveau zuteilen: gleiche Baender zusammen, Gruppen mischen NIE zwei Baender.
+  /* Julia, 01.11.2026: KEINE Gruppe mit nur 1 Person. Bleibt beim Aufteilen
+     eine Person allein übrig, kommt sie in die vorige Gruppe dazu. */
+  function boMergeSingles(assign){
+    const byG={}; Object.entries(assign).forEach(([id,g])=>{ (byG[g]=byG[g]||[]).push(id); });
+    const gs=Object.keys(byG).map(Number).sort((a,b)=>a-b);
+    gs.forEach((g,i)=>{
+      if(byG[g] && byG[g].length===1){
+        const target = (i>0?gs[i-1]:gs[i+1]);
+        if(target && target!==g){ assign[byG[g][0]]=target; byG[target].push(byG[g][0]); byG[g]=[]; }
+      }
+    });
+    return assign;
+  }
   function boNiveau(){
     const el=document.getElementById('bo-size'); const size=Math.max(2, parseInt((el&&el.value)||window._boSize||'2',10));
     window._boSize=size;
@@ -1384,6 +1410,7 @@
       byBand[band].forEach(pp=>{ window._boAssign[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
       if(c>0) g++;   // neues Band beginnt in neuer Gruppe
     });
+    boMergeSingles(window._boAssign);
     boRenderTeacher();
   }
   function boZufall(){
@@ -1393,6 +1420,7 @@
     for(let i=ppl.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ppl[i]; ppl[i]=ppl[j]; ppl[j]=t; }
     window._boAssign={}; let g=1,c=0;
     ppl.forEach(pp=>{ window._boAssign[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+    boMergeSingles(window._boAssign);
     boRenderTeacher();
   }
   // Gruppen NEU MISCHEN, während sie laufen – alle bekommen sofort neue Gruppen/Räume (neue Partner).
@@ -1404,6 +1432,7 @@
     for(let i=ppl.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=ppl[i]; ppl[i]=ppl[j]; ppl[j]=t; }
     const groups={}; let g=1,c=0;
     ppl.forEach(pp=>{ groups[pp.id]=g; c++; if(c>=size){ g++; c=0; } });
+    boMergeSingles(groups);
     window._boAssign=Object.assign({},groups);
     window._breakoutGroups=groups; window._breakoutActive=true;
     await gnotesResetAll();                 // beim Neu-Mischen alte Tafeln leeren
@@ -1427,7 +1456,7 @@
     const ppl=boParticipants();
     if(window._breakoutActive){
       const groups={}; Object.entries(window._breakoutGroups||{}).forEach(([id,g])=>{ (groups[g]=groups[g]||[]).push(id); });
-      const nameOf=(id)=>{ const f=ppl.find(x=>x.id===id); return f?f.name:'…'; };
+      const nameOf=(id)=>{ const f=ppl.find(x=>x.id===id); return f?f.name:((window._roster&&window._roster[id])||'…'); };
       const nG=Object.keys(groups).length, nS=Object.values(groups).reduce((a,b)=>a+b.length,0);
       let html=`<div class="bo-active">🟢 Gruppen laufen · ${nS} Schüler in ${nG} Gruppen</div>`;
       const hr=teachersIn(0); html+=`<div class="bo-hr">🏠 Hauptraum: ${hr.length?hr.map(esc).join(', '):'—'}</div>`;
@@ -1444,8 +1473,16 @@
           ? ` <span class="bo-there${konflikt?' konflikt':''}" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}${konflikt?' ⚠️ 2 Lehrer!':''}</span>`
           : ` <span class="bo-nobody" title="Hier ist noch keine Lehrkraft">👤 kein Lehrer</span>`;
         const mem = groups[g].map(id=>`<div class="bo-mv">${boBadge(id)} <span class="bo-mv-n">${esc(nameOf(id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" value="${esc(g)}" title="Diesen Schüler in eine andere Gruppe verschieben" onchange="boMoveLive('${esc(id)}', this.value)"></div>`).join('');
-        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}${konflikt?' konflikt':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b> <span class="bo-niv-lbl">${esc(nivLabel)} · ${groups[g].length} 👥</span>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
+        html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}${konflikt?' konflikt':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b> <span class="bo-niv-lbl">${esc(nivLabel)} · ${groups[g].length} 👥</span>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}${groups[g].length===1?' <span class="lvtag" style="color:#DD0000;font-weight:800" title="allein – bitte jemandem zuordnen">⚠️ allein</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
+      // Noch ohne Gruppe (z.B. später reingekommen) – manuell einer Gruppe zuordnen
+      const grouped = new Set(Object.keys(window._breakoutGroups||{}));
+      const ungrouped = ppl.filter(p=>!grouped.has(p.id));
+      if(ungrouped.length){
+        html+=`<div class="bo-grp bo-ungrouped"><div class="bo-grp-h"><b>➕ Noch ohne Gruppe</b> <span class="bo-niv-lbl">${ungrouped.length} 👥</span></div><div class="bo-mem">`+
+          ungrouped.map(p=>`<div class="bo-mv">${boBadge(p.id)} <span class="bo-mv-n">${esc(nameOf(p.id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" placeholder="Nr." title="In diese Gruppe setzen" onchange="boMoveLive('${esc(p.id)}', this.value)"></div>`).join('')+
+          `</div></div>`;
+      }
       html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boWarnThen('end')">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
