@@ -482,6 +482,7 @@
     <button id="max-praesi" onclick="maxView('praesi')" title="Präsentation groß / zurück">📊 Präsi</button>
     <button id="max-tafel" onclick="maxView('tafel')" title="Live-Tafel groß / zurück">📝 Tafel</button>
     <button id="max-kameras" onclick="maxView('kameras')" title="Kameras groß / zurück">🎥 Kameras</button>
+    <button id="max-normal" onclick="maxViewReset()" title="Zurück zur normalen Ansicht (alles nebeneinander)">🔳 Normal</button>
   </div>
   <!-- echte interaktive Lektion mit Stift-Overlay -->
   <section class="lektion-card">
@@ -907,6 +908,15 @@
   // Inhalt (Bilder/Audio) lädt oft verzögert → mehrfach nachmessen, damit unten nichts abgeschnitten wird
   function fitLektionSoon(){ const ifr=document.getElementById('lektion'); [150,500,1200,2500,4000].forEach(t=>setTimeout(()=>{ if(ifr) fixDeckStage(ifr); fitLektion(); },t)); }
   window.addEventListener('resize', ()=> setTimeout(fitLektion,200));
+  /* Julia, 01.11.2026: Viele vergessen „Verlassen" und lassen den Raum im
+     Hintergrund offen → Geister-Verbindungen / mehrere Fenster. Beim Schließen
+     oder Weg-Navigieren der Seite jetzt automatisch sauber aus dem Daily-Raum
+     austreten. pagehide ist zuverlässiger als unload (v.a. am Handy). */
+  function raumVerlassenAuto(){
+    try{ if(dframe){ try{ dframe.leave(); }catch(e){} try{ dframe.destroy&&dframe.destroy(); }catch(e){} } }catch(e){}
+  }
+  window.addEventListener('pagehide', raumVerlassenAuto);
+  window.addEventListener('beforeunload', raumVerlassenAuto);
 
   // Lektion IMMER aktuell aus der Datenbank holen – so sieht die Lehrkraft auch
   // kurzfristige Material-Änderungen automatisch.
@@ -1134,11 +1144,20 @@
     const on=b.classList.contains(cls);
     b.classList.remove('max-praesi','max-tafel','max-kameras');
     if(!on) b.classList.add(cls);
-    ['praesi','tafel','kameras'].forEach(k=>{ const el=document.getElementById('max-'+k); if(el) el.classList.toggle('active', (!on && k===which)); });
+    const labels={praesi:'📊 Präsi', tafel:'📝 Tafel', kameras:'🎥 Kameras'};
+    ['praesi','tafel','kameras'].forEach(k=>{ const el=document.getElementById('max-'+k); if(el){ const act=(!on && k===which); el.classList.toggle('active', act); el.textContent = labels[k] + (act?' ✕':''); el.title = act ? 'Nochmal tippen = normale Ansicht' : labels[k].replace(/^.. /,'')+' groß machen'; } });
     // Kameras-Raster und Präsentation an die neue Größe anpassen
     setTimeout(()=>{ try{ if(typeof renderGrid==='function') renderGrid(); }catch(e){} try{ if(typeof fitLektion==='function') fitLektion(); }catch(e){} }, 80);
   }
   window.maxView = maxView;
+  // Eigener Knopf: zurück zur normalen Ansicht (alles nebeneinander)
+  function maxViewReset(){
+    document.body.classList.remove('max-praesi','max-tafel','max-kameras');
+    const labels={praesi:'📊 Präsi', tafel:'📝 Tafel', kameras:'🎥 Kameras'};
+    ['praesi','tafel','kameras'].forEach(k=>{ const el=document.getElementById('max-'+k); if(el){ el.classList.remove('active'); el.textContent=labels[k]; } });
+    setTimeout(()=>{ try{ if(typeof renderGrid==='function') renderGrid(); }catch(e){} try{ if(typeof fitLektion==='function') fitLektion(); }catch(e){} }, 80);
+  }
+  window.maxViewReset = maxViewReset;
   // ===== Eigenes Kachel-Raster: ALLE Teilnehmer gleichzeitig, formatfüllend (kein Schwarzrand) =====
   function renderGrid(){
     if(!dframe || window._provider!=='daily') return;
