@@ -1103,6 +1103,13 @@
       setTimeout(()=>manageSubscriptions(), 1500);
       // Namen aller gebuchten Schüler laden (für die Gruppen-Übersicht, auch über Räume hinweg)
       setTimeout(()=>{ if(istLehrer && typeof ladeRoster==='function') ladeRoster(); }, 1500);
+      // Nachzügler: Wer im HAUPTRAUM ankommt, meldet sich – falls die Gruppen schon
+      // laufen, teilt der Lehrer-Rechner ihn automatisch nach Niveau einer Gruppe zu.
+      // Mehrfach senden, falls der Realtime-Kanal gerade erst verbindet.
+      if(!istLehrer){
+        const sagHallo=()=>{ try{ if(window._boCh && window._meId && (window._currentGroup||0)===0) window._boCh.send({ type:'broadcast', event:'hello', payload:{ id: window._meId } }); }catch(e){} };
+        [1800,5000,10000].forEach(t=>setTimeout(sagHallo, t));
+      }
       // Hauptraum: Schüler kommen stumm rein → einmal freundlich erklären, wie man das Mikro freischaltet.
       setTimeout(()=>{ try{ var lp=(dframe.participants&&dframe.participants().local); if(lp && lp.audio===false && !document.body.classList.contains('ingroup')){ showMicHint('🔇 <b>Du bist noch stumm.</b> Tippe unten auf <b>🎤 Mikro</b>, wenn du sprechen möchtest.'); } }catch(e){} }, 2600);
       // Geräuschunterdrückung: Hintergrundlärm/Tastatur/Hall aus dem Mikro filtern (Krisp)
@@ -1463,6 +1470,44 @@
     if(window._boAssign) delete window._boAssign[id];
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups||{} } }); }catch(e){}
     boRenderTeacher();
+  }
+  /* Nachzügler automatisch nach Niveau einteilen, wenn die Gruppen schon laufen
+     (Julia, 01.11.2026). Läuft auf dem Lehrer-Rechner über Realtime — egal, in
+     welchem Gruppenraum der Lehrer gerade ist. Der Nachzügler kommt in die
+     Gruppe mit passendem Niveau-Band und den wenigsten Leuten; so hängt niemand
+     allein im Hauptraum. */
+  window._lateBusy = window._lateBusy || {};
+  async function boAutoAssignLate(id){
+    if(!istLehrer || !window._breakoutActive) return;
+    if(!id || window._lateBusy[id]) return;
+    if(window._breakoutGroups && window._breakoutGroups[id]) return;   // schon in einer Gruppe
+    window._lateBusy[id]=true;
+    try{
+      // Niveau des Nachzüglers sicherstellen (falls noch nicht geladen)
+      window._boLevels = window._boLevels || {};
+      if(!(id in window._boLevels)){
+        try{ const { data } = await sb.from('profiles').select('id,level,stufe,target_level').eq('id',id).maybeSingle(); if(data) window._boLevels[id]=data.level||data.stufe||data.target_level||null; }catch(e){}
+      }
+      if(window._breakoutGroups && window._breakoutGroups[id]){ return; }   // inzwischen schon zugeteilt
+      const band = boBand(boLv(id));
+      const byGroup={}; Object.entries(window._breakoutGroups||{}).forEach(([uid,g])=>{ (byGroup[g]=byGroup[g]||[]).push(uid); });
+      const groupNums=Object.keys(byGroup).map(Number);
+      if(!groupNums.length){ return; }   // (sollte bei aktiven Gruppen nicht vorkommen)
+      const groupBand=(g)=>{ const cnt={}; byGroup[g].forEach(uid=>{ const b=boBand(boLv(uid)); cnt[b]=(cnt[b]||0)+1; }); return Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]; };
+      // bevorzugt Gruppe mit gleichem Band; sonst irgendeine. Deterministisch:
+      // kleinste Gruppe zuerst, bei Gleichstand niedrigste Nummer (damit zwei
+      // Lehrer-Rechner gleich entscheiden und es kein Durcheinander gibt).
+      let cand = (band!=='x') ? groupNums.filter(g=>groupBand(g)===band) : [];
+      if(!cand.length) cand = groupNums.slice();
+      cand.sort((a,b)=> (byGroup[a].length-byGroup[b].length) || (a-b));
+      const target = cand[0];
+      window._breakoutGroups=window._breakoutGroups||{};
+      window._breakoutGroups[id]=target; if(window._boAssign) window._boAssign[id]=target;
+      try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+      boRenderTeacher();
+    } finally {
+      setTimeout(()=>{ delete window._lateBusy[id]; }, 4000);
+    }
   }
   function boRenderTeacher(){
     const body=document.getElementById('bo-body'); if(!body) return;
@@ -2577,6 +2622,7 @@
       .on('broadcast', { event:'tpos' }, ({payload})=>{ if(typeof handleTpos==='function') handleTpos(payload); })
       .on('broadcast', { event:'help' }, ({payload})=>{ if(istLehrer && typeof onHelpCall==='function') onHelpCall(payload); })
       .on('broadcast', { event:'evt' }, ({payload})=>{ if(typeof handleEvent==='function') handleEvent(payload); })
+      .on('broadcast', { event:'hello' }, ({payload})=>{ if(payload && payload.id && istLehrer && typeof boAutoAssignLate==='function') boAutoAssignLate(payload.id); })
       .subscribe((status)=>{
         // Lehrer meldet seine Position (Hauptraum/Gruppe) und hält sie per Heartbeat aktuell
         if(status==='SUBSCRIBED' && istLehrer){
