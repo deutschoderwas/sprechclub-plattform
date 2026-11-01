@@ -229,6 +229,9 @@
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
   .bo-grp.konflikt{ outline:2px solid #DD0000; outline-offset:1px; background:#FCECEC; }
   .bo-grp.bo-ungrouped{ outline:2px dashed #E8820C; background:#FFF8EF; }
+  .bo-rm{ margin-left:6px; border:none; background:#FCE7E7; color:#DD0000; border-radius:8px; padding:3px 8px; font-weight:800; font-size:.8rem; cursor:pointer; line-height:1; }
+  .bo-rm:hover{ background:#DD0000; color:#fff; }
+  .dwechsel{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; min-height:160px; color:var(--weich); font-weight:800; font-size:1rem; }
   .dtile.tile-hidden{ display:none !important; }
   #dgrid-more{ display:block; margin:8px auto 0; padding:7px 16px; border:none; border-radius:999px; background:#0A7D72; color:#fff; font-weight:800; font-size:.85rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.15); }
   .bo-mv{ display:flex; align-items:center; gap:6px; margin:4px 0; font-size:.86rem; flex-wrap:wrap; }
@@ -1088,6 +1091,8 @@
       setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
       // Bildqualität/Abos clever steuern: wenige Kameras scharf, Großraum-Sparmodus ab 16 Leuten
       setTimeout(()=>manageSubscriptions(), 1500);
+      // Namen aller gebuchten Schüler laden (für die Gruppen-Übersicht, auch über Räume hinweg)
+      setTimeout(()=>{ if(istLehrer && typeof ladeRoster==='function') ladeRoster(); }, 1500);
       // Hauptraum: Schüler kommen stumm rein → einmal freundlich erklären, wie man das Mikro freischaltet.
       setTimeout(()=>{ try{ var lp=(dframe.participants&&dframe.participants().local); if(lp && lp.audio===false && !document.body.classList.contains('ingroup')){ showMicHint('🔇 <b>Du bist noch stumm.</b> Tippe unten auf <b>🎤 Mikro</b>, wenn du sprechen möchtest.'); } }catch(e){} }, 2600);
       // Geräuschunterdrückung: Hintergrundlärm/Tastatur/Hall aus dem Mikro filtern (Krisp)
@@ -1249,15 +1254,20 @@
   window._currentGroup = 0; window._boAssign = {}; window._breakoutGroups = {}; window._breakoutActive=false;
   async function wechsleRaum(group){
     if(window._provider!=='daily' || !dframe) return;
-    const daily = await holeDailyRaum(group||null);
-    if(!daily) return;
-    window._showAll = false;   // beim Raumwechsel Ansicht wieder einklappen
+    if(window._switching) return;   // Schutz: NICHT zwei Wechsel gleichzeitig – sonst hängt Daily
     window._switching = true;
+    // Sicherheitsnetz: sollte ein Wechsel mal hängen, nach 12 s wieder freigeben,
+    // damit man nicht dauerhaft festsitzt.
+    clearTimeout(window._switchWatchdog); window._switchWatchdog=setTimeout(()=>{ window._switching=false; }, 12000);
+    window._showAll = false;   // beim Raumwechsel Ansicht wieder einklappen
+    const grid0=document.getElementById('dgrid'); if(grid0) grid0.innerHTML='<div class="dwechsel">⏳ '+(group?('Wechsle in Gruppe '+group):'Zurück in den Hauptraum')+' …</div>';
+    const daily = await holeDailyRaum(group||null);
+    if(!daily){ window._switching=false; if(grid0) grid0.innerHTML=''; if(typeof showMicHint==='function') showMicHint('⚠️ Konnte den Raum nicht wechseln – nochmal versuchen.'); return; }
     try{ await dframe.leave(); }catch(e){}
-    const grid=document.getElementById('dgrid'); if(grid) grid.innerHTML='';
+    const grid=document.getElementById('dgrid'); if(grid) grid.innerHTML='<div class="dwechsel">⏳ Verbinde …</div>';
     try{ await dframe.join({ url:daily.url, token:daily.token }); window._currentGroup = group||0; }
     catch(e){ console.warn('Raumwechsel', e); }
-    window._switching = false;
+    window._switching = false; clearTimeout(window._switchWatchdog);
     if(istLehrer && typeof boBroadcastPos==='function') boBroadcastPos(group||0);   // Kollegen sehen, wo ich bin
     setTimeout(()=>{ renderGrid(); if(typeof manageSubscriptions==='function') manageSubscriptions(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
   }
@@ -1276,6 +1286,7 @@
           if(g && g===window._currentGroup){ window._gnGroup=0; gnotesEnter(g); }
         }
         if(g && g!==window._currentGroup) wechsleRaum(g);
+        else if(!g && window._currentGroup) wechsleRaum(0);   // aus der Gruppe genommen → zurück in den Hauptraum
       }
     } else {
       window._breakoutActive=false; hideBoBanner();
@@ -1427,6 +1438,13 @@
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
     boRenderTeacher();
   }
+  // Schüler AUS der Gruppe nehmen → zurück in den Hauptraum (Julia, 01.11.2026)
+  function boRemoveFromGroup(id){
+    if(window._breakoutGroups) delete window._breakoutGroups[id];
+    if(window._boAssign) delete window._boAssign[id];
+    try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups||{} } }); }catch(e){}
+    boRenderTeacher();
+  }
   function boRenderTeacher(){
     const body=document.getElementById('bo-body'); if(!body) return;
     const esc=(s)=>String(s==null?'':s).replace(/[<>&"']/g,'');
@@ -1449,7 +1467,7 @@
         const thHtml = th.length
           ? ` <span class="bo-there${konflikt?' konflikt':''}" title="Lehrkraft in dieser Gruppe">👩‍🏫 ${th.map(esc).join(', ')}${konflikt?' ⚠️ 2 Lehrer!':''}</span>`
           : ` <span class="bo-nobody" title="Hier ist noch keine Lehrkraft">👤 kein Lehrer</span>`;
-        const mem = groups[g].map(id=>`<div class="bo-mv">${boBadge(id)} <span class="bo-mv-n">${esc(nameOf(id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" value="${esc(g)}" title="Diesen Schüler in eine andere Gruppe verschieben" onchange="boMoveLive('${esc(id)}', this.value)"></div>`).join('');
+        const mem = groups[g].map(id=>`<div class="bo-mv">${boBadge(id)} <span class="bo-mv-n">${esc(nameOf(id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" value="${esc(g)}" title="In eine andere Gruppe verschieben" onchange="boMoveLive('${esc(id)}', this.value)"><button class="bo-rm" title="Aus der Gruppe nehmen (zurück in den Hauptraum)" onclick="boRemoveFromGroup('${esc(id)}')">✖</button></div>`).join('');
         html+=`<div class="bo-grp${needs?' needhelp':''}${mixed?' mixed':''}${th.length?' hat-lehrer':''}${konflikt?' konflikt':''}"><div class="bo-grp-h"><b>Gruppe ${esc(g)}</b> <span class="bo-niv-lbl">${esc(nivLabel)} · ${groups[g].length} 👥</span>${thHtml}${needs?' <span title="braucht Hilfe">🔔</span>':''}${mixed?' <span class="lvtag" title="gemischte Niveaus">⚠️ gemischt</span>':''}${groups[g].length===1?' <span class="lvtag" style="color:#DD0000;font-weight:800" title="allein – bitte jemandem zuordnen">⚠️ allein</span>':''}<button onclick="boHop(${esc(g)})">👀 ansehen</button></div><div class="bo-mem">${mem}</div></div>`;
       });
       // Noch ohne Gruppe (z.B. später reingekommen) – manuell einer Gruppe zuordnen
