@@ -90,7 +90,11 @@ export function wochenplanHtml(name, email, plan) {
       <tr><td style="padding:16px 18px;font-family:${FF}">
         <div style="font-weight:800;font-size:15.5px;color:#0F766E;margin-bottom:6px">Zwei Dinge, die du wissen solltest</div>
         <div style="font-size:15px;line-height:1.65;color:#3f4650">
-          In jeder Stunde sind <b>20 Pl&auml;tze</b>. Ist eine Stunde voll, steht im Wochenplan rot
+          <!-- Julia, 1.11.2026: "Nenne die Zahl nicht, sag die Plätze
+               sind begrenzt." Eine genannte Zahl laedt zum Nachrechnen
+               ein ("warum waren da gestern 26 drin?") und bindet uns
+               fest, falls wir sie einmal aendern. -->
+          Die Pl&auml;tze sind <b>begrenzt</b>. Ist eine Stunde voll, steht im Wochenplan rot
           &bdquo;ausgebucht&ldquo; &mdash; dann nimm einfach eine andere Uhrzeit am selben Tag, das Thema ist dasselbe.
           Und es w&auml;re toll, wenn du eine gebuchte Stunde stornierst, falls du doch nicht kommen kannst.
           Dann wird der Platz f&uuml;r jemand anderen frei.
