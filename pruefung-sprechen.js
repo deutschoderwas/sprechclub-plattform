@@ -39,7 +39,8 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1' };
+  var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
+                  'telcB1':'SPRECHEN_TELC_B1' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
@@ -281,17 +282,22 @@
   }
 
   function karteErzaehlenHTML(k, thema){
+    /* telc: eigener Kartenkopf (k.kopf), ein Zeitschriftentext (k.text) und
+       die Nachfrage der Partnerin (k.frage) stehen mit auf der Karte. */
     return '<div class="sp-karte sp-k-frage">'
-      + '<div class="sp-karte-kopf"><span>Teil 2 · Von sich erzählen</span><b>Themenkarte</b></div>'
+      + '<div class="sp-karte-kopf"><span>'+E(k.kopf||'Teil 2 · Von sich erzählen')+'</span><b>'+E(k.kopfb||'Themenkarte')+'</b></div>'
       + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
+      + (k.text ? '<div class="sp-zeitschrift"><span>'+E(k.quelle||'Aus einer Zeitschrift')+'</span><p>'
+          + E(k.text).replace(/\n/g,'<br>')+'</p></div>' : '')
       + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
           return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
+      + (k.frage ? '<div class="sp-nachfrage"><span>Danach fragt dich dein Gegenüber</span><b>„'+E(k.frage)+'"</b></div>' : '')
       + '</div>';
   }
 
   function kartePlanenHTML(k, thema){
     return '<div class="sp-karte sp-k-bitte">'
-      + '<div class="sp-karte-kopf"><span>Teil 3 · Gemeinsam planen</span><b>Aufgabenkarte</b></div>'
+      + '<div class="sp-karte-kopf"><span>'+E(k.kopf||'Teil 3 · Gemeinsam planen')+'</span><b>Aufgabenkarte</b></div>'
       + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
       + '<div class="sp-gegenstand">'+E(k.aufgabe||'')+'</div>'
       + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
@@ -364,7 +370,7 @@
   }
 
   function sprechFlaeche(a, zeigen, art){
-    var sch = schritte(art), auf = AUFTRAG[art];
+    var sch = schritte(art), auf = (a && a.auftrag) || AUFTRAG[art];
     var h = '<div class="sp-auftrag"><span>Deine Aufgabe</span><ul>'
       + auf.map(function(x){ return '<li>'+E(x)+'</li>'; }).join('') + '</ul></div>';
 
@@ -636,6 +642,8 @@
       + 'am besten planbare. Es gibt nur drei Aufgaben, und alle drei folgen einem festen Muster. '
       + 'Wer die Muster kann, muss am Prüfungstag nur noch einsetzen. '
       + 'Übe laut. Wirklich laut. Im Kopf sprechen hilft nicht.</p></div>';
+    /* Eigene Einleitung je Prüfung (z. B. telc) statt des allgemeinen Texts. */
+    if(d.intro) h = '<div class="pl-intro"><h2>Dein Weg zum Sprechen-Teil</h2><p>'+E(d.intro)+'</p></div>';
 
     if(naechst){
       h += '<button class="pl-dran" onclick="'+naechst.klick+'">'
@@ -770,6 +778,12 @@
 '  font-size:16px; font-weight:800; margin-top:2px }',
 
 '.sp-stich{ display:flex; flex-wrap:wrap; gap:9px; padding:20px 18px 6px }',
+'.sp-zeitschrift{ margin:14px 18px 0; padding:14px 16px; background:#FFFBF0; border-left:4px solid #E7B43A; border-radius:10px }',
+'.sp-zeitschrift span{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9A7414; margin-bottom:6px }',
+'.sp-zeitschrift p{ margin:0; font-size:15px; line-height:1.6; font-style:italic; color:#2A2F35 }',
+'.sp-nachfrage{ margin:10px 18px 16px; padding:11px 14px; border:1.5px dashed #9AA5B1; border-radius:11px }',
+'.sp-nachfrage span{ display:block; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#6B7680; margin-bottom:3px }',
+'.sp-nachfrage b{ font-size:15px; color:#1F2A33 }',
 '.sp-stich-w{ background:#F6F9FA; border:1.5px solid #F6F9FA; border-radius:11px;',
 '  padding:9px 15px; font-family:"Space Grotesk",sans-serif; font-size:16px; font-weight:800 }',
 '.sp-extra{ display:grid; gap:10px; padding:14px 18px 20px }',

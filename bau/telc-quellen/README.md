@@ -10,7 +10,12 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
 - telc B1 Lesen + Sprachbausteine: lesen-telc-b1.js (4 Strategie-Blöcke, 5 Teile mit 15 Runden, 2 Prüfungsläufe à 40 Aufgaben / 90 Min).
   Alle Texte eigene; nur das Format ist nachgebaut. Quelle Format: telc Übungstest 1 Zertifikat Deutsch.
 
-## Offen telc B1
-- Hören (3 Teile, 20 Aufgaben richtig/falsch, ca. 30 Min) — braucht Ton (ElevenLabs).
-- Schreiben (E-Mail mit 4 Leitpunkten, 30 Min).
-- Sprechen (kennenlernen, über ein Thema sprechen, gemeinsam planen; 20 Min Vorbereitung).
+- telc B1 Hören: hoeren-telc-b1.js (4 Blöcke, 3 Teile à 3 Runden, 2 Läufe à 20 Aufgaben/30 Min, Teil 1 einmal hören).
+- telc B1 Schreiben: schreiben-telc-b1.js (4 Blöcke, informell + halbformell, 2 Läufe à 30 Min). Bewertung nach telc
+  (I/II/III je A–D = 5/3/1/0, ×3 = 45) im Selbstcheck und in api/ai-schreiben.js (schema telc_b1).
+- telc B1 Sprechen: sprechen-telc-b1.js (4 Blöcke, Kennenlernen / Thema mit Zeitschriftentext / Planen, 2 Läufe).
+- Prüfungsseite telc B1: „Alles für die Prüfung" (Ablauf, Bewertung, Themen, Grammatik, Redemittel) und
+  „Bist du bereit?" mit Punkteprognose (schriftlich /225, Grenze 135; mündlich /75, Grenze 45).
+
+## Als Nächstes
+telc B2 (Format siehe telc.net + Übungstest 3 Deutsch B2), dann telc A2·B1, C1 Hochschule …

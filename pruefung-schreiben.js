@@ -989,6 +989,8 @@
       + 'Fünf für das Formular, zehn für die Mitteilung. Wir bauen es in vier Stufen auf: '
       + 'erst die Wörter im Formular, dann die Bausteine einer Nachricht, dann die zwei Aufgaben, '
       + 'zuletzt beides zusammen mit Uhr.</p></div>';
+    /* Eigene Einleitung je Prüfung (z. B. telc) statt des allgemeinen Texts. */
+    if(d.intro) h = '<div class="pl-intro"><h2>Dein Weg zum Schreiben-Teil</h2><p>'+E(d.intro)+'</p></div>';
 
     if(naechst){
       h += '<button class="pl-dran" onclick="'+naechst.klick+'">'

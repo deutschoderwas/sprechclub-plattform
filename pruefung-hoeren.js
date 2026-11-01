@@ -438,6 +438,8 @@
       + 'erst Zahlen und Zeiten, dann die Wörter, die alles umdrehen, dann die drei Aufgabentypen, '
       + 'zuletzt die ganze Prüfung mit Uhr. Nach jeder Antwort siehst du den Text, den du gehört hast, '
       + 'mit der entscheidenden Stelle markiert.</p></div>';
+    /* Eigene Einleitung je Prüfung (z. B. telc) statt des allgemeinen Texts. */
+    if(d.intro) h = '<div class="pl-intro"><h2>Dein Weg zum Hören-Teil</h2><p>'+E(d.intro)+'</p></div>';
 
     if(naechst){
       h += '<button class="pl-dran" onclick="'+naechst.klick+'">'

@@ -129,7 +129,39 @@
        Wo telc eine Zahl nicht nennt, steht hier auch keine. */
     { id:'telcb1', name:'telc Deutsch B1', anbieter:'telc · Zertifikat Deutsch', niveau:'B1',
       bild:'buero', kurs:'goethetelc', muster:'B1', telc:true, geprueft:true,
-      training:{ lesen:'telcB1' },
+      training:{ lesen:'telcB1', hoeren:'telcB1', schreiben:'telcB1', sprechen:'telcB1' },
+      /* Punkteprognose für „Bist du bereit?" — Gewichte nach telc:
+         schriftlich 225 (Lesen 75 + Sprachbausteine 30, Hören 75, Schreiben 45),
+         Grenze 135; mündlich 75, Grenze 45. */
+      prognose:{ teile:[ { name:'Schriftliche Prüfung', max:225, grenze:135,
+                           anteile:{ lesen:105, hoeren:75, schreiben:45 } },
+                         { name:'Mündliche Prüfung', max:75, grenze:45, anteile:{ sprechen:75 } } ] },
+      mat:{
+        wortschatz:['Arbeit und Beruf','Wohnen und Nachbarschaft','Gesundheit und Arzt','Ämter und Behörden',
+                    'Freizeit und Vereine','Reisen und Verkehr','Einkaufen und Dienstleistungen','Medien und Kommunikation',
+                    'Schule, Kurse, Weiterbildung','Familie und Feste','Umwelt und Stadt'],
+        grammatik:['Konnektoren: weil, obwohl, deshalb, trotzdem, damit, als/wenn','Präpositionen mit Dativ und Akkusativ',
+                   'Relativsätze und Relativpronomen','Adjektivendungen','Perfekt und Präteritum','Passiv',
+                   'Konjunktiv II für höfliche Bitten','Verben mit festen Präpositionen (warten auf, sich freuen über)',
+                   'zu + Infinitiv','Reflexive Verben und Reflexivpronomen'],
+        redemittel:[
+          ['Schreiben — Einleitung','Vielen Dank für deine Mail. / Vielen Dank für Ihre Nachricht vom …'],
+          ['Schreiben — Punkte verbinden','Außerdem … · Deshalb … · Was … betrifft, … · Zum Schluss noch eine Frage: …'],
+          ['Schreiben — Schluss','Ich freue mich auf deine Antwort. / Ich freue mich auf Ihre Antwort. · Viele Grüße / Mit freundlichen Grüßen'],
+          ['Sprechen — Text wiedergeben','In meinem Text geht es um … · Die Autorin meint, dass … · Sie schreibt, dass …'],
+          ['Sprechen — Meinung','Ich persönlich finde … · Da bin ich anderer Meinung, weil … · Da hast du recht, aber …'],
+          ['Sprechen — Planen','Wie wäre es, wenn wir … · Ich schlage vor, dass … · Einverstanden. Dann machen wir es so: …'] ],
+        bewertung:[
+          ['Lesen und Sprachbausteine','Jeder der drei Leseteile zählt 25 Punkte, jeder Teil Sprachbausteine 15 — zusammen 105.'],
+          ['Hören','Drei Teile mit 20 Aufgaben richtig oder falsch, jeder Teil 25 Punkte — zusammen 75.'],
+          ['Schreiben','Drei Kriterien — Leitpunkte, Gestaltung, Richtigkeit — je A bis D (5, 3, 1, 0), Summe mal drei: höchstens 45.'],
+          ['Sprechen','Je Teil: Ausdrucksfähigkeit, Aufgabenbewältigung, formale Richtigkeit, Aussprache. Teil 1 bis 15, Teil 2 und 3 je bis 30 Punkte.'],
+          ['Bestanden','Schriftlich mindestens 135 von 225, mündlich mindestens 45 von 75. Beide Teile müssen reichen; einen nicht bestandenen Teil kannst du allein wiederholen.'] ],
+        ablauf:[
+          'Schriftlich, 150 Minuten: erst Lesen und Sprachbausteine (90 Minuten), dann Hören (ca. 30), dann Schreiben (30).',
+          'Beim Hören: Teil 1 hörst du nur einmal, Teil 2 und 3 zweimal.',
+          'Mündlich: meist zu zweit, ca. 15 Minuten. Vorher 20 Minuten Vorbereitung.',
+          'In der Vorbereitung bekommst du die Aufgaben für Teil 2 und 3 — mach dir Stichpunkte, keine ganzen Sätze.'] },
       fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber — das Zertifikat Deutsch von telc.',
       module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
                  t:'Drei Leseteile mit 20 Aufgaben, dann zwei Teile Sprachbausteine — Grammatik und Wortschatz im Text, 20 Lücken. Die 90 Minuten teilst du selbst ein.'},
@@ -340,7 +372,25 @@
       '.pf-andere>summary{cursor:pointer;font-weight:700;font-size:15px;padding:8px 0;list-style:none}',
       '.pf-andere>summary::-webkit-details-marker{display:none}',
       '.pf-andere>summary:before{content:"▸ ";color:#14708B}',
-      '.pf-andere[open]>summary:before{content:"▾ "}'
+      '.pf-andere[open]>summary:before{content:"▾ "}',
+      '.pf-mat-voll{display:grid;gap:14px}',
+      '.pf-mat-k{background:#fff;border:1px solid #ECE6DA;border-radius:18px;padding:16px 18px;box-shadow:0 6px 18px rgba(20,40,60,.05)}',
+      '.pf-mat-k h4{margin:0 0 10px;font-size:16px}',
+      '.pf-mat-l{margin:0;padding-left:20px;line-height:1.6;font-size:14.5px}',
+      '.pf-mat-p{display:grid;gap:8px}',
+      '.pf-mat-p div{display:grid;gap:2px;padding:9px 12px;background:#F7F5EF;border-radius:11px}',
+      '.pf-mat-p b{font-size:13.5px}', '.pf-mat-p span{font-size:14px;color:#3C4650;line-height:1.5}',
+      '.pf-mat-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}',
+      '.pf-mat-tags span{background:#E9F6FA;color:#0E5E75;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600}',
+      '.pf-mat-k .pf-mat-knoepfe{margin-top:10px}',
+      '.pf-prog{margin-top:14px;padding:14px 16px;border-radius:16px;background:#fff;border:1px solid #ECE6DA}',
+      '.pf-prog-k{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}',
+      '.pf-prog-k span{color:#5B6672;font-size:14px}',
+      '.pf-prog-bar{position:relative;height:12px;background:#EEF1F3;border-radius:99px;margin:10px 0 8px;overflow:visible}',
+      '.pf-prog-bar i{display:block;height:100%;border-radius:99px;background:#E7B43A}',
+      '.pf-prog.gut .pf-prog-bar i{background:#2E9E62}',
+      '.pf-prog-bar em{position:absolute;top:-4px;width:2px;height:20px;background:#1F2A33}',
+      '.pf-prog p{margin:0;font-size:14px}'
     ].join('\n');
     document.head.appendChild(st);
   }
@@ -604,6 +654,9 @@
     bereit:  ['Wo stehst du?','Eine ehrliche Einschätzung, Bereich für Bereich.']
   };
   function bereicheVon(p){
+    if(p.mat) return BEREICHE.map(function(b){
+      return b.id==='material' ? { id:b.id, z:'🧭', f:b.f, t:'Alles für die Prüfung',
+        k:'Ablauf, Bewertung, Themen, Grammatik und die wichtigsten Sätze.' } : b; });
     if(!p.ohnePruefung) return BEREICHE;
     var raus = { muster:1, bildschirm:1 };
     return BEREICHE.filter(function(b){ return !raus[b.id]; }).map(function(b){
@@ -647,7 +700,7 @@
     /* material war der einzige Bereich ohne leer-Flag — die Schrittleiste
        zeigte ihn deshalb als erledigt, obwohl dort fuer alle neun
        Pruefungen derselbe Platzhaltersatz steht. */
-    if(b.id==='material') return { text:'Wortschatz & Grammatik', leer:true };
+    if(b.id==='material') return p.mat ? { text:'Ablauf, Bewertung, Themen', leer:false } : { text:'Wortschatz & Grammatik', leer:true };
     if(b.id==='video')    return { text:'in Vorbereitung', leer:true };
     /* Das Bildschirmtraining ist fertig und zaehlt mit — es fiel nur in
        den Standardzweig und blieb auch nach 100 % grau. */
@@ -660,6 +713,7 @@
 
   window.pruefungOeffnen=function(id, bereich){
     var p=pruefungVon(id); if(!p) return;
+    stilMeine();
     var v=document.getElementById('v-pruefung'); if(!v) return;
     S('pruefLetzte', id);
     var liste = bereicheVon(p);
@@ -912,6 +966,22 @@
 
   /* 3 — Wortschatz und Grammatik */
   function materialBlock(p){
+    if(p.mat){
+      var M = p.mat, liste = function(l){ return '<ul class="pf-mat-l">'+l.map(function(x){ return '<li>'+E(x)+'</li>'; }).join('')+'</ul>'; };
+      var paare = function(l){ return '<div class="pf-mat-p">'+l.map(function(x){
+          return '<div><b>'+E(x[0])+'</b><span>'+E(x[1])+'</span></div>'; }).join('')+'</div>'; };
+      var inh = '<div class="pf-mat pf-mat-voll">'
+        + '<div class="pf-mat-k"><h4>📋 So läuft der Prüfungstag</h4>'+liste(M.ablauf)+'</div>'
+        + '<div class="pf-mat-k"><h4>⚖️ So wird bewertet</h4>'+paare(M.bewertung)+'</div>'
+        + '<div class="pf-mat-k"><h4>🗂️ Typische Themen auf B1</h4><div class="pf-mat-tags">'
+        +   M.wortschatz.map(function(w){ return '<span>'+E(w)+'</span>'; }).join('')+'</div>'
+        +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Wortschatz üben →</button></div></div>'
+        + '<div class="pf-mat-k"><h4>🧩 Grammatik, die in den Sprachbausteinen oft drankommt</h4>'+liste(M.grammatik)
+        +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Grammatik üben →</button></div></div>'
+        + '<div class="pf-mat-k"><h4>💬 Sätze, die du sicher können solltest</h4>'+paare(M.redemittel)+'</div>'
+        + '</div>';
+      return block('3', 'Alles für diese Prüfung', inh, 'pf-mat-b');
+    }
     var inhalt='<div class="pf-mat">'
       +'<p>Die vorhandenen Grammatik- und Wortschatzseiten werden hier eingehängt: '
       +'17 Grammatikkapitel, 34 Wortschatzseiten, 8 Aussprachekapitel.</p>'
@@ -934,7 +1004,34 @@
   }
 
   /* 5 — Bist du bereit? */
+  /* telc: Punkteprognose aus den eigenen Trainingsergebnissen. Ehrlich als
+     Schätzung beschriftet — sie rechnet die Prozent je Fertigkeit auf die
+     Punkte der echten Prüfung hoch. */
+  function prognoseBlock(p){
+    var zeilen = p.prognose.teile.map(function(t){
+      var pts = 0, offen = [];
+      for(var k in t.anteile){
+        var m = null; p.module.forEach(function(x){ if(x.id===k) m=x; });
+        var pr = m ? modulProzent(p, m) : 0;
+        if(!pr) offen.push(m ? m.n : k);
+        pts += t.anteile[k] * pr / 100;
+      }
+      pts = Math.round(pts);
+      var ok = pts >= t.grenze;
+      return '<div class="pf-prog '+(ok?'gut':'knapp')+'">'
+        + '<div class="pf-prog-k"><b>'+E(t.name)+'</b><span>'+pts+' von '+t.max+' · bestanden ab '+t.grenze+'</span></div>'
+        + '<div class="pf-prog-bar"><i style="width:'+Math.max(2,Math.round(pts/t.max*100))+'%"></i>'
+        +   '<em style="left:'+Math.round(t.grenze/t.max*100)+'%"></em></div>'
+        + '<p>'+(ok ? '✅ Nach deinen Übungen liegst du über der Grenze.'
+                   : '⏳ Noch unter der Grenze'+(offen.length?' — noch nicht geübt: '+E(offen.join(', ')):'')+'.')+'</p></div>';
+    }).join('');
+    return block('5', 'Bist du bereit?', '<div class="pf-bereit"><p>Eine Schätzung aus deinen Trainingsergebnissen, '
+      + 'hochgerechnet auf die Punkte der echten Prüfung. Je mehr du übst — vor allem die Prüfungsläufe mit Uhr —, desto genauer wird sie.</p>'
+      + zeilen + '</div>', 'pf-ber');
+  }
+
   function bereitBlock(p){
+    if(p.prognose) return prognoseBlock(p);
     var einl = p.ohnePruefung
       ? 'Am Ende steht hier eine ehrliche Einschätzung: wie sicher du in jedem Bereich schon bist — '
         + 'und was du als Nächstes üben solltest.'
