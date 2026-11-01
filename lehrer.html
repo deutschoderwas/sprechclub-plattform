@@ -71,8 +71,10 @@ async function init(){
   const to=new Date(Date.now()+21*24*3600*1000).toISOString();
   let cls=[];
   if(teacher){
-    const { data }=await sb.from('classes').select('id,title,level,topic,club,starts_at,zoom_link,material_live,material_pre')
-      .eq('teacher_id',teacher.id).gte('starts_at',from).lt('starts_at',to).eq('is_cancelled',false).order('starts_at');
+    const { data }=await sb.from('classes').select('id,title,level,topic,club,starts_at,zoom_link,material_live,material_pre,teacher_id')
+      /* Julia, 01.11.2026: Assistenzlehrer haben die gleichen Rechte wie der Hauptlehrer –
+         also sehen sie hier auch die Stunden, in denen sie als (2.) Assistenz eingeteilt sind. */
+      .or(`teacher_id.eq.${teacher.id},assist_teacher_id.eq.${teacher.id},assist_teacher2_id.eq.${teacher.id}`).gte('starts_at',from).lt('starts_at',to).eq('is_cancelled',false).order('starts_at');
     cls=data||[];
   }
   render(vorname, teacher, cls, prof);
@@ -95,7 +97,7 @@ function render(vorname, teacher, cls, prof){
       const kat=(c.club==='sprechclub'&&c.title&&c.title!==c.topic)?c.title:club.n;
       html+=`<div class="cls" style="--c:${club.c}">
         <div class="row1"><span class="time">${fTime.format(new Date(c.starts_at))}</span>
-          <span class="pill" style="--c:${club.c}">${esc(club.n)}</span><span class="lvl">${esc(c.level)}</span></div>
+          <span class="pill" style="--c:${club.c}">${esc(club.n)}</span><span class="lvl">${esc(c.level)}</span>${teacher&&c.teacher_id!==teacher.id?'<span class="lvl">🧑‍🏫 Assistenz</span>':''}</div>
         <div class="topic">${esc(c.topic||c.title)}</div>
         <div class="kat">${esc(kat)}</div>
         <div class="acts">

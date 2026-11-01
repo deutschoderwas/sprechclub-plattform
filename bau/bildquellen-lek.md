@@ -313,3 +313,7 @@ Alle Fotos: Unsplash, Unsplash License (kostenlos, auch kommerziell, keine Namen
 - hf_20260811_075829_9140ad9f-d09d-416c-80-021456dd.webp: https://unsplash.com/photos/1580674285054-bed31e145f59
 - hf_20260811_075829_bbbd331d-d247-4f2f-99-dccd7bb0.webp: https://unsplash.com/photos/1647140655214-e4a2d914971f
 - hf_20260809_211448_373a2f60-b6f0-4c5e-bf-d0f72a21.webp: https://unsplash.com/photos/1758519288905-38b7b00c1023
+
+## Sprachspielclub-Wimmelbilder (echte Fotos statt KI)
+
+- hf_20260711_084334_d7acf2fa-1d52-43f5-81-5fa63df7.webp (Strand B2) ← https://unsplash.com/photos/1697220538903-606f3dbeacaa
