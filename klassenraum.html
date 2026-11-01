@@ -319,6 +319,21 @@
   body.sharing .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
   body.sharing .video-buehne{ height:auto !important; flex:1 1 auto; min-height:40vh; }
 
+  /* Vergrößern-Leiste + Modi: eine Spalte (Präsi / Live-Tafel / Kameras) auf
+     volle Breite, zweiter Druck → normale Ansicht. Pro Person, lokal. */
+  #maxbar{ position:fixed; top:10px; left:50%; transform:translateX(-50%); z-index:80; display:flex; gap:6px; background:rgba(255,255,255,.93); border:1px solid var(--rahmen); border-radius:999px; padding:5px 7px; box-shadow:0 4px 14px rgba(0,0,0,.12); }
+  #maxbar button{ border:none; background:var(--creme-hell); color:var(--anthrazit); border-radius:999px; padding:6px 12px; font-family:'Inter'; font-weight:800; font-size:.8rem; cursor:pointer; white-space:nowrap; }
+  #maxbar button.active{ background:var(--tuerkis); color:var(--auf-tuerkis); }
+  body.max-praesi #gutter, body.max-praesi #gutter2, body.max-praesi .m-tabs, body.max-praesi .mittelspalte, body.max-praesi .spalte{ display:none; }
+  body.max-praesi .lektion-card{ flex:1 1 auto; width:auto; }
+  body.max-tafel #gutter, body.max-tafel #gutter2, body.max-tafel .m-tabs, body.max-tafel .lektion-card, body.max-tafel .spalte{ display:none; }
+  body.max-tafel .mittelspalte{ flex:1 1 auto; width:auto; }
+  body.max-kameras #gutter, body.max-kameras #gutter2, body.max-kameras .m-tabs, body.max-kameras .lektion-card, body.max-kameras .mittelspalte{ display:none; }
+  body.max-kameras .spalte{ flex:1 1 auto; width:auto; }
+  body.max-kameras .video-card{ width:100%; align-self:stretch; flex:1 1 auto; display:flex; flex-direction:column; }
+  body.max-kameras .video-buehne{ height:auto !important; flex:1 1 auto; min-height:60vh; }
+  @media (max-width:1024px){ #maxbar{ display:none; } }
+
   /* Die Mitschrift mitnehmen: eine Zeile unter jeder Tafel, fuer
      ALLE sichtbar — auch fuer Schueler, die oben nur mitlesen. */
   .tf-save{display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:9px 14px 11px; border-top:1px solid var(--rahmen);}
@@ -459,6 +474,12 @@
 </header>
 
 <main id="main">
+  <!-- Vergrößern: jede Person kann Präsi / Live-Tafel / Kameras groß machen (Julia, 01.11.2026) -->
+  <div id="maxbar">
+    <button id="max-praesi" onclick="maxView('praesi')" title="Präsentation groß / zurück">📊 Präsi</button>
+    <button id="max-tafel" onclick="maxView('tafel')" title="Live-Tafel groß / zurück">📝 Tafel</button>
+    <button id="max-kameras" onclick="maxView('kameras')" title="Kameras groß / zurück">🎥 Kameras</button>
+  </div>
   <!-- echte interaktive Lektion mit Stift-Overlay -->
   <section class="lektion-card">
     <div class="lekt-kopf">
@@ -1100,6 +1121,19 @@
   function lobbyMusicStop(){}
   function handleMusic(){}
   window.toggleLobbyMusic = function(){};
+
+  // ===== Vergrößern: Präsi / Live-Tafel / Kameras groß machen (Julia, 01.11.2026) =====
+  // Jede Person für sich: einmal drücken → groß, nochmal drücken → normal.
+  function maxView(which){
+    const b=document.body; const cls='max-'+which;
+    const on=b.classList.contains(cls);
+    b.classList.remove('max-praesi','max-tafel','max-kameras');
+    if(!on) b.classList.add(cls);
+    ['praesi','tafel','kameras'].forEach(k=>{ const el=document.getElementById('max-'+k); if(el) el.classList.toggle('active', (!on && k===which)); });
+    // Kameras-Raster und Präsentation an die neue Größe anpassen
+    setTimeout(()=>{ try{ if(typeof renderGrid==='function') renderGrid(); }catch(e){} try{ if(typeof fitLektion==='function') fitLektion(); }catch(e){} }, 80);
+  }
+  window.maxView = maxView;
   // ===== Eigenes Kachel-Raster: ALLE Teilnehmer gleichzeitig, formatfüllend (kein Schwarzrand) =====
   function renderGrid(){
     if(!dframe || window._provider!=='daily') return;
