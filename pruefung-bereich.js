@@ -80,7 +80,7 @@
       punkte:'Hören und Lesen zusammen 45 Punkte — ab 33 ist es B1, ab 20 A2. '
             +'Schreiben 20 Punkte, ab 15 B1. Sprechen 100 Punkte, ab 40 B1.' },
 
-    { id:'b1', name:'Zertifikat B1', anbieter:'Goethe · telc · ÖSD', niveau:'B1',
+    { id:'b1', name:'Goethe-Zertifikat B1', anbieter:'Goethe · ÖSD', niveau:'B1',
       bild:'buero', kurs:'goethetelc', muster:'B1',
       fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber. Die wichtigste Hürde.',
       module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
@@ -89,14 +89,14 @@
       hinweis:'Sprechen ca. 15 Minuten zu zweit, ca. 10 Minuten allein — dazu 15 Minuten Vorbereitung. '
              +'Die schriftlichen Module dauern zusammen etwa 165 Minuten.' },
 
-    { id:'b2', name:'Goethe-Zertifikat B2', anbieter:'Goethe · telc', niveau:'B2',
+    { id:'b2', name:'Goethe-Zertifikat B2', anbieter:'Goethe-Institut', niveau:'B2',
       bild:'bewerbung', kurs:'goethetelc', muster:'B2', geprueft:true,
       fuer:'Studium, Anerkennung im Beruf, qualifizierte Arbeit.',
       module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'40'},
                {id:'schreiben',n:'Schreiben',m:'75'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
       modular:true },
 
-    { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe · telc Hochschule', niveau:'C1',
+    { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe-Institut', niveau:'C1',
       bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1',
       fuer:'Universität, Führungsposition, anspruchsvolle Fachberufe.',
       /* Die allgemeinen Modultexte sind fuer A1/A2 geschrieben ("Anzeigen,
@@ -114,6 +114,67 @@
       hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung. '
              +'Lesen: 65 Minuten für 30 Aufgaben, davon 5 für den Antwortbogen; bestanden ab 18 richtigen. '
              +'Schreiben: 75 Minuten für zwei Texte, bewertet von zwei Prüfenden unabhängig voneinander.' },
+
+
+    /* ---------- Die telc-Prüfungen, jede mit eigener Seite ----------
+       01.11.2026: Vorher teilten sich Goethe und telc eine Seite — mit
+       den Goethe-Zeiten. Eine Schülerin, die sich auf telc B1 vorbereitet,
+       sah dort „Lesen 65 Min, modular" — bei telc sind es 90 Minuten
+       Lesen und Sprachbausteine zusammen, und es gibt keine Module.
+       Gegen telc geprüft am 01.11.2026:
+       B1: Übungstest 1 Zertifikat Deutsch (shop.telc.net)
+       B2: telc.net Prüfungsseite + Übungstest 3 Deutsch B2
+       C1 Hochschule: telc „Tipps zur Prüfungsvorbereitung Deutsch Hochschule"
+       B1+ Beruf: telc.net Prüfungsseite
+       Wo telc eine Zahl nicht nennt, steht hier auch keine. */
+    { id:'telcb1', name:'telc Deutsch B1', anbieter:'telc · Zertifikat Deutsch', niveau:'B1',
+      bild:'buero', kurs:'goethetelc', muster:'B1', telc:true, geprueft:true,
+      fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber — das Zertifikat Deutsch von telc.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
+                 t:'Drei Leseteile mit 20 Aufgaben, dann zwei Teile Sprachbausteine — Grammatik und Wortschatz im Text, 20 Lücken. Die 90 Minuten teilst du selbst ein.'},
+               {id:'hoeren',n:'Hören',m:'ca. 30',
+                 t:'Drei Teile, 20 Aufgaben — alle richtig oder falsch.'},
+               {id:'schreiben',n:'Schreiben',m:'30',
+                 t:'Eine E-Mail, informell oder halbformell, zu vier Leitpunkten. Alle vier müssen drin sein.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15',
+                 t:'Zu zweit: einander kennenlernen, über ein Thema sprechen, gemeinsam etwas planen.'} ],
+      hinweis:'Schriftlich 150 Minuten: erst Lesen und Sprachbausteine, dann Hören, dann Schreiben. '
+             +'Mündlich ca. 15 Minuten zu zweit, vorher 20 Minuten Vorbereitung.',
+      punkte:'Bestanden hast du mit 135 von 225 Punkten im schriftlichen und 45 von 75 Punkten im '
+            +'mündlichen Teil — beide Teile müssen reichen. Fällt ein Teil durch, wiederholst du nur '
+            +'diesen Teil, im selben oder im nächsten Kalenderjahr.',
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf' },
+
+    { id:'telcb2', name:'telc Deutsch B2', anbieter:'telc', niveau:'B2',
+      bild:'bewerbung', kurs:'goethetelc', muster:'B2', telc:true, geprueft:true,
+      fuer:'Studium, Anerkennung im Beruf, qualifizierte Arbeit — die B2-Prüfung von telc.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
+                 t:'Drei Leseteile mit 20 Aufgaben, dann zwei Teile Sprachbausteine mit 20 Lücken. Zusammen 90 Minuten, ohne Pause.'},
+               {id:'hoeren',n:'Hören',m:'ca. 20',
+                 t:'Drei Teile, 20 Aufgaben — alle richtig oder falsch.'},
+               {id:'schreiben',n:'Schreiben',m:'30',
+                 t:'Eine halbformelle E-Mail, mindestens 150 Wörter.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15',
+                 t:'Zu zweit: über Erfahrungen sprechen, diskutieren, gemeinsam etwas planen.'} ],
+      hinweis:'Schriftlich: Lesen und Sprachbausteine 90 Minuten ohne Pause, dann Hören ca. 20 und '
+             +'Schreiben 30 Minuten. Mündlich ca. 15 Minuten zu zweit, vorher 20 Minuten Vorbereitung.',
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/201907015023B00030201BiB.pdf' },
+
+    { id:'telcc1', name:'telc Deutsch C1 Hochschule', anbieter:'telc · Hochschulzugang', niveau:'C1',
+      bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1', telc:true, geprueft:true,
+      fuer:'Der Sprachnachweis für das Studium an einer deutschen Hochschule.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
+                 t:'Drei Leseteile mit langen Sachtexten, zusammen rund 2600 Wörter, dazu ein Lückentext mit 22 Sprachbausteinen.'},
+               {id:'hoeren',n:'Hören',m:'ca. 40',
+                 t:'Drei Teile. Im letzten schreibst du bei einem Vortrag von etwa 10 Minuten mit. 5 Minuten zum Übertragen sind dabei.'},
+               {id:'schreiben',n:'Schreiben',m:'70',
+                 t:'Ein Text mit etwa 350 Wörtern — du wählst eines von zwei Themen.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 16',
+                 t:'Zu zweit: eine kurze Präsentation, die Präsentation des anderen zusammenfassen und nachfragen, dann eine Diskussion zu einem Zitat.'} ],
+      hinweis:'Schriftlich: Lesen und Sprachbausteine 90 Minuten, Hören ca. 40, Schreiben 70 Minuten. '
+             +'Mündlich ca. 16 Minuten zu zweit, vorher 20 Minuten Vorbereitung für die Präsentation.',
+      punkte:'Insgesamt 214 Punkte: 166 im schriftlichen, 48 im mündlichen Teil.',
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/5032B00010301BiB.pdf' },
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
       bild:'gesundheit', kurs:'telcmed', fach:true, geprueft:true, dauer:'ca. 2 Std 25 Min',
@@ -148,6 +209,19 @@
       hinweis:'Eine Prüfung, zwei Niveaus: ob am Ende B1 oder B2 auf dem Zertifikat steht, '
              +'entscheidet dein Ergebnis. Schriftlich zusammen 115 Minuten. Sprechen ca. 16 Minuten '
              +'zu zweit — dazu 20 Minuten Vorbereitung. Einzelne Module kann man hier nicht ablegen.' },
+
+    { id:'telcb1beruf', name:'telc Deutsch B1+ Beruf', anbieter:'telc · Beruf', niveau:'B1',
+      bild:'kunden', kurs:'goethetelc', telc:true, fach:true, geprueft:true,
+      fuer:'Deutsch für den Arbeitsplatz — der Nachweis für Jobcenter und Arbeitgeber.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
+                 t:'Drei Leseteile und zwei Teile Sprachbausteine — zusammen 90 Minuten, ohne Pause.'},
+               {id:'hoeren',n:'Hören',m:'30', t:'Drei Teile.'},
+               {id:'schreiben',n:'Schreiben',m:'30', t:'Eine Schreibaufgabe.'},
+               {id:'sprechen',n:'Sprechen',m:'15',
+                 t:'Drei Teile, zu zweit.'} ],
+      hinweis:'Schriftlich: Lesen und Sprachbausteine 90 Minuten, Hören 30, Schreiben 30 Minuten. '
+             +'Mündlich 15 Minuten zu zweit, vorher 20 Minuten Vorbereitung.',
+      uebungstest:'https://shop.telc.net/media/catalog/product/file//2/0/20201224_5034-b00-010103_web_2.pdf' },
 
     { id:'buero', name:'Deutsch für Büro & Logistik', anbieter:'ohne Prüfung', niveau:'A2–B2',
       bild:'kunden', kurs:'buero', fach:true, ohnePruefung:true,
@@ -214,14 +288,25 @@
      Lernziel-ID -> [Prüfungsseite hier, Name wie sie ihn gewählt hat] */
   var LZ_ZU_PF = {
     goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a2:['sd2','telc A2'],
-    goethe_b1:['b1','Goethe B1'], telc_b1:['b1','telc B1'], telc_b1_beruf:['b1','telc B1+ Beruf'],
-    goethe_b2:['b2','Goethe B2'], telc_b2:['b2','telc B2'],
-    goethe_c1:['c1','Goethe C1'], telc_c1:['c1','telc C1 Hochschule'],
+    goethe_b1:['b1','Goethe B1'], telc_b1:['telcb1','telc B1'], telc_b1_beruf:['telcb1beruf','telc B1+ Beruf'],
+    goethe_b2:['b2','Goethe B2'], telc_b2:['telcb2','telc B2'],
+    goethe_c1:['c1','Goethe C1'], telc_c1:['telcc1','telc C1 Hochschule'],
     telc_b1b2_pflege:['pflege','telc B1·B2 Pflege'], telc_b2c1_medizin:['telcmed','telc B2·C1 Medizin'],
     dtz:['dtz','DTZ']
   };
+  /* In der App (app.html) gibt es kein lernziel.js — dort liegt das Lernziel in window.LZ_DATEN. */
+  function lzDaten(){ return (window.LZ && window.LZ.data) || window.LZ_DATEN || null; }
+  window.pruefLernzielLaden = function(){
+    if(window.LZ && window.LZ.laden) return window.LZ.laden();
+    var sb = window.sb; if(!sb || !sb.auth) return Promise.resolve(null);
+    return sb.auth.getSession().then(function(r){
+      var u = r && r.data && r.data.session && r.data.session.user; if(!u) return null;
+      return sb.from('lernziel').select('*').eq('user_id', u.id).maybeSingle()
+        .then(function(x){ window.LZ_DATEN = (x && x.data) || null; return window.LZ_DATEN; });
+    }).catch(function(){ return null; });
+  };
   function meinePruefung(){
-    var d = window.LZ && window.LZ.data;
+    var d = lzDaten();
     if(!d || d.ziel!=='pruefung' || !d.pruefung) return null;
     var z = LZ_ZU_PF[d.pruefung]; if(!z) return null;
     var p = pruefungVon(z[0]); if(!p) return null;
@@ -552,7 +637,7 @@
       return { text:p.module.length+(p.ohnePruefung?' Bereiche · ':' Teile · ')+pr+' %', bar:pr };
     }
     if(b.id==='muster'){
-      var da = p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster];
+      var da = (p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]) || p.uebungstest;
       return { text: da ? 'bereit zum Ansehen' : 'in Vorbereitung', leer:!da };
     }
     /* material war der einzige Bereich ohne leer-Flag — die Schrittleiste
@@ -603,6 +688,7 @@
       +       '<span>›</span><b>'+E(p.name)+'</b></div>'
       +     '<div class="pf-hero-oben"><div>'
       +       '<div class="pf-pillen">'
+      +         (function(){ var mp=meinePruefung(); return (mp && mp.p.id===p.id) ? '<span class="pf-p pf-p-rot">⭐ Deine Prüfung</span>' : ''; })()
       +         '<span class="pf-p pf-p-gold">'+E(p.niveau)+'</span>'
       +         '<span class="pf-p pf-p-weiss">'+E(p.anbieter)+'</span>'
       +         (pr>0 ? '<span class="pf-p pf-p-rot">🔥 '+pr+' % geschafft</span>' : '')
@@ -749,6 +835,10 @@
        und unsichtbar. Genau das will jemand wissen, der sich vorbereitet. */
     if(p.hinweis) hinweis += '<p class="pf-hinw">'+E(p.hinweis)+'</p>';
     if(p.punkte)  hinweis += '<p class="pf-hinw">'+E(p.punkte)+'</p>';
+    if(p.telc) hinweis += '<p class="pf-hinw pf-telc-hinw">ℹ️ Unsere Trainings unten üben Lesen, Hören, '
+      + 'Schreiben und Sprechen auf '+E(p.niveau)+' — die Aufgaben sind aber nach dem Goethe-Format gebaut '
+      + 'und sehen bei telc anders aus. Das echte telc-Format übst du mit dem kostenlosen Übungstest von telc'
+      + (p.uebungstest ? ' (unter „Musterprüfung")' : '') + '.</p>';
     var zu = ZUSATZ[p.id] ? zusatzBlock(ZUSATZ[p.id]) : '';
     return hinweis + '<div class="pf-mods">'+karten+'</div>' + zu;
   }
@@ -794,6 +884,13 @@
     } else {
       inhalt='<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung. '
         +'Vorhanden sind bisher A2, B1, B2 und C1.</div>';
+    }
+    if(p.uebungstest){
+      inhalt = '<div class="pf-muster"><div class="pf-muster-tx"><b>Der offizielle Übungstest von telc</b>'
+        + '<span>Eine komplette Prüfung im echten telc-Format, kostenlos als PDF. '
+        + 'Druck ihn aus und mach ihn einmal mit Uhr, wie am Prüfungstag.</span></div>'
+        + '<a class="pf-b1" href="'+E(p.uebungstest)+'" target="_blank" rel="noopener">Übungstest öffnen →</a></div>'
+        + inhalt;
     }
     return block('2', 'Musterprüfung', inhalt, 'pf-must');
   }
@@ -848,4 +945,6 @@
   }
 
   window.PRUEFUNGEN_DATEN = PRUEFUNGEN;
+  window.pruefMeine = meinePruefung;
+  window.pruefTerminText = terminText;
 })();

@@ -131,6 +131,7 @@
      Vorher sprang die App hier direkt in die Simulation. Wer aber
      wissen will, welche Pruefung ueberhaupt zu ihm passt, stand vor
      einer Frage, die er noch gar nicht beantworten kann. */
+  var appLzGeladen = false;
   var daPruef = function () { return Array.isArray(window.PRUEFUNGEN_DATEN) && window.PRUEFUNGEN_DATEN.length; };
 
   function appPruefungen() {
@@ -141,20 +142,39 @@
       nachladen('pruefung-bereich.js', daPruef).then(function () { appPruefungen(); });
       return;
     }
-    var alle = window.PRUEFUNGEN_DATEN;
+    /* 01.11.2026: Wer im Lernziel eine Prüfung gewählt hat, sieht sie oben —
+       mit Datum und Tagen bis dahin. Die anderen sind eingeklappt. */
+    if (!appLzGeladen && window.pruefLernzielLaden) {
+      appLzGeladen = true;
+      window.pruefLernzielLaden().then(function (d) { if (d) appPruefungen(); });
+    }
+    var mein = window.pruefMeine ? window.pruefMeine() : null;
+    var alle = window.PRUEFUNGEN_DATEN.filter(function (p) { return !mein || p.id !== mein.p.id; });
     var sprach = alle.filter(function (p) { return !p.fach; });
     var beruf = alle.filter(function (p) { return p.fach; });
+    var listen = '<h2 class="a">Die Sprachprüfungen</h2><div class="ls-app-liste">'
+      + sprach.map(pruefZeile).join('') + '</div>'
+      + (beruf.length ? '<h2 class="a">Für deinen Beruf</h2><div class="ls-app-liste">'
+          + beruf.map(pruefZeile).join('') + '</div>' : '');
+    var oben = '';
+    if (mein) {
+      var tt = window.pruefTerminText ? window.pruefTerminText(mein.termin) : null;
+      oben = '<h2 class="a">Deine Prüfung</h2>'
+        + '<p class="u">Dein Ziel: <b>' + E(mein.name) + '</b>'
+        + (tt && !tt.vorbei ? ' — am <b>' + E(tt.datum) + '</b>, ' + E(tt.rest) : '') + '.</p>'
+        + '<div class="ls-app-liste">' + pruefZeile(mein.p) + '</div>';
+      listen = '<details style="margin-top:18px"><summary style="cursor:pointer;font-weight:700;padding:8px 0">'
+        + 'Andere Prüfungen ansehen</summary>' + listen + '</details>';
+    }
 
     s.innerHTML = kopfZurueck('Lernbereich', 'appLernenZurueck()')
       + amBand('amanda-schlau.webp', 'Prüfung?',
           'Erst schauen, <b>was drankommt</b> — dann üben. Wenn du eine Aufgabe nicht verstehst, frag mich.',
           'Frag Amanda →')
       + '<h1 class="t">Für die Prüfung</h1>'
-      + '<p class="u">Such deine Prüfung. Dahinter stehen die Module, die Zeit und was du üben kannst.</p>'
-      + '<h2 class="a">Die Sprachprüfungen</h2><div class="ls-app-liste">'
-      + sprach.map(pruefZeile).join('') + '</div>'
-      + (beruf.length ? '<h2 class="a">Für deinen Beruf</h2><div class="ls-app-liste">'
-          + beruf.map(pruefZeile).join('') + '</div>' : '');
+      + '<p class="u">' + (mein ? 'Hier ist alles für deine Prüfung — Module, Zeiten und was du üben kannst.'
+          : 'Such deine Prüfung. Dahinter stehen die Module, die Zeit und was du üben kannst.') + '</p>'
+      + oben + listen;
     try { window.scrollTo(0, 0); } catch (e) {}
   }
   window.appPruefungen = appPruefungen;
