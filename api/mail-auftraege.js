@@ -74,6 +74,12 @@ const ARTEN = {
      und zwar wie man den Unterricht bucht und wo man den gebuchten
      Unterricht findet." Erst 'anleitung_test' (eine Mail an Julia),
      dann auf ihr Wort 'anleitung_buchen' an alle. */
+  /* "Es gibt jetzt mehr Stunden" mit dem neuen Wochenplan. Julia,
+     1.11.2026, nachdem die Abendstunden am ersten Tag voll waren. */
+  wochenplan_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/wochenplan-neu', true),
+  wochenplan_neu:      (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/wochenplan-neu', false),
+  wochenplan_test:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/wochenplan-neu?test=1', false),
+
   anleitung_vorschau: (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen', true),
   anleitung_buchen:   (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen', false),
   anleitung_test:     (sb, auftrag, basis) => endpunktAnstossen(basis, '/api/anleitung-buchen?test=1', false),
