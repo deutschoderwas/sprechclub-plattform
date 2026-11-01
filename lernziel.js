@@ -196,6 +196,7 @@ LZ.starten=function(neu){
 };
 /* Nicht einsperren: jederzeit raus, kommt beim nächsten Mal nicht ungefragt wieder */
 LZ.spaeter=function(){
+  window.LZ_ZURUECK=null;
   try{ localStorage.setItem('dow_lz_skip','1'); }catch(e){}
   LZ.schliessen();
 };
@@ -396,7 +397,9 @@ LZ.speichern=async function(){
     try{ localStorage.setItem('dow_lz_skip','1'); }catch(e){}
     LZ.schliessen();
     LZ.zeichneKarte();
-    if(typeof window.go==='function') window.go('dashboard');
+    /* Vom Prüfungsbereich aus geöffnet? Dann dorthin zurück, nicht aufs Dashboard. */
+    var zur = window.LZ_ZURUECK || 'dashboard'; window.LZ_ZURUECK = null;
+    if(typeof window.go==='function') window.go(zur);
   }catch(e){
     if(b){ b.disabled=false; b.innerHTML=I('check',17)+'<span>Nochmal versuchen</span>'; }
     alert('Das Speichern hat nicht geklappt: '+(e.message||'unbekannter Fehler'));

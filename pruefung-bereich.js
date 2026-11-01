@@ -205,6 +205,60 @@
 
   function pruefungVon(id){ for(var i=0;i<PRUEFUNGEN.length;i++) if(PRUEFUNGEN[i].id===id) return PRUEFUNGEN[i]; return null; }
 
+  /* ---------- Meine Prüfung (aus dem Lernziel) ----------
+     01.11.2026: Eine neue Schülerin hatte „telc B1" und ihr Datum im
+     Lernziel eingetragen — und sah hier trotzdem alle neun Prüfungen
+     und „Termin: noch nicht eingetragen". Jetzt liest der Bereich das
+     Lernziel: ihre Prüfung steht oben, die anderen sind eingeklappt,
+     und der Termin zeigt die echten Tage bis zur Prüfung.
+     Lernziel-ID -> [Prüfungsseite hier, Name wie sie ihn gewählt hat] */
+  var LZ_ZU_PF = {
+    goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a2:['sd2','telc A2'],
+    goethe_b1:['b1','Goethe B1'], telc_b1:['b1','telc B1'], telc_b1_beruf:['b1','telc B1+ Beruf'],
+    goethe_b2:['b2','Goethe B2'], telc_b2:['b2','telc B2'],
+    goethe_c1:['c1','Goethe C1'], telc_c1:['c1','telc C1 Hochschule'],
+    telc_b1b2_pflege:['pflege','telc B1·B2 Pflege'], telc_b2c1_medizin:['telcmed','telc B2·C1 Medizin'],
+    dtz:['dtz','DTZ']
+  };
+  function meinePruefung(){
+    var d = window.LZ && window.LZ.data;
+    if(!d || d.ziel!=='pruefung' || !d.pruefung) return null;
+    var z = LZ_ZU_PF[d.pruefung]; if(!z) return null;
+    var p = pruefungVon(z[0]); if(!p) return null;
+    return { p:p, name:z[1], termin:d.termin||null };
+  }
+  function terminText(t){
+    if(!t) return null;
+    var d = new Date(t+'T12:00:00'); if(isNaN(d)) return null;
+    var datum = new Intl.DateTimeFormat('de-DE',{ day:'numeric', month:'long', year:'numeric' }).format(d);
+    var heute = new Date(); heute.setHours(12,0,0,0);
+    var tage = Math.round((d - heute)/86400000);
+    var rest = tage>1 ? 'noch '+tage+' Tage' + (tage>=14 ? ' (gut '+Math.floor(tage/7)+' Wochen)' : '')
+             : tage===1 ? 'morgen' : tage===0 ? 'heute — viel Erfolg!' : 'vorbei';
+    return { datum:datum, rest:rest, vorbei:tage<0 };
+  }
+  window.pruefTerminAendern=function(){
+    window.LZ_ZURUECK='pruefung';
+    if(window.LZ && window.LZ.starten) window.LZ.starten(true); else if(window.go) window.go('lernpfad');
+  };
+  var lzGeladen=false;
+  function stilMeine(){
+    if(document.getElementById('pf-mein-stil')) return;
+    var st=document.createElement('style'); st.id='pf-mein-stil';
+    st.textContent=[
+      '.pf-mein{margin:0 0 8px}',
+      '.pf-mein-info{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 12px;font-size:14px;color:var(--m-muted,#6B7280)}',
+      '.pf-mein-info b{color:var(--m-ink,#1A1A1A)}',
+      '.pf-mein-info button{background:none;border:0;padding:0;color:#14708B;font-weight:700;font-size:14px;cursor:pointer;text-decoration:underline}',
+      '.pf-andere{margin-top:26px;border-top:1px solid rgba(0,0,0,.08);padding-top:14px}',
+      '.pf-andere>summary{cursor:pointer;font-weight:700;font-size:15px;padding:8px 0;list-style:none}',
+      '.pf-andere>summary::-webkit-details-marker{display:none}',
+      '.pf-andere>summary:before{content:"▸ ";color:#14708B}',
+      '.pf-andere[open]>summary:before{content:"▾ "}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
   /* ---------- Fortschritt ----------
  — bis die Module echte Inhalte haben, zählt
      der Fortschritt der dahinterliegenden Lektionen. */
@@ -324,6 +378,32 @@
   /* ---------- Ebene 1: Welche Prüfung? ---------- */
   window.renderPruefungen=function(){
     var v=document.getElementById('v-pruefung'); if(!v) return;
+    /* Lernziel noch nicht da (frisch eingeloggt)? Einmal nachladen, dann neu zeichnen. */
+    if(!lzGeladen && window.LZ && !window.LZ.data && window.LZ.laden){
+      lzGeladen=true;
+      window.LZ.laden().then(function(d){ if(d && document.getElementById('v-pruefung')===v && v.querySelector('.pf-kopf')) window.renderPruefungen(); });
+    }
+    var mein = meinePruefung();
+    var gruppen = function(ohne){
+      var nicht = function(p){ return !ohne || p.id!==ohne; };
+      return '<div class="pf-gruppe"><span class="pf-gr-t">Die Sprachprüfungen</span></div>'
+        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return !p.fach && nicht(p); }).map(kachel).join('') + '</div>'
+        + '<div class="pf-gruppe"><span class="pf-gr-t">Für deinen Beruf</span></div>'
+        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach && nicht(p); }).map(kachel).join('') + '</div>';
+    };
+    var unten;
+    if(mein){
+      stilMeine();
+      var tt = terminText(mein.termin);
+      unten = '<div class="pf-gruppe"><span class="pf-gr-t">Deine Prüfung</span></div>'
+        + '<div class="pf-mein-info"><span>Du hast <b>'+E(mein.name)+'</b> als Ziel gewählt'
+        +   (tt && !tt.vorbei ? ' — am <b>'+E(tt.datum)+'</b>, '+E(tt.rest) : '')+'.</span>'
+        +   '<button type="button" onclick="pruefTerminAendern()">'+(tt?'Ändern':'Termin eintragen')+'</button></div>'
+        + '<div class="pf-liste pf-mein">' + kachel(mein.p) + '</div>'
+        + '<details class="pf-andere"><summary>Andere Prüfungen ansehen</summary>' + gruppen(mein.p.id) + '</details>';
+    } else {
+      unten = gruppen(null);
+    }
     v.innerHTML =
         '<div class="pf-kopf">'
       +   '<span class="pf-kicker">Prüfungsvorbereitung</span>'
@@ -337,10 +417,7 @@
       +     '<span class="pf-test-go">Test starten →</span>'
       +   '</a>'
       + '</div>'
-      + '<div class="pf-gruppe"><span class="pf-gr-t">Die Sprachprüfungen</span></div>'
-      + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return !p.fach; }).map(kachel).join('') + '</div>'
-      + '<div class="pf-gruppe"><span class="pf-gr-t">Für deinen Beruf</span></div>'
-      + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach; }).map(kachel).join('') + '</div>';
+      + unten;
     try{ window.scrollTo(0,0); }catch(e){}
   };
 
@@ -548,10 +625,7 @@
       + '<div class="pf-body">'
       +   '<nav class="pf-rail"><h3>Deine Vorbereitung</h3>'
       +     '<div class="pf-rail-l">'+schritte+'</div>'
-      +     (p.ohnePruefung ? '' :
-            '<div class="pf-termin"><span>⏳ Dein Termin</span><b>Noch nicht eingetragen</b>'
-      +       '<em>Trag ihn ein — dann rechne ich dir aus, was pro Woche dran ist.</em>'
-      +       '<button onclick="go(\'lernpfad\')">Termin eintragen</button></div>')
+      +     (p.ohnePruefung ? '' : terminKarte(p))
       +   '</nav>'
       +   '<div class="pf-inhalt">'
       +     '<div class="pf-kopfzeile"><h2>'+E(b?b.t:'')+'</h2><p>'+E(b?b.k:'')+'</p></div>'
@@ -561,6 +635,20 @@
       + '</div>';
     try{ window.scrollTo(0,0); }catch(e){}
   };
+
+  /* Termin-Karte links: echtes Datum, wenn diese Seite die eigene Prüfung ist */
+  function terminKarte(p){
+    var mein = meinePruefung();
+    var tt = (mein && mein.p.id===p.id) ? terminText(mein.termin) : null;
+    if(tt && !tt.vorbei){
+      return '<div class="pf-termin"><span>⏳ Deine Prüfung · '+E(mein.name)+'</span><b>'+E(tt.datum)+'</b>'
+        + '<em>'+E(tt.rest.charAt(0).toUpperCase()+tt.rest.slice(1))+'</em>'
+        + '<button onclick="pruefTerminAendern()">Termin ändern</button></div>';
+    }
+    return '<div class="pf-termin"><span>⏳ Dein Termin</span><b>Noch nicht eingetragen</b>'
+      + '<em>Trag ihn ein — dann siehst du hier, wie viele Tage dir noch bleiben.</em>'
+      + '<button onclick="pruefTerminAendern()">Termin eintragen</button></div>';
+  }
 
   /* Die goldene Zeile: was jetzt dran ist */
   function naechsterSchritt(p, bid){
