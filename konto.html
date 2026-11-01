@@ -2935,7 +2935,16 @@ function kalEv(c){
   /* Vor dem eigenen Starttag: ansehen ja, buchen nein. Der Satz steht
      so da, wie Julia ihn geschrieben hat. */
   else if(!stundeErlaubt(c.starts_at)){ btn=`<button class="ev-btn off" style="white-space:normal;line-height:1.25;text-align:left" onclick="erstAbStart()">Buche den Unterricht ab dem ${startTextKurz()}</button>`; }
-  else if(free<=0 && !neuesSystem(c.starts_at)){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
+  /* Julia, 1.11.2026: "Keine Anmeldung mehr für den Unterricht heute
+     um 11 möglich, ausgebucht ... In Zukunft: bei 30 Anmeldungen
+     Sperre einlegen."
+
+     Hier stand "&& !neuesSystem(...)": im neuen System wurde eine
+     volle Stunde NICHT als ausgebucht gezeigt, weil Premium damals
+     immer hineinkam. Seit die Platzgrenze auch für Premium gilt
+     (book_class, 1.11.2026), wäre der Knopf eine Falle — man tippt
+     auf Buchen und bekommt eine Fehlermeldung. */
+  else if(free<=0){ btn=`<span class="ev-btn off">ausgebucht</span>`; }
   else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   /* Julia, 31.10.2026: "Alle Schueler muessen das Material und auch die
      Vorbereitung dazu ansehen koennen." Material-Knopf jetzt fuer alle
