@@ -46,6 +46,9 @@ export default async function handler(req, res) {
 
   const { data: teachers } = await sb.from('teachers').select('id,name,email,profile_id');
   const tmap = Object.fromEntries((teachers || []).map(t => [t.id, t]));
+  // Julia, 01.11.2026: Assistenzlehrer haben die gleichen Rechte wie der Hauptlehrer –
+  // sie bekommen also auch alle Erinnerungen. Haupt- + (2.) Assistenz, ohne Doppelte.
+  const lehrerVon = c => [...new Set([c.teacher_id, c.assist_teacher_id, c.assist_teacher2_id].filter(Boolean))];
   const { data: clubs } = await sb.from('clubs').select('slug,name,emoji,color');
   const clubmap = Object.fromEntries((clubs || []).map(c => [c.slug, c]));
 
@@ -55,14 +58,15 @@ export default async function handler(req, res) {
   {
     const until = new Date(now.getTime() + 90 * 60 * 1000);
     const { data: cls } = await sb.from('classes')
-      .select('id,title,level,topic,starts_at,zoom_link,club,capacity,teacher_id')
+      .select('id,title,level,topic,starts_at,zoom_link,club,capacity,teacher_id,assist_teacher_id,assist_teacher2_id')
       .gt('starts_at', now.toISOString()).lt('starts_at', until.toISOString())
-      .eq('is_cancelled', false).not('teacher_id', 'is', null);
+      .eq('is_cancelled', false);
 
-    for (const c of (cls || [])) {
-      const t = tmap[c.teacher_id];
+    for (const c of (cls || [])) for (const tid of lehrerVon(c)) {
+      const t = tmap[tid];
       if (!t?.email) continue;
-      const ref = `${c.id}`;
+      // Hauptlehrer behaelt die alte ref (= Stunden-ID), Assistenz bekommt eine eigene.
+      const ref = tid === c.teacher_id ? `${c.id}` : `${c.id}:${tid}`;
       const { error: logErr } = await sb.from('email_log').insert({ kind: 'teacher_reminder', ref, user_id: t.profile_id || null });
       if (logErr) continue; // schon erinnert
 
@@ -91,9 +95,9 @@ export default async function handler(req, res) {
     const tomorrowKey = berlinDateKey(new Date(now.getTime() + 24 * 3600 * 1000));
     const windowEnd = new Date(now.getTime() + 50 * 3600 * 1000);
     const { data: cls } = await sb.from('classes')
-      .select('id,title,level,topic,starts_at,club,capacity,teacher_id')
+      .select('id,title,level,topic,starts_at,club,capacity,teacher_id,assist_teacher_id,assist_teacher2_id')
       .gt('starts_at', now.toISOString()).lt('starts_at', windowEnd.toISOString())
-      .eq('is_cancelled', false).not('teacher_id', 'is', null).order('starts_at');
+      .eq('is_cancelled', false).order('starts_at');
 
     const tomorrow = (cls || []).filter(c => berlinDateKey(new Date(c.starts_at)) === tomorrowKey);
     const ids = tomorrow.map(c => c.id);
@@ -103,7 +107,7 @@ export default async function handler(req, res) {
       (bk || []).forEach(b => { counts[b.class_id] = (counts[b.class_id] || 0) + 1; });
     }
     const byTeacher = {};
-    tomorrow.forEach(c => { (byTeacher[c.teacher_id] = byTeacher[c.teacher_id] || []).push(c); });
+    tomorrow.forEach(c => lehrerVon(c).forEach(tid => { (byTeacher[tid] = byTeacher[tid] || []).push(c); }));
     const dateLabel = DAYLABEL_FMT.format(new Date(now.getTime() + 24 * 3600 * 1000));
 
     for (const [tid, list] of Object.entries(byTeacher)) {
@@ -135,9 +139,9 @@ export default async function handler(req, res) {
     const windowEnd = new Date(now.getTime() + (daysToMon + 8) * 24 * 3600 * 1000);
 
     const { data: cls } = await sb.from('classes')
-      .select('id,title,level,topic,starts_at,club,capacity,teacher_id')
+      .select('id,title,level,topic,starts_at,club,capacity,teacher_id,assist_teacher_id,assist_teacher2_id')
       .gt('starts_at', now.toISOString()).lt('starts_at', windowEnd.toISOString())
-      .eq('is_cancelled', false).not('teacher_id', 'is', null).order('starts_at');
+      .eq('is_cancelled', false).order('starts_at');
 
     const week = (cls || []).filter(c => {
       const k = berlinDateKey(new Date(c.starts_at));
@@ -150,7 +154,7 @@ export default async function handler(req, res) {
       (bk || []).forEach(b => { counts[b.class_id] = (counts[b.class_id] || 0) + 1; });
     }
     const byTeacher = {};
-    week.forEach(c => { (byTeacher[c.teacher_id] = byTeacher[c.teacher_id] || []).push(c); });
+    week.forEach(c => lehrerVon(c).forEach(tid => { (byTeacher[tid] = byTeacher[tid] || []).push(c); }));
     const weekLabel = `${RANGE_FMT.format(monday)} – ${RANGE_FMT.format(sunday)}`;
 
     for (const [tid, list] of Object.entries(byTeacher)) {

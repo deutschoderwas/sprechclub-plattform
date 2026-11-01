@@ -51,11 +51,11 @@ export default async function handler(req, res) {
   if (!list.length) return res.status(200).json({ ok: true, teachers: 0 });
 
   const { data: classes } = await sb.from('classes')
-    .select('id,title,topic,level,starts_at,club,teacher_id,is_cancelled')
+    .select('id,title,topic,level,starts_at,club,teacher_id,assist_teacher_id,assist_teacher2_id,is_cancelled')
     .gte('starts_at', startUTC.toISOString())
     .lt('starts_at', endUTC.toISOString())
     .order('starts_at', { ascending: true });
-  const active = (classes || []).filter((c) => !c.is_cancelled && c.teacher_id);
+  const active = (classes || []).filter((c) => !c.is_cancelled && (c.teacher_id || c.assist_teacher_id || c.assist_teacher2_id));
 
   const ids = active.map((c) => c.id);
   const counts = {};
@@ -66,7 +66,8 @@ export default async function handler(req, res) {
 
   const results = [];
   for (const t of list) {
-    const mine = active.filter((c) => c.teacher_id === t.id);
+    // Julia, 01.11.2026: Assistenzlehrer haben die gleichen Rechte -> sie bekommen auch ihren Wochenplan.
+    const mine = active.filter((c) => c.teacher_id === t.id || c.assist_teacher_id === t.id || c.assist_teacher2_id === t.id);
     if (!mine.length) continue; // keine Stunden -> keine Mail
 
     const ref = t.id + ':' + mondayKey;
