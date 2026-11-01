@@ -41,7 +41,8 @@
   function S(k,v){ try{ if(window.lsSet) return lsSet(k,v);
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
-  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2', 'C1':'HOEREN_C1' };
+  var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2', 'C1':'HOEREN_C1',
+                  'telcB1':'HOEREN_TELC_B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */
@@ -98,7 +99,7 @@
         if(p==null || p<r.aufgaben.length)
           return { was:'Teil '+t.nr+' — '+t.name+', Runde '+(k+1), klick:"hoerenRunde("+t.nr+",'"+r.id+"')" }; } }
     for(var m=0;m<d.laeufe.length;m++){ var Lf=d.laeufe[m], sl=laufStand(niveau,Lf);
-      if(sl.punkte < sl.max) return { was:Lf.titel+' — 15 Aufgaben mit Uhr', klick:"hoerenLauf('"+Lf.id+"')" }; }
+      if(sl.punkte < sl.max) return { was:Lf.titel+' — '+anzahlIn(Lf)+' Aufgaben mit Uhr', klick:"hoerenLauf('"+Lf.id+"')" }; }
     return null;
   };
 

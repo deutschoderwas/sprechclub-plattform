@@ -84,6 +84,55 @@ Gib GENAU dieses JSON zurueck:
 }`;
 }
 
+/* ---------- telc Deutsch B1, Schriftlicher Ausdruck (01.11.2026) ----------
+   Gegen den telc-Übungstest 1 Zertifikat Deutsch geprüft:
+     I   Aufgabenbewältigung  A alle 4 Leitpunkte, B 3, C 2, D 1 oder keiner
+     II  Kommunikative Gestaltung  A B1 gut erfüllt, B B1 erfüllt, C A2, D A1 oder darunter
+     III Formale Richtigkeit       A B1 gut erfüllt, B B1 erfüllt, C A2, D A1 oder darunter
+   A = 5, B = 3, C = 1, D = 0 Punkte. Summe mal 3 = höchstens 45.
+   Kriterium I rechnen wir selbst aus den Leitpunkten — das Modell sagt nur je
+   Leitpunkt ja / teilweise / nein. */
+const SYSTEM_TELC = `Du bist Amanda, die freundliche Sprachbegleiterin von „deutschoderwas club". Du bewertest E-Mails von Deutschlernenden nach den offiziellen Kriterien von telc Deutsch B1 (Schriftlicher Ausdruck) — streng in der Sache, warm im Ton.
+Du gibst AUSSCHLIESSLICH gueltiges JSON zurueck: kein Text davor oder danach, keine Markdown-Backticks.`;
+
+function promptTelc({ text, situation, punkte, eingang }) {
+  const liste = (punkte || []).map(p => `${p.nr}. ${p.was}${p.hinweis ? ' — ' + p.hinweis : ''}`).join('\n');
+  return `Prüfung: telc Deutsch B1, Schriftlicher Ausdruck. Die Person antwortet auf eine E-Mail.
+
+SITUATION: «${situation || '—'}»
+
+ERHALTENE E-MAIL:
+«${eingang || '—'}»
+
+DIE VIER LEITPUNKTE:
+${liste}
+
+DAS HAT DIE PERSON GESCHRIEBEN:
+«${text}»
+
+Bewerte nach den telc-Kriterien:
+- Je Leitpunkt: "ja" (angemessen behandelt), "teilweise" (nur erwähnt oder unklar), "nein" (fehlt).
+- II Kommunikative Gestaltung: A = B1 gut erfüllt, B = B1 erfüllt, C = A2, D = A1 oder darunter. Achte auf Textsorte E-Mail, passendes Register (du/Sie), Anrede, Einleitung mit Bezug zur erhaltenen Mail, Schluss, Gruß, Verknüpfung der Punkte.
+- III Formale Richtigkeit: A = B1 gut erfüllt, B = B1 erfüllt, C = A2, D = A1 oder darunter. Grammatik, Wortschatz, Rechtschreibung im Verhältnis zu B1.
+- Geht der Text am Thema vorbei: alles "nein" und II/III = "D".
+- „korrigiert": nur echte Fehler verbessern, Wörter, Länge und Ton der Person behalten.
+- Rückmeldungen mit „du", einfaches Deutsch, ohne Fachbegriffe.
+
+Gib GENAU dieses JSON zurück:
+{
+  "leitpunkte": [ { "nr": 1, "erfuellt": "ja", "warum": "ein kurzer Satz" }, … für alle vier ],
+  "gestaltung": { "stufe": "B", "warum": "ein bis zwei Sätze" },
+  "richtigkeit": { "stufe": "B", "warum": "ein bis zwei Sätze" },
+  "korrigiert": "der korrigierte Text — bei fehlerfreiem Text exakt der Originaltext",
+  "sprache": "ein bis zwei Sätze: der wichtigste Fehler und die Regel dahinter. Leer, wenn alles stimmt.",
+  "lob": "ein kurzes, echtes Lob (max. 8 Wörter)",
+  "tipp": "ein konkreter Satz für das nächste Mal"
+}`;
+}
+
+const TELC_WERT = { A: 5, B: 3, C: 1, D: 0 };
+function telcStufe(v) { const s = String(v || '').trim().toUpperCase().charAt(0); return TELC_WERT[s] != null ? s : 'D'; }
+
 function extractJson(t) {
   const s = t.indexOf('{'), e = t.lastIndexOf('}');
   if (s === -1 || e === -1) throw new Error('Keine JSON-Antwort vom Modell.');
@@ -119,10 +168,51 @@ export default async function handler(req, res) {
   if (uerr || !ures?.user) return res.status(401).json({ error: 'invalid_token' });
   const uid = ures.user.id;
 
-  let { text, situation, punkte, sorte, level } = req.body || {};
+  let { text, situation, punkte, sorte, level, schema, eingang } = req.body || {};
   text = String(text || '').replace(/\r/g, '').trim();
   if (!text) return res.status(400).json({ error: 'text_required' });
   if (text.length > 1500) text = text.slice(0, 1500);
+
+  if (schema === 'telc_b1') {
+    if (!Array.isArray(punkte) || punkte.length !== 4) return res.status(400).json({ error: 'vier_punkte_noetig' });
+    let o;
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: MODEL, max_tokens: 1200, system: SYSTEM_TELC,
+          messages: [{ role: 'user', content: promptTelc({ text, situation, punkte, eingang: String(eingang || '').slice(0, 1500) }) }] }),
+      });
+      if (!r.ok) { const t = await r.text(); return res.status(502).json({ error: 'anthropic_error', detail: t.slice(0, 300) }); }
+      const j = await r.json();
+      o = extractJson((j.content || []).filter(b => b.type === 'text').map(b => b.text).join(''));
+    } catch (e) {
+      return res.status(502).json({ error: 'generation_failed', detail: String(e).slice(0, 300) });
+    }
+    const roh = Array.isArray(o.leitpunkte) ? o.leitpunkte : [];
+    const lp = punkte.map((p, i) => {
+      const g = roh.find(x => Number(x.nr) === p.nr) || roh[i] || {};
+      const e = String(g.erfuellt || '').toLowerCase();
+      return { nr: p.nr, was: p.was, erfuellt: e.startsWith('ja') ? 'ja' : (e.startsWith('teil') ? 'teilweise' : 'nein'),
+               warum: String(g.warum || '').slice(0, 300) };
+    });
+    const c = Math.floor(lp.reduce((a, x) => a + (x.erfuellt === 'ja' ? 1 : x.erfuellt === 'teilweise' ? 0.5 : 0), 0));
+    const s1 = c >= 4 ? 'A' : c === 3 ? 'B' : c === 2 ? 'C' : 'D';
+    const s2 = telcStufe((o.gestaltung || {}).stufe), s3 = telcStufe((o.richtigkeit || {}).stufe);
+    const kriterien = [
+      { id: 'I', name: 'I Aufgabenbewältigung', stufe: s1, wert: TELC_WERT[s1], warum: c + ' von 4 Leitpunkten angemessen behandelt.' },
+      { id: 'II', name: 'II Kommunikative Gestaltung', stufe: s2, wert: TELC_WERT[s2], warum: String((o.gestaltung || {}).warum || '').slice(0, 300) },
+      { id: 'III', name: 'III Formale Richtigkeit', stufe: s3, wert: TELC_WERT[s3], warum: String((o.richtigkeit || {}).warum || '').slice(0, 300) },
+    ];
+    const summe = kriterien.reduce((a, k) => a + k.wert, 0) * 3;
+    return res.status(200).json({
+      ok: true, schema: 'telc', leitpunkte: lp, kriterien, summe, max: 45,
+      korrigiert: String(o.korrigiert || text).trim(),
+      sprache: String(o.sprache || '').slice(0, 400),
+      lob: String(o.lob || 'Gut gemacht!').slice(0, 80),
+      tipp: String(o.tipp || '').slice(0, 300),
+    });
+  }
   if (!Array.isArray(punkte) || punkte.length !== 3) {
     return res.status(400).json({ error: 'drei_punkte_noetig' });
   }

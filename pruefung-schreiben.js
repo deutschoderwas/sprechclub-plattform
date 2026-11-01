@@ -61,7 +61,8 @@
      ------------------------------------------------------------ */
   var AMANDA = 'immer';
 
-  var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1' };
+  var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
+                  'telcB1':'SCHREIBEN_TELC_B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -82,9 +83,11 @@
   }
   function holen(niveau, topf, id){ return ((stand()[niveau]||{})[topf]||{})[id]; }
 
+  /* Höchstpunktzahl einer Mitteilung: Goethe 10, telc 45 (a.max). */
+  function mMax(a){ return (a && a.max) || 10; }
   function maxVon(teil, r){
     if(teil.art==='formular') return 5;                     /* fünf Felder */
-    return r.aufgaben.length * 10;                          /* je Mitteilung 10 */
+    return r.aufgaben.reduce(function(n,a){ return n + mMax(a); }, 0);
   }
   /* Beim Formular gibt es genau eine richtige Lösung — da zählt die volle
      Punktzahl. Eine Mitteilung dagegen wird bewertet wie in der Prüfung:
@@ -103,7 +106,7 @@
     return { punkte:hat, max:max, prozent:max?Math.round(hat/max*100):0 };
   }
   function laufMax(L){
-    if(L && L.aufgaben) return L.aufgaben.length * 10;      /* je Schreibaufgabe zehn */
+    if(L && L.aufgaben) return L.aufgaben.reduce(function(n,a){ return n + mMax(a); }, 0);
     return 15;                                              /* A1: 5 + 10 */
   }
   function laufZiel(L){ return Math.round(laufMax(L)*0.6*2)/2; }
@@ -392,7 +395,14 @@
     var text = W.gewaehlt[W.i] || '';
     var srt = a.sorte || 'zettel';
     var h = sitHTML(a.situation, srt==='sms' ? '💬' : (srt==='email' ? '✉️' : '📝'));
-    h += '<div class="pw-punkte"><span class="pw-punkte-t">Diese drei Punkte müssen vorkommen</span>'
+    /* telc: man antwortet auf eine E-Mail, die man vorher bekommen hat. */
+    if(a.eingang) h += '<div class="pw-eingang"><div class="pw-mail-bar"><i></i><i></i><i></i><span>Posteingang</span></div>'
+      + '<div class="pw-mail-kopf"><div><span>Von</span><b>'+E(a.eingang.von||'')+'</b></div>'
+      + (a.eingang.betreff?'<div><span>Betreff</span><b>'+E(a.eingang.betreff)+'</b></div>':'')+'</div>'
+      + '<p class="pw-eingang-t">'+E(a.eingang.text||'').replace(/\n/g,'<br>')+'</p></div>';
+    var ZAHL = ['keine','einen','zwei','drei','vier','fünf','sechs'];
+    h += '<div class="pw-punkte"><span class="pw-punkte-t">Diese '+(ZAHL[a.punkte.length]||a.punkte.length)
+      + ' Punkte müssen vorkommen</span>'
       + '<div class="pw-pk-r">'
       + a.punkte.map(function(p){
           return '<div class="pw-pk"><i>'+p.nr+'</i><b>'+E(p.was)+'</b>'
@@ -470,11 +480,23 @@
     { w:0,   t:'Fehlt',          z:'✕' }
   ];
 
-  function selbstWerte(){ return W.selbst[W.i] || (W.selbst[W.i] = [null,null,null]); }
+  function aktA(){ var e=W.folge[W.i]; return e ? e.a : {}; }
+  /* Anzahl der Häkchen: je Leitpunkt eins, bei telc dazu Kriterium II und III. */
+  function selbstAnzahl(a){ return (a.punkte||[]).length + (a.telc ? 2 : 0); }
+  function selbstWerte(){
+    if(!W.selbst[W.i]){ var n=selbstAnzahl(aktA()), s=[]; for(var i=0;i<n;i++) s.push(null); W.selbst[W.i]=s; }
+    return W.selbst[W.i];
+  }
   function selbstFertig(){
     var s = selbstWerte();
-    for(var i=0;i<3;i++) if(s[i]==null) return false;
+    for(var i=0;i<s.length;i++) if(s[i]==null) return false;
     return true;
+  }
+  /* telc: Kriterium I aus den Leitpunkten (alle 4 = A = 5, 3 = B = 3, 2 = C = 1, sonst 0). */
+  function telcKrit1(s, n){
+    var c=0; for(var i=0;i<n;i++) c += s[i]===3 ? 1 : (s[i]===1.5 ? 0.5 : 0);
+    c = Math.floor(c);
+    return c>=4 ? 5 : (c===3 ? 3 : (c===2 ? 1 : 0));
   }
   /* Anrede und Gruß muss niemand selbst einschätzen — das sieht der
      Browser zuverlässig, und es ist in der echten Prüfung ein ganzer Punkt. */
@@ -483,12 +505,56 @@
     return an && gr ? 1 : (an || gr ? 0.5 : 0);
   }
   function selbstPunkte(text){
-    var s = selbstWerte(), n = gestaltungWert(text);
-    for(var i=0;i<3;i++) if(s[i]!=null) n += s[i];
+    var a = aktA(), s = selbstWerte();
+    if(a.telc){
+      var k = a.punkte.length;
+      return (telcKrit1(s,k) + (s[k]||0) + (s[k+1]||0)) * 3;
+    }
+    var n = gestaltungWert(text);
+    for(var i=0;i<a.punkte.length;i++) if(s[i]!=null) n += s[i];
     return n;
   }
 
+  var TELC_STUFEN = [
+    { w:5, t:'A', d:'B1 gut erfüllt' }, { w:3, t:'B', d:'B1 erfüllt' },
+    { w:1, t:'C', d:'eher A2' },        { w:0, t:'D', d:'A1 oder darunter' } ];
+  var TELC_KRIT = [
+    { t:'II Kommunikative Gestaltung', h:'Passt der Ton (du oder Sie)? Betreff, Anrede, Einleitung, Schluss, Gruß? Sind die Punkte mit Wörtern wie „außerdem", „deshalb", „zum Schluss" verbunden?' },
+    { t:'III Formale Richtigkeit', h:'Wie viele Fehler in Grammatik und Rechtschreibung? Stören sie das Verstehen? Vergleich mit dem Muster.' } ];
+
+  function selbstHTMLtelc(a, text, dazu){
+    var s = selbstWerte(), k = a.punkte.length, voll = selbstFertig();
+    var k1 = telcKrit1(s,k), summe = selbstPunkte(text);
+    return '<div class="pw-selbst'+(voll?' fertig':'')+(dazu?' dazu':'')+'">'
+      + '<div class="pw-selbst-kopf"><span class="pw-selbst-p">'+(voll?summe:'–')+'<em>/45</em></span>'
+      +   '<div><b>'+(dazu?'Und wie hättest du dich selbst eingeschätzt?':'Bewerte dich wie die telc-Prüfer')+'</b>'
+      +   '<span>Drei Kriterien, je A = 5, B = 3, C = 1, D = 0 Punkte. Die Summe mal drei ergibt deine Punkte — höchstens 45.</span></div></div>'
+      + '<div class="pw-sr auto"><b>I Aufgabenbewältigung — sind alle vier Leitpunkte drin?</b></div>'
+      + a.punkte.map(function(p,i){
+          return '<div class="pw-sr"><b>'+p.nr+'. '+E(p.was)+'</b>'
+            + (p.hinweis ? '<span class="pw-sh">'+E(p.hinweis)+'</span>' : '')
+            + '<div class="pw-sw">'
+            + STUFEN_S.map(function(st){
+                var an2 = s[i]===st.w ? ' an' : '';
+                return '<button class="pw-sb w'+String(st.w).replace('.','')+an2
+                  + '" onclick="schreibenSelbst('+i+','+st.w+')"><i>'+st.z+'</i>'+st.t+'</button>'; }).join('')
+            + '</div></div>'; }).join('')
+      + '<div class="pw-sr auto"><b>→ Kriterium I: '+(k1===5?'A':k1===3?'B':k1===1?'C':'D')+' = '+k1+' Punkte</b></div>'
+      + TELC_KRIT.map(function(kr, j){
+          var idx = k + j;
+          return '<div class="pw-sr"><b>'+E(kr.t)+'</b><span class="pw-sh">'+E(kr.h)+'</span>'
+            + '<div class="pw-sw">' + TELC_STUFEN.map(function(st){
+                var an2 = s[idx]===st.w ? ' an' : '';
+                return '<button class="pw-sb'+an2+'" onclick="schreibenSelbst('+idx+','+st.w+')"><i>'+st.t+'</i>'+st.d+'</button>'; }).join('')
+            + '</div></div>'; }).join('')
+      + (voll ? '<div class="pw-sfazit">'+E(summe>=27
+            ? summe+' von 45 — das reicht. In der Prüfung zählt das Schreiben zusammen mit Lesen und Hören, bestanden ist ab 60 Prozent.'
+            : summe+' von 45 — noch unter 60 Prozent. Prüf zuerst Kriterium I: Jeder fehlende Leitpunkt kostet dich sechs Punkte.')+'</div>' : '')
+      + '</div>';
+  }
+
   function selbstHTML(a, text, dazu){
+    if(a.telc) return selbstHTMLtelc(a, text, dazu);
     var s = selbstWerte();
     var an = hatAnrede(text), gr = hatGruss(text), g = gestaltungWert(text);
     var summe = selbstPunkte(text);
@@ -525,7 +591,7 @@
   /* Ein Satz zum Schluss — der sagt, was beim nächsten Mal dran ist. */
   function fazit(a, s, an, gr){
     var fehlt = [];
-    for(var i=0;i<3;i++) if(s[i]<3) fehlt.push(a.punkte[i].was);
+    for(var i=0;i<a.punkte.length;i++) if(s[i]<3) fehlt.push(a.punkte[i].was);
     if(!fehlt.length && an && gr)
       return 'Alle drei Punkte drin, Anrede und Gruß auch — genau so wird in der Prüfung '
            + 'die volle Punktzahl vergeben.';
@@ -667,7 +733,9 @@
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+tok },
       body: JSON.stringify({ text:text, situation:a.situation, punkte:a.punkte,
-                             sorte:a.sorte, level:'A1' })
+                             sorte:a.sorte, level:a.telc ? 'B1' : 'A1',
+                             schema:a.telc ? 'telc_b1' : undefined,
+                             eingang:a.eingang ? a.eingang.text : undefined })
     }).then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){
         clearTimeout(abbruch);
@@ -678,6 +746,7 @@
   }
 
   function kiHTML(j, original){
+    if(j.schema==='telc') return kiHTMLtelc(j, original);
     var quote = j.summe / (j.max||10);
     /* Wenn nichts zu verbessern war, zeigen wir den Text auch nicht
        ein zweites Mal an — sonst sucht die Lernende dort nach einem
@@ -700,6 +769,30 @@
           + E(j.korrigiert).replace(/\n/g,'<br>')+'</p></div>'
         : (gleich && !j.sprache ? '<div class="pw-erg-k gleich"><b>Sprachlich</b>'
           + '<p>An deinem Text gibt es nichts zu verbessern.</p></div>' : ''))
+      + (j.tipp ? '<div class="pw-erg-t">👉 '+E(j.tipp)+'</div>' : '')
+      + '</div>';
+  }
+
+  /* telc: Amandas Wertung nach den drei telc-Kriterien. */
+  function kiHTMLtelc(j, original){
+    var quote = j.summe / 45;
+    var gleich = norm(j.korrigiert||'') === norm(original||'');
+    return '<div class="pw-erg '+(quote>=0.6?'gut':'knapp')+'">'
+      + '<div class="pw-erg-kopf"><span class="pw-erg-p">'+j.summe+'<em>/45</em></span>'
+      +   '<div><b>'+E(j.lob||'')+'</b><span>Bewertet nach den telc-Kriterien: drei Kriterien, je A–D, Summe mal drei</span></div></div>'
+      + '<div class="pw-erg-z">'
+      +   (j.leitpunkte||[]).map(function(p){
+            var kl = p.erfuellt==='ja' ? 'voll' : (p.erfuellt==='teilweise' ? 'halb' : 'null');
+            return '<div class="pw-erg-r '+kl+'"><i>'+(p.erfuellt==='ja'?'✓':(p.erfuellt==='teilweise'?'~':'✕'))+'</i>'
+              + '<div><b>Leitpunkt '+p.nr+': '+E(p.was)+'</b><span>'+E(p.warum)+'</span></div></div>'; }).join('')
+      +   (j.kriterien||[]).map(function(k){
+            var kl = k.wert>=5 ? 'voll' : (k.wert>0 ? 'halb' : 'null');
+            return '<div class="pw-erg-r '+kl+'"><i>'+E(k.stufe)+'</i>'
+              + '<div><b>'+E(k.name)+' — '+k.wert+' Punkte</b><span>'+E(k.warum)+'</span></div></div>'; }).join('')
+      + '</div>'
+      + (j.sprache ? '<div class="pw-erg-s"><b>Zur Sprache</b><p>'+E(j.sprache)+'</p></div>' : '')
+      + (j.korrigiert && !gleich ? '<div class="pw-erg-k"><b>So wäre es richtig</b><p>'
+          + E(j.korrigiert).replace(/\n/g,'<br>')+'</p></div>' : '')
       + (j.tipp ? '<div class="pw-erg-t">👉 '+E(j.tipp)+'</div>' : '')
       + '</div>';
   }
@@ -735,7 +828,7 @@
     if(W.mpunkte[W.i]==null && selbstFertig())
       W.mpunkte[W.i] = selbstPunkte(W.gewaehlt[W.i]||'');
     var p = W.mpunkte[W.i];
-    if(p!=null) W.offen[W.i] = p>=6 ? true : (p>0 ? 'teil' : false);
+    if(p!=null) W.offen[W.i] = p>=0.6*mMax(e.a) ? true : (p>0 ? 'teil' : false);
   }
 
   window.schreibenWeiter = function(){
@@ -758,7 +851,7 @@
     var offenPunkte = 0, summe = W.punkte;
     W.folge.forEach(function(e,i){
       if(e.art!=='mitteilung') return;
-      if(W.mpunkte[i]==null) offenPunkte += 10; else summe += W.mpunkte[i];
+      if(W.mpunkte[i]==null) offenPunkte += mMax(e.a); else summe += W.mpunkte[i];
     });
     var p = Math.round(summe*10)/10;
     var n = Math.max(0, W.max - offenPunkte);
@@ -1144,6 +1237,9 @@
 '.pw-medium{ margin-bottom:12px }',
 '.pw-m-email{ background:#fff; border:1px solid #D8DEE2; border-radius:12px;',
 '  overflow:hidden; box-shadow:0 18px 38px -26px rgba(40,53,59,.7) }',
+'.pw-eingang{ background:#fff; border:1px solid #E6E1D6; border-radius:16px; overflow:hidden; margin:0 0 16px; box-shadow:0 6px 18px rgba(20,40,60,.06) }',
+'.pw-eingang .pw-mail-kopf{ padding:10px 15px; border-bottom:1px solid #F0ECE3 }',
+'.pw-eingang-t{ margin:0; padding:14px 16px 16px; font-size:15px; line-height:1.6; color:#2A2F35 }',
 '.pw-mail-bar{ display:flex; align-items:center; gap:7px; padding:11px 15px;',
 '  background:#EEF3F6; border-bottom:1px solid #DEE5E9 }',
 '.pw-mail-bar i{ width:11px; height:11px; border-radius:50%; background:#CBD5DA }',
