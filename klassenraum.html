@@ -1053,7 +1053,7 @@
   // Rest erscheint als Namens-Kachel (📷) — kein Dekodier-Aufwand, kein Ruckeln.
   // So bleibt der Raum auch mit 30+ Leuten flüssig. Daily selbst trägt 200
   // aktive Teilnehmer pro Raum, Grenze sind also die Geräte, nicht der Server.
-  const GROSSRAUM_AB = 16;      // ab so vielen im Raum → Spar-Modus
+  const GROSSRAUM_AB = 24;      // bis ~20 Leute: ALLE Kameras klein zeigen; erst darüber (Richtung 40) → Spar-/Ausblend-Modus
   const LIVE_VIDEO_MAX = 6;     // so viele Live-Kameras gleichzeitig
   window._bigMode = false;
   window._showAll = false;      // Großraum: sind gerade „weitere" aufgeklappt?
@@ -1089,7 +1089,7 @@
     dframe = window.DailyIframe.createCallObject({ subscribeToTracksAutomatically:true });
     dframe.on('joined-meeting', (ev)=>{ window._inCall=true; renderGrid(); if(ev&&ev.participants&&ev.participants.local) dailySyncButtons(ev.participants.local); setTimeout(checkMic,2500);
       setTimeout(()=>{ if(typeof applySavedBg==='function') applySavedBg(); }, 1800);
-      // Bildqualität/Abos clever steuern: wenige Kameras scharf, Großraum-Sparmodus ab 16 Leuten
+      // Bildqualität/Abos clever steuern: bis ~20 alle Kameras klein, erst darüber Sparmodus
       setTimeout(()=>manageSubscriptions(), 1500);
       // Namen aller gebuchten Schüler laden (für die Gruppen-Übersicht, auch über Räume hinweg)
       setTimeout(()=>{ if(istLehrer && typeof ladeRoster==='function') ladeRoster(); }, 1500);
