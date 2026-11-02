@@ -401,13 +401,40 @@
       bild:'kunden', kurs:'goethetelc', telc:true, fach:true, geprueft:true,
       fuer:'Deutsch für den Arbeitsplatz — der Nachweis für Jobcenter und Arbeitgeber.',
       module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
-                 t:'Drei Leseteile und zwei Teile Sprachbausteine — zusammen 90 Minuten, ohne Pause.'},
-               {id:'hoeren',n:'Hören',m:'30', t:'Drei Teile.'},
-               {id:'schreiben',n:'Schreiben',m:'30', t:'Eine Schreibaufgabe.'},
+                 t:'E-Mails und Betreffzeilen, ein E-Mail-Wechsel, Anzeigen; dazu Sprachbausteine in einem Infotext und einem Geschäftsbrief.'},
+               {id:'hoeren',n:'Hören',m:'30', t:'Kollegen äußern sich (einmal hören), ein Gespräch im Betrieb und kurze Ansagen (je zweimal).'},
+               {id:'schreiben',n:'Schreiben',m:'30', t:'Ein halbformeller Brief oder eine E-Mail aus dem Beruf mit vier Leitpunkten.'},
                {id:'sprechen',n:'Sprechen',m:'15',
-                 t:'Drei Teile, zu zweit.'} ],
-      hinweis:'Schriftlich: Lesen und Sprachbausteine 90 Minuten, Hören 30, Schreiben 30 Minuten. '
-             +'Mündlich 15 Minuten zu zweit, vorher 20 Minuten Vorbereitung.',
+                 t:'Zu zweit: Kontaktaufnahme, Gespräch über ein Arbeitsthema, gemeinsam eine Aufgabe lösen.'} ],
+      hinweis:'Schriftlich 150 Minuten: Lesen und Sprachbausteine 90, Hören ca. 30, Schreiben 30. '
+             +'Mündlich ca. 15 Minuten zu zweit, vorher 20 Minuten Vorbereitung.',
+      punkte:'Bestanden mit mindestens 180 von 300 Punkten und mindestens 60 Prozent in jedem Teil: 135 von 225 schriftlich, '
+            +'45 von 75 mündlich. Ist nur ein Teil nicht bestanden, kannst du ihn bis Ende des folgenden Kalenderjahres wiederholen.',
+      training:{ lesen:'telcB1B', hoeren:'telcB1B', schreiben:'telcB1B', sprechen:'telcB1B' },
+      prognose:{ teile:[ { name:'Schriftliche Prüfung', max:225, grenze:135, anteile:{ lesen:105, hoeren:75, schreiben:45 } },
+                         { name:'Mündliche Prüfung', max:75, grenze:45, anteile:{ sprechen:75 } } ] },
+      mat:{
+        wortschatz:['Bewerbung und Vorstellungsgespräch','Arbeitsvertrag und Arbeitszeit','Kollegen und Vorgesetzte','Kunden und Reklamationen',
+                    'Lieferung und Bestellung','Arbeitsschutz und Gesundheit','Weiterbildung','Urlaub und Krankmeldung','Telefon und E-Mail im Büro'],
+        grammatik:['Konnektoren: weil, obwohl, deshalb, damit, sodass','Passiv im Arbeitsablauf (wird geliefert, wurde repariert)',
+                   'Höfliche Bitten mit Konjunktiv II (Könnten Sie …, Ich würde gern …)','Präpositionen mit Dativ und Akkusativ',
+                   'Relativsätze','Verben mit Präposition (sich bewerben um, sich kümmern um, Bescheid geben über)','zu + Infinitiv'],
+        redemittel:[
+          ['Brief — Anfang','Sehr geehrte Damen und Herren, ich beziehe mich auf Ihre Anzeige vom … · ich wende mich an Sie, weil …'],
+          ['Brief — bitten und anfragen','Könnten Sie mir bitte mitteilen, … · Ich wäre Ihnen dankbar, wenn … · Bitte schicken Sie mir …'],
+          ['Brief — Schluss','Für Rückfragen stehe ich Ihnen gern zur Verfügung. · Mit freundlichen Grüßen'],
+          ['Sprechen — Informationen weitergeben','Auf meinem Blatt steht, dass … · Interessant finde ich, dass …'],
+          ['Sprechen — planen','Ich schlage vor, dass … · Wie wäre es, wenn … · Dann kümmere ich mich um … und du um …'] ],
+        bewertung:[
+          ['Lesen (75) und Sprachbausteine (30)','Jeder Leseteil 25 Punkte, jeder Teil Sprachbausteine 15.'],
+          ['Hören (75)','Drei Teile mit je 25 Punkten.'],
+          ['Schreiben (45)','Leitpunkte, Gestaltung, Richtigkeit je A–D (5/3/1/0), mal drei; dazu bis zu 2 Zusatzpunkte. Ist Kriterium I oder III ein D, gibt es 0 Punkte.'],
+          ['Sprechen (75)','Teil 1 bis 15, Teil 2 und 3 je bis 30: Ausdrucksfähigkeit, Aufgabenbewältigung, Richtigkeit, Aussprache.'],
+          ['Bestanden','180 von 300 und in jedem Teil 60 Prozent: 135 schriftlich, 45 mündlich.'] ],
+        ablauf:[
+          'Schriftlich: Lesen und Sprachbausteine 90 Minuten, Hören ca. 30, Schreiben 30.',
+          'Beim Hören: Teil 1 nur einmal, Teil 2 und 3 zweimal.',
+          'Mündlich zu zweit, ca. 15 Minuten, vorher 20 Minuten Vorbereitung.'] },
       uebungstest:'https://shop.telc.net/media/catalog/product/file//2/0/20201224_5034-b00-010103_web_2.pdf' },
 
     { id:'buero', name:'Deutsch für Büro & Logistik', anbieter:'ohne Prüfung', niveau:'A2–B2',

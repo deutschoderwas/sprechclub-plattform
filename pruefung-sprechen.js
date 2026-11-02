@@ -40,7 +40,7 @@
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
-                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1' };
+                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }

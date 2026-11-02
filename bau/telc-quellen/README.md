@@ -37,5 +37,10 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
   Schreiben Erörterung/Stellungnahme (Amanda: schema telc_c1h mit allg:true); eigene Prüfungsseite telcc1allg,
   Lernziel-Option „telc C1".
 
+- telc B1+ Beruf komplett: lesen/hoeren/schreiben/sprechen-telc-b1b.js. Quelle: telc Übungstest 1 B1+ Beruf.
+  Wie B1, aber Arbeitswelt: Betreffzeilen, E-Mail-Wechsel, Anzeigen, Infotext, Geschäftsbrief; Hören Kollegen (einmal),
+  Gespräch im Betrieb, Ansagen; Brief mit 4 Leitpunkten (Zusatzpunkte IV nicht nachgebildet); Kontaktaufnahme /
+  Gespräch über Arbeitsthema / Aufgabe lösen. Bestehen 180/300 und je 60 % (belegt).
+
 ## Als Nächstes
-Beruf-Prüfungen: telc B1+ Beruf, B2+ Beruf, B1·B2 Beruf, B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.
+telc B2+ Beruf, B1·B2 Beruf, B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.
