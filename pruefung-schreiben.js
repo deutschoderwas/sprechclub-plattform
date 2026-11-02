@@ -493,10 +493,11 @@
     return true;
   }
   /* telc: Kriterium I aus den Leitpunkten (alle 4 = A = 5, 3 = B = 3, 2 = C = 1, sonst 0). */
-  function telcKrit1(s, n){
+  /* noetig: wie viele Leitpunkte verlangt sind — telc B1 alle 4, telc B2 3 von 4. */
+  function telcKrit1(s, n, noetig){
     var c=0; for(var i=0;i<n;i++) c += s[i]===3 ? 1 : (s[i]===1.5 ? 0.5 : 0);
-    c = Math.floor(c);
-    return c>=4 ? 5 : (c===3 ? 3 : (c===2 ? 1 : 0));
+    c = Math.floor(c); var z = noetig || n;
+    return c>=z ? 5 : (c===z-1 ? 3 : (c===z-2 ? 1 : 0));
   }
   /* Anrede und Gruß muss niemand selbst einschätzen — das sieht der
      Browser zuverlässig, und es ist in der echten Prüfung ein ganzer Punkt. */
@@ -508,28 +509,34 @@
     var a = aktA(), s = selbstWerte();
     if(a.telc){
       var k = a.punkte.length;
-      return (telcKrit1(s,k) + (s[k]||0) + (s[k+1]||0)) * 3;
+      return (telcKrit1(s,k,a.noetig) + (s[k]||0) + (s[k+1]||0)) * 3;
     }
     var n = gestaltungWert(text);
     for(var i=0;i<a.punkte.length;i++) if(s[i]!=null) n += s[i];
     return n;
   }
 
-  var TELC_STUFEN = [
-    { w:5, t:'A', d:'B1 gut erfüllt' }, { w:3, t:'B', d:'B1 erfüllt' },
-    { w:1, t:'C', d:'eher A2' },        { w:0, t:'D', d:'A1 oder darunter' } ];
+  var TELC_UNTER = { B1:['A2','A1'], B2:['B1','A2'], C1:['B2','B1'] };
+  function telcStufen(a){
+    var n = a.niveauTelc || 'B1', u = TELC_UNTER[n] || TELC_UNTER.B1;
+    return [ { w:5, t:'A', d:n+' gut erfüllt' }, { w:3, t:'B', d:n+' erfüllt' },
+             { w:1, t:'C', d:'eher '+u[0] },     { w:0, t:'D', d:u[1]+' oder darunter' } ];
+  }
   var TELC_KRIT = [
     { t:'II Kommunikative Gestaltung', h:'Passt der Ton (du oder Sie)? Betreff, Anrede, Einleitung, Schluss, Gruß? Sind die Punkte mit Wörtern wie „außerdem", „deshalb", „zum Schluss" verbunden?' },
     { t:'III Formale Richtigkeit', h:'Wie viele Fehler in Grammatik und Rechtschreibung? Stören sie das Verstehen? Vergleich mit dem Muster.' } ];
 
   function selbstHTMLtelc(a, text, dazu){
     var s = selbstWerte(), k = a.punkte.length, voll = selbstFertig();
-    var k1 = telcKrit1(s,k), summe = selbstPunkte(text);
+    var k1 = telcKrit1(s,k,a.noetig), summe = selbstPunkte(text), TELC_STUFEN = telcStufen(a);
+    var ZW = ['keinen','einen','zwei','drei','vier'];
     return '<div class="pw-selbst'+(voll?' fertig':'')+(dazu?' dazu':'')+'">'
       + '<div class="pw-selbst-kopf"><span class="pw-selbst-p">'+(voll?summe:'–')+'<em>/45</em></span>'
       +   '<div><b>'+(dazu?'Und wie hättest du dich selbst eingeschätzt?':'Bewerte dich wie die telc-Prüfer')+'</b>'
       +   '<span>Drei Kriterien, je A = 5, B = 3, C = 1, D = 0 Punkte. Die Summe mal drei ergibt deine Punkte — höchstens 45.</span></div></div>'
-      + '<div class="pw-sr auto"><b>I Aufgabenbewältigung — sind alle vier Leitpunkte drin?</b></div>'
+      + '<div class="pw-sr auto"><b>I Aufgabenbewältigung — '+(a.noetig && a.noetig<k
+          ? 'hast du '+ZW[a.noetig]+' der '+ZW[k]+' Leitpunkte bearbeitet?</b><span class="pw-sh">Hak die Punkte ab, die in deinem Text stehen. Ein eigener Aspekt zählt wie ein Leitpunkt — dann hak dafür den Punkt ab, den du ersetzt hast.</span></div>'
+          : 'sind alle '+ZW[k]+' Leitpunkte drin?</b></div>')
       + a.punkte.map(function(p,i){
           return '<div class="pw-sr"><b>'+p.nr+'. '+E(p.was)+'</b>'
             + (p.hinweis ? '<span class="pw-sh">'+E(p.hinweis)+'</span>' : '')
@@ -548,8 +555,9 @@
                 return '<button class="pw-sb'+an2+'" onclick="schreibenSelbst('+idx+','+st.w+')"><i>'+st.t+'</i>'+st.d+'</button>'; }).join('')
             + '</div></div>'; }).join('')
       + (voll ? '<div class="pw-sfazit">'+E(summe>=27
-            ? summe+' von 45 — das reicht. In der Prüfung zählt das Schreiben zusammen mit Lesen und Hören, bestanden ist ab 60 Prozent.'
-            : summe+' von 45 — noch unter 60 Prozent. Prüf zuerst Kriterium I: Jeder fehlende Leitpunkt kostet dich sechs Punkte.')+'</div>' : '')
+            ? summe+' von 45 — das reicht. In der Prüfung zählt das Schreiben zusammen mit Lesen und Hören'+(a.niveauTelc==='B2' ? ' — als Richtwert gelten 60 Prozent.' : ', bestanden ist ab 60 Prozent.')
+            : summe+' von 45 — noch unter 60 Prozent. Prüf zuerst Kriterium I: Jeder fehlende Leitpunkt kostet dich sechs Punkte.')
+            + (a.niveauTelc==='B2' && a.woerter && woerter(text) < a.woerter ? ' Dein Text hat nur '+woerter(text)+' Wörter — verlangt sind mindestens '+a.woerter+'.' : '')+'</div>' : '')
       + '</div>';
   }
 
@@ -734,7 +742,7 @@
       headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+tok },
       body: JSON.stringify({ text:text, situation:a.situation, punkte:a.punkte,
                              sorte:a.sorte, level:a.telc ? 'B1' : 'A1',
-                             schema:a.telc ? 'telc_b1' : undefined,
+                             schema:a.telc ? (a.niveauTelc==='B2' ? 'telc_b2' : 'telc_b1') : undefined,
                              eingang:a.eingang ? a.eingang.text : undefined })
     }).then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){

@@ -95,13 +95,14 @@ Gib GENAU dieses JSON zurueck:
 const SYSTEM_TELC = `Du bist Amanda, die freundliche Sprachbegleiterin von „deutschoderwas club". Du bewertest E-Mails von Deutschlernenden nach den offiziellen Kriterien von telc Deutsch B1 (Schriftlicher Ausdruck) — streng in der Sache, warm im Ton.
 Du gibst AUSSCHLIESSLICH gueltiges JSON zurueck: kein Text davor oder danach, keine Markdown-Backticks.`;
 
-function promptTelc({ text, situation, punkte, eingang }) {
+function promptTelc({ text, situation, punkte, eingang, b2 }) {
+  const n = b2 ? 'B2' : 'B1', u1 = b2 ? 'B1' : 'A2', u2 = b2 ? 'A2' : 'A1';
   const liste = (punkte || []).map(p => `${p.nr}. ${p.was}${p.hinweis ? ' — ' + p.hinweis : ''}`).join('\n');
-  return `Prüfung: telc Deutsch B1, Schriftlicher Ausdruck. Die Person antwortet auf eine E-Mail.
+  return `Prüfung: telc Deutsch ${n}, Schriftlicher Ausdruck. ${b2 ? 'Halbformelle E-Mail (Bitte um Informationen oder Beschwerde), mindestens 150 Wörter. Verlangt sind DREI der vier Leitpunkte — oder zwei Leitpunkte plus ein eigener, zur Situation passender Aspekt.' : 'Die Person antwortet auf eine E-Mail.'}
 
 SITUATION: «${situation || '—'}»
 
-ERHALTENE E-MAIL:
+${b2 ? 'ANZEIGE ODER VORFALL' : 'ERHALTENE E-MAIL'}:
 «${eingang || '—'}»
 
 DIE VIER LEITPUNKTE:
@@ -112,8 +113,8 @@ DAS HAT DIE PERSON GESCHRIEBEN:
 
 Bewerte nach den telc-Kriterien:
 - Je Leitpunkt: "ja" (angemessen behandelt), "teilweise" (nur erwähnt oder unklar), "nein" (fehlt).
-- II Kommunikative Gestaltung: A = B1 gut erfüllt, B = B1 erfüllt, C = A2, D = A1 oder darunter. Achte auf Textsorte E-Mail, passendes Register (du/Sie), Anrede, Einleitung mit Bezug zur erhaltenen Mail, Schluss, Gruß, Verknüpfung der Punkte.
-- III Formale Richtigkeit: A = B1 gut erfüllt, B = B1 erfüllt, C = A2, D = A1 oder darunter. Grammatik, Wortschatz, Rechtschreibung im Verhältnis zu B1.
+- II Kommunikative Gestaltung: A = ${n} gut erfüllt, B = ${n} erfüllt, C = ${u1}, D = ${u2} oder darunter. Achte auf Textsorte E-Mail, passendes Register (du/Sie), Anrede, Einleitung mit Bezug zur erhaltenen Mail, Schluss, Gruß, Verknüpfung der Punkte.
+- III Formale Richtigkeit: A = ${n} gut erfüllt, B = ${n} erfüllt, C = ${u1}, D = ${u2} oder darunter. Grammatik, Wortschatz, Rechtschreibung im Verhältnis zu ${n}.${b2 ? '\n- Ein eigener Aspekt, der zur Situation passt, zählt wie ein Leitpunkt: gib dann bei einem nicht bearbeiteten Leitpunkt "ja" an und nenne den eigenen Aspekt im warum.' : ''}
 - Geht der Text am Thema vorbei: alles "nein" und II/III = "D".
 - „korrigiert": nur echte Fehler verbessern, Wörter, Länge und Ton der Person behalten.
 - Rückmeldungen mit „du", einfaches Deutsch, ohne Fachbegriffe.
@@ -173,7 +174,8 @@ export default async function handler(req, res) {
   if (!text) return res.status(400).json({ error: 'text_required' });
   if (text.length > 1500) text = text.slice(0, 1500);
 
-  if (schema === 'telc_b1') {
+  if (schema === 'telc_b1' || schema === 'telc_b2') {
+    const b2 = schema === 'telc_b2', noetig = b2 ? 3 : 4;
     if (!Array.isArray(punkte) || punkte.length !== 4) return res.status(400).json({ error: 'vier_punkte_noetig' });
     let o;
     try {
@@ -181,7 +183,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ model: MODEL, max_tokens: 1200, system: SYSTEM_TELC,
-          messages: [{ role: 'user', content: promptTelc({ text, situation, punkte, eingang: String(eingang || '').slice(0, 1500) }) }] }),
+          messages: [{ role: 'user', content: promptTelc({ text, situation, punkte, b2, eingang: String(eingang || '').slice(0, 1500) }) }] }),
       });
       if (!r.ok) { const t = await r.text(); return res.status(502).json({ error: 'anthropic_error', detail: t.slice(0, 300) }); }
       const j = await r.json();
@@ -196,11 +198,11 @@ export default async function handler(req, res) {
       return { nr: p.nr, was: p.was, erfuellt: e.startsWith('ja') ? 'ja' : (e.startsWith('teil') ? 'teilweise' : 'nein'),
                warum: String(g.warum || '').slice(0, 300) };
     });
-    const c = Math.floor(lp.reduce((a, x) => a + (x.erfuellt === 'ja' ? 1 : x.erfuellt === 'teilweise' ? 0.5 : 0), 0));
-    const s1 = c >= 4 ? 'A' : c === 3 ? 'B' : c === 2 ? 'C' : 'D';
+    const c = Math.min(noetig, Math.floor(lp.reduce((a, x) => a + (x.erfuellt === 'ja' ? 1 : x.erfuellt === 'teilweise' ? 0.5 : 0), 0)));
+    const s1 = c >= noetig ? 'A' : c === noetig - 1 ? 'B' : c === noetig - 2 ? 'C' : 'D';
     const s2 = telcStufe((o.gestaltung || {}).stufe), s3 = telcStufe((o.richtigkeit || {}).stufe);
     const kriterien = [
-      { id: 'I', name: 'I Aufgabenbewältigung', stufe: s1, wert: TELC_WERT[s1], warum: c + ' von 4 Leitpunkten angemessen behandelt.' },
+      { id: 'I', name: 'I Aufgabenbewältigung', stufe: s1, wert: TELC_WERT[s1], warum: c + ' von ' + noetig + ' verlangten Leitpunkten angemessen behandelt.' },
       { id: 'II', name: 'II Kommunikative Gestaltung', stufe: s2, wert: TELC_WERT[s2], warum: String((o.gestaltung || {}).warum || '').slice(0, 300) },
       { id: 'III', name: 'III Formale Richtigkeit', stufe: s3, wert: TELC_WERT[s3], warum: String((o.richtigkeit || {}).warum || '').slice(0, 300) },
     ];
