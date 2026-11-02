@@ -273,6 +273,38 @@
     { id:'telcc1', name:'telc Deutsch C1 Hochschule', anbieter:'telc · Hochschulzugang', niveau:'C1',
       bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1', telc:true, geprueft:true,
       fuer:'Der Sprachnachweis für das Studium an einer deutschen Hochschule.',
+      training:{ lesen:'telcC1H', hoeren:'telcC1H', schreiben:'telcC1H', sprechen:'telcC1H' },
+      /* Punkte nach telc „Tipps C1 Hochschule": Lesen 48 + Sprachbausteine 22, Hören 48,
+         Schreiben 48 = 166 schriftlich; mündlich 48. Eine Bestehensgrenze nennt das
+         Dokument nicht — 60 % ist ein Richtwert. */
+      prognose:{ richtwert:true, teile:[ { name:'Schriftliche Prüfung', max:166, grenze:100,
+                           anteile:{ lesen:70, hoeren:48, schreiben:48 } },
+                         { name:'Mündliche Prüfung', max:48, grenze:29, anteile:{ sprechen:48 } } ] },
+      mat:{
+        wortschatz:['Studium und Lehre','Wissenschaft und Forschung','Bildungspolitik','Gesellschaft und Demografie',
+                    'Umwelt und Klima','Technik und Digitalisierung','Gesundheit und Psychologie','Wirtschaft und Arbeit','Medien und Kommunikation'],
+        grammatik:['Nominalstil: aus Verben Nomen machen (die Durchführung der Studie)','Passiv und Passiversatz (lässt sich, ist zu)',
+                   'Konjunktiv I in der Redewiedergabe','Partizipialattribute (die im Labor durchgeführte Studie)',
+                   'Konnektoren: wohingegen, insofern, zumal, sofern, indem','Präpositionen mit Genitiv: angesichts, hinsichtlich, infolge',
+                   'Funktionsverbgefüge: in Betracht ziehen, zur Folge haben, Kritik üben'],
+        redemittel:[
+          ['Schreiben — Positionen wiedergeben','X vertritt die Auffassung, dass … · Laut Y sei … · Demgegenüber betont Z …'],
+          ['Schreiben — abwägen','Zwar …, jedoch … · Einerseits …, andererseits … · Dafür spricht … · Dagegen lässt sich einwenden …'],
+          ['Schreiben — Fazit','Zusammenfassend lässt sich festhalten … · Meines Erachtens … · Abschließend …'],
+          ['Sprechen — Präsentation','Ich möchte auf drei Aspekte eingehen. · Erstens … · Damit komme ich zu … · Abschließend …'],
+          ['Sprechen — zusammenfassen','Wenn ich dich richtig verstanden habe, … · Dein zentraler Punkt war … · Mich würde noch interessieren …'],
+          ['Sprechen — Zitat','Das Zitat bringt zum Ausdruck, dass … · Dem würde ich nur teilweise zustimmen, denn … · Das ist ein berechtigter Einwand, allerdings …'] ],
+        bewertung:[
+          ['Lesen und Sprachbausteine (70)','Textrekonstruktion 12, Abschnitte 12, Detailverstehen 22 + Überschrift 2, Sprachbausteine 22.'],
+          ['Hören (48)','Acht Personen 8, Gespräch 20 (2 je Aufgabe), Vortrag mitschreiben 20 (2 je Notiz). Alles nur einmal.'],
+          ['Schreiben (48)','Vier Kriterien: Aufgabengerechtheit, Korrektheit, Repertoire, kommunikative Gestaltung.'],
+          ['Sprechen (48)','Inhalt 16 (Präsentation 6, Zusammenfassung 4, Diskussion 6) und Sprache 32 (Flüssigkeit, Repertoire, Richtigkeit, Aussprache je bis 8).'],
+          ['Insgesamt','214 Punkte: 166 schriftlich, 48 mündlich.'] ],
+        ablauf:[
+          'Schriftlich: Lesen und Sprachbausteine 90 Minuten, Hören ca. 40, Schreiben 70.',
+          'Beim Hören läuft jeder Text nur einmal — beim Vortrag schreibst du auf einem Handzettel mit.',
+          'Beim Schreiben wählst du eines von zwei Themen, etwa 350 Wörter.',
+          'Mündlich zu zweit, ca. 16 Minuten, vorher 20 Minuten Vorbereitung für deine Präsentation.'] },
       module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
                  t:'Drei Leseteile mit langen Sachtexten, zusammen rund 2600 Wörter, dazu ein Lückentext mit 22 Sprachbausteinen.'},
                {id:'hoeren',n:'Hören',m:'ca. 40',

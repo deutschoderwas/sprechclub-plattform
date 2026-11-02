@@ -26,5 +26,11 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
   Schreiben Mail beantworten + Kurznachricht (Übungspunkte, keine telc-Wertung); Sprechen Vorstellen / Planen / Meinung.
   Prognose zeigt B1 / A2 / noch nicht nach den echten Regeln (70 %/40 %…). Lernziel kennt jetzt „telc A2·B1".
 
+- telc C1 Hochschule komplett: lesen/hoeren/schreiben/sprechen-telc-c1h.js. Quelle: telc „Tipps zur Prüfungsvorbereitung
+  Deutsch C1 Hochschule". Lesen: Textrekonstruktion, Abschnitte, Detail (richtig/falsch/steht nicht im Text) + Überschrift,
+  Sprachbausteine 22×4. Hören nur einmal: acht Personen, Gespräch mit Satzanfängen, Vortrag mitschreiben (freie Notiz,
+  großzügiger Abgleich + „meint dasselbe"). Schreiben ~350 Wörter, vier Kriterien (gleich gewichtet, Übungsschätzung;
+  Amanda schema telc_c1h). Sprechen Präsentation / Zusammenfassung / Zitat. Grenze nicht belegt → Richtwert 60 %.
+
 ## Als Nächstes
-telc C1 Hochschule (Format: telc Tipps Deutsch C1 Hochschule), dann telc C1 …
+telc C1 (allgemein), dann die Beruf-Prüfungen (B1+, B2+, B1·B2, B2·C1, C1 Beruf), C2, Nischen.

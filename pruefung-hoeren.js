@@ -42,7 +42,7 @@
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2', 'C1':'HOEREN_C1',
-                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2', 'telcA2B1':'HOEREN_TELC_A2B1' };
+                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2', 'telcA2B1':'HOEREN_TELC_A2B1', 'telcC1H':'HOEREN_TELC_C1H' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */
@@ -273,7 +273,10 @@
       + '<div class="ph-notiz-f"><span>'+E(n.feld)+'</span>';
     if(fertig){
       h += '<em class="'+(zeigen ? (H.offen[H.i]?'gut':'schlecht') : 'wahl')+'">'+E(wert||'—')+'</em></div>';
-      if(zeigen && !H.offen[H.i]) h += '<p class="ph-notiz-l">Richtig wäre: <b>'+E(n.loesungen[0])+'</b></p>';
+      if(zeigen && n.frei){
+        h += '<p class="ph-notiz-l">Musternotiz: <b>'+E(n.muster || n.loesungen[0])+'</b></p>';
+        if(!H.offen[H.i]) h += '<button class="pl-b2" onclick="hoerenNotizSelbst()">Meine Notiz meint dasselbe ✓</button>';
+      } else if(zeigen && !H.offen[H.i]) h += '<p class="ph-notiz-l">Richtig wäre: <b>'+E(n.loesungen[0])+'</b></p>';
     } else {
       h += '<input id="phNotiz" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="'+E(wert)+'"'
         +  ' onkeydown="if(event.key===\'Enter\')hoerenNotiz()"></div>'
@@ -285,8 +288,27 @@
     var el = document.getElementById('phNotiz'), v = el ? el.value : '';
     if(!String(v).trim()) return;
     var a = H.folge[H.i].a;
-    var ok = a.notiz.loesungen.some(function(l){ return normN(l)===normN(v); });
+    var ok = a.notiz.frei ? notizPasst(a.notiz, v)
+           : a.notiz.loesungen.some(function(l){ return normN(l)===normN(v); });
     werten(ok, v);
+  };
+  /* Freie Notiz (telc C1 Vortrag): passt, wenn eine Lösung darin steckt oder
+     die meisten ihrer Inhaltswörter vorkommen. Rechtschreibung zählt bei telc
+     nicht — deshalb großzügig. Im Rückblick kann man es selbst korrigieren. */
+  function notizPasst(n, v){
+    var w = normN(v); if(w.length < 2) return false;
+    return n.loesungen.some(function(l){
+      var x = normN(l); if(!x) return false;
+      if(w.indexOf(x) >= 0 || (x.indexOf(w) >= 0 && w.length >= 4)) return true;
+      var teile = x.split(' ').filter(function(t){ return t.length > 3; });
+      if(!teile.length) return false;
+      var treffer = teile.filter(function(t){ return w.indexOf(t.slice(0, Math.max(4, t.length-2))) >= 0; }).length;
+      return treffer / teile.length >= 0.6;
+    });
+  }
+  window.hoerenNotizSelbst = function(){
+    if(H.offen[H.i]!==false) return;
+    H.offen[H.i] = true; H.punkte++; malen();
   };
 
   function rfHTML(a, zeigen){

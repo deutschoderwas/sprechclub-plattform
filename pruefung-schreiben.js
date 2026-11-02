@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -430,7 +430,7 @@
       } else {
         h += (a.an ? '<div class="pw-zet-an">Für <b>'+E(a.an)+'</b></div>' : '')
           +  '<textarea id="pwText" class="pw-ta" rows="7" spellcheck="false" autocorrect="off" autocapitalize="sentences"'
-          +    ' placeholder="Schreib hier deinen Zettel …">'+E(text)+'</textarea>';
+          +    ' placeholder="'+E(a.platzhalter||'Schreib hier deinen Zettel …')+'"'+(a.platzhalter?' style="min-height:340px"':'')+'>'+E(text)+'</textarea>';
       }
       h += '<div class="pw-fuss">'
         +    '<span class="pw-ring" id="pwZaehler">'
@@ -483,7 +483,7 @@
 
   function aktA(){ var e=W.folge[W.i]; return e ? e.a : {}; }
   /* Anzahl der Häkchen: je Leitpunkt eins, bei telc dazu Kriterium II und III. */
-  function selbstAnzahl(a){ return (a.punkte||[]).length + (a.telc ? 2 : 0); }
+  function selbstAnzahl(a){ return a.rubrik ? a.rubrik.length : (a.punkte||[]).length + (a.telc ? 2 : 0); }
   function selbstWerte(){
     if(!W.selbst[W.i]){ var n=selbstAnzahl(aktA()), s=[]; for(var i=0;i<n;i++) s.push(null); W.selbst[W.i]=s; }
     return W.selbst[W.i];
@@ -508,6 +508,7 @@
   }
   function selbstPunkte(text){
     var a = aktA(), s = selbstWerte();
+    if(a.rubrik) return s.reduce(function(n,x){ return n + (x||0); }, 0);
     if(a.telc){
       var k = a.punkte.length;
       return (telcKrit1(s,k,a.noetig) + (s[k]||0) + (s[k+1]||0)) * 3;
@@ -562,7 +563,33 @@
       + '</div>';
   }
 
+  /* C1 Hochschule: vier Kriterien, je „in jeder Hinsicht / vorwiegend /
+     vorwiegend nicht / überhaupt nicht C1". telc nennt keine Punkte je
+     Kriterium — wir gewichten gleich (12/8/4/0), als Übungsschätzung. */
+  var RUB_STUFEN = [ { w:12, t:'A', d:'in jeder Hinsicht C1' }, { w:8, t:'B', d:'vorwiegend C1' },
+                     { w:4, t:'C', d:'vorwiegend nicht C1' }, { w:0, t:'D', d:'überhaupt nicht C1' } ];
+  function selbstHTMLrubrik(a, text, dazu){
+    var s = selbstWerte(), voll = selbstFertig(), summe = selbstPunkte(text), wz = woerter(text);
+    return '<div class="pw-selbst'+(voll?' fertig':'')+(dazu?' dazu':'')+'">'
+      + '<div class="pw-selbst-kopf"><span class="pw-selbst-p">'+(voll?summe:'–')+'<em>/'+mMax(a)+'</em></span>'
+      +   '<div><b>Bewerte dich nach den vier telc-Kriterien</b>'
+      +   '<span>Übungsschätzung: alle vier Kriterien gleich gewichtet. Dein Text hat '+wz+' Wörter — verlangt sind etwa '+(a.woerter||350)+'.</span></div></div>'
+      + '<div class="pw-sr auto"><b>Erinnerung: Diese Punkte gehören in den Text</b><span class="pw-sh">'
+      +   a.punkte.map(function(p){ return E(p.was); }).join(' · ')+'</span></div>'
+      + a.rubrik.map(function(kr, j){
+          return '<div class="pw-sr"><b>'+E(kr.t)+'</b><span class="pw-sh">'+E(kr.h)+'</span>'
+            + '<div class="pw-sw">' + RUB_STUFEN.map(function(st){
+                var an2 = s[j]===st.w ? ' an' : '';
+                return '<button class="pw-sb'+an2+'" onclick="schreibenSelbst('+j+','+st.w+')"><i>'+st.t+'</i>'+st.d+'</button>'; }).join('')
+            + '</div></div>'; }).join('')
+      + (voll ? '<div class="pw-sfazit">'+E(summe >= 0.6*mMax(a)
+            ? summe+' von '+mMax(a)+' — auf gutem Weg. Vergleich deinen Aufbau noch einmal mit dem Muster.'
+            : summe+' von '+mMax(a)+' — noch unter 60 Prozent. Schau zuerst auf die Aufgabengerechtheit: Sind alle Punkte drin, gibt es Einleitung und Schluss?')+'</div>' : '')
+      + '</div>';
+  }
+
   function selbstHTML(a, text, dazu){
+    if(a.rubrik) return selbstHTMLrubrik(a, text, dazu);
     if(a.telc) return selbstHTMLtelc(a, text, dazu);
     var s = selbstWerte();
     var an = hatAnrede(text), gr = hatGruss(text), g = gestaltungWert(text);
@@ -743,7 +770,7 @@
       headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+tok },
       body: JSON.stringify({ text:text, situation:a.situation, punkte:a.punkte,
                              sorte:a.sorte, level:a.level || (a.telc ? 'B1' : 'A1'),
-                             schema:a.telc ? (a.niveauTelc==='B2' ? 'telc_b2' : 'telc_b1') : undefined,
+                             schema:a.c1h ? 'telc_c1h' : (a.telc ? (a.niveauTelc==='B2' ? 'telc_b2' : 'telc_b1') : undefined),
                              eingang:a.eingang ? a.eingang.text : undefined })
     }).then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){
@@ -784,18 +811,18 @@
 
   /* telc: Amandas Wertung nach den drei telc-Kriterien. */
   function kiHTMLtelc(j, original){
-    var quote = j.summe / 45;
+    var M = j.max || 45, quote = j.summe / M;
     var gleich = norm(j.korrigiert||'') === norm(original||'');
     return '<div class="pw-erg '+(quote>=0.6?'gut':'knapp')+'">'
-      + '<div class="pw-erg-kopf"><span class="pw-erg-p">'+j.summe+'<em>/45</em></span>'
-      +   '<div><b>'+E(j.lob||'')+'</b><span>Bewertet nach den telc-Kriterien: drei Kriterien, je A–D, Summe mal drei</span></div></div>'
+      + '<div class="pw-erg-kopf"><span class="pw-erg-p">'+j.summe+'<em>/'+M+'</em></span>'
+      +   '<div><b>'+E(j.lob||'')+'</b><span>'+E(j.hinweis || 'Bewertet nach den telc-Kriterien: drei Kriterien, je A–D, Summe mal drei')+'</span></div></div>'
       + '<div class="pw-erg-z">'
       +   (j.leitpunkte||[]).map(function(p){
             var kl = p.erfuellt==='ja' ? 'voll' : (p.erfuellt==='teilweise' ? 'halb' : 'null');
             return '<div class="pw-erg-r '+kl+'"><i>'+(p.erfuellt==='ja'?'✓':(p.erfuellt==='teilweise'?'~':'✕'))+'</i>'
               + '<div><b>Leitpunkt '+p.nr+': '+E(p.was)+'</b><span>'+E(p.warum)+'</span></div></div>'; }).join('')
       +   (j.kriterien||[]).map(function(k){
-            var kl = k.wert>=5 ? 'voll' : (k.wert>0 ? 'halb' : 'null');
+            var kl = (k.stufe==='A') ? 'voll' : (k.wert>0 ? 'halb' : 'null');
             return '<div class="pw-erg-r '+kl+'"><i>'+E(k.stufe)+'</i>'
               + '<div><b>'+E(k.name)+' — '+k.wert+' Punkte</b><span>'+E(k.warum)+'</span></div></div>'; }).join('')
       + '</div>'
@@ -1426,6 +1453,8 @@
 '.pw-sb i{ font-style:normal; font-weight:800; font-size:12px; width:19px; height:19px;',
 '  border-radius:50%; display:grid; place-items:center; background:#F6F9FA; color:#8A97A0 }',
 '.pw-sb:hover{ border-color:#28353B; transform:translateY(-1px) }',
+'.pw-sb.an{ background:#E9F6FA; border-color:#1B9BC0; color:#0E5E75; font-weight:700 }',
+'.pw-sb.an i{ background:#1B9BC0; color:#fff }',
 '.pw-sb.w3.an{ background:#E8F8EE; border-color:#16A34A; color:#14532D }',
 '.pw-sb.w3.an i{ background:#12883E; color:#fff }',
 '.pw-sb.w15.an{ background:#F6F9FA; border-color:#E0B400; color:#5A3E00 }',

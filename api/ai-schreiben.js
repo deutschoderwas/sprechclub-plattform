@@ -131,6 +131,47 @@ Gib GENAU dieses JSON zurück:
 }`;
 }
 
+/* telc Deutsch C1 Hochschule, Schriftlicher Ausdruck (02.11.2026, telc „Tipps …
+   C1 Hochschule"): ca. 350 Wörter, vier Kriterien Aufgabengerechtheit, Korrektheit,
+   Repertoire, Kommunikative Gestaltung. Stufen nach telc: A in jeder Hinsicht C1,
+   B vorwiegend, C vorwiegend nicht, D überhaupt nicht. */
+function promptC1H({ text, situation, punkte, eingang }) {
+  const liste = (punkte || []).map(p => `${p.nr}. ${p.was}${p.hinweis ? ' — ' + p.hinweis : ''}`).join('\n');
+  return `Prüfung: telc Deutsch C1 Hochschule, Schriftlicher Ausdruck. Ein Text von etwa 350 Wörtern zu einem Seminarauftrag, mit Einleitung, Hauptteil und Schluss.
+
+SITUATION: «${situation || '—'}»
+
+AUFGABENSTELLUNG:
+«${eingang || '—'}»
+
+PUNKTE, DIE DER TEXT BEHANDELN SOLL:
+${liste}
+
+DAS HAT DIE PERSON GESCHRIEBEN:
+«${text}»
+
+Bewerte nach den vier telc-Kriterien, je Stufe A (in jeder Hinsicht C1), B (vorwiegend C1), C (vorwiegend nicht C1), D (überhaupt nicht C1):
+- aufgabe: Aufgabengerechtheit — Auftrag, Adressat, alle Punkte, Einleitung/Hauptteil/Schluss.
+- korrektheit: Grammatik und Rechtschreibung.
+- repertoire: Spektrum und Präzision von Wortschatz und Strukturen.
+- gestaltung: Kohärenz, Verknüpfung, Textaufbau, Register.
+Je Punkt: "ja", "teilweise" oder "nein".
+„korrigiert": nur echte Fehler verbessern, Stil und Länge der Person behalten. Rückmeldungen mit „du", klar und konkret.
+
+Gib GENAU dieses JSON zurück:
+{
+  "leitpunkte": [ { "nr": 1, "erfuellt": "ja", "warum": "ein Satz" }, … für jeden Punkt ],
+  "aufgabe": { "stufe": "B", "warum": "ein bis zwei Sätze" },
+  "korrektheit": { "stufe": "B", "warum": "…" },
+  "repertoire": { "stufe": "B", "warum": "…" },
+  "gestaltung": { "stufe": "B", "warum": "…" },
+  "korrigiert": "…",
+  "sprache": "die zwei wichtigsten sprachlichen Punkte mit Regel",
+  "lob": "max. 8 Wörter",
+  "tipp": "ein konkreter Satz"
+}`;
+}
+
 const TELC_WERT = { A: 5, B: 3, C: 1, D: 0 };
 function telcStufe(v) { const s = String(v || '').trim().toUpperCase().charAt(0); return TELC_WERT[s] != null ? s : 'D'; }
 
@@ -173,6 +214,38 @@ export default async function handler(req, res) {
   text = String(text || '').replace(/\r/g, '').trim();
   if (!text) return res.status(400).json({ error: 'text_required' });
   if (text.length > 1500) text = text.slice(0, 1500);
+
+  if (schema === 'telc_c1h') {
+    if (!Array.isArray(punkte) || !punkte.length) return res.status(400).json({ error: 'punkte_noetig' });
+    let o;
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: MODEL, max_tokens: 1600, system: SYSTEM_TELC,
+          messages: [{ role: 'user', content: promptC1H({ text, situation, punkte, eingang: String(eingang || '').slice(0, 1500) }) }] }),
+      });
+      if (!r.ok) { const t = await r.text(); return res.status(502).json({ error: 'anthropic_error', detail: t.slice(0, 300) }); }
+      const j = await r.json();
+      o = extractJson((j.content || []).filter(b => b.type === 'text').map(b => b.text).join(''));
+    } catch (e) {
+      return res.status(502).json({ error: 'generation_failed', detail: String(e).slice(0, 300) });
+    }
+    const W = { A: 12, B: 8, C: 4, D: 0 };
+    const roh = Array.isArray(o.leitpunkte) ? o.leitpunkte : [];
+    const lp = punkte.map((p, i) => {
+      const g = roh.find(x => Number(x.nr) === p.nr) || roh[i] || {};
+      const e = String(g.erfuellt || '').toLowerCase();
+      return { nr: p.nr, was: p.was, erfuellt: e.startsWith('ja') ? 'ja' : (e.startsWith('teil') ? 'teilweise' : 'nein'), warum: String(g.warum || '').slice(0, 300) };
+    });
+    const NAMEN = [['aufgabe', 'Aufgabengerechtheit'], ['korrektheit', 'Korrektheit'], ['repertoire', 'Repertoire'], ['gestaltung', 'Kommunikative Gestaltung']];
+    const kriterien = NAMEN.map(([k, n]) => { const s = telcStufe((o[k] || {}).stufe); return { id: k, name: n, stufe: s, wert: W[s], warum: String((o[k] || {}).warum || '').slice(0, 300) }; });
+    const summe = kriterien.reduce((a, k) => a + k.wert, 0);
+    return res.status(200).json({ ok: true, schema: 'telc', leitpunkte: lp, kriterien, summe, max: 48,
+      hinweis: 'Vier telc-Kriterien, je A–D. telc nennt keine Punkte je Kriterium — hier gleich gewichtet (Übungsschätzung).',
+      korrigiert: String(o.korrigiert || text).trim(), sprache: String(o.sprache || '').slice(0, 500),
+      lob: String(o.lob || 'Gut gemacht!').slice(0, 80), tipp: String(o.tipp || '').slice(0, 300) });
+  }
 
   if (schema === 'telc_b1' || schema === 'telc_b2') {
     const b2 = schema === 'telc_b2', noetig = b2 ? 3 : 4;
