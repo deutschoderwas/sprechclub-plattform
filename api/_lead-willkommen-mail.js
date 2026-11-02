@@ -81,7 +81,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${zu ? 'Die T&uuml;ren &ouml;ffnen Mitte November' : 'Sch&ouml;n, dass du da bist'}</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${zu ? 'Die T&uuml;ren &ouml;ffnen Mitte November &middot; mit noch mehr Live-Unterricht' : 'Start am 1. November' + (rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : '')}</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${zu ? 'Der Sprechclub ist voll &middot; Mitte November &ouml;ffnen wir noch einmal f&uuml;r eine Woche' : 'Start am 1. November' + (rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : '')}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
@@ -97,7 +97,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     </h1>
     <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
       ${zu
-        ? 'Danke, dass du dich eingetragen hast. Der Sprechclub ist gerade geschlossen &ndash; aber nicht lange. Du bist dabei, sobald die T&uuml;ren wieder aufgehen, und die Pl&auml;tze sind begrenzt.'
+        ? 'Danke, dass du dich eingetragen hast. Aktuell ist der Sprechclub <b>voll</b> &ndash; aber Mitte November &ouml;ffnen wir die Anmeldung noch einmal, f&uuml;r eine Woche.'
         : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Dinge sind jetzt wichtig f&uuml;r dich:'}
     </p>
   </td></tr>
@@ -105,9 +105,9 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   <tr><td style="padding:0 30px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
-        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Die T&uuml;ren &ouml;ffnen Mitte November' : '&#128197; Der Unterricht startet am 1. November'}</div>
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Mitte November &ouml;ffnen wir noch einmal &ndash; eine Woche lang' : '&#128197; Der Unterricht startet am 1. November'}</div>
         <div style="font-size:15px;line-height:1.55;color:#06403A">${zu
-          ? 'Wir arbeiten gerade an noch mehr <b>Live-Unterricht</b> und noch mehr <b>Flexibilit&auml;t</b> &ndash; damit du den Sprechclub noch &ouml;fter und noch freier nutzen kannst.'
+          ? '<b>Wir sagen dir rechtzeitig Bescheid</b>, damit du deinen Platz sicher bekommst. Du musst nichts weiter tun &ndash; du stehst auf der Liste.'
           : 'Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.'}</div>
       </td></tr>
     </table>
@@ -123,7 +123,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="https://www.deutschoderwas-club.de/#preise" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Die Lernplattform ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
+    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/#preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Community-Mitgliedschaft ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">
