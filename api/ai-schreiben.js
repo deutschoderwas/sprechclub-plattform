@@ -135,9 +135,9 @@ Gib GENAU dieses JSON zurück:
    C1 Hochschule"): ca. 350 Wörter, vier Kriterien Aufgabengerechtheit, Korrektheit,
    Repertoire, Kommunikative Gestaltung. Stufen nach telc: A in jeder Hinsicht C1,
    B vorwiegend, C vorwiegend nicht, D überhaupt nicht. */
-function promptC1H({ text, situation, punkte, eingang }) {
+function promptC1H({ text, situation, punkte, eingang, allg }) {
   const liste = (punkte || []).map(p => `${p.nr}. ${p.was}${p.hinweis ? ' — ' + p.hinweis : ''}`).join('\n');
-  return `Prüfung: telc Deutsch C1 Hochschule, Schriftlicher Ausdruck. Ein Text von etwa 350 Wörtern zu einem Seminarauftrag, mit Einleitung, Hauptteil und Schluss.
+  return `Prüfung: telc Deutsch C1${allg ? '' : ' Hochschule'}, Schriftlicher Ausdruck. Ein Text von etwa 350 Wörtern ${allg ? '(Erörterung oder Stellungnahme)' : 'zu einem Seminarauftrag'}, mit Einleitung, Hauptteil und Schluss.
 
 SITUATION: «${situation || '—'}»
 
@@ -210,7 +210,7 @@ export default async function handler(req, res) {
   if (uerr || !ures?.user) return res.status(401).json({ error: 'invalid_token' });
   const uid = ures.user.id;
 
-  let { text, situation, punkte, sorte, level, schema, eingang } = req.body || {};
+  let { text, situation, punkte, sorte, level, schema, eingang, allg } = req.body || {};
   text = String(text || '').replace(/\r/g, '').trim();
   if (!text) return res.status(400).json({ error: 'text_required' });
   if (text.length > 1500) text = text.slice(0, 1500);
@@ -223,7 +223,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ model: MODEL, max_tokens: 1600, system: SYSTEM_TELC,
-          messages: [{ role: 'user', content: promptC1H({ text, situation, punkte, eingang: String(eingang || '').slice(0, 1500) }) }] }),
+          messages: [{ role: 'user', content: promptC1H({ text, situation, punkte, allg: !!allg, eingang: String(eingang || '').slice(0, 1500) }) }] }),
       });
       if (!r.ok) { const t = await r.text(); return res.status(502).json({ error: 'anthropic_error', detail: t.slice(0, 300) }); }
       const j = await r.json();

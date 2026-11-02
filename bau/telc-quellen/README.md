@@ -32,5 +32,10 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
   großzügiger Abgleich + „meint dasselbe"). Schreiben ~350 Wörter, vier Kriterien (gleich gewichtet, Übungsschätzung;
   Amanda schema telc_c1h). Sprechen Präsentation / Zusammenfassung / Zitat. Grenze nicht belegt → Richtwert 60 %.
 
+- telc C1 (allgemein) komplett: lesen/hoeren/schreiben/sprechen-telc-c1.js. Quelle: telc Übungstest 1 Deutsch C1 —
+  gleiches Format wie C1 Hochschule (plus 20 Min. Pause nach Lesen), aber Alltags-, Berufs- und Gesellschaftsthemen;
+  Schreiben Erörterung/Stellungnahme (Amanda: schema telc_c1h mit allg:true); eigene Prüfungsseite telcc1allg,
+  Lernziel-Option „telc C1".
+
 ## Als Nächstes
-telc C1 (allgemein), dann die Beruf-Prüfungen (B1+, B2+, B1·B2, B2·C1, C1 Beruf), C2, Nischen.
+Beruf-Prüfungen: telc B1+ Beruf, B2+ Beruf, B1·B2 Beruf, B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.

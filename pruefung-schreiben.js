@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -771,7 +771,8 @@
       body: JSON.stringify({ text:text, situation:a.situation, punkte:a.punkte,
                              sorte:a.sorte, level:a.level || (a.telc ? 'B1' : 'A1'),
                              schema:a.c1h ? 'telc_c1h' : (a.telc ? (a.niveauTelc==='B2' ? 'telc_b2' : 'telc_b1') : undefined),
-                             eingang:a.eingang ? a.eingang.text : undefined })
+                             eingang:a.eingang ? a.eingang.text : undefined,
+                             allg:a.c1allg ? true : undefined })
     }).then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){
         clearTimeout(abbruch);
