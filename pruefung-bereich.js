@@ -180,6 +180,40 @@
 
     { id:'telcb2', name:'telc Deutsch B2', anbieter:'telc', niveau:'B2',
       bild:'bewerbung', kurs:'goethetelc', muster:'B2', telc:true, geprueft:true,
+      training:{ lesen:'telcB2', hoeren:'telcB2', schreiben:'telcB2', sprechen:'telcB2' },
+      /* Gewichte nach telc „Tipps Deutsch B2": Lesen 75 + Sprachbausteine 30, Hören 75,
+         Schreiben 45 = 225 schriftlich; mündlich 75. Eine Bestehensgrenze nennt das
+         Dokument nicht — 60 % ist hier ein Richtwert und so beschriftet. */
+      prognose:{ richtwert:true, teile:[ { name:'Schriftliche Prüfung', max:225, grenze:135,
+                           anteile:{ lesen:105, hoeren:75, schreiben:45 } },
+                         { name:'Mündliche Prüfung', max:75, grenze:45, anteile:{ sprechen:75 } } ] },
+      mat:{
+        wortschatz:['Arbeitswelt und Karriere','Gesellschaft und Zusammenleben','Umwelt und Klima','Technik und Digitales',
+                    'Gesundheit und Ernährung','Bildung und Weiterbildung','Wohnen und Stadt','Konsum und Werbung','Medien',
+                    'Reisen und Mobilität','Kultur und Freizeit'],
+        grammatik:['Zweiteilige Konnektoren: nicht nur … sondern auch, je … desto, sowohl … als auch, weder … noch',
+                   'Präpositionen mit Genitiv: trotz, wegen, aufgrund, innerhalb, während','Passiv mit Modalverb',
+                   'Konjunktiv II, auch in der Vergangenheit','Relativsätze mit Präposition (mit dem, über die)',
+                   'Pronominaladverbien: darauf, worüber, damit','Partizipien als Adjektive','Indirekte Rede (einfach)',
+                   'Nomen-Verb-Verbindungen (zur Verfügung stellen, Rücksicht nehmen)'],
+        redemittel:[
+          ['Schreiben — Anfrage','Ich habe Ihre Anzeige in … gelesen und hätte einige Fragen. · Könnten Sie mir bitte mitteilen, ob …'],
+          ['Schreiben — Beschwerde','Leider muss ich mich über … beschweren. · Laut Ihrer Beschreibung … · Ich erwarte daher, dass …'],
+          ['Schreiben — verbinden','Darüber hinaus … · Zum einen … zum anderen … · Folglich … · Dennoch …'],
+          ['Sprechen — Erfahrung','Ich möchte von einer Erfahrung erzählen, die … · Damals … · Rückblickend würde ich sagen …'],
+          ['Sprechen — Diskussion','Ich sehe das etwas anders, denn … · Das stimmt zwar, aber … · Ein wichtiges Argument ist …'],
+          ['Sprechen — Planen','Ich hätte Bedenken, weil … · Was hältst du davon, wenn … · Dann halten wir fest: …'] ],
+        bewertung:[
+          ['Lesen und Sprachbausteine','Leseteil 1 und 2 je 25 Punkte, Teil 3 25 Punkte (2,5 je Situation), Sprachbausteine je 15 — zusammen 105.'],
+          ['Hören','Teil 1 und 3 je 25 Punkte (5 je Aussage), Teil 2 25 Punkte (2,5 je Aussage) — zusammen 75. Jeder Text nur einmal.'],
+          ['Schreiben','Drei Kriterien — Aufgabenbewältigung (drei Leitpunkte), Gestaltung, Richtigkeit — je A bis D (5, 3, 1, 0), Summe mal drei: höchstens 45.'],
+          ['Sprechen','Drei Teile je 25 Punkte: Ausdrucksfähigkeit, Aufgabenbewältigung, formale Richtigkeit, Aussprache. Das Kennenlernen am Anfang zählt nicht.'],
+          ['Insgesamt','300 Punkte: 225 schriftlich, 75 mündlich.'] ],
+        ablauf:[
+          'Schriftlich: Lesen und Sprachbausteine 90 Minuten ohne Pause, dann Hören (ca. 20), dann Schreiben (30).',
+          'Beim Hören hörst du jeden Text nur einmal.',
+          'Beim Schreiben wählst du zwischen Aufgabe A (Bitte um Informationen) und B (Beschwerde).',
+          'Mündlich zu zweit, ca. 15 Minuten, vorher 20 Minuten Vorbereitung. Zuerst ein kurzes Kennenlernen, das nicht bewertet wird.'] },
       fuer:'Studium, Anerkennung im Beruf, qualifizierte Arbeit — die B2-Prüfung von telc.',
       module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'90',
                  t:'Drei Leseteile mit 20 Aufgaben, dann zwei Teile Sprachbausteine mit 20 Lücken. Zusammen 90 Minuten, ohne Pause.'},
@@ -1019,7 +1053,7 @@
       pts = Math.round(pts);
       var ok = pts >= t.grenze;
       return '<div class="pf-prog '+(ok?'gut':'knapp')+'">'
-        + '<div class="pf-prog-k"><b>'+E(t.name)+'</b><span>'+pts+' von '+t.max+' · bestanden ab '+t.grenze+'</span></div>'
+        + '<div class="pf-prog-k"><b>'+E(t.name)+'</b><span>'+pts+' von '+t.max+' · '+(p.prognose.richtwert?'Richtwert 60 %: ':'bestanden ab ')+t.grenze+'</span></div>'
         + '<div class="pf-prog-bar"><i style="width:'+Math.max(2,Math.round(pts/t.max*100))+'%"></i>'
         +   '<em style="left:'+Math.round(t.grenze/t.max*100)+'%"></em></div>'
         + '<p>'+(ok ? '✅ Nach deinen Übungen liegst du über der Grenze.'

@@ -40,7 +40,7 @@
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
-                  'telcB1':'SPRECHEN_TELC_B1' };
+                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
@@ -291,7 +291,6 @@
           + E(k.text).replace(/\n/g,'<br>')+'</p></div>' : '')
       + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
           return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
-      + (k.frage ? '<div class="sp-nachfrage"><span>Danach fragt dich dein Gegenüber</span><b>„'+E(k.frage)+'"</b></div>' : '')
       + '</div>';
   }
 
@@ -390,7 +389,9 @@
     h += '<div class="sp-muster"><span class="sp-muster-t">So könnte es klingen</span>'
       + sch.map(function(x,k){
           var m = x.muster(a) || '';
-          return '<div class="sp-m-z"><div class="sp-m-tx"><b>'+E(x.t)+'</b><p>'+E(m)+'</p></div>'
+          /* Die Nachfrage passt zum Musterbeispiel — deshalb steht sie erst hier, nicht vorher auf der Karte. */
+          var nf = (k===1 && a.frage) ? '<div class="sp-nachfrage"><span>Nachfrage zum Musterbeispiel</span><b>„'+E(a.frage)+'"</b></div>' : '';
+          return '<div class="sp-m-z"><div class="sp-m-tx"><b>'+E(x.t)+'</b>'+nf+'<p>'+E(m)+'</p></div>'
             + '<button class="sp-hoer" onclick="sprechenHoeren('+k+')" aria-label="Vorlesen">🔊</button></div>';
         }).join('') + '</div>';
 

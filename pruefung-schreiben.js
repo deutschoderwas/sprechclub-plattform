@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -401,8 +401,9 @@
       + (a.eingang.betreff?'<div><span>Betreff</span><b>'+E(a.eingang.betreff)+'</b></div>':'')+'</div>'
       + '<p class="pw-eingang-t">'+E(a.eingang.text||'').replace(/\n/g,'<br>')+'</p></div>';
     var ZAHL = ['keine','einen','zwei','drei','vier','fünf','sechs'];
-    h += '<div class="pw-punkte"><span class="pw-punkte-t">Diese '+(ZAHL[a.punkte.length]||a.punkte.length)
-      + ' Punkte müssen vorkommen</span>'
+    h += '<div class="pw-punkte"><span class="pw-punkte-t">'+(a.noetig && a.noetig < a.punkte.length
+        ? 'Bearbeite '+ZAHL[a.noetig]+' dieser '+ZAHL[a.punkte.length]+' Punkte — oder zwei und einen eigenen Aspekt'
+        : 'Diese '+(ZAHL[a.punkte.length]||a.punkte.length)+' Punkte müssen vorkommen')+'</span>'
       + '<div class="pw-pk-r">'
       + a.punkte.map(function(p){
           return '<div class="pw-pk"><i>'+p.nr+'</i><b>'+E(p.was)+'</b>'
@@ -974,7 +975,7 @@
     }
     starten({ niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
       titel:Lf.titel,
-      unter:(Lf.aufgaben ? Lf.aufgaben.length+' Schreibaufgaben' : 'Formular und Mitteilung')
+      unter:(Lf.aufgaben ? Lf.aufgaben.length+(Lf.aufgaben.length===1?' Schreibaufgabe':' Schreibaufgaben') : 'Formular und Mitteilung')
         +' · '+(Lf.minuten||d.minuten)+' Minuten',
       folge:folge, max:laufMax(Lf) });
     uhrStarten(Lf.minuten || d.minuten);

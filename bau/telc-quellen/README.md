@@ -17,5 +17,10 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
 - Prüfungsseite telc B1: „Alles für die Prüfung" (Ablauf, Bewertung, Themen, Grammatik, Redemittel) und
   „Bist du bereit?" mit Punkteprognose (schriftlich /225, Grenze 135; mündlich /75, Grenze 45).
 
+- telc B2 komplett: lesen/hoeren/schreiben/sprechen-telc-b2.js. Quelle Format: telc „Tipps zur Prüfungsvorbereitung
+  Deutsch B2" + Übungstest 1/3. Hören nur EINMAL; Schreiben A Information / B Beschwerde, 3 von 4 Leitpunkten, mind. 150
+  Wörter; Sprechen Erfahrung / Diskussion / Planen je 25 P. Bestehensgrenze nicht belegt → Prognose „Richtwert 60 %".
+
 ## Als Nächstes
-telc B2 (Format siehe telc.net + Übungstest 3 Deutsch B2), dann telc A2·B1, C1 Hochschule …
+telc A2·B1 (neu, Format: Lesen 4 Teile 45 Min, Sprachbausteine/Lesen+Schreiben 3 Teile 35, Hören 5 Teile 35, Schreiben 10,
+Sprechen 3 Teile ca. 15, keine Vorbereitung — Details vorher genau bei telc prüfen), dann C1 Hochschule …
