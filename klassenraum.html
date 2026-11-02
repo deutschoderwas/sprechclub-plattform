@@ -1103,6 +1103,8 @@
       setTimeout(()=>manageSubscriptions(), 1500);
       // Namen aller gebuchten Schüler laden (für die Gruppen-Übersicht, auch über Räume hinweg)
       setTimeout(()=>{ if(istLehrer && typeof ladeRoster==='function') ladeRoster(); }, 1500);
+      // Nach einem Reconnect: laufende Kleingruppen aus der DB wiederherstellen (Haupt- & Assistenzlehrer)
+      setTimeout(()=>{ if(istLehrer && typeof gruppenWiederherstellen==='function') gruppenWiederherstellen(); }, 1700);
       // Nachzügler: Wer im HAUPTRAUM ankommt, meldet sich – falls die Gruppen schon
       // laufen, teilt der Lehrer-Rechner ihn automatisch nach Niveau einer Gruppe zu.
       // Mehrfach senden, falls der Realtime-Kanal gerade erst verbindet.
@@ -1452,6 +1454,7 @@
     await gnotesResetAll();                 // beim Neu-Mischen alte Tafeln leeren
     const reset=Date.now();
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups, reset } }); }catch(e){}
+    gruppenPersistieren();                  // Gruppen für den Reconnect sichern
     boRenderTeacher();
   }
   function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
@@ -1462,6 +1465,7 @@
     window._breakoutGroups=window._breakoutGroups||{};
     window._breakoutGroups[id]=n; if(window._boAssign) window._boAssign[id]=n;
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+    gruppenPersistieren();
     boRenderTeacher();
   }
   // Schüler AUS der Gruppe nehmen → zurück in den Hauptraum (Julia, 01.11.2026)
@@ -1469,6 +1473,7 @@
     if(window._breakoutGroups) delete window._breakoutGroups[id];
     if(window._boAssign) delete window._boAssign[id];
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups||{} } }); }catch(e){}
+    gruppenEntfernenDB([id]);               // auch aus der DB raus, sonst wird er beim Reconnect wieder zugeteilt
     boRenderTeacher();
   }
   /* Nachzügler automatisch nach Niveau einteilen, wenn die Gruppen schon laufen
@@ -1489,6 +1494,16 @@
         try{ const { data } = await sb.from('profiles').select('id,level,stufe,target_level').eq('id',id).maybeSingle(); if(data) window._boLevels[id]=data.level||data.stufe||data.target_level||null; }catch(e){}
       }
       if(window._breakoutGroups && window._breakoutGroups[id]){ return; }   // inzwischen schon zugeteilt
+      // Hatte der Schüler schon eine Gruppe (z.B. selbst rausgeflogen)? → zurück in SEINE Gruppe, wenn es sie noch gibt.
+      try{
+        const { data:ex } = await sb.from('class_group_members').select('grp').eq('class_id',STUNDE).eq('user_id',id).maybeSingle();
+        const eg = ex && (ex.grp|0);
+        if(eg>0 && Object.values(window._breakoutGroups||{}).some(x=>(x|0)===eg)){
+          window._breakoutGroups[id]=eg; if(window._boAssign) window._boAssign[id]=eg;
+          try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+          gruppenPersistieren(); boRenderTeacher(); return;
+        }
+      }catch(e){}
       const band = boBand(boLv(id));
       const byGroup={}; Object.entries(window._breakoutGroups||{}).forEach(([uid,g])=>{ (byGroup[g]=byGroup[g]||[]).push(uid); });
       const groupNums=Object.keys(byGroup).map(Number);
@@ -1504,6 +1519,7 @@
       window._breakoutGroups=window._breakoutGroups||{};
       window._breakoutGroups[id]=target; if(window._boAssign) window._boAssign[id]=target;
       try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+      gruppenPersistieren();
       boRenderTeacher();
     } finally {
       setTimeout(()=>{ delete window._lateBusy[id]; }, 4000);
@@ -1574,13 +1590,55 @@
     await gnotesResetAll();                 // frische, leere Tafeln für alle Gruppen
     const reset=Date.now();
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups, reset } }); }catch(e){}
+    gruppenPersistieren();                  // Gruppen für den Reconnect sichern
     boRenderTeacher();
   }
   function boEnd(){
     window._breakoutActive=false;
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:false } }); }catch(e){}
+    gruppenEntfernenDB();                 // laufende Gruppen aus der DB löschen (nichts mehr wiederherzustellen)
     if(window._currentGroup) wechsleRaum(0);
     boRenderTeacher();
+  }
+  // ===== Gruppen überleben einen Reconnect (Julia, 02.11.2026) =====
+  // Die Gruppen lebten sonst nur im Speicher + Realtime (flüchtig) — beim
+  // Rausfliegen/Neuladen waren sie weg (auf 0). Jetzt: bei jeder Änderung in die
+  // DB sichern (class_group_members), beim (Wieder-)Beitritt laden und anzeigen.
+  // Gilt für Haupt- UND Assistenzlehrer (beide sind istLehrer).
+  async function gruppenPersistieren(){
+    if(!istLehrer || !sb || !STUNDE) return;
+    try{
+      const groups=window._breakoutGroups||{};
+      const ids=Object.keys(groups).filter(id=>(groups[id]|0)>0);
+      if(!ids.length) return;
+      const rows=ids.map(id=>({ class_id:STUNDE, user_id:id, grp:groups[id]|0, name:(window._roster&&window._roster[id])||null, updated_at:new Date().toISOString() }));
+      await sb.from('class_group_members').upsert(rows,{ onConflict:'class_id,user_id' });
+    }catch(e){ console.warn('Gruppen sichern', e); }
+  }
+  async function gruppenEntfernenDB(ids){
+    if(!istLehrer || !sb || !STUNDE) return;
+    try{
+      let q=sb.from('class_group_members').delete().eq('class_id',STUNDE);
+      if(ids && ids.length) q=q.in('user_id',ids);
+      await q;
+    }catch(e){ console.warn('Gruppen DB löschen', e); }
+  }
+  window._gruppenGeladen=false;
+  async function gruppenWiederherstellen(){
+    if(!istLehrer || !sb || !STUNDE) return;
+    if(window._gruppenGeladen) return; window._gruppenGeladen=true;   // nur einmal pro Seitenladen
+    try{
+      const seit=new Date(Date.now()-3*3600*1000).toISOString();     // nur frische Gruppen (letzte 3 h)
+      const { data } = await sb.from('class_group_members').select('user_id,grp,name').eq('class_id',STUNDE).gte('updated_at',seit);
+      const rows=(data||[]).filter(r=>r && (r.grp|0)>0);
+      if(!rows.length) return;                        // keine laufenden Gruppen → nichts wiederherstellen
+      const groups={}; window._roster=window._roster||{};
+      rows.forEach(r=>{ groups[r.user_id]=r.grp|0; if(r.name) window._roster[r.user_id]=r.name; });
+      window._breakoutGroups=groups; window._boAssign=Object.assign({},groups); window._breakoutActive=true;
+      try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups } }); }catch(e){}  // alle wieder synchronisieren
+      if(typeof ladeRoster==='function') ladeRoster();
+      if(typeof boRenderTeacher==='function') boRenderTeacher();
+    }catch(e){ console.warn('Gruppen wiederherstellen', e); }
   }
   /* Namen anderer Lehrkräfte (nicht ich selbst) in Gruppe g. */
   function teachersInExceptMe(g){ const now=Date.now(); const me=window._meId||'self'; return Object.entries(window._teacherPos||{}).filter(([id,t])=>id!==me && t && (t.group|0)===(g|0) && now-(t.ts||0)<=45000).map(([id,t])=>t.name); }
@@ -2629,6 +2687,8 @@
           if(typeof boBroadcastPos==='function') boBroadcastPos(window._currentGroup||0);
           clearInterval(window._tposHb); window._tposHb=setInterval(()=>{ if(typeof boBroadcastPos==='function') boBroadcastPos(window._currentGroup||0); }, 20000);
           clearInterval(window._tposPruneIv); window._tposPruneIv=setInterval(()=>{ if(typeof tposPrune==='function') tposPrune(); }, 15000);
+          // laufende Kleingruppen nach Reconnect wiederherstellen (einmal, über die DB)
+          if(typeof gruppenWiederherstellen==='function') gruppenWiederherstellen();
         }
       });
     window._handCh = sb.channel('hand-'+STUNDE)
