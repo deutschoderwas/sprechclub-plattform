@@ -127,6 +127,9 @@ table.gtab td b{color:var(--blau);}
 .gda{font-family:'Space Grotesk';font-weight:800;font-size:2.4rem;color:var(--blau);}
 .gwo{font-weight:700;color:var(--gruen);font-size:1.15rem;margin-top:.3rem;}
 .gex{font-family:'Space Grotesk';font-style:italic;color:var(--ink);margin-top:.7rem;font-size:1.05rem;}
+.gfrage{margin-top:.8rem;font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.4;}
+.gantwort{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;color:var(--ink);line-height:1.35;}
+.ghinweis{margin-top:.9rem;display:inline-block;font-size:.85rem;font-weight:700;color:var(--blau);background:#E9F1FB;padding:.3rem .8rem;border-radius:999px;}
 .game-ctrl{text-align:center;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;}
 .btn-ok{background:var(--gruen);color:#fff;border:2px solid var(--gruen);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
 .btn-no{background:#fff;color:var(--rot);border:2px solid var(--rot);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
@@ -428,8 +431,8 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 
 <section class="section" data-section="2">
 <h2 class="section-title">🎮 Flip &amp; Sprich-<em>Challenge</em></h2>
-<p class="section-sub">So geht's: Verb lesen → <b>laut sagen</b>: 1️⃣ das Relativpronomen · 2️⃣ den Kasus (Nom/Akk/Dativ)? · 3️⃣ einen eigenen Satz. Dann umdrehen und prüfen. Konntest du alles? ✓ — sonst kommt die Karte nochmal!</p>
-<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person zieht, sagt alles laut, die anderen prüfen beim Umdrehen und vergeben ✓ oder ✗. Schafft ihr alle Karten ohne „Nochmal"? Niveau oben umschalten.</div>
+<p class="section-sub">So geht's: Stichwort lesen → die <b>Frage laut stellen</b> und selbst <b>frei antworten</b> (am besten mit einem Relativsatz). Dann die Karte <b>antippen</b> – du siehst eine mögliche Antwort (nochmal antippen = zurück). Passt? ✓ Konnte ich — sonst ✗ und die Karte kommt später nochmal. Niveau oben umschalten.</p>
+<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person stellt die Frage, die/der Nächste antwortet frei mit einem Relativsatz. Dann Karte umdrehen und schauen, wie man es natürlich sagt. Niveau oben umschalten.</div>
 <div class="game" id="game">
   <div class="game-hud">
     <span>🃏 Karte <b id="gCur">1</b>/<b id="gTot">6</b></span>
@@ -438,11 +441,10 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
   </div>
   <div class="game-bar"><div class="game-bar-fill" id="gFill"></div></div>
   <div class="gcard" id="gCard"><div class="gcard-inner" id="gInner">
-    <div class="gcard-face gcard-front"><div class="glabel">Sag laut &amp; dann umdrehen</div><div class="gverb" id="gVerb">warten auf</div><div class="gtask">1️⃣ Pronomen &nbsp;·&nbsp; 2️⃣ Kasus &nbsp;·&nbsp; 3️⃣ eigener Satz</div></div>
-    <div class="gcard-face gcard-back"><div class="gda" id="gDa">darauf</div><div class="gwo" id="gWo">Worauf?</div><div class="gex" id="gEx">„Ich warte darauf."</div></div>
+    <div class="gcard-face gcard-front"><div class="glabel">🗣️ Frag laut — dann Karte antippen</div><div class="gverb" id="gVerb">der Freund</div><div class="gfrage" id="gFrage">„Was ist für dich ein guter Freund?“</div></div>
+    <div class="gcard-face gcard-back"><div class="glabel">💬 So kannst du antworten — antippen zum Zurückdrehen</div><div class="gantwort" id="gAntwort">„Ein guter Freund ist jemand, der immer für dich da ist.“</div><div class="ghinweis" id="gHinweis">der (Nominativ, maskulin)</div></div>
   </div></div>
-  <div class="game-ctrl" id="gC1"><button class="btn-primary" id="gFlip">🔄 Umdrehen &amp; prüfen</button></div>
-  <div class="game-ctrl" id="gC2" style="display:none;"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nochmal üben</button></div>
+  <div class="game-ctrl" id="gC2"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nächste Karte</button></div>
   <div class="gend" id="gEnd" style="display:none;"><div class="gend-emoji">🎉</div><div class="gend-title">Geschafft — alle Karten gemeistert!</div><div class="gend-score" id="gEndScore"></div><button class="btn-primary" id="gRestart">🔁 Nochmal spielen</button></div>
 </div>
 </section>
@@ -587,37 +589,37 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 var curLevel='komplexer';
 var DECKS={
  einfach:[
-  {v:"der Mann",da:"der",wo:"Nominativ m",ex:"„der Mann, der wohnt“"},
-  {v:"die Frau",da:"die",wo:"Nominativ f",ex:"„die Frau, die singt“"},
-  {v:"das Kind",da:"das",wo:"Nominativ n",ex:"„das Kind, das spielt“"},
-  {v:"die Leute",da:"die",wo:"Nominativ Pl",ex:"„die Leute, die lachen“"},
-  {v:"das Haus",da:"das",wo:"Nominativ n",ex:"„das Haus, das alt ist“"},
-  {v:"der Hund",da:"der",wo:"Nominativ m",ex:"„der Hund, der bellt“"}
+  {v:"der Freund",frage:"„Was ist für dich ein guter Freund?“",antwort:"„Ein guter Freund ist jemand, der immer für dich da ist.“",hinweis:"der (Nominativ, maskulin)"},
+  {v:"die Nachbarin",frage:"„Magst du deine Nachbarn?“",antwort:"„Ja, ich habe eine Nachbarin, die total nett ist.“",hinweis:"die (Nominativ, feminin)"},
+  {v:"das Kind",frage:"„Kennst du ein lustiges Kind?“",antwort:"„Ja, meine Nichte ist ein Kind, das ständig lacht.“",hinweis:"das (Nominativ, neutrum)"},
+  {v:"die Leute",frage:"„Was für Leute magst du?“",antwort:"„Ich mag Leute, die ehrlich sind.“",hinweis:"die (Nominativ, Plural)"},
+  {v:"das Handy",frage:"„Wie ist dein Handy?“",antwort:"„Ich habe ein Handy, das schon ziemlich alt ist.“",hinweis:"das (Nominativ, neutrum)"},
+  {v:"der Hund",frage:"„Gibt es Tiere in deiner Nachbarschaft?“",antwort:"„Ja, da ist ein Hund, der jeden Morgen bellt.“",hinweis:"der (Nominativ, maskulin)"}
  ],
  komplexer:[
-  {v:"den Film (Objekt)",da:"den",wo:"Akkusativ m",ex:"„der Film, den ich sah“"},
-  {v:"die Serie (Objekt)",da:"die",wo:"Akkusativ f",ex:"„die Serie, die ich mag“"},
-  {v:"dem Mann (helfen)",da:"dem",wo:"Dativ m",ex:"„der Mann, dem ich half“"},
-  {v:"der Frau (helfen)",da:"der",wo:"Dativ f",ex:"„die Frau, der ich half“"},
-  {v:"dem Kind (geben)",da:"dem",wo:"Dativ n",ex:"„das Kind, dem ich gab“"},
-  {v:"den Leuten",da:"denen",wo:"Dativ Pl",ex:"„die Leute, denen ich half“"}
+  {v:"der Film",frage:"„Welchen Film fandest du zuletzt richtig gut?“",antwort:"„Der Film, den ich letztens gesehen habe, war mega.“",hinweis:"den (Akkusativ, maskulin)"},
+  {v:"die Serie",frage:"„Gibt es eine Serie, die du empfehlen kannst?“",antwort:"„Ja, die Serie, die ich gerade schaue, ist richtig gut.“",hinweis:"die (Akkusativ, feminin)"},
+  {v:"das Buch",frage:"„Was liest du gerade?“",antwort:"„Ich lese ein Buch, das mir eine Freundin empfohlen hat.“",hinweis:"das (Akkusativ, neutrum)"},
+  {v:"der Kollege (helfen)",frage:"„Wem hilfst du bei der Arbeit?“",antwort:"„Es gibt einen Kollegen, dem ich oft helfe.“",hinweis:"dem (Dativ, maskulin)"},
+  {v:"die Freundin (danken)",frage:"„Wem möchtest du mal richtig danken?“",antwort:"„Ich habe eine Freundin, der ich für alles danke.“",hinweis:"der (Dativ, feminin)"},
+  {v:"die Nachbarn (gehören)",frage:"„Wem gehört das Auto da draußen?“",antwort:"„Das sind die Nachbarn, denen das Auto gehört.“",hinweis:"denen (Dativ, Plural)"}
  ],
  schwierig:[
-  {v:"mit + Mann",da:"mit dem",wo:"Präp + Dativ",ex:"„der Kollege, mit dem ich arbeite“"},
-  {v:"in + Stadt",da:"in der",wo:"Präp + Dativ",ex:"„die Stadt, in der ich wohne“"},
-  {v:"Genitiv m/n",da:"dessen",wo:"Genitiv",ex:"„der Mann, dessen Auto …“"},
-  {v:"Genitiv f/Pl",da:"deren",wo:"Genitiv",ex:"„die Frau, deren Hund …“"},
-  {v:"nach alles/etwas",da:"was",wo:"Relativ-was",ex:"„alles, was ich weiß“"},
-  {v:"Ort",da:"wo",wo:"Ort",ex:"„die Stadt, wo ich wohne“"}
+  {v:"mit + Person",frage:"„Mit wem arbeitest du gern zusammen?“",antwort:"„Ich habe einen Kollegen, mit dem ich super klarkomme.“",hinweis:"mit dem (Präposition + Dativ)"},
+  {v:"die Stadt (Ort)",frage:"„Wie findest du deine Stadt?“",antwort:"„Ich wohne in einer Stadt, in der echt viel los ist.“",hinweis:"in der (Präposition + Dativ)"},
+  {v:"der Freund (Genitiv)",frage:"„Kennst du jemanden mit einem coolen Auto?“",antwort:"„Ja, einen Freund, dessen Auto richtig schnell ist.“",hinweis:"dessen (Genitiv, maskulin)"},
+  {v:"die Kollegin (Genitiv)",frage:"„Kennst du jemanden, der immer einen Hund dabeihat?“",antwort:"„Ja, eine Kollegin, deren Hund jeden Tag mit im Büro ist.“",hinweis:"deren (Genitiv, feminin)"},
+  {v:"alles (was)",frage:"„Erzählst du mir wirklich alles?“",antwort:"„Ich erzähle dir alles, was ich weiß.“",hinweis:"was (nach alles/etwas/nichts)"},
+  {v:"der Ort (wo)",frage:"„Wo fühlst du dich am wohlsten?“",antwort:"„Zu Hause ist der Ort, wo ich richtig abschalten kann.“",hinweis:"wo (Ort)"}
  ]
 };
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 var gQueue=[],gScore=0,gStreak=0,gMaxStreak=0,gMastered=0,gTotal=0,gCardEl=document.getElementById('gCard');
-function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gDa').textContent=k.da;document.getElementById('gWo').textContent=k.wo;document.getElementById('gEx').textContent=k.ex;gCardEl.classList.remove('flipped');document.getElementById('gC1').style.display='flex';document.getElementById('gC2').style.display='none';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
-function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC1').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
+function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gFrage').textContent=k.frage;document.getElementById('gAntwort').textContent=k.antwort;document.getElementById('gHinweis').textContent=k.hinweis;gCardEl.classList.remove('flipped');document.getElementById('gC2').style.display='flex';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
+function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC2').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
 function gNext(){if(gQueue.length===0){gEndGame();}else{gRender();}}
-function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
-document.getElementById('gFlip').onclick=function(){gCardEl.classList.add('flipped');document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='flex';};
+function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
+gCardEl.style.cursor='pointer';gCardEl.title='Antippen zum Umdrehen';gCardEl.onclick=function(){gCardEl.classList.toggle('flipped');};
 document.getElementById('gOk').onclick=function(){gScore++;gStreak++;if(gStreak>gMaxStreak)gMaxStreak=gStreak;gMastered++;gQueue.shift();gNext();};
 document.getElementById('gNo').onclick=function(){gStreak=0;var c=gQueue.shift();gQueue.push(c);gCardEl.classList.add('shake');setTimeout(function(){gCardEl.classList.remove('shake');},420);gNext();};
 document.getElementById('gRestart').onclick=startGame;

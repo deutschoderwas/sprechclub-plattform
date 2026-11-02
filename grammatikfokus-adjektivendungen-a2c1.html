@@ -127,6 +127,9 @@ table.gtab td b{color:var(--blau);}
 .gda{font-family:'Space Grotesk';font-weight:800;font-size:2.4rem;color:var(--blau);}
 .gwo{font-weight:700;color:var(--gruen);font-size:1.15rem;margin-top:.3rem;}
 .gex{font-family:'Space Grotesk';font-style:italic;color:var(--ink);margin-top:.7rem;font-size:1.05rem;}
+.gfrage{margin-top:.8rem;font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.4;}
+.gantwort{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;color:var(--ink);line-height:1.35;}
+.ghinweis{margin-top:.9rem;display:inline-block;font-size:.85rem;font-weight:700;color:var(--blau);background:#E9F1FB;padding:.3rem .8rem;border-radius:999px;}
 .game-ctrl{text-align:center;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;}
 .btn-ok{background:var(--gruen);color:#fff;border:2px solid var(--gruen);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
 .btn-no{background:#fff;color:var(--rot);border:2px solid var(--rot);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
@@ -421,8 +424,8 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 
 <section class="section" data-section="2">
 <h2 class="section-title">🎮 Flip &amp; Sprich-<em>Challenge</em></h2>
-<p class="section-sub">So geht's: Verb lesen → <b>laut sagen</b>: 1️⃣ die richtige Endung · 2️⃣ Artikel &amp; Kasus? · 3️⃣ einen eigenen Satz. Dann umdrehen und prüfen. Konntest du alles? ✓ — sonst kommt die Karte nochmal!</p>
-<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person zieht, sagt alles laut, die anderen prüfen beim Umdrehen und vergeben ✓ oder ✗. Schafft ihr alle Karten ohne „Nochmal"? Niveau oben umschalten.</div>
+<p class="section-sub">So geht's: Stichwort lesen → die <b>Frage laut stellen</b> und selbst <b>frei antworten</b>. Dann die Karte <b>antippen</b> – du siehst eine mögliche Antwort (nochmal antippen = zurück). Passt? ✓ Konnte ich — sonst ✗ und die Karte kommt später nochmal. Niveau oben umschalten.</p>
+<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person stellt die Frage, die/der Nächste antwortet frei. Dann Karte umdrehen und schauen, wie man es natürlich sagt. Niveau oben umschalten.</div>
 <div class="game" id="game">
   <div class="game-hud">
     <span>🃏 Karte <b id="gCur">1</b>/<b id="gTot">6</b></span>
@@ -431,11 +434,10 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
   </div>
   <div class="game-bar"><div class="game-bar-fill" id="gFill"></div></div>
   <div class="gcard" id="gCard"><div class="gcard-inner" id="gInner">
-    <div class="gcard-face gcard-front"><div class="glabel">Sag laut &amp; dann umdrehen</div><div class="gverb" id="gVerb">warten auf</div><div class="gtask">1️⃣ Endung &nbsp;·&nbsp; 2️⃣ Artikel/Kasus &nbsp;·&nbsp; 3️⃣ eigener Satz</div></div>
-    <div class="gcard-face gcard-back"><div class="gda" id="gDa">darauf</div><div class="gwo" id="gWo">Worauf?</div><div class="gex" id="gEx">„Ich warte darauf."</div></div>
+    <div class="gcard-face gcard-front"><div class="glabel">🗣️ Frag laut — dann Karte antippen</div><div class="gverb" id="gVerb">eine Wohnung</div><div class="gfrage" id="gFrage">„Was für eine Wohnung suchst du?“</div></div>
+    <div class="gcard-face gcard-back"><div class="glabel">💬 So kannst du antworten — antippen zum Zurückdrehen</div><div class="gantwort" id="gAntwort">„Ich suche eine helle, ruhige Wohnung.“</div><div class="ghinweis" id="gHinweis">eine helle Wohnung (unbestimmt, fem., Akk. → -e)</div></div>
   </div></div>
-  <div class="game-ctrl" id="gC1"><button class="btn-primary" id="gFlip">🔄 Umdrehen &amp; prüfen</button></div>
-  <div class="game-ctrl" id="gC2" style="display:none;"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nochmal üben</button></div>
+  <div class="game-ctrl" id="gC2"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nächste Karte</button></div>
   <div class="gend" id="gEnd" style="display:none;"><div class="gend-emoji">🎉</div><div class="gend-title">Geschafft — alle Karten gemeistert!</div><div class="gend-score" id="gEndScore"></div><button class="btn-primary" id="gRestart">🔁 Nochmal spielen</button></div>
 </div>
 </section>
@@ -581,37 +583,37 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 var curLevel='komplexer';
 var DECKS={
  einfach:[
-  {v:"der ___ Hund (groß)",da:"große",wo:"Nom. m · bestimmt",ex:"„der große Hund“"},
-  {v:"ein ___ Tag (schön)",da:"schöner",wo:"Nom. m · unbestimmt",ex:"„ein schöner Tag“"},
-  {v:"eine ___ Jacke (warm)",da:"warme",wo:"Akk. f · unbestimmt",ex:"„eine warme Jacke“"},
-  {v:"den ___ Film (gut)",da:"guten",wo:"Akk. m · bestimmt",ex:"„den guten Film“"},
-  {v:"ein ___ Handy (neu)",da:"neues",wo:"Nom. n · unbestimmt",ex:"„ein neues Handy“"},
-  {v:"die ___ Leute (nett)",da:"netten",wo:"Plural · bestimmt",ex:"„die netten Leute“"}
+  {v:"schön · der Tag",frage:"„Na, wie war dein Tag heute?“",antwort:"„Es war ein richtig schöner Tag.“",hinweis:"ein schöner Tag (unbestimmt, mask., Nom. → -er)"},
+  {v:"warm · die Jacke",frage:"„Was ziehst du bei der Kälte an?“",antwort:"„Ich nehme die warme Jacke.“",hinweis:"die warme Jacke (bestimmt, fem., Akk. → -e)"},
+  {v:"neu · das Handy",frage:"„Was hast du da Neues in der Hand?“",antwort:"„Das ist mein neues Handy.“",hinweis:"mein neues Handy (Possessiv, neutr., Nom. → -es)"},
+  {v:"groß · der Hund",frage:"„Wie findest du den Hund da drüben?“",antwort:"„Oh, das ist ein großer Hund!“",hinweis:"ein großer Hund (unbestimmt, mask., Nom. → -er)"},
+  {v:"gut · der Film",frage:"„Welchen Film sollen wir heute gucken?“",antwort:"„Lass uns den guten Film von gestern nehmen.“",hinweis:"den guten Film (bestimmt, mask., Akk. → -en)"},
+  {v:"nett · die Leute",frage:"„Wie sind deine neuen Nachbarn so?“",antwort:"„Das sind echt nette Leute.“",hinweis:"nette Leute (ohne Artikel, Plural, Nom. → -e)"}
  ],
  komplexer:[
-  {v:"mit dem ___ Auto (neu)",da:"neuen",wo:"Dativ m · bestimmt",ex:"„mit dem neuen Auto“"},
-  {v:"in einer ___ Wohnung (klein)",da:"kleinen",wo:"Dativ f · unbestimmt",ex:"„in einer kleinen Wohnung“"},
-  {v:"mit ___ Kollegen (nett)",da:"netten",wo:"Dativ Plural",ex:"„mit netten Kollegen“"},
-  {v:"zu einem ___ Preis (günstig)",da:"günstigen",wo:"Dativ m · unbestimmt",ex:"„zu einem günstigen Preis“"},
-  {v:"bei ___ Wetter (schön)",da:"schönem",wo:"Dativ n · ohne Artikel",ex:"„bei schönem Wetter“"},
-  {v:"die ___ Bücher (interessant)",da:"interessanten",wo:"Plural Nom.",ex:"„die interessanten Bücher“"}
+  {v:"neu · das Auto",frage:"„Wie kommst du gerade zur Arbeit?“",antwort:"„Ich fahre jetzt mit dem neuen Auto.“",hinweis:"mit dem neuen Auto (Dativ, neutr., bestimmt → -en)"},
+  {v:"klein · die Wohnung",frage:"„Wo wohnst du im Moment?“",antwort:"„Ich wohne in einer kleinen Wohnung.“",hinweis:"in einer kleinen Wohnung (Dativ, fem., unbestimmt → -en)"},
+  {v:"nett · die Kollegen",frage:"„Und, gefällt dir der neue Job?“",antwort:"„Ja, ich arbeite mit netten Kollegen.“",hinweis:"mit netten Kollegen (Dativ Plural, ohne Artikel → -en)"},
+  {v:"günstig · der Preis",frage:"„Hat sich der Kauf gelohnt?“",antwort:"„Klar, ich hab's zu einem günstigen Preis bekommen.“",hinweis:"zu einem günstigen Preis (Dativ, mask., unbestimmt → -en)"},
+  {v:"schön · das Wetter",frage:"„Was macht ihr am Wochenende?“",antwort:"„Bei schönem Wetter grillen wir im Garten.“",hinweis:"bei schönem Wetter (Dativ, neutr., ohne Artikel → -em)"},
+  {v:"interessant · die Bücher",frage:"„Was liest du gerade so?“",antwort:"„Ich hab zwei interessante Bücher angefangen.“",hinweis:"interessante Bücher (Plural, ohne Artikel, Akk. → -e)"}
  ],
  schwierig:[
-  {v:"___ Wein (gut)",da:"guter",wo:"Nom. m · ohne Artikel",ex:"„guter Wein“"},
-  {v:"mit ___ Milch (kalt)",da:"kalter",wo:"Dativ f · ohne Artikel",ex:"„mit kalter Milch“"},
-  {v:"trotz des ___ Wetters (schlecht)",da:"schlechten",wo:"Genitiv n",ex:"„trotz des schlechten Wetters“"},
-  {v:"wegen eines ___ Fehlers (klein)",da:"kleinen",wo:"Genitiv m",ex:"„wegen eines kleinen Fehlers“"},
-  {v:"etwas ___ (schön)",da:"Schönes",wo:"nach etwas (groß!)",ex:"„etwas Schönes“"},
-  {v:"viele ___ Ideen (kreativ)",da:"kreative",wo:"nach viele",ex:"„viele kreative Ideen“"}
+  {v:"gut · der Wein",frage:"„Was trinkst du am liebsten zum Essen?“",antwort:"„Guter Wein geht bei mir eigentlich immer.“",hinweis:"guter Wein (ohne Artikel, mask., Nom. → -er)"},
+  {v:"kalt · die Milch",frage:"„Wie magst du deinen Kaffee?“",antwort:"„Mit kalter Milch, bitte.“",hinweis:"mit kalter Milch (Dativ, fem., ohne Artikel → -er)"},
+  {v:"schlecht · das Wetter",frage:"„Wart ihr am Sonntag wandern?“",antwort:"„Trotz des schlechten Wetters sind wir kurz raus.“",hinweis:"trotz des schlechten Wetters (Genitiv, neutr., bestimmt → -en)"},
+  {v:"klein · der Fehler",frage:"„Warum habt ihr nochmal von vorne angefangen?“",antwort:"„Wegen eines kleinen Fehlers mussten wir neu starten.“",hinweis:"wegen eines kleinen Fehlers (Genitiv, mask., unbestimmt → -en)"},
+  {v:"schön · etwas",frage:"„Was wünschst du dir zum Geburtstag?“",antwort:"„Ach, einfach etwas Schönes zum Anziehen.“",hinweis:"etwas Schönes (nach „etwas“, großgeschrieben → -es)"},
+  {v:"kreativ · die Ideen",frage:"„Wie war euer Meeting heute?“",antwort:"„Wir hatten viele kreative Ideen.“",hinweis:"viele kreative Ideen (nach „viele“, Plural, Akk. → -e)"}
  ]
 };
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 var gQueue=[],gScore=0,gStreak=0,gMaxStreak=0,gMastered=0,gTotal=0,gCardEl=document.getElementById('gCard');
-function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gDa').textContent=k.da;document.getElementById('gWo').textContent=k.wo;document.getElementById('gEx').textContent=k.ex;gCardEl.classList.remove('flipped');document.getElementById('gC1').style.display='flex';document.getElementById('gC2').style.display='none';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
-function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC1').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
+function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gFrage').textContent=k.frage;document.getElementById('gAntwort').textContent=k.antwort;document.getElementById('gHinweis').textContent=k.hinweis;gCardEl.classList.remove('flipped');document.getElementById('gC2').style.display='flex';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
+function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC2').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
 function gNext(){if(gQueue.length===0){gEndGame();}else{gRender();}}
-function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
-document.getElementById('gFlip').onclick=function(){gCardEl.classList.add('flipped');document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='flex';};
+function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
+gCardEl.style.cursor='pointer';gCardEl.title='Antippen zum Umdrehen';gCardEl.onclick=function(){gCardEl.classList.toggle('flipped');};
 document.getElementById('gOk').onclick=function(){gScore++;gStreak++;if(gStreak>gMaxStreak)gMaxStreak=gStreak;gMastered++;gQueue.shift();gNext();};
 document.getElementById('gNo').onclick=function(){gStreak=0;var c=gQueue.shift();gQueue.push(c);gCardEl.classList.add('shake');setTimeout(function(){gCardEl.classList.remove('shake');},420);gNext();};
 document.getElementById('gRestart').onclick=startGame;

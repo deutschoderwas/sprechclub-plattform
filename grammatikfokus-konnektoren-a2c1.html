@@ -431,8 +431,8 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 
 <section class="section" data-section="2">
 <h2 class="section-title">🎮 Flip &amp; Sprich-<em>Challenge</em></h2>
-<p class="section-sub">So geht's: Verb lesen → <b>laut sagen</b>: 1️⃣ den Typ (Grund/Folge/Gegensatz) · 2️⃣ die Satzstellung · 3️⃣ einen eigenen Satz. Dann umdrehen und prüfen. Konntest du alles? ✓ — sonst kommt die Karte nochmal!</p>
-<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person zieht, sagt alles laut, die anderen prüfen beim Umdrehen und vergeben ✓ oder ✗. Schafft ihr alle Karten ohne „Nochmal"? Niveau oben umschalten.</div>
+<p class="section-sub">So geht's: Konnektor lesen → die <b>Frage laut stellen</b> und selbst <b>frei antworten</b>. Dann die Karte <b>antippen</b> – du siehst eine mögliche Antwort (nochmal antippen = zurück). Passt? ✓ Konnte ich — sonst ✗ und die Karte kommt später nochmal. Niveau oben umschalten.</p>
+<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person stellt die Frage, die/der Nächste antwortet frei mit dem Konnektor. Dann Karte umdrehen und schauen, wie man es natürlich sagt. Niveau oben umschalten.</div>
 <div class="game" id="game">
   <div class="game-hud">
     <span>🃏 Karte <b id="gCur">1</b>/<b id="gTot">6</b></span>
@@ -441,11 +441,10 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
   </div>
   <div class="game-bar"><div class="game-bar-fill" id="gFill"></div></div>
   <div class="gcard" id="gCard"><div class="gcard-inner" id="gInner">
-    <div class="gcard-face gcard-front"><div class="glabel">Sag laut &amp; dann umdrehen</div><div class="gverb" id="gVerb">warten auf</div><div class="gtask">1️⃣ Typ &nbsp;·&nbsp; 2️⃣ Satzstellung &nbsp;·&nbsp; 3️⃣ eigener Satz</div></div>
-    <div class="gcard-face gcard-back"><div class="gda" id="gDa">darauf</div><div class="gwo" id="gWo">Worauf?</div><div class="gex" id="gEx">„Ich warte darauf."</div></div>
+    <div class="gcard-face gcard-front"><div class="glabel">🗣️ Frag laut — dann Karte antippen</div><div class="gverb" id="gVerb">weil</div><div class="gfrage" id="gFrage">„Warum lernst du Deutsch?“</div></div>
+    <div class="gcard-face gcard-back"><div class="glabel">💬 So kannst du antworten — antippen zum Zurückdrehen</div><div class="gantwort" id="gAntwort">„Ich lerne Deutsch, weil ich in Deutschland arbeite.“</div><div class="ghinweis" id="gHinweis">weil → Verb ans Ende</div></div>
   </div></div>
-  <div class="game-ctrl" id="gC1"><button class="btn-primary" id="gFlip">🔄 Umdrehen &amp; prüfen</button></div>
-  <div class="game-ctrl" id="gC2" style="display:none;"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nochmal üben</button></div>
+  <div class="game-ctrl" id="gC2"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nächste Karte</button></div>
   <div class="gend" id="gEnd" style="display:none;"><div class="gend-emoji">🎉</div><div class="gend-title">Geschafft — alle Karten gemeistert!</div><div class="gend-score" id="gEndScore"></div><button class="btn-primary" id="gRestart">🔁 Nochmal spielen</button></div>
 </div>
 </section>
@@ -590,37 +589,37 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 var curLevel='komplexer';
 var DECKS={
  einfach:[
-  {v:"weil",da:"Grund",wo:"Verb ans Ende",ex:"„…, weil es regnet.“"},
-  {v:"denn",da:"Grund",wo:"Hauptsatz",ex:"„…, denn es regnet.“"},
-  {v:"deshalb",da:"Folge",wo:"Inversion",ex:"„…, deshalb bleibe ich.“"},
-  {v:"aber",da:"Gegensatz",wo:"Position 2",ex:"„müde, aber glücklich.“"},
-  {v:"und",da:"Verbindung",wo:"Position 2",ex:"„Ich koche und du deckst.“"},
-  {v:"wenn",da:"Bedingung",wo:"Verb ans Ende",ex:"„Wenn es regnet, bleibe ich.“"}
+  {v:"weil",frage:"„Warum lernst du Deutsch?“",antwort:"„Ich lerne Deutsch, weil ich in Deutschland arbeite.“",hinweis:"weil → Verb ans Ende"},
+  {v:"denn",frage:"„Warum bleibst du heute zu Hause?“",antwort:"„Ich bleibe zu Hause, denn ich bin müde.“",hinweis:"denn → normaler Hauptsatz, Verb auf Position 2"},
+  {v:"deshalb",frage:"„Es ist spät – was machst du jetzt?“",antwort:"„Es ist spät, deshalb gehe ich ins Bett.“",hinweis:"deshalb → Verb direkt dahinter (Position 2)"},
+  {v:"aber",frage:"„Wie war dein Tag – gut oder stressig?“",antwort:"„Der Tag war lang, aber echt schön.“",hinweis:"aber → verbindet, Wortstellung bleibt normal"},
+  {v:"und",frage:"„Was machst du heute Abend?“",antwort:"„Ich koche und du deckst den Tisch, okay?“",hinweis:"und → kein Komma nötig, Satzbau bleibt normal"},
+  {v:"wenn",frage:"„Was machst du, wenn es regnet?“",antwort:"„Wenn es regnet, bleibe ich einfach drin.“",hinweis:"wenn → Verb ans Ende, dann Komma"}
  ],
  komplexer:[
-  {v:"obwohl",da:"Gegensatz",wo:"Verb ans Ende",ex:"„Obwohl es regnet, gehe ich.“"},
-  {v:"trotzdem",da:"Gegensatz",wo:"Inversion",ex:"„Es regnet, trotzdem gehe ich.“"},
-  {v:"sondern",da:"Korrektur",wo:"nach nicht/kein",ex:"„nicht heute, sondern morgen.“"},
-  {v:"damit",da:"Zweck",wo:"Verb ans Ende",ex:"„…, damit ich bestehe.“"},
-  {v:"deswegen",da:"Folge",wo:"Inversion",ex:"„…, deswegen bleibe ich.“"},
-  {v:"sodass",da:"Folge",wo:"Verb ans Ende",ex:"„…, sodass wir blieben.“"}
+  {v:"obwohl",frage:"„Gehst du raus, obwohl es regnet?“",antwort:"„Obwohl es regnet, gehe ich spazieren.“",hinweis:"obwohl → Verb ans Ende"},
+  {v:"trotzdem",frage:"„Du bist krank – kommst du trotzdem?“",antwort:"„Ich bin krank, trotzdem komme ich mit.“",hinweis:"trotzdem → Verb direkt dahinter (Position 2)"},
+  {v:"sondern",frage:"„Trinkst du Kaffee oder lieber was anderes?“",antwort:"„Ich trinke keinen Kaffee, sondern Tee.“",hinweis:"sondern → kommt nach einer Verneinung (nicht/kein)"},
+  {v:"damit",frage:"„Warum stehst du so früh auf?“",antwort:"„Ich stehe früh auf, damit ich den Bus kriege.“",hinweis:"damit → Verb ans Ende (Zweck/Ziel)"},
+  {v:"deswegen",frage:"„Der Zug fällt aus – und jetzt?“",antwort:"„Der Zug fällt aus, deswegen nehme ich das Auto.“",hinweis:"deswegen → Verb direkt dahinter (Position 2)"},
+  {v:"sodass",frage:"„War so viel los, dass ihr nicht reinkamt?“",antwort:"„Es war so voll, sodass wir draußen warten mussten.“",hinweis:"sodass → Verb ans Ende (Folge)"}
  ],
  schwierig:[
-  {v:"während",da:"gleichzeitig",wo:"Verb ans Ende",ex:"„Während ich koche, …“"},
-  {v:"dennoch",da:"Gegensatz",wo:"Inversion (gehoben)",ex:"„…, dennoch gelang es.“"},
-  {v:"je … desto",da:"Vergleich",wo:"Komparativ",ex:"„Je mehr, desto besser.“"},
-  {v:"entweder … oder",da:"Alternative",wo:"zweiteilig",ex:"„Entweder jetzt oder nie.“"},
-  {v:"nicht nur … sondern auch",da:"Steigerung",wo:"zweiteilig",ex:"„nicht nur schön, sondern auch günstig.“"},
-  {v:"falls",da:"Bedingung",wo:"Verb ans Ende",ex:"„Falls es regnet, …“"}
+  {v:"während",frage:"„Was machst du, während ich koche?“",antwort:"„Während du kochst, decke ich schon mal den Tisch.“",hinweis:"während → Verb ans Ende (gleichzeitig)"},
+  {v:"dennoch",frage:"„Es war ein harter Tag – und?“",antwort:"„Es war anstrengend, dennoch würde ich es wieder machen.“",hinweis:"dennoch → Verb direkt dahinter (gehobener Gegensatz)"},
+  {v:"je … desto",frage:"„Wird's mit dem Üben eigentlich besser?“",antwort:"„Je mehr ich rede, desto sicherer werde ich.“",hinweis:"je + Komparativ … desto + Komparativ, Verb am Ende nach „je“"},
+  {v:"entweder … oder",frage:"„Hast du dich schon entschieden?“",antwort:"„Entweder gehen wir heute oder gar nicht.“",hinweis:"entweder … oder → zweiteilig, zwei Alternativen"},
+  {v:"nicht nur … sondern auch",frage:"„Und, wie findest du die Wohnung?“",antwort:"„Die ist nicht nur schön, sondern auch günstig.“",hinweis:"nicht nur … sondern auch → zweiteilig (Steigerung)"},
+  {v:"falls",frage:"„Was machen wir, falls es regnet?“",antwort:"„Falls es regnet, nehmen wir einfach den Bus.“",hinweis:"falls → Verb ans Ende (Bedingung wie „wenn“)"}
  ]
 };
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 var gQueue=[],gScore=0,gStreak=0,gMaxStreak=0,gMastered=0,gTotal=0,gCardEl=document.getElementById('gCard');
-function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gDa').textContent=k.da;document.getElementById('gWo').textContent=k.wo;document.getElementById('gEx').textContent=k.ex;gCardEl.classList.remove('flipped');document.getElementById('gC1').style.display='flex';document.getElementById('gC2').style.display='none';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
-function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC1').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
+function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gFrage').textContent=k.frage;document.getElementById('gAntwort').textContent=k.antwort;document.getElementById('gHinweis').textContent=k.hinweis;gCardEl.classList.remove('flipped');document.getElementById('gC2').style.display='flex';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
+function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC2').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
 function gNext(){if(gQueue.length===0){gEndGame();}else{gRender();}}
-function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
-document.getElementById('gFlip').onclick=function(){gCardEl.classList.add('flipped');document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='flex';};
+function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
+gCardEl.style.cursor='pointer';gCardEl.title='Antippen zum Umdrehen';gCardEl.onclick=function(){gCardEl.classList.toggle('flipped');};
 document.getElementById('gOk').onclick=function(){gScore++;gStreak++;if(gStreak>gMaxStreak)gMaxStreak=gStreak;gMastered++;gQueue.shift();gNext();};
 document.getElementById('gNo').onclick=function(){gStreak=0;var c=gQueue.shift();gQueue.push(c);gCardEl.classList.add('shake');setTimeout(function(){gCardEl.classList.remove('shake');},420);gNext();};
 document.getElementById('gRestart').onclick=startGame;

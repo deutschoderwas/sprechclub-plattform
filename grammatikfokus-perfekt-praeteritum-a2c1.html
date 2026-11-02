@@ -127,6 +127,9 @@ table.gtab td b{color:var(--blau);}
 .gda{font-family:'Space Grotesk';font-weight:800;font-size:2.4rem;color:var(--blau);}
 .gwo{font-weight:700;color:var(--gruen);font-size:1.15rem;margin-top:.3rem;}
 .gex{font-family:'Space Grotesk';font-style:italic;color:var(--ink);margin-top:.7rem;font-size:1.05rem;}
+.gfrage{margin-top:.8rem;font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.4;}
+.gantwort{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;color:var(--ink);line-height:1.35;}
+.ghinweis{margin-top:.9rem;display:inline-block;font-size:.85rem;font-weight:700;color:var(--blau);background:#E9F1FB;padding:.3rem .8rem;border-radius:999px;}
 .game-ctrl{text-align:center;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;}
 .btn-ok{background:var(--gruen);color:#fff;border:2px solid var(--gruen);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
 .btn-no{background:#fff;color:var(--rot);border:2px solid var(--rot);font-weight:700;padding:.55rem 1.3rem;border-radius:999px;cursor:pointer;font-size:.98rem;}
@@ -428,8 +431,8 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 
 <section class="section" data-section="2">
 <h2 class="section-title">🎮 Flip &amp; Sprich-<em>Challenge</em></h2>
-<p class="section-sub">So geht's: Verb lesen → <b>laut sagen</b>: 1️⃣ das Perfekt (haben/sein + Partizip) · 2️⃣ das Präteritum · 3️⃣ einen eigenen Satz. Dann umdrehen und prüfen. Konntest du alles? ✓ — sonst kommt die Karte nochmal!</p>
-<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person zieht, sagt alles laut, die anderen prüfen beim Umdrehen und vergeben ✓ oder ✗. Schafft ihr alle Karten ohne „Nochmal"? Niveau oben umschalten.</div>
+<p class="section-sub">So geht's: Verb lesen → die <b>Frage laut stellen</b> und selbst <b>frei antworten</b> (erzähl von früher, in der Vergangenheit). Dann die Karte <b>antippen</b> – du siehst eine mögliche Antwort (nochmal antippen = zurück). Passt? ✓ Konnte ich — sonst ✗ und die Karte kommt später nochmal. Niveau oben umschalten.</p>
+<div class="tip blue" style="max-width:600px;margin:.4rem auto 1.1rem;text-align:center;">👥 <strong>In der Gruppe:</strong> Reihum — eine Person stellt die Frage, die/der Nächste antwortet frei über die Vergangenheit. Dann Karte umdrehen und schauen, wie man es natürlich sagt. Niveau oben umschalten.</div>
 <div class="game" id="game">
   <div class="game-hud">
     <span>🃏 Karte <b id="gCur">1</b>/<b id="gTot">6</b></span>
@@ -438,11 +441,10 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
   </div>
   <div class="game-bar"><div class="game-bar-fill" id="gFill"></div></div>
   <div class="gcard" id="gCard"><div class="gcard-inner" id="gInner">
-    <div class="gcard-face gcard-front"><div class="glabel">Sag laut &amp; dann umdrehen</div><div class="gverb" id="gVerb">warten auf</div><div class="gtask">1️⃣ Perfekt &nbsp;·&nbsp; 2️⃣ Präteritum &nbsp;·&nbsp; 3️⃣ eigener Satz</div></div>
-    <div class="gcard-face gcard-back"><div class="gda" id="gDa">darauf</div><div class="gwo" id="gWo">Worauf?</div><div class="gex" id="gEx">„Ich warte darauf."</div></div>
+    <div class="gcard-face gcard-front"><div class="glabel">🗣️ Frag laut — dann Karte antippen</div><div class="gverb" id="gVerb">machen</div><div class="gfrage" id="gFrage">„Was hast du am Wochenende gemacht?“</div></div>
+    <div class="gcard-face gcard-back"><div class="glabel">💬 So kannst du antworten — antippen zum Zurückdrehen</div><div class="gantwort" id="gAntwort">„Ich habe lange geschlafen und Freunde getroffen.“</div><div class="ghinweis" id="gHinweis">haben + Partizip</div></div>
   </div></div>
-  <div class="game-ctrl" id="gC1"><button class="btn-primary" id="gFlip">🔄 Umdrehen &amp; prüfen</button></div>
-  <div class="game-ctrl" id="gC2" style="display:none;"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nochmal üben</button></div>
+  <div class="game-ctrl" id="gC2"><button class="btn-ok" id="gOk">✓ Konnte ich</button><button class="btn-no" id="gNo">✗ Nächste Karte</button></div>
   <div class="gend" id="gEnd" style="display:none;"><div class="gend-emoji">🎉</div><div class="gend-title">Geschafft — alle Karten gemeistert!</div><div class="gend-score" id="gEndScore"></div><button class="btn-primary" id="gRestart">🔁 Nochmal spielen</button></div>
 </div>
 </section>
@@ -587,37 +589,37 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 var curLevel='komplexer';
 var DECKS={
  einfach:[
-  {v:"machen",da:"hat gemacht",wo:"machte",ex:"„Ich habe es gemacht.“"},
-  {v:"gehen",da:"ist gegangen",wo:"ging",ex:"„Ich bin gegangen.“"},
-  {v:"essen",da:"hat gegessen",wo:"aß",ex:"„Ich habe gegessen.“"},
-  {v:"sein",da:"ist gewesen",wo:"war",ex:"„Ich war da.“"},
-  {v:"haben",da:"hat gehabt",wo:"hatte",ex:"„Ich hatte Zeit.“"},
-  {v:"fahren",da:"ist gefahren",wo:"fuhr",ex:"„Ich bin gefahren.“"}
+  {v:"machen",frage:"„Was hast du gestern Abend gemacht?“",antwort:"„Ich habe nur chillen und was gegessen.“",hinweis:"haben + Partizip"},
+  {v:"gehen",frage:"„Wohin bist du am Wochenende gegangen?“",antwort:"„Ich bin mit Freunden ins Kino gegangen.“",hinweis:"sein + Partizip (Bewegung)"},
+  {v:"essen",frage:"„Was hast du heute Mittag gegessen?“",antwort:"„Ich habe eine Pizza gegessen.“",hinweis:"haben + Partizip"},
+  {v:"sein",frage:"„Wo warst du letztes Wochenende?“",antwort:"„Ich war zu Hause und hab ausgeschlafen.“",hinweis:"war (Präteritum von sein)"},
+  {v:"haben",frage:"„Hattest du letzte Woche viel Stress?“",antwort:"„Ja, ich hatte echt viel zu tun.“",hinweis:"hatte (Präteritum von haben)"},
+  {v:"fahren",frage:"„Bist du in den Ferien irgendwohin gefahren?“",antwort:"„Ja, ich bin ans Meer gefahren.“",hinweis:"sein + Partizip (Bewegung)"}
  ],
  komplexer:[
-  {v:"sehen",da:"hat gesehen",wo:"sah",ex:"„Ich habe es gesehen.“"},
-  {v:"treffen",da:"hat getroffen",wo:"traf",ex:"„Ich habe sie getroffen.“"},
-  {v:"bleiben",da:"ist geblieben",wo:"blieb",ex:"„Ich bin geblieben.“"},
-  {v:"aufstehen",da:"ist aufgestanden",wo:"stand auf",ex:"„Ich bin aufgestanden.“"},
-  {v:"können",da:"hat gekonnt",wo:"konnte",ex:"„Ich konnte nicht.“"},
-  {v:"müssen",da:"hat gemusst",wo:"musste",ex:"„Ich musste gehen.“"}
+  {v:"sehen",frage:"„Was für einen Film hast du zuletzt gesehen?“",antwort:"„Ich habe einen richtig guten Krimi gesehen.“",hinweis:"haben + Partizip"},
+  {v:"treffen",frage:"„Wen hast du am Wochenende getroffen?“",antwort:"„Ich habe meine alte Freundin getroffen.“",hinweis:"haben + Partizip"},
+  {v:"bleiben",frage:"„Bist du gestern lange wach geblieben?“",antwort:"„Ja, ich bin bis Mitternacht wach geblieben.“",hinweis:"sein + Partizip"},
+  {v:"aufstehen",frage:"„Wann bist du heute aufgestanden?“",antwort:"„Ich bin erst um zehn aufgestanden.“",hinweis:"sein + Partizip (trennbar)"},
+  {v:"können",frage:"„Konntest du als Kind schon schwimmen?“",antwort:"„Nein, ich konnte erst mit acht schwimmen.“",hinweis:"konnte (Präteritum, Modalverb)"},
+  {v:"müssen",frage:"„Musstest du am Wochenende arbeiten?“",antwort:"„Ja, ich musste leider den ganzen Samstag ran.“",hinweis:"musste (Präteritum, Modalverb)"}
  ],
  schwierig:[
-  {v:"bringen",da:"hat gebracht",wo:"brachte",ex:"„Ich habe es gebracht.“"},
-  {v:"denken",da:"hat gedacht",wo:"dachte",ex:"„Ich dachte nach.“"},
-  {v:"werden",da:"ist geworden",wo:"wurde",ex:"„Es ist spät geworden.“"},
-  {v:"verlieren",da:"hat verloren",wo:"verlor",ex:"„Ich habe verloren.“"},
-  {v:"beginnen",da:"hat begonnen",wo:"begann",ex:"„Es hat begonnen.“"},
-  {v:"geschehen",da:"ist geschehen",wo:"geschah",ex:"„Es ist geschehen.“"}
+  {v:"bringen",frage:"„Hast du zur Party was zu essen mitgebracht?“",antwort:"„Ja, ich habe einen Salat mitgebracht.“",hinweis:"haben + Partizip (unregelmäßig)"},
+  {v:"denken",frage:"„Was hast du gedacht, als du die Nachricht bekommen hast?“",antwort:"„Ich dachte erst, das ist ein Witz.“",hinweis:"dachte (Präteritum, unregelmäßig)"},
+  {v:"werden",frage:"„Wie ist dein letztes Projekt am Ende geworden?“",antwort:"„Es ist am Ende richtig gut geworden.“",hinweis:"sein + Partizip (werden)"},
+  {v:"verlieren",frage:"„Hast du schon mal was Wichtiges verloren?“",antwort:"„Ja, ich habe mal meinen Schlüssel verloren.“",hinweis:"haben + Partizip (unregelmäßig)"},
+  {v:"beginnen",frage:"„Wann hast du angefangen, Deutsch zu lernen?“",antwort:"„Ich habe vor zwei Jahren damit begonnen.“",hinweis:"haben + Partizip (unregelmäßig)"},
+  {v:"geschehen",frage:"„Ist bei dir letzte Woche irgendwas Besonderes passiert?“",antwort:"„Nein, es ist eigentlich nichts Besonderes geschehen.“",hinweis:"sein + Partizip (geschehen)"}
  ]
 };
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 var gQueue=[],gScore=0,gStreak=0,gMaxStreak=0,gMastered=0,gTotal=0,gCardEl=document.getElementById('gCard');
-function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gDa').textContent=k.da;document.getElementById('gWo').textContent=k.wo;document.getElementById('gEx').textContent=k.ex;gCardEl.classList.remove('flipped');document.getElementById('gC1').style.display='flex';document.getElementById('gC2').style.display='none';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
-function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC1').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
+function gRender(){var k=gQueue[0];document.getElementById('gVerb').textContent=k.v;document.getElementById('gFrage').textContent=k.frage;document.getElementById('gAntwort').textContent=k.antwort;document.getElementById('gHinweis').textContent=k.hinweis;gCardEl.classList.remove('flipped');document.getElementById('gC2').style.display='flex';document.getElementById('gCur').textContent=Math.min(gMastered+1,gTotal);document.getElementById('gScore').textContent=gScore;document.getElementById('gStreak').textContent=gStreak;document.getElementById('gFill').style.width=Math.round(gMastered/gTotal*100)+'%';}
+function startGame(){var deck=DECKS[curLevel];gTotal=deck.length;gQueue=shuffle(deck);gScore=0;gStreak=0;gMaxStreak=0;gMastered=0;document.getElementById('gEnd').style.display='none';document.getElementById('gCard').style.display='';document.getElementById('gC2').style.display='flex';document.getElementById('gTot').textContent=gTotal;gRender();}
 function gNext(){if(gQueue.length===0){gEndGame();}else{gRender();}}
-function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
-document.getElementById('gFlip').onclick=function(){gCardEl.classList.add('flipped');document.getElementById('gC1').style.display='none';document.getElementById('gC2').style.display='flex';};
+function gEndGame(){document.getElementById('gCard').style.display='none';document.getElementById('gC2').style.display='none';var e=document.getElementById('gEnd');e.style.display='block';document.getElementById('gEndScore').innerHTML='⭐ '+gScore+' von '+gTotal+' Karten gemeistert<br>🔥 Längste Serie: '+gMaxStreak;document.getElementById('gFill').style.width='100%';if(window.confetti)window.confetti();}
+gCardEl.style.cursor='pointer';gCardEl.title='Antippen zum Umdrehen';gCardEl.onclick=function(){gCardEl.classList.toggle('flipped');};
 document.getElementById('gOk').onclick=function(){gScore++;gStreak++;if(gStreak>gMaxStreak)gMaxStreak=gStreak;gMastered++;gQueue.shift();gNext();};
 document.getElementById('gNo').onclick=function(){gStreak=0;var c=gQueue.shift();gQueue.push(c);gCardEl.classList.add('shake');setTimeout(function(){gCardEl.classList.remove('shake');},420);gNext();};
 document.getElementById('gRestart').onclick=startGame;
