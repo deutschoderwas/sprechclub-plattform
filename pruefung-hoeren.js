@@ -42,7 +42,7 @@
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2', 'C1':'HOEREN_C1',
-                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2' };
+                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2', 'telcA2B1':'HOEREN_TELC_A2B1' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */
@@ -237,7 +237,9 @@
 
     h += spielerHTML();
 
-    if(!a.opt){
+    if(a.notiz){
+      h += notizHTML(a, zeigen);
+    } else if(!a.opt){
       h += rfHTML(a, zeigen);
     } else {
       h += '<div class="pl-opts">' + a.opt.map(function(o,k){
@@ -259,6 +261,33 @@
     kopfMalen();
     try{ document.getElementById('phOv').scrollTop = 0; }catch(e2){}
   }
+
+  /* telc A2·B1 „Hören und Schreiben": eine Telefonnotiz mit einer Lücke.
+     Verglichen wird großzügig — Groß/klein, Satzzeichen und Leerzeichen egal,
+     und loesungen enthält alle sinnvollen Schreibweisen (17 Uhr, 17:00 …). */
+  function normN(s){ return String(s||'').toLowerCase().replace(/[.,:;!?„“"'()]/g,'').replace(/\s+/g,' ').trim(); }
+  function notizHTML(a, zeigen){
+    var n = a.notiz, wert = H.gewaehlt[H.i] || '', fertig = H.offen[H.i]!=null;
+    var h = '<div class="ph-notiz"><b class="ph-notiz-t">📝 '+E(n.titel||'Telefonnotiz')+'</b>'
+      + (n.zeilen||[]).map(function(z){ return '<p>'+E(z)+'</p>'; }).join('')
+      + '<div class="ph-notiz-f"><span>'+E(n.feld)+'</span>';
+    if(fertig){
+      h += '<em class="'+(zeigen ? (H.offen[H.i]?'gut':'schlecht') : 'wahl')+'">'+E(wert||'—')+'</em></div>';
+      if(zeigen && !H.offen[H.i]) h += '<p class="ph-notiz-l">Richtig wäre: <b>'+E(n.loesungen[0])+'</b></p>';
+    } else {
+      h += '<input id="phNotiz" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="'+E(wert)+'"'
+        +  ' onkeydown="if(event.key===\'Enter\')hoerenNotiz()"></div>'
+        +  '<button class="pl-weiter" onclick="hoerenNotiz()">Eintragen →</button>';
+    }
+    return h + '</div>';
+  }
+  window.hoerenNotiz = function(){
+    var el = document.getElementById('phNotiz'), v = el ? el.value : '';
+    if(!String(v).trim()) return;
+    var a = H.folge[H.i].a;
+    var ok = a.notiz.loesungen.some(function(l){ return normN(l)===normN(v); });
+    werten(ok, v);
+  };
 
   function rfHTML(a, zeigen){
     function kl(w){
@@ -566,6 +595,13 @@
 '#phOv .pl-kopf{ max-width:880px }',
 
 '.ph-szene{ display:flex; align-items:center; gap:11px; margin-bottom:14px }',
+'.ph-notiz{ background:#FFFDF5; border:1px solid #EADFC2; border-radius:14px; padding:14px 16px; margin:12px 0; box-shadow:0 4px 14px rgba(60,50,20,.07); background-image:repeating-linear-gradient(#FFFDF5 0 27px,#F1E9D2 27px 28px) }',
+'.ph-notiz-t{ display:block; margin-bottom:6px }', '.ph-notiz p{ margin:0 0 4px; font-size:15px }',
+'.ph-notiz-f{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:8px 0 10px; font-weight:700 }',
+'.ph-notiz-f input{ flex:1; min-width:140px; font:inherit; font-weight:600; padding:9px 11px; border:2px solid #1B9BC0; border-radius:10px; background:#fff }',
+'.ph-notiz-f em{ font-style:normal; padding:6px 11px; border-radius:9px; background:#EEF1F3 }',
+'.ph-notiz-f em.gut{ background:#DDF3E5; color:#1D6B40 }', '.ph-notiz-f em.schlecht{ background:#FBE2DF; color:#9C2B1F }',
+'.ph-notiz-l{ font-size:14px }',
 '.ph-szene-z{ flex:none; width:40px; height:40px; border-radius:13px; display:grid;',
 '  place-items:center; font-size:20px; background:#fff; border:1.5px solid #F6F9FA;',
 '  box-shadow:0 6px 14px -10px rgba(40,53,59,.6) }',

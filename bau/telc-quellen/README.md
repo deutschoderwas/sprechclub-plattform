@@ -21,6 +21,10 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
   Deutsch B2" + Übungstest 1/3. Hören nur EINMAL; Schreiben A Information / B Beschwerde, 3 von 4 Leitpunkten, mind. 150
   Wörter; Sprechen Erfahrung / Diskussion / Planen je 25 P. Bestehensgrenze nicht belegt → Prognose „Richtwert 60 %".
 
+- telc A2·B1 komplett: lesen/hoeren/schreiben/sprechen-telc-a2b1.js. Quelle: telc Übungstest 1 Deutsch A2·B1.
+  Lesen 4 Teile + Sprachbausteine + Mail verstehen; Hören 5 Teile inkl. Telefonnotiz (Eingabefeld, neu in pruefung-hoeren.js);
+  Schreiben Mail beantworten + Kurznachricht (Übungspunkte, keine telc-Wertung); Sprechen Vorstellen / Planen / Meinung.
+  Prognose zeigt B1 / A2 / noch nicht nach den echten Regeln (70 %/40 %…). Lernziel kennt jetzt „telc A2·B1".
+
 ## Als Nächstes
-telc A2·B1 (neu, Format: Lesen 4 Teile 45 Min, Sprachbausteine/Lesen+Schreiben 3 Teile 35, Hören 5 Teile 35, Schreiben 10,
-Sprechen 3 Teile ca. 15, keine Vorbereitung — Details vorher genau bei telc prüfen), dann C1 Hochschule …
+telc C1 Hochschule (Format: telc Tipps Deutsch C1 Hochschule), dann telc C1 …

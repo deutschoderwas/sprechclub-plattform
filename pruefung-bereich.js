@@ -178,6 +178,49 @@
             +'diesen Teil, im selben oder im nächsten Kalenderjahr.',
       uebungstest:'https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf' },
 
+    { id:'telca2b1', name:'telc Deutsch A2·B1', anbieter:'telc · zwei Niveaus', niveau:'A2–B1',
+      bild:'amt', kurs:'goethetelc', telc:true, geprueft:true,
+      fuer:'Aufenthalt, Einbürgerung, Beruf — eine Prüfung, am Ende steht A2 oder B1 auf dem Zertifikat.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'45',
+                 t:'Vier Leseteile: Kleinanzeigen, eine Mitteilung, E-Mails mit Betreffzeilen, ein Sachtext. Dazu Sprachbausteine und eine Mail, die du danach beantwortest.'},
+               {id:'hoeren',n:'Hören',m:'ca. 35',
+                 t:'Fünf Teile: Alltagsgespräch, Gespräch im Beruf, Ansagen, Meinungen — und eine Telefonnotiz nach dem Anrufbeantworter.'},
+               {id:'schreiben',n:'Schreiben',m:'45',
+                 t:'Eine Mail beantworten und in zehn Minuten auf eine Kurznachricht antworten.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15',
+                 t:'Zu zweit, ohne Vorbereitung: dich vorstellen, gemeinsam planen, Meinung begründen.'} ],
+      hinweis:'Schriftlich 125 Minuten: Lesen 45, Sprachbausteine mit Lesen und Schreiben 35, Hören ca. 35, Schreiben 10. '
+             +'Mündlich ca. 15 Minuten zu zweit, ohne Vorbereitungszeit. Einzelne Teile kann man nicht getrennt ablegen.',
+      punkte:'240 Punkte, je 60 für Lesen, Hören, Schreiben und Sprechen. B1: mindestens 70 Prozent insgesamt, '
+            +'70 Prozent in drei der vier Fertigkeiten und überall mindestens 40 Prozent. A2: mindestens 40 Prozent insgesamt, '
+            +'40 Prozent in drei der vier und überall mindestens 10 Prozent.',
+      training:{ lesen:'telcA2B1', hoeren:'telcA2B1', schreiben:'telcA2B1', sprechen:'telcA2B1' },
+      prognose:{ typ:'a2b1' },
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/2/0/20231106_5060-b00-010102_web.pdf',
+      mat:{
+        wortschatz:['Wohnen und Nachbarn','Arbeit und Kollegen','Arzt und Gesundheit','Ämter und Formulare','Kita und Schule',
+                    'Einkaufen und Reklamieren','Freizeit und Feste','Bus, Bahn und Verkehr','Telefonieren und Termine'],
+        grammatik:['weil, denn, deshalb, dass, wenn — Wortstellung','Perfekt im Gespräch','Modalverben (müssen, dürfen, können, sollen)',
+                   'Präpositionen mit Dativ (mit, bei, nach, seit, von, zu)','Wechselpräpositionen (in, an, auf …)',
+                   'Personalpronomen und Possessivartikel','Höfliche Bitten mit „könnten" und „würden"','Vergleiche: größer als, so groß wie'],
+        redemittel:[
+          ['Mail — Anfang und Schluss','Liebe Anna, vielen Dank für deine Mail. · Viele Grüße / Sehr geehrte Frau …, Mit freundlichen Grüßen'],
+          ['Mail — antworten','Du fragst, ob … — ja, gern! · Leider kann ich nicht, weil … · Kannst du mir sagen, …?'],
+          ['Sprechen — vorstellen','Ich heiße … und komme aus … · Ich lebe seit … in … · In meiner Freizeit …'],
+          ['Sprechen — planen','Wollen wir …? · Wie wäre es mit …? · Gute Idee! / Das geht leider nicht, weil … · Also machen wir …'],
+          ['Sprechen — Meinung','Einerseits …, andererseits … · Ich finde …, weil … · Zum Beispiel …'] ],
+        bewertung:[
+          ['Lesen (60)','Leseteile 1 bis 4 zusammen 54 Punkte, dazu 6 Punkte für das Lesen der Mail.'],
+          ['Hören (60)','Vier Teile mit je 15 Punkten; die Telefonnotiz zählt zum Schreiben.'],
+          ['Schreiben (60)','Sprachbausteine 5, Mail beantworten 15, Telefonnotiz 5, Kurznachricht 5 — dazu 30 Punkte für die Sprache.'],
+          ['Sprechen (60)','Teil 1 6, Teil 2 12, Teil 3 12 Punkte für den Inhalt — dazu 30 Punkte für die Sprache.'],
+          ['B1 oder A2','B1 ab 70 Prozent (168 von 240) und 70 Prozent in drei Fertigkeiten, überall mindestens 40 Prozent. A2 ab 40 Prozent, 40 Prozent in drei Fertigkeiten, überall mindestens 10 Prozent.'] ],
+        ablauf:[
+          'Schriftlich 125 Minuten: Lesen (45), Sprachbausteine mit Lesen und Schreiben (35), Hören (ca. 35), Schreiben (10).',
+          'Beim Hören: Alltagsgespräch, Ansagen und Anrufbeantworter zweimal, Gespräch im Beruf und Meinungen nur einmal.',
+          'Mündlich zu zweit, ca. 15 Minuten, ohne Vorbereitung — nur vor Teil 3 etwa eine Minute für Notizen.',
+          'Die Prüfung gibt es nur ganz: Einzelne Teile kann man nicht getrennt ablegen.'] } },
+
     { id:'telcb2', name:'telc Deutsch B2', anbieter:'telc', niveau:'B2',
       bild:'bewerbung', kurs:'goethetelc', muster:'B2', telc:true, geprueft:true,
       training:{ lesen:'telcB2', hoeren:'telcB2', schreiben:'telcB2', sprechen:'telcB2' },
@@ -355,6 +398,7 @@
      Lernziel-ID -> [Prüfungsseite hier, Name wie sie ihn gewählt hat] */
   var LZ_ZU_PF = {
     goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a2:['sd2','telc A2'],
+    telc_a2b1:['telca2b1','telc A2·B1'],
     goethe_b1:['b1','Goethe B1'], telc_b1:['telcb1','telc B1'], telc_b1_beruf:['telcb1beruf','telc B1+ Beruf'],
     goethe_b2:['b2','Goethe B2'], telc_b2:['telcb2','telc B2'],
     goethe_c1:['c1','Goethe C1'], telc_c1:['telcc1','telc C1 Hochschule'],
@@ -1041,7 +1085,25 @@
   /* telc: Punkteprognose aus den eigenen Trainingsergebnissen. Ehrlich als
      Schätzung beschriftet — sie rechnet die Prozent je Fertigkeit auf die
      Punkte der echten Prüfung hoch. */
+  /* telc A2·B1: je Fertigkeit 60 Punkte, Ergebnis B1, A2 oder noch nicht. */
+  function prognoseA2B1(p){
+    var NAM = { lesen:'Lesen', hoeren:'Hören', schreiben:'Schreiben', sprechen:'Sprechen' };
+    var pkt = p.module.map(function(m){ return { n:NAM[m.id]||m.n, p:Math.round(modulProzent(p,m)*0.6) }; });
+    var sum = pkt.reduce(function(a,x){ return a+x.p; },0);
+    var drei = function(g){ return pkt.filter(function(x){ return x.p>=g; }).length>=3; };
+    var alle = function(g){ return pkt.every(function(x){ return x.p>=g; }); };
+    var stufe = (sum>=168 && drei(42) && alle(24)) ? 'B1' : ((sum>=96 && drei(24) && alle(6)) ? 'A2' : null);
+    var zeilen = pkt.map(function(x){
+      return '<div class="pf-prog '+(x.p>=42?'gut':'knapp')+'"><div class="pf-prog-k"><b>'+E(x.n)+'</b><span>'+x.p+' von 60 · B1 ab 42</span></div>'
+        + '<div class="pf-prog-bar"><i style="width:'+Math.max(2,Math.round(x.p/60*100))+'%"></i><em style="left:70%"></em></div></div>'; }).join('');
+    return block('5','Bist du bereit?','<div class="pf-bereit"><p>Eine Schätzung aus deinen Trainingsergebnissen, hochgerechnet auf die 240 Punkte der Prüfung.</p>'
+      + '<div class="pf-prog '+(stufe==='B1'?'gut':'knapp')+'"><div class="pf-prog-k"><b>Nach deinen Übungen</b><span>'+sum+' von 240</span></div>'
+      + '<p>'+(stufe==='B1' ? '✅ Das reicht für B1.' : (stufe==='A2' ? '🟡 Das reicht für A2 — für B1 fehlt noch etwas.' : '⏳ Noch nicht genug für A2 — übe weiter, vor allem die Prüfungsläufe.'))+'</p></div>'
+      + zeilen + '</div>','pf-ber');
+  }
+
   function prognoseBlock(p){
+    if(p.prognose.typ==='a2b1') return prognoseA2B1(p);
     var zeilen = p.prognose.teile.map(function(t){
       var pts = 0, offen = [];
       for(var k in t.anteile){

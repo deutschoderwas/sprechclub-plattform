@@ -56,7 +56,7 @@
 
   var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1',
                   /* 01.11.2026: eigene telc-Trainings */
-                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2' };
+                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };

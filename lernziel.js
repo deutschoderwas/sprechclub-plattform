@@ -23,7 +23,7 @@ var PRUEFUNGEN=[
  {id:'telc_a2',t:'telc A2',n:'A2'},{id:'telc_b1',t:'telc B1',n:'B1'},
  {id:'telc_b2',t:'telc B2',n:'B2'},{id:'telc_c1',t:'telc C1 Hochschule',n:'C1'},
  {id:'telc_b1b2_pflege',t:'telc B1·B2 Pflege',n:'B2'},{id:'telc_b2c1_medizin',t:'telc B2·C1 Medizin',n:'C1'},
- {id:'telc_b1_beruf',t:'telc B1+ Beruf',n:'B1'},{id:'dtz',t:'DTZ (Deutsch-Test für Zuwanderer)',n:'B1'}
+ {id:'telc_b1_beruf',t:'telc B1+ Beruf',n:'B1'},{id:'telc_a2b1',t:'telc A2·B1',n:'B1'},{id:'dtz',t:'DTZ (Deutsch-Test für Zuwanderer)',n:'B1'}
 ];
 var NIVEAUS=['A1','A2','B1','B2','C1','C2'];
 var TEMPO=[
