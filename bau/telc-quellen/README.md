@@ -45,5 +45,7 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
 
 - telc B1·B2 Beruf komplett: lesen/hoeren/schreiben/sprechen-telc-b1b2.js. Quellen: telc Übungstest 1 B1·B2 Beruf + „Tipps zur Prüfungsvorbereitung". Hören alles einmal (4 Teile, 23), Lesen 4 Teile + Sprachbausteine 2 Teile (36), Schreiben 2 E-Mails je 4 Kriterien × 0–5 (40), Sprechen Foto/Kurzvortrag/Aufgabe (100). Grenzen belegt (HLS 27/43, Schreiben 14/30, Sprechen 35/75), Prognose typ b1b2. Fotos Teil 1: bilder/beruf/ (Unsplash, siehe bau/bildquellen-beruf.md).
 
+- telc B2·C1 Beruf komplett: lesen/hoeren/schreiben/sprechen-telc-b2c1.js. Quelle: telc Übungstest 1 B2·C1 Beruf. Hören alles einmal (25), Lesen 3 Teile + SB 2 Teile (45; Teil 3 mischt richtig/falsch und a/b/c über a.art), Schreiben 3 Texte (42; III/IV als Übungsschätzung anteilig 2/3/5), Sprechen Small Talk mit Foto / Präsentation / Diskussion (100). Grenzen belegt (HLS 32/50, Schreiben 18/34, Sprechen 35/75), Prognose typ b2c1.
+
 ## Als Nächstes
-telc B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.
+telc C1 Beruf — Formate jeweils bei telc prüfen.

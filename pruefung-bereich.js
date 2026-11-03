@@ -515,6 +515,45 @@
           'Mündlich meist zu zweit, ca. 16 Minuten, vorher 20 Minuten Vorbereitung.'] },
       uebungstest:'https://shop.telc.net/media/catalog/product/file//2/0/20201225_5066-b00-010102_web_1.pdf' },
 
+    { id:'telcb2c1beruf', name:'telc Deutsch B2·C1 Beruf', anbieter:'telc · Beruf · zwei Niveaus', niveau:'B2–C1',
+      bild:'buero', kurs:'goethetelc', telc:true, fach:true, geprueft:true,
+      fuer:'Für Fachkräfte und den Berufssprachkurs C1 — am Ende steht B2 oder C1 auf dem Zertifikat.',
+      module:[ {id:'lesen',n:'Lesen und Sprachbausteine',m:'70',
+                 t:'Ein Internetforum, ein langer betrieblicher Bericht, ein Sachtext (50 Minuten); dazu ein Gespräch und ein Geschäftsbrief mit Lücken (20 Minuten).'},
+               {id:'hoeren',n:'Hören',m:'40', t:'Zwei Gespräche, ein Vortrag, Meinungen von fünf Personen, eine Besprechung. Alles nur einmal.'},
+               {id:'schreiben',n:'Schreiben',m:'60', t:'Drei Texte: eine E-Mail an Kollegen, eine formelle Antwort nach außen, eine Diskussionsvorlage.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 20',
+                 t:'Zu zweit: Small Talk zu einem Foto, eine Präsentation von etwa drei Minuten, eine Diskussion.'} ],
+      hinweis:'Schriftlich 190 Minuten: Hören 40, Lesen 50, Sprachbausteine 20, Pause, Schreiben 60. '
+             +'Mündlich ca. 20 Minuten zu zweit. Die Präsentation bereitest du zu Hause vor und hältst sie frei.',
+      punkte:'Drei Ergebnisse: Hören, Lesen und Sprachbausteine zusammen (70 Punkte: B2 ab 32, C1 ab 50), Schreiben (42: B2 ab 18, C1 ab 34) '
+            +'und Sprechen (100: B2 ab 35, C1 ab 75). Ohne B2 im Sprechen gibt es kein Zertifikat. C1 bekommst du mit C1 im Sprechen, '
+            +'C1 in einem schriftlichen Teil und mindestens B2 im anderen.',
+      training:{ lesen:'telcB2C1', hoeren:'telcB2C1', schreiben:'telcB2C1', sprechen:'telcB2C1' },
+      prognose:{ typ:'b2c1' },
+      mat:{
+        wortschatz:['Projekte, Berichte und Kennzahlen','Umstrukturierung und Veränderungen','Arbeitsrecht und Mitbestimmung','Arbeitsschutz und Gesundheit',
+                    'Personal, Bewerbung und Weiterbildung','Kunden, Lieferanten und Reklamation','Besprechungen und Entscheidungen','Arbeitszeit und Arbeitsorganisation'],
+        grammatik:['Nominalstil in Berichten und Vorlagen','Konnektoren auf C1: zwar … jedoch, demgegenüber, insofern, sofern',
+                   'Passiv und Passiversatz (lässt sich, ist zu prüfen)','Präpositionaladverbien (darauf, womit, worüber)',
+                   'Nomen-Verb-Verbindungen (in Kraft treten, zur Sprache bringen)','Konjunktiv I und indirekte Rede im Bericht'],
+        redemittel:[
+          ['Diskussionsvorlage','Ausgangslage: … · Für Möglichkeit A spricht, dass … · Demgegenüber … · Wir empfehlen daher …, weil …'],
+          ['Formelle Antwort','Vielen Dank für Ihre Bewerbung / Anfrage. · Wir freuen uns, Ihnen … anbieten zu können. · Bitte bestätigen Sie bis …'],
+          ['Small Talk','Das kenne ich gut, bei uns … · Wie ist das bei Ihnen? · Ehrlich gesagt sehe ich das ein bisschen anders.'],
+          ['Präsentation','Ich möchte Ihnen heute … vorstellen. · Damit komme ich zum zweiten Punkt. · Zusammenfassend lässt sich sagen …'],
+          ['Diskussion','Da muss ich Ihnen widersprechen. · Das stimmt zwar, aber … · Können wir uns darauf einigen, dass …?'] ],
+        bewertung:[
+          ['Hören, Lesen, Sprachbausteine (70)','Jede richtige Lösung ein Punkt. B2 ab 32, C1 ab 50.'],
+          ['Schreiben (42)','Je Text Aufgabenbewältigung und Gestaltung (Teil 1 je 2, Teil 2 je 4, Teil 3 je 5), dazu Korrektheit und Wortschatz über alle drei Texte (je 10). B2 ab 18, C1 ab 34.'],
+          ['Sprechen (100)','50 für die Aufgaben (Small Talk 10, Präsentation 10, Rückfragen 10, Diskussion 20), 50 für Aussprache, Flüssigkeit, Korrektheit, Wortschatz. B2 ab 35, C1 ab 75.'],
+          ['Zertifikat','C1: Sprechen C1 und schriftlich einmal C1, einmal mindestens B2. B2: Sprechen mindestens B2 und schriftlich mindestens einmal B2; ein schwacher Teil geht nur mit Mindestpunkten (19 bzw. 8).'] ],
+        ablauf:[
+          'Schriftlich: Hören 40 Minuten, Lesen 50, Sprachbausteine 20, Pause, Schreiben 60.',
+          'Beim Hören: Alle Texte nur einmal.',
+          'Mündlich zu zweit, ca. 20 Minuten. Präsentation frei, nicht ablesen; Laptop und Beamer sind nicht erlaubt.'] },
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/u/e/uebungstest_deutsch_b2-c1-beruf.pdf' },
+
     { id:'buero', name:'Deutsch für Büro & Logistik', anbieter:'ohne Prüfung', niveau:'A2–B2',
       bild:'kunden', kurs:'buero', fach:true, ohnePruefung:true,
       fuer:'Telefon, E-Mail, Kundengespräch — für den Arbeitsalltag, nicht für ein Zertifikat.',
@@ -582,7 +621,7 @@
     goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a2:['sd2','telc A2'],
     telc_a2b1:['telca2b1','telc A2·B1'],
     goethe_b1:['b1','Goethe B1'], telc_b1:['telcb1','telc B1'], telc_b1_beruf:['telcb1beruf','telc B1+ Beruf'],
-    goethe_b2:['b2','Goethe B2'], telc_b2:['telcb2','telc B2'], telc_b2_beruf:['telcb2beruf','telc B2+ Beruf'], telc_b1b2_beruf:['telcb1b2beruf','telc B1·B2 Beruf'],
+    goethe_b2:['b2','Goethe B2'], telc_b2:['telcb2','telc B2'], telc_b2_beruf:['telcb2beruf','telc B2+ Beruf'], telc_b1b2_beruf:['telcb1b2beruf','telc B1·B2 Beruf'], telc_b2c1_beruf:['telcb2c1beruf','telc B2·C1 Beruf'],
     telc_c1_allg:['telcc1allg','telc C1'],
     goethe_c1:['c1','Goethe C1'], telc_c1:['telcc1','telc C1 Hochschule'],
     telc_b1b2_pflege:['pflege','telc B1·B2 Pflege'], telc_b2c1_medizin:['telcmed','telc B2·C1 Medizin'],
@@ -1306,7 +1345,29 @@
       + '</div>','pf-ber');
   }
 
+  /* telc B2·C1 Beruf: drei Ergebnisse, jedes C1, B2 oder darunter. */
+  function prognoseB2C1(p){
+    var pr = {}; p.module.forEach(function(m){ pr[m.id] = modulProzent(p, m); });
+    var hls = Math.round(((pr.hoeren||0)*25 + (pr.lesen||0)*45)/100), sch = Math.round((pr.schreiben||0)*42/100), spr = Math.round(pr.sprechen||0);
+    var st = function(x, b2, c1){ return x>=c1 ? 'C1' : (x>=b2 ? 'B2' : '–'); };
+    var sH = st(hls,32,50), sS = st(sch,18,34), sP = st(spr,35,75);
+    var erg = null;
+    if(sP!=='–'){
+      if(sP==='C1' && sH!=='–' && sS!=='–' && (sH==='C1' || sS==='C1')) erg = 'C1';
+      else if((sH!=='–' && sS!=='–') || (sH!=='–' && sch>=8) || (sS!=='–' && hls>=19)) erg = 'B2';
+    }
+    var z = function(n, x, max, b2, c1, s){
+      return '<div class="pf-prog '+(s==='–'?'knapp':'gut')+'"><div class="pf-prog-k"><b>'+E(n)+'</b><span>'+x+' von '+max+' · B2 ab '+b2+', C1 ab '+c1+'</span></div>'
+        + '<div class="pf-prog-bar"><i style="width:'+Math.max(2,Math.round(x/max*100))+'%"></i><em style="left:'+Math.round(b2/max*100)+'%"></em><em style="left:'+Math.round(c1/max*100)+'%"></em></div></div>'; };
+    return block('5','Bist du bereit?','<div class="pf-bereit"><p>Eine Schätzung aus deinen Trainingsergebnissen, hochgerechnet auf die drei Ergebnisse der Prüfung.</p>'
+      + '<div class="pf-prog '+(erg?'gut':'knapp')+'"><div class="pf-prog-k"><b>Nach deinen Übungen</b><span>'+(erg||'noch nicht B2')+'</span></div>'
+      + '<p>'+(erg==='C1' ? '✅ Das reicht für C1.' : (erg==='B2' ? '🟡 Das reicht für B2 — für C1 brauchst du C1 im Sprechen und in einem schriftlichen Teil.' : '⏳ Noch nicht genug für B2 — wichtig: Ohne B2 im Sprechen gibt es kein Zertifikat.'))+'</p></div>'
+      + z('Hören, Lesen, Sprachbausteine', hls, 70, 32, 50, sH) + z('Schreiben', sch, 42, 18, 34, sS) + z('Sprechen', spr, 100, 35, 75, sP)
+      + '</div>','pf-ber');
+  }
+
   function prognoseBlock(p){
+    if(p.prognose.typ==='b2c1') return prognoseB2C1(p);
     if(p.prognose.typ==='a2b1') return prognoseA2B1(p);
     if(p.prognose.typ==='b1b2') return prognoseB1B2(p);
     var zeilen = p.prognose.teile.map(function(t){

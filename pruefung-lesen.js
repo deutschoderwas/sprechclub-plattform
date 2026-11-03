@@ -56,7 +56,7 @@
 
   var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1',
                   /* 01.11.2026: eigene telc-Trainings */
-                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B', 'telcB2B':'LESEN_TELC_B2B', 'telcB1B2':'LESEN_TELC_B1B2' };
+                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B', 'telcB2B':'LESEN_TELC_B2B', 'telcB1B2':'LESEN_TELC_B1B2', 'telcB2C1':'LESEN_TELC_B2C1' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };
@@ -352,9 +352,10 @@
       h += frageHTML(a.frage);
 
     } else if(art==='rf'){
-      h += '<div class="pl-texte">'
+      /* telc B2·C1 Beruf: richtig/falsch auch zu einem langen Sachtext (e.text). */
+      h += e.texte ? '<div class="pl-texte">'
          + e.texte.map(function(t){ return textKarte(t, zeigen?a.stelle:null); }).join('')
-         + '</div>';
+         + '</div>' : langtextHTML(e.text, zeigen?a.stelle:null);
       h += frageHTML(a.satz, L.i+1);
       h += rfHTML(a, zeigen);
 
@@ -458,7 +459,9 @@
     brief:   { z:'📄', t:'Brief' },
     seite:   { z:'🌐', t:'Von einer Internetseite' },
     aushang: { z:'📌', t:'Aushang' },
-    regel:   { z:'📋', t:'Regelung' }
+    regel:   { z:'📋', t:'Regelung' },
+    bericht: { z:'📊', t:'Bericht' },
+    gespraech:{ z:'💬', t:'Gespräch' }
   };
 
   /* telc-Sprachbausteine: Lücken „__(3)__" als Kästchen zeigen, die gefragte hervorheben. */
@@ -765,7 +768,7 @@
     oeffnen();
     var folge = r.aufgaben.map(function(a){
       /* telc Teil 1: jede Aufgabe hat ihren eigenen kurzen Text. */
-      return { a:a, art:t.art, texte:r.texte||null,
+      return { a:a, art:a.art||t.art, texte:r.texte||null,
                text:a.text||r.text||null, tafel:r.tafel||null, anzeigen:r.anzeigen||null }; });
     var nr = t.runden.indexOf(r)+1;
     L = { niveau:niveau, daten:d, modus:'runde', topf:teilNr, id:rundeId,
@@ -782,7 +785,7 @@
     oeffnen();
     var folge = [];
     Lf.teile.forEach(function(t){
-      t.aufgaben.forEach(function(a){ folge.push({ a:a, art:t.art, texte:t.texte||null,
+      t.aufgaben.forEach(function(a){ folge.push({ a:a, art:a.art||t.art, texte:t.texte||null,
         text:a.text||t.text||null, tafel:t.tafel||null, anzeigen:t.anzeigen||null, teilNr:t.nr }); });
     });
     L = { niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
