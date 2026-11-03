@@ -1150,7 +1150,7 @@ function leadKontoPille(l){
       + (was ? esc(was)+'-Zugang gehabt, inzwischen abgelaufen' : 'Hatte ein Abo, es ist abgelaufen')
       + '">⌛ ' + (was ? esc(was)+' abgelaufen' : 'Abo abgelaufen') + '</span>';
   }
-  if(lage === 'alt') return '<span class="pill" style="background:#E2EBC9;color:#3F6212;font-weight:800" title="Alter Schüler mit Guthaben">🎒 '+(k.credits||0)+' Stunden</span>';
+  if(lage === 'alt') return '<span class="pill" style="background:#E2EBC9;color:#3F6212;font-weight:800" title="Schüler aus der Zeit der Stundenpakete">🎒 alter Schüler</span>';
   if(lage === 'weg') return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700">🗄️ beendet</span>';
   return '<span class="pill" style="background:#FEF3C7;color:#8A6608;font-weight:700" title="Konto angelegt, aber nie etwas gekauft">👤 nur angemeldet</span>';
 }
@@ -2212,7 +2212,7 @@ async function addStudentToClass(classId){
   studs = studs.slice().sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','de'));
   const already = new Set((KL_PARTS[classId]||[]).map(x=>x.user_id));
   const free = studs.filter(s=>!already.has(s.id));
-  const opts = free.map(s=>`<option value="${s.id}">${esc(s.name||s.email)} · ${s.credits||0} Std${s.level?' · '+esc(s.level):''}</option>`).join('');
+  const opts = free.map(s=>`<option value="${s.id}">${esc(s.name||s.email)}${s.level?' · '+esc(s.level):''}</option>`).join('');
   const cInfo = (KL_ALL||[]).find(c=>c.id===classId);
   const tf = new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
   const title = cInfo ? `${tf.format(new Date(cInfo.starts_at))} · ${esc(cInfo.title)}${cInfo.level?' ('+esc(cInfo.level)+')':''}` : 'Stunde';
@@ -3855,7 +3855,7 @@ window.jkMailClass=async function(classId,titleEnc,singleUid){
 };
 window.jkMail=function(){var sel=document.getElementById('jkStud');if(!sel||!sel.value)return alert('Bitte einen Schueler waehlen.');var s=getList().find(function(x){return x.id===sel.value;});if(s&&s.email)window.location.href='mailto:'+s.email;};
 window.jkSetStatus=async function(){var sel=document.getElementById('jkStud');var st=document.getElementById('jkStatus');if(!sel||!sel.value)return alert('Bitte Schueler waehlen.');var v=st.value;try{await sb.from('profiles').update({status:v}).eq('id',sel.value);var s=getList().find(function(x){return x.id===sel.value;});if(s)s.status=v;alert('Status gesetzt: '+(v||'kein paket'));applyView();}catch(e){alert('Fehler: '+e.message);}};
-function studOptions(){return realStudents().slice().sort(function(a,b){return (a.name||'').localeCompare(b.name||'');}).map(function(s){return '<option value="'+s.id+'">'+esc3(s.name||s.email)+' ('+(s.credits||0)+'h'+(s.level?', '+s.level:'')+')</option>';}).join('');}
+function studOptions(){return realStudents().slice().sort(function(a,b){return (a.name||'').localeCompare(b.name||'');}).map(function(s){return '<option value="'+s.id+'">'+esc3(s.name||s.email)+(s.level?' ('+s.level+')':'')+'</option>';}).join('');}
 function bar(){function mk(v,l){var on=QF===v;return '<button class="jkqf" data-v="'+v+'" onclick="jkSetQF(&#39;'+v+'&#39;)" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:'+(on?'#DD0000':'#fff')+';color:'+(on?'#fff':'#333')+'">'+l+'</button>';}return '<div class="card" id="jkBar" style="margin:14px 0;background:#F4FBFA;border:1px solid #cde"><b>\uD83D\uDD0E Filter</b> <span id="jkFilterCount" class="muted" style="margin-left:8px"></span><div style="display:flex;gap:6px;flex-wrap:wrap;margin:8px 0">'+mk('alle','Alle')+mk('alt','ALTE SCHÜLER')+mk('aktiv','\uD83D\uDFE2 AKTIV')+mk('community','\uD83D\uDCAC COMMUNITY')+mk('urlaub','\uD83C\uDF34 URLAUB')+mk('beendet','\uD83D\uDD34 BEENDET')+mk('kein','\u26AA KEIN PAKET')+mk('archiv','\uD83D\uDDC4\uFE0F ARCHIV')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><label>Niveau: <select onchange="jkSetNiv(this.value)" style="padding:6px"><option value="">Alle</option>'+LEV.map(function(l){return '<option value="'+l+'">'+l+'</option>';}).join('')+'</select></label> <button onclick="jkMailGroup()" style="border:none;border-radius:8px;padding:7px 14px;cursor:pointer;background:#DD0000;color:#fff;font-weight:700;margin-left:10px">✉️ Mail an diese Auswahl</button></div><hr style="border:none;border-top:1px solid #e5e5e5;margin:10px 0"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><select id="jkStud" style="padding:6px;min-width:220px"><option value="">\u2013 Schueler waehlen \u2013</option>'+studOptions()+'</select><button onclick="jkMail()" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:#fff">\u2709\uFE0F E-Mail schreiben</button><select id="jkStatus" style="padding:6px"><option value="aktiv">aktiv</option><option value="urlaub">urlaub</option><option value="pause">pause</option><option value="beendet">beendet</option><option value="archiv">\uD83D\uDDC4\uFE0F archivieren (ausblenden)</option><option value="">kein paket (leer)</option></select><button onclick="jkSetStatus()" style="border:1px solid #ccc;border-radius:8px;padding:6px 12px;cursor:pointer;background:#fff">\uD83D\uDCBE Status setzen</button></div></div>';}
 /* Julia, 18.10.2026: "diese filter sind ueberfluessig."
 

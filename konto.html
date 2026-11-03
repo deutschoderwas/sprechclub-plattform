@@ -1571,7 +1571,12 @@ async function load(){
     sb.from('challenge_settings').select('start_date,weeks,title').maybeSingle()
   ]);
   challengeSet = chs || null;
-  profile = prof||{}; credits = profile.credits||0;
+  profile = prof||{};
+  /* Julia, 3.11.2026: "Es gibt kein Guthaben mehr ... das entscheidet
+     nirgends." Die Zahl wird gar nicht mehr aus dem Profil gelesen;
+     damit ist jede Bedingung der Form credits > 0 im Rest der Seite
+     von selbst falsch, ohne dass eine davon uebersehen werden kann. */
+  credits = 0;
   /* profile steht als let auf oberster Ebene und landet damit NICHT
      auf window. Vier Dateien (lernpfad.js, vokabeltrainer.js,
      fertigkeiten.js, lernen.js) lesen aber nur window.profile und
@@ -1693,7 +1698,7 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','guthaben','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
+const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
 const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
@@ -1739,7 +1744,7 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    1. November (kalEv/erstAbStart). Die Liste bleibt leer stehen, falls
    wieder einmal ein Bereich vor einem Start zugehen soll. */
 VORVERKAUF_ZU=[];
-const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','guthaben','nachrichten','amanda','fehler','buddy','fertigkeit'];
+const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','nachrichten','amanda','fehler','buddy','fertigkeit'];
 /* Diese beiden Ansichten bleiben auch gesperrten Altschuelern offen:
    die Materialien und der Stundenplan mit dem Material der Stunden,
    die sie gebucht hatten. Alles andere aus LOCKED_VIEWS ist zu —
