@@ -42,7 +42,7 @@
     localStorage.setItem('ub_'+k,JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'HOEREN_A1', 'A2':'HOEREN_A2', 'B1':'HOEREN_B1', 'B2':'HOEREN_B2', 'C1':'HOEREN_C1',
-                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2', 'telcA2B1':'HOEREN_TELC_A2B1', 'telcC1H':'HOEREN_TELC_C1H', 'telcC1':'HOEREN_TELC_C1', 'telcB1B':'HOEREN_TELC_B1B' };
+                  'telcB1':'HOEREN_TELC_B1', 'telcB2':'HOEREN_TELC_B2', 'telcA2B1':'HOEREN_TELC_A2B1', 'telcC1H':'HOEREN_TELC_C1H', 'telcC1':'HOEREN_TELC_C1', 'telcB1B':'HOEREN_TELC_B1B', 'telcB2B':'HOEREN_TELC_B2B' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.hoerenVorhanden = function(n){ return !!datenVon(n); };
   /* Damit die Uebersicht die Aufgabenzahl des richtigen Niveaus zeigt. */

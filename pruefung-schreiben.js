@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -572,13 +572,13 @@
     var s = selbstWerte(), voll = selbstFertig(), summe = selbstPunkte(text), wz = woerter(text);
     return '<div class="pw-selbst'+(voll?' fertig':'')+(dazu?' dazu':'')+'">'
       + '<div class="pw-selbst-kopf"><span class="pw-selbst-p">'+(voll?summe:'–')+'<em>/'+mMax(a)+'</em></span>'
-      +   '<div><b>Bewerte dich nach den vier telc-Kriterien</b>'
-      +   '<span>Übungsschätzung: alle vier Kriterien gleich gewichtet. Dein Text hat '+wz+' Wörter — verlangt sind etwa '+(a.woerter||350)+'.</span></div></div>'
+      +   '<div><b>'+E(a.rubrikTitel || 'Bewerte dich nach den vier telc-Kriterien')+'</b>'
+      +   '<span>'+E(a.rubrikHinweis || 'Übungsschätzung: alle vier Kriterien gleich gewichtet.')+' Dein Text hat '+wz+' Wörter — verlangt sind etwa '+(a.woerter||350)+'.</span></div></div>'
       + '<div class="pw-sr auto"><b>Erinnerung: Diese Punkte gehören in den Text</b><span class="pw-sh">'
       +   a.punkte.map(function(p){ return E(p.was); }).join(' · ')+'</span></div>'
       + a.rubrik.map(function(kr, j){
           return '<div class="pw-sr"><b>'+E(kr.t)+'</b><span class="pw-sh">'+E(kr.h)+'</span>'
-            + '<div class="pw-sw">' + RUB_STUFEN.map(function(st){
+            + '<div class="pw-sw">' + (kr.stufen || RUB_STUFEN).map(function(st){
                 var an2 = s[j]===st.w ? ' an' : '';
                 return '<button class="pw-sb'+an2+'" onclick="schreibenSelbst('+j+','+st.w+')"><i>'+st.t+'</i>'+st.d+'</button>'; }).join('')
             + '</div></div>'; }).join('')
@@ -658,6 +658,7 @@
      der Weg zurück. Der Selbstcheck darunter zählt in beiden Fällen. */
   function amandaHTML(){
     if(AMANDA==='aus') return '';
+    if(aktA() && aktA().keineKI) return '';
     var weg = !!W.kifehler[W.i];
     return '<div class="pw-amanda">'
       + '<div class="pw-amanda-t"><b>'
@@ -747,7 +748,7 @@
     }
     W.gewaehlt[W.i] = text;
     W.offen[W.i] = 'teil';        /* aufgedeckt — bewertet wird gleich */
-    if(AMANDA==='immer') window.schreibenBewerten();
+    if(AMANDA==='immer' && !aktA().keineKI) window.schreibenBewerten();
     else malen();
   };
 

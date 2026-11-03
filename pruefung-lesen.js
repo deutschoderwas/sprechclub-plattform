@@ -56,7 +56,7 @@
 
   var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1',
                   /* 01.11.2026: eigene telc-Trainings */
-                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B' };
+                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B', 'telcB2B':'LESEN_TELC_B2B' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };
@@ -459,9 +459,12 @@
 
   /* telc-Sprachbausteine: Lücken „__(3)__" als Kästchen zeigen, die gefragte hervorheben. */
   function luecken(html, aktiv){
-    if(html.indexOf('__(')<0) return html;
+    if(html.indexOf('__(')<0 && html.indexOf('[[')<0) return html;
     return html.replace(/__\((\d+)\)__/g, function(_, n){
-      return '<b class="pl-gap'+(+n===aktiv?' an':'')+'">'+n+'</b>'; });
+      return '<b class="pl-gap'+(+n===aktiv?' an':'')+'">'+n+'</b>'; })
+      /* B2+ Beruf: das Wort steht im Text, die Nummer daneben */
+      .replace(/\[\[(\d+):([^\]]+)\]\]/g, function(_, n, w){
+        return '<u class="pl-wort'+(+n===aktiv?' an':'')+'">'+w+'</u><b class="pl-gap'+(+n===aktiv?' an':'')+'">'+n+'</b>'; });
   }
   function langtextHTML(t, stelle, aktiv){
     if(!t) return '';
@@ -1172,6 +1175,8 @@
 '@media(min-width:680px){ .pl-anz-6{ grid-template-columns:1fr 1fr } }',
 '.pl-gap{ display:inline-block; min-width:2.2em; padding:0 .4em; margin:0 .1em; border:1.5px dashed #9AA5B1; border-radius:6px; text-align:center; font-size:.85em; color:#5B6672 }',
 '.pl-gap.an{ border:2px solid #1B9BC0; background:#E3F5FA; color:#0E5E75; font-weight:800 }',
+'.pl-wort{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; text-decoration-color:#9AA5B1 }',
+'.pl-wort.an{ text-decoration-color:#1B9BC0; background:#E3F5FA; border-radius:4px }',
 '@media(min-width:940px){ .pl-anz-6{ grid-template-columns:1fr 1fr 1fr } }',
 '.pl-xzeile{ margin-top:13px }',
 '.pl-x{ width:100%; background:#fff; border:2px dashed #E7ECEE; border-radius:14px;',
