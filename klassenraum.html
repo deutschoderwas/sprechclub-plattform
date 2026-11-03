@@ -229,6 +229,9 @@
   .bo-grp.hat-lehrer{ outline:2px solid #1f7a4d; outline-offset:1px; }
   .bo-grp.konflikt{ outline:2px solid #DD0000; outline-offset:1px; background:#FCECEC; }
   .bo-grp.bo-ungrouped{ outline:2px dashed #E8820C; background:#FFF8EF; }
+  .bo-presets{ display:inline-flex; gap:4px; flex-wrap:wrap; }
+  .bo-sz{ border:1.5px solid var(--rahmen); background:#fff; color:var(--anthrazit); border-radius:8px; padding:5px 10px; font-weight:800; font-size:.82rem; cursor:pointer; line-height:1; }
+  .bo-sz.on{ background:var(--tuerkis); color:var(--auf-tuerkis); border-color:var(--tuerkis); }
   .bo-rm{ margin-left:6px; border:none; background:#FCE7E7; color:#DD0000; border-radius:8px; padding:3px 8px; font-weight:800; font-size:.8rem; cursor:pointer; line-height:1; }
   .bo-rm:hover{ background:#DD0000; color:#fff; }
   .dwechsel{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; min-height:160px; color:var(--weich); font-weight:800; font-size:1rem; }
@@ -1458,6 +1461,10 @@
     boRenderTeacher();
   }
   function boSet(id,g){ const n=parseInt(g,10); if(n>0) window._boAssign[id]=n; else delete window._boAssign[id]; boRenderTeacher(); }
+  // Schnellwahl der Gruppengröße (Julia, 03.11.2026): 2er/3er/4er… mit einem Tipp.
+  function boSetGroesse(n){ n=Math.max(2,parseInt(n,10)||2); window._boSize=n; const a=document.getElementById('bo-size'); if(a)a.value=n; const b=document.getElementById('bo-size-live'); if(b)b.value=n; boMarkGroesse(n); }
+  function boMarkGroesse(n){ document.querySelectorAll('.bo-sz').forEach(function(b){ b.classList.toggle('on', parseInt(b.dataset.n,10)===n); }); }
+  window.boSetGroesse=boSetGroesse;
   // Einzelnen Schüler live in eine andere Gruppe verschieben – OHNE Countdown, sofort.
   // Kein reset-Token → die Gruppen-Tafeln bleiben erhalten; nur der verschobene Schüler wechselt den Raum.
   function boMoveLive(id, g){
@@ -1558,7 +1565,7 @@
           ungrouped.map(p=>`<div class="bo-mv">${boBadge(p.id)} <span class="bo-mv-n">${esc(nameOf(p.id))}</span> <span class="bo-mv-lbl">→ Gruppe</span> <input class="bo-mv-in" type="number" min="1" max="20" placeholder="Nr." title="In diese Gruppe setzen" onchange="boMoveLive('${esc(p.id)}', this.value)"></div>`).join('')+
           `</div></div>`;
       }
-      html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="8" value="${esc(window._boSize||2)}"><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
+      html+=`<div class="bo-row"><label>Gruppengröße</label><input id="bo-size-live" type="number" min="2" max="10" value="${esc(window._boSize||2)}"><span class="bo-presets">${[2,3,4,5,6].map(n=>`<button class="bo-sz${(window._boSize|0)===n?' on':''}" data-n="${n}" onclick="boSetGroesse(${n})">${n}er</button>`).join('')}</span><button onclick="boWarnThen('mix')">🔀 Neu mischen</button></div>`;
       html+=`<div class="bo-row"><button onclick="boHop(0)">🏠 Hauptraum</button><button class="bo-end" onclick="boWarnThen('end')">⏹️ Alle zurückholen</button></div>`;
       body.innerHTML=html; return;
     }
@@ -1572,7 +1579,8 @@
     const ohne = ppl.filter(pp => boBand(boLv(pp.id)) === 'x').length;
     if(ohne) html += `<div class="bo-hint bo-ohne">⚠️ ${ohne} ${ohne===1?'Person hat':'Personen haben'} kein Niveau — beim Zuteilen landen sie im Rest. Trag es unten rechts nach.</div>`;
     html+=boLegendHtml();
-    html+=`<div class="bo-row"><label>Gruppe à</label><input id="bo-size" type="number" min="2" max="8" value="${size}"><button class="bo-niv" onclick="boNiveau()">🎯 Nach Niveau</button><button onclick="boZufall()">🎲 Zufällig</button></div>`;
+    html+=`<div class="bo-row"><label>Gruppe à</label><input id="bo-size" type="number" min="2" max="10" value="${size}"><span class="bo-presets">${[2,3,4,5,6].map(n=>`<button class="bo-sz${(window._boSize|0)===n?' on':''}" data-n="${n}" onclick="boSetGroesse(${n})">${n}er</button>`).join('')}</span></div>`;
+    html+=`<div class="bo-row"><button class="bo-niv" onclick="boNiveau()">🎯 Nach Niveau</button><button onclick="boZufall()">🎲 Zufällig</button></div>`;
     if(!n){ html+='<div class="bo-hint">Noch keine Schüler im Raum.</div>'; body.innerHTML=html; return; }
     const sorted=[...ppl].sort((a,b)=>{ const d=BO_ORDER.indexOf(boBand(boLv(a.id)))-BO_ORDER.indexOf(boBand(boLv(b.id))); return d!==0?d:String(a.name).localeCompare(String(b.name)); });
     html+='<div class="bo-list">';
