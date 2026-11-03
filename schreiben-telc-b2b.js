@@ -718,7 +718,7 @@ window.SCHREIBEN_TELC_B2B = {
   {
    "nr": 1,
    "art": "mitteilung",
-   "name": "Teil 1: Geschäftsbrief",
+   "name": "Geschäftsbrief",
    "kurz": "180–200 Wörter, sechs Leitpunkte",
    "was": "Du antwortest auf eine Anfrage, einen Auftrag oder eine Beschwerde — mit allen sechs Leitpunkten, Betreff, Anrede und Schluss.",
    "tipp": "Plane die Reihenfolge der sechs Punkte, bevor du schreibst. Ein Punkt — ein Absatz oder zwei Sätze.",
@@ -1589,7 +1589,7 @@ window.SCHREIBEN_TELC_B2B = {
   {
    "nr": 2,
    "art": "mitteilung",
-   "name": "Teil 2: Kurze Nachricht",
+   "name": "Kurze Nachricht",
    "kurz": "60–80 Wörter, kurz und vollständig",
    "was": "Eine kurze E-Mail oder Notiz an einen Kollegen oder Dienstleister: drei Dinge müssen drin sein.",
    "tipp": "Knapp heißt nicht unhöflich: Dank, Anliegen, Frist.",
