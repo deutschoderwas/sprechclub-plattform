@@ -117,13 +117,13 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
         <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; ${zu ? 'Solange kannst du in Ruhe die Lernplattform nutzen' : 'Die Lernplattform ist sofort offen'}</div>
-        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist die <b>Basis-Mitgliedschaft</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick auf Premium.' : ''}</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist die <b>Basis-Community</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick auf Premium.' : ''}</div>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/#preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Basis-Mitgliedschaft ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
+    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/#preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Basis-Community ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">

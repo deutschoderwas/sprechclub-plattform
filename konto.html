@@ -1297,13 +1297,13 @@ function startWoche(){
 }
 function tageBisStart(){ const d=startAb(); if(!d) return 0; return Math.max(0,Math.ceil((d-new Date())/86400000)); }
 function startText(){ const d=startAb(); return d? d.toLocaleDateString('de-DE',{timeZone:'Europe/Berlin',day:'numeric',month:'long',year:'numeric'}) : ''; }
-function bereichName(){ return ((profile&&profile.tier)==='premium') ? 'Premium' : 'Basis'; }
+function bereichName(){ return ((profile&&profile.tier)==='premium') ? 'Premium-Community' : 'Basis-Community'; }
 function vorverkaufKarte(){
   if(!nochNichtOffen()) return '';
   const tage=tageBisStart(), prem=(profile&&profile.tier)==='premium';
   const punkte = prem
     ? ['🗓️ <b>Unbegrenzt LIVE-Stunden</b> in kleiner Gruppe — buch so viele, wie du möchtest.',
-       '💬 <b>Alles aus Basis</b>: Kursbibliothek A1–C2, Chat, Korrektur und Podcast.',
+       '💬 <b>Alles aus der Basis-Community</b>: Kursbibliothek A1–C2, Chat, Korrektur und Podcast.',
        '✍️ <b>Korrektur deiner Texte</b> und persönliches Feedback von echten Lehrern.']
     : ['📚 <b>Die ganze Kursbibliothek</b> von A1 bis C2 — über 100 Lektionen zum Üben.',
        '💬 <b>Community-Chat</b> mit anderen Lernenden und täglicher Korrektur.',
@@ -1371,11 +1371,11 @@ function zeigeLiveUpgrade(){
     +'<div class="lup-ic">🗣️</div>'
     +'<div class="lup-eyebrow">Offener Sprechclub</div>'
     +'<h2 id="lupT">Der Sprechclub startet am 1. November</h2>'
-    +'<p class="lup-lead">Deine Basis-Mitgliedschaft gilt für die <b>ganze Plattform</b>. Der LIVE-Unterricht gehört zu Premium — und der geht am <b>1. November</b> los.</p>'
+    +'<p class="lup-lead">Deine Basis-Community gilt für die <b>ganze Plattform</b>. Der LIVE-Unterricht gehört zu Premium — und der geht am <b>1. November</b> los.</p>'
     +'<ul class="lup-list">'
       +'<li><span>🗓️</span><span><b>'+SC_PLAN+'</b> — wie ein Sprachcafé, du kommst einfach dazu.</span></li>'
       +'<li><span>👥</span><span><b>Endlich wirklich sprechen</b> — mit echten Menschen, nicht nur zuhören.</span></li>'
-      +'<li><span>💛</span><span><b>Alles aus Basis bleibt</b> — Kurse, Vokabeltrainer, Podcast, Chat und Amanda.</span></li>'
+      +'<li><span>💛</span><span><b>Alles aus der Basis-Community bleibt</b> — Kurse, Vokabeltrainer, Podcast, Chat und Amanda.</span></li>'
     +'</ul>'
     /* Bis zum 30.09. gibt es nichts zu kaufen, da fuehrt der Weg auf die
        Warteliste. Ab dem 01.10. ist die Anmeldung offen — dann waere ein
@@ -1411,7 +1411,7 @@ async function zurWartelisteLive(btn){
       body:JSON.stringify({
         name: nm, email: em, tarif: 'Premium',
         niveau: (profile&&profile.target_level)||'',
-        mehr: 'Eingetragen im Schülerbereich (Basis-Mitglied)'
+        mehr: 'Eingetragen im Schülerbereich (Basis-Community)'
       })});
     var j=await r.json();
     if(j&&j.ok){ wartelisteEingetragen(); return; }
@@ -1846,8 +1846,8 @@ function abzeichenZeichnen(){
   const niv=((profile&&(profile.level||profile.stufe||profile.target_level))||'').toUpperCase().slice(0,2);
   let art=null;
   if(istLeitung()) art={cls:'mz-prem', ic:'🎓', txt:(profile&&profile.is_admin)?'Leitung':'Lehrkraft'};
-  else if(tier==='premium'||tier==='premium_plus'||tier==='premiumplus') art={cls:'mz-prem', ic:'👑', txt:'Premium'};
-  else if(tier==='community') art={cls:'mz-comm', ic:'💬', txt:'Basis'};
+  else if(tier==='premium'||tier==='premium_plus'||tier==='premiumplus') art={cls:'mz-prem', ic:'👑', txt:'Premium-Community'};
+  else if(tier==='community') art={cls:'mz-comm', ic:'💬', txt:'Basis-Community'};
   if(!art){ el.hidden=true; el.className='me-abz'; return; }
   el.hidden=false;
   el.className='me-abz '+art.cls;
@@ -2050,7 +2050,7 @@ function pruefeZugang(){
     '<div class="ico">🔒</div>' +
     '<h3>Deine Mitgliedschaft ist nicht aktiv</h3>' +
     '<p class="hint">' + (community
-      ? 'Deine Basis-Mitgliedschaft ist ausgelaufen. Mit einer neuen Mitgliedschaft bist du sofort wieder dabei — dein Fortschritt bleibt gespeichert.'
+      ? 'Deine Basis-Community ist ausgelaufen. Mit einer neuen Mitgliedschaft bist du sofort wieder dabei — dein Fortschritt bleibt gespeichert.'
       : 'Für die Plattform brauchst du eine aktive Mitgliedschaft. Dein Fortschritt bleibt gespeichert und ist sofort wieder da.') +
     '</p>' +
     '<div class="acts"><a class="btn btn-primary" href="/preise" style="flex:1;text-decoration:none">Mitgliedschaft ansehen →</a></div>';
@@ -3218,7 +3218,7 @@ async function doBook(id){
     /* Seit dem 3.11.2026 gibt es kein Guthaben mehr; gebucht wird allein
    ueber die Mitgliedschaft. Ohne die neuen Zeilen stuende bei einer
    Absage nur "Das hat nicht geklappt". */
-const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.',kein_premium:'Zum LIVE-Unterricht gehört der Sprechclub. Mit der Basis-Mitgliedschaft kannst du die ganze Lernplattform nutzen, aber keine Stunden buchen.',kein_zugang:'Dafür brauchst du eine aktive Mitgliedschaft.',kein_unterricht:'An diesem Tag ist kein Unterricht.'};
+const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.',kein_premium:'Zum LIVE-Unterricht gehört der Sprechclub. Mit der Basis-Community kannst du die ganze Lernplattform nutzen, aber keine Stunden buchen.',kein_zugang:'Dafür brauchst du eine aktive Mitgliedschaft.',kein_unterricht:'An diesem Tag ist kein Unterricht.'};
     closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
     return;
   }
@@ -4158,7 +4158,7 @@ window.MEIN_ABO = null;
 const ABO_INHALT = {
   community: ['Alle Kurse und Lernbereiche', 'Vokabeltrainer, Podcast und Hörtraining',
               'Community-Chat mit Korrekturen vom Team', 'Amanda, deine KI-Sprechpartnerin'],
-  premium:   ['Alles aus der Basis-Mitgliedschaft', 'LIVE-Sprechclub: ' + SC_PLAN,
+  premium:   ['Alles aus der Basis-Community', 'LIVE-Sprechclub: ' + SC_PLAN,
               'Themen, über die man wirklich reden will', 'Persönliche Nachbereitung nach jeder Stunde']
 };
 
