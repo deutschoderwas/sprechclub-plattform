@@ -541,7 +541,7 @@ html.anim .cbox.tick b{transform:scale(1.14)}
         Eine Stunde dauert 60 Minuten, die Zeiten sind deutsche Zeit. Festlegen musst du
         dich auf nichts — du kommst einfach, wenn es dir passt.</p>
     </div>
-    <div class="plan">
+    <div class="plan" id="planRaster">
       <div class="ptag"><h3>Montag</h3><em>Freie Sprechstunde</em><span>09:00</span><span>10:00</span><span>19:00</span><span>20:00</span></div>
       <div class="ptag"><h3>Dienstag</h3><em>Grammatikfokus</em><span>09:00</span><span>18:00</span><span>19:00</span></div>
       <div class="ptag"><h3>Mittwoch</h3><em>Freie Sprechstunde</em><span>09:00</span><span>10:00</span><span>19:00</span><span>20:00</span></div>
@@ -550,7 +550,7 @@ html.anim .cbox.tick b{transform:scale(1.14)}
       <div class="ptag"><h3>Samstag</h3><em>Freie Sprechstunde</em><span>11:00</span></div>
       <div class="ptag"><h3>Sonntag</h3><em>Wortschatzfokus</em><span>11:00</span></div>
     </div>
-    <p class="planfuss">Sieben Tage die Woche. Und komm so oft du willst — kein Guthaben,
+    <p class="planfuss">Sieben Tage die Woche. Und komm so oft du willst —
        keine Obergrenze, keiner zählt mit.</p>
   </div>
 </section>
@@ -996,6 +996,66 @@ wartelisteSchalten();
   window.addEventListener('pagehide', alleZeigen);
 })();
 
+</script>
+<script>
+/* Der Wochenplan kommt live aus /api/wochenplan — dieselbe Quelle wie
+   der Kalender im Schülerbereich und der Plan im Admin. Von Hand
+   gepflegt stand hier schon einmal eine Uhrzeit, die es gar nicht
+   mehr gab; das kostet mehr Vertrauen, als der Plan bringt.
+
+   Julia, 1.11.2026: "Wochenplan ohne Datum, nur mit der Zeit und dem
+   Fokus." Deshalb gruppieren wir nach Wochentag und zeigen vom
+   jeweils nächsten Vorkommen dieses Tages nur Fokus und Uhrzeiten.
+
+   Schlägt der Abruf fehl oder kommt zu wenig zurück, bleibt der fest
+   geschriebene Plan stehen — lieber der alte Stand als eine leere
+   Flaeche. */
+(function(){
+  var raster = document.getElementById('planRaster');
+  if (!raster) return;
+  if (!/^https?:$/.test(location.protocol)) return;
+
+  var ORDNUNG = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  fetch('/api/wochenplan?tage=14').then(function(r){ return r.json(); }).then(function(d){
+    var alle = (d && d.termine) || [];
+    var t = alle.filter(function(e){ return e && e.art && e.tag && e.zeit; });
+    if (t.length < 7) return;
+
+    /* Pro Wochentag zählt das nächste Vorkommen. Steht der Donnerstag
+       zweimal in den vierzehn Tagen, gilt der erste — sonst mischen
+       sich zwei Wochen in einer Spalte. */
+    var tage = {};
+    t.forEach(function(e){
+      var vorhanden = tage[e.tag];
+      if (!vorhanden) { tage[e.tag] = { datum: e.datum, zeiten: [], arten: {} }; vorhanden = tage[e.tag]; }
+      if (vorhanden.datum !== e.datum) return;
+      if (vorhanden.zeiten.indexOf(e.zeit) < 0) vorhanden.zeiten.push(e.zeit);
+      vorhanden.arten[e.art] = (vorhanden.arten[e.art] || 0) + 1;
+    });
+
+    var spalten = ORDNUNG.filter(function(tag){ return tage[tag] && tage[tag].zeiten.length; });
+    if (spalten.length < 5) return;
+
+    raster.innerHTML = spalten.map(function(tag){
+      var e = tage[tag];
+      e.zeiten.sort();
+      /* Der Fokus des Tages: die Rubrik, die an dem Tag am häufigsten
+         vorkommt. Steht an allen Stunden dieselbe, ist es genau die. */
+      var fokus = '', beste = 0;
+      for (var a in e.arten) if (e.arten[a] > beste) { beste = e.arten[a]; fokus = a; }
+      return '<div class="ptag"><h3>' + esc(tag) + '</h3>'
+        + (fokus ? '<em>' + esc(fokus) + '</em>' : '')
+        + e.zeiten.map(function(z){ return '<span>' + esc(z) + '</span>'; }).join('')
+        + '</div>';
+    }).join('');
+  }).catch(function(){ /* fest geschriebener Plan bleibt stehen */ });
+})();
 </script>
 </body>
 </html>
