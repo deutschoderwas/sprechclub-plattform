@@ -73,7 +73,63 @@ export default async function handler(req, res) {
     }).then(x => x.ok).catch(() => false);
   }));
   const sent = results.filter(Boolean).length;
+
+  /* Julia, 3.11.2026: "Schick mir auch bitte eine Benachrichtigung wenn
+     ich eine Mail von der Plattform verschicke auf meine Email und mir
+     eine Kopie." Also eine Mail an Julia: was raus ging, an wen, und
+     der Text so, wie ihn die Leute sehen.
+     Sie geht NACH dem Versand raus und ihr Scheitern aendert nichts am
+     Ergebnis - sonst stuende im Admin "nicht gesendet", obwohl alle
+     Mails unterwegs sind. */
+  try { await kopieAnJulia({ betreff, text, list, sent, site }); } catch (e) {}
+
   return res.status(200).json({ ok: true, sent, total: list.length, betreff });
+}
+
+async function kopieAnJulia({ betreff, text, list, sent, site }) {
+  const an = process.env.JULIA_EMAIL || 'deutschoderwas@gmail.com';
+  const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, (c) => ({ '<':'&lt;','>':'&gt;','&':'&amp;' }[c]));
+  const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+
+  /* Bei drei Leuten will man die Namen sehen, bei hundert nicht. */
+  const namen = list.map(r => (r.name || r.email)).filter(Boolean);
+  const zeigen = namen.slice(0, 25);
+  const empfaenger = esc(zeigen.join(', ')) + (namen.length > zeigen.length ? ' und ' + (namen.length - zeigen.length) + ' weitere' : '');
+
+  const original = messageEmail({ vorname: '[Vorname]', text, site });
+  const koerper = original.slice(original.indexOf('<body'), original.lastIndexOf('</body>'));
+
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#F6F4F1;font-family:${ff}">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 12px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:600px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #E7E2DA">
+      <tr><td style="padding:18px 22px;background:#1A1A1A;color:#fff">
+        <div style="font-size:13px;letter-spacing:.06em;opacity:.7">KOPIE F\u00dcR DICH</div>
+        <div style="font-size:19px;font-weight:800;margin-top:4px">${esc(betreff)}</div>
+      </td></tr>
+      <tr><td style="padding:16px 22px;font-size:14.5px;line-height:1.7;color:#1A1A1A">
+        Verschickt an <b>${sent}</b> von ${list.length} ${list.length === 1 ? 'Person' : 'Personen'}.<br>
+        <span style="color:#6B7280">${empfaenger}</span>
+        ${sent < list.length ? '<br><b style="color:#B45309">Achtung: ' + (list.length - sent) + ' Mail(s) konnten nicht zugestellt werden.</b>' : ''}
+      </td></tr>
+      <tr><td style="padding:0 22px 8px;font-size:13px;color:#6B7280">So sieht die Mail bei den Lernenden aus \u2014 statt [Vorname] steht dort ihr Name:</td></tr>
+      <tr><td style="padding:0 14px 20px">
+        <div style="border:1px solid #E7E2DA;border-radius:14px;overflow:hidden">${koerper.replace(/^<body[^>]*>/, '<div>').replace(/$/, '</div>')}</div>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+      to: [{ email: an, name: 'Julia' }],
+      subject: '\uD83D\uDCEC Kopie: ' + betreff + ' (an ' + sent + ')',
+      htmlContent: html,
+    }),
+  });
 }
 
 function messageEmail({ vorname, text, site }) {
