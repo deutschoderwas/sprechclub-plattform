@@ -183,7 +183,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
   <div id="material" style="display:none">
     <div class="card">
       <h3 style="margin-bottom:6px">PDFs hochladen</h3>
-      <p class="muted" style="margin-bottom:12px">Neues Material sehen nur Schüler mit Guthaben oder gebuchter Stunde — die Sperre für Inaktive passiert automatisch.</p>
+      <p class="muted" style="margin-bottom:12px">Neues Material sehen nur Schüler mit aktiver Mitgliedschaft oder gebuchter Stunde — die Sperre für Inaktive passiert automatisch.</p>
       <div class="formrow">
         <select id="matFolderSel" style="flex:1"></select>
         <input id="matFolderNew" placeholder="…oder neuen Ordner tippen, z.B. Juni 2026/Woche 3" style="flex:2">
@@ -816,7 +816,7 @@ const BEREICHE = [
       { id:'plan',    name:'Lehrerplan',            laden:function(){ loadPlan(); } },
       { id:'neu',     name:'Stunde anlegen',        nurAdmin:true } ] },
   { id:'menschen', name:'👥 Menschen', reiter:[
-      { id:'schueler', name:'Sch\u00fcler & Guthaben', nurAdmin:true, laden:function(){ loadSchueler(); } },
+      { id:'schueler', name:'Sch\u00fcler', nurAdmin:true, laden:function(){ loadSchueler(); } },
       { id:'lehrer',   name:'Lehrkr\u00e4fte',         nurAdmin:true, laden:function(){ loadLehrer(); } },
       { id:'leads',    name:'📋 Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } },
       { id:'kontakt',  name:'📣 Angeschrieben?', nurAdmin:true, abzeichen:'kontaktBdg', laden:function(){ ladeKontakt(); } } ] },
@@ -1704,7 +1704,7 @@ async function uploadMaterials(){
       ok++;
     }catch(e){ fail++; console.error('Upload-Fehler', f.name, e); }
   }
-  msg.textContent=`✅ ${ok} hochgeladen`+(fail?` · ⚠️ ${fail} fehlgeschlagen`:'')+'. Schüler mit Guthaben sehen sie sofort.';
+  msg.textContent=`✅ ${ok} hochgeladen`+(fail?` · ⚠️ ${fail} fehlgeschlagen`:'')+'. Schüler mit aktiver Mitgliedschaft sehen sie sofort.';
   document.getElementById('matFiles').value='';
   loadMaterial();
 }
@@ -2159,7 +2159,7 @@ async function loadClassFeedback(cid){
 
 function openKl(id){ klOpenId = (klOpenId===id ? null : id); renderKlassen(); }
 
-// Schüler umbuchen (nur Admin): alte Stunde stornieren, neue buchen — Guthaben bleibt gleich.
+// Schüler umbuchen (nur Admin): alte Stunde stornieren, neue buchen.
 async function rebookStudent(userId, fromClassId){
   const me = (KL_PARTS[fromClassId]||[]).find(s=>s.user_id===userId);
   const name = me ? (me.name || me.email) : 'Schüler';
@@ -2171,7 +2171,7 @@ async function rebookStudent(userId, fromClassId){
   ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px';
   ov.innerHTML=`<div class="card" style="max-width:460px;width:100%;background:#fff">
     <b style="font-size:17px">🔁 ${esc(name)} umbuchen</b>
-    <p class="muted" style="margin:6px 0 12px;font-size:13px">Die aktuelle Stunde wird storniert und die gewählte neue Stunde gebucht. Das Guthaben bleibt unverändert.</p>
+    <p class="muted" style="margin:6px 0 12px;font-size:13px">Die aktuelle Stunde wird storniert und die gewählte neue Stunde gebucht. </p>
     <label class="muted" style="font-size:12px">Neue Stunde wählen</label>
     <select id="rbTarget" style="width:100%;margin-top:4px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px">${sel}</select>
     <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
@@ -2201,7 +2201,7 @@ function bookErr(e){
   return m[e] || ('Fehler: '+e);
 }
 
-// Schüler zu einer Stunde hinzufügen (nur Admin) — 1 Std Guthaben wird abgezogen
+// Schüler zu einer Stunde hinzufügen (nur Admin)
 async function addStudentToClass(classId){
   let studs = [];
   try { studs = (typeof realStudents==='function' ? realStudents() : (typeof SCHUELER!=='undefined'?SCHUELER:[])) || []; } catch(e){ studs = []; }
@@ -2220,7 +2220,7 @@ async function addStudentToClass(classId){
   ov.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:18px';
   ov.innerHTML=`<div class="card" style="max-width:460px;width:100%;background:#fff">
     <b style="font-size:17px">➕ Schüler hinzufügen</b>
-    <p class="muted" style="margin:6px 0 12px;font-size:13px">${title} — es wird <b>1 Stunde</b> vom Guthaben abgezogen (wie beim normalen Buchen). Beim Stornieren gibt es die Stunde wieder zurück.</p>
+    <p class="muted" style="margin:6px 0 12px;font-size:13px">${title} — der Platz wird belegt wie bei einer normalen Buchung. Beim Stornieren gibt es die Stunde wieder zurück.</p>
     <label class="muted" style="font-size:12px">Schüler wählen</label>
     <select id="asTarget" style="width:100%;margin-top:4px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px">${opts||'<option value="">Alle sind bereits gebucht</option>'}</select>
     <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
@@ -2245,7 +2245,7 @@ async function addStudentToClass(classId){
   };
 }
 
-// Buchung eines Schülers stornieren (nur Admin) — Stunde kommt zurück aufs Guthaben
+// Buchung eines Schülers stornieren (nur Admin)
 async function cancelStudent(userId, classId){
   const me=(KL_PARTS[classId]||[]).find(s=>s.user_id===userId);
   const name=me?(me.name||me.email):'diesen Schüler';
@@ -2286,7 +2286,7 @@ function klWeekNav(dir){
 }
 
 async function cancelClass(id){
-  if (!confirm('Stunde absagen? Gebuchte Teilnehmer bekommen ihr Guthaben zurück.')) return;
+  if (!confirm('Stunde absagen? Alle gebuchten Teilnehmer werden benachrichtigt.')) return;
   const { error } = await sb.rpc('teacher_cancel_class', { p_class_id: id });
   if (error) alert('Absagen fehlgeschlagen: '+error.message);
   loadKlassen();
@@ -2366,7 +2366,7 @@ async function toggleAtt(id){
   if (!rows.length){ box.innerHTML='<div class="muted" style="background:var(--bg);border-radius:10px;padding:10px 12px">Niemand für diese Stunde gebucht.</div>'; return; }
   box.innerHTML = `<div style="background:var(--bg);border-radius:10px;padding:10px 12px">
     <b style="font-size:13px">✅ Anwesenheit eintragen</b>
-    <p class="muted" style="margin:3px 0 8px">Nur Protokoll — das Guthaben wurde bereits bei der Buchung abgezogen.</p>
+    <p class="muted" style="margin:3px 0 8px">Nur Protokoll.</p>
     ${rows.map(r=>`<div class="tn" style="display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);padding:5px 0">
       <span style="flex:1">👤 ${esc(r.name||'')} <span class="muted">${esc(r.email||'')}</span></span>
       <button class="btn ${r.attendance==='present'?'btn-primary':'btn-ghost'}" style="padding:4px 12px;font-size:12px;${r.attendance==='present'?'background:#13A89A':''}" onclick="markAtt('${id}','${r.user_id}',true)">Da</button>
@@ -2735,10 +2735,10 @@ async function loadSchueler(){
           <select id="newArt" onchange="newArtWechsel()">
             <option value="premium">👑 Premium</option>
             <option value="community">💬 Community</option>
-            <option value="alt" id="newArtAlt">🎒 Alter Schüler (Guthaben)</option>
+            
           </select>
         </div>
-        <div class="field" style="margin:0;max-width:120px" id="newCreditsFeld"><label>Guthaben</label><input id="newCredits" type="number" min="0" value="0"></div>
+        <input type="hidden" id="newCredits" value="0">
         <div class="field" style="margin:0"><label>Geburtstag</label><input id="newBday" type="date"></div>
         <button class="btn" id="btnCreate" onclick="createStudent()" style="background:#7ED8EA;color:#062;font-weight:800">Anlegen & einladen</button>
       </div>
@@ -2766,9 +2766,7 @@ async function loadSchueler(){
       <input id="schuelerSuche" placeholder="🔎 Name oder E-Mail suchen" oninput="renderSchuelerTable()" style="flex:1;min-width:220px">
       <select id="schuelerSort" onchange="renderSchuelerTable()">
         <option value="name">Name A–Z</option>
-        <option value="credits">Guthaben aufsteigend</option>
-        <option value="credits-desc">Guthaben absteigend</option>
-        <option value="bday">Geburtstag (Monat/Tag)</option>
+                        <option value="bday">Geburtstag (Monat/Tag)</option>
         <option value="ende">Abo-Ende (nächstes zuerst)</option>
       </select>
       <select id="schuelerStatus" onchange="renderSchuelerTable()">
@@ -3155,6 +3153,12 @@ window.gruppenMail = async function(){
     }catch(e){ alert('Fehler: '+(e&&e.message||e)); this.disabled=false; this.textContent='An '+arr.length+' senden'; }
   };
 };
+/* Julia, 3.11.2026: "Wir haben KEIN GUTHABEN mehr ... ueberall
+   Guthaben weg, sie koennen, wenn das Abo aktiv ist, so oft
+   buchen wie sie wollen." Gebucht wird seitdem allein ueber die
+   Mitgliedschaft (book_class), das Guthaben entscheidet nichts
+   mehr. Die Spalte bleibt in der Datenbank, damit credit_log
+   nachvollziehbar bleibt — hier zeigen wir sie nicht mehr. */
 function renderSchuelerTable(){
   zeichneGruppenPillen();
   const q = (document.getElementById('schuelerSuche')?.value||'').toLowerCase().trim();
@@ -3217,7 +3221,7 @@ function renderSchuelerTable(){
     let head = '';
     if (byName){
       const L = (nameKey(p)[0]||'#').toUpperCase();
-      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="6" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
+      if (L !== lastLetter){ lastLetter = L; head = `<tr class="alpha"><td colspan="5" style="background:#FFF8E0;font-weight:800;color:#DD0000;letter-spacing:.05em;padding:8px 10px">${esc(L)}</td></tr>`; }
     }
     const nivo = p.level || p.target_level || '';
     return head + `<tr onclick="openStudentCard('${p.id}')" style="cursor:pointer${(brauchtStunden(p)&&p.credits<=1)?';background:#FFF1C2':''}" onmouseover="this.style.outline='2px solid #7ED8EA'" onmouseout="this.style.outline='none'">
@@ -3225,12 +3229,9 @@ function renderSchuelerTable(){
       <td class="muted">${esc(p.email)}</td>
       <td>${nivo?`<span class="pill" style="background:#Eef;color:#2563EB;font-weight:700">${esc(nivo)}</span>`:'<span class="muted">–</span>'}</td>
       <td>${statusLabel(st)}${(gruppeVon(p)==='geht'&&p.abo_ende)?` <span class="pill" style="background:#FFF1C2;color:#7A5200;font-weight:800">bis ${dt(p.abo_ende)}</span>`:''}${p.alt_schueler?' <span class="pill" style="background:#EFEAE1;color:#5b5b5b;font-weight:800">Alte Schüler</span>':''}${((st==='pause'||st==='urlaub')&&p.inactive_until)?` <span class="muted" style="font-size:11px">bis ${p.inactive_until.split('-').reverse().join('.')}</span>`:''}</td>
-      <td>${brauchtStunden(p)
-        ? `<b style="font-size:16px">${p.credits}</b> <span class="muted" style="font-size:12px">Std.</span>${p.credits<=1?' <span class="pill">niedrig</span>':''}`
-        : `<span class="muted" style="font-size:12px" title="Zahlt monatlich für die Plattform und bucht keine Einzelstunden">nicht nötig</span>`}</td>
       <td><button class="btn btn-ghost" title="Fortschritts-Akte — Lernmaterial, Vokabeln, Stunden" onclick="openFortschritt('${p.id}', event)" style="padding:4px 9px;font-size:13px">📈</button></td></tr>`;
   }).join('');
-  document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Guthaben</th><th>Akte</th></tr>` + rowsHtml + '</table>';
+  document.getElementById('schuelerTable').innerHTML = `<p class="muted" style="margin:0 0 6px">Tipp: Auf einen Schüler klicken, um die Schülerkarte zu öffnen.</p><table><tr><th>Name</th><th>E-Mail</th><th>Niveau</th><th>Status</th><th>Akte</th></tr>` + rowsHtml + '</table>';
 }
 
 // ---------- Schülerkarte (Tutorbird-Stil) ----------
@@ -3261,14 +3262,6 @@ async function openStudentCard(id){
       <label style="display:flex;align-items:center;gap:10px;margin:4px 0 12px;padding:11px 14px;background:#F4F1EA;border:1px solid #E3DCCE;border-radius:12px;cursor:pointer;font-weight:700"><input type="checkbox" id="cAlt" ${p.alt_schueler?'checked':''} style="width:18px;height:18px;accent-color:#5b5b5b">Alte Schüler<span class="muted" style="font-weight:500;font-size:12.5px">— war schon vor dem Sprechclub dabei</span></label>
       <div class="muted" style="margin:8px 0 14px;font-size:13px">🎂 Geburtstag: ${bdayLabel(p)} · 🎯 Ziel: ${esc(p.target_level||'—')} · 🗣️ Muttersprache: ${esc(p.native_language||'—')}</div>
 
-      <div style="background:#FFF8E0;border-radius:14px;padding:14px 16px;margin-bottom:14px">
-        <b>🎟️ Guthaben</b>
-        <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:8px">
-          <div class="field" style="margin:0;max-width:140px"><label>Guthaben setzen</label><input id="cCredits" type="number" min="0" value="${p.credits}"></div>
-          <button class="btn btn-primary" onclick="saveCardCredits('${p.id}')">Guthaben speichern</button>
-          <span class="muted" id="cCreditMsg" style="margin-bottom:8px"></span>
-        </div>
-      </div>
 
       <div style="background:#F2FBFA;border:1px solid #CFEFEA;border-radius:14px;padding:14px 16px;margin-bottom:14px">
         <b>📅 Gebuchte Stunden</b>

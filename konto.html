@@ -1860,9 +1860,12 @@ function sprechclubMarkieren(){
     b.classList.toggle('cl-zu', zu);
   });
   try{
-    var weg = abosHaben();
+    /* Julia, 3.11.2026: "Wir haben KEIN GUTHABEN mehr ... ueberall
+       Guthaben weg." Der Punkt war bisher nur fuer Mitglieder
+       ausgeblendet; jetzt fuer alle, denn Guthaben entscheidet
+       nirgends mehr etwas. */
     document.querySelectorAll('.navlink[data-view="guthaben"]').forEach(function(b){
-      b.style.display = weg ? 'none' : '';
+      b.style.display = 'none';
     });
   }catch(e){}
   try{ abzeichenZeichnen(); }catch(e){}
@@ -3214,7 +3217,10 @@ async function doBook(id){
       closeCfm(); toast('Deine Mitgliedschaft startet am '+(data.ab||'1.11.2026')+' — ab dann kannst du diese Stunde buchen.');
       return;
     }
-    const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.'};
+    /* Seit dem 3.11.2026 gibt es kein Guthaben mehr; gebucht wird allein
+   ueber die Mitgliedschaft. Ohne die neuen Zeilen stuende bei einer
+   Absage nur "Das hat nicht geklappt". */
+const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast diese Stunde schon gebucht!',class_in_past:'Diese Stunde ist schon vorbei.',booking_paused:'Buchung über die Plattform ist gerade pausiert.',kein_premium:'Zum LIVE-Unterricht gehört der Sprechclub. Mit der Community-Mitgliedschaft kannst du die ganze Lernplattform nutzen, aber keine Stunden buchen.',kein_zugang:'Dafür brauchst du eine aktive Mitgliedschaft.',kein_unterricht:'An diesem Tag ist kein Unterricht.'};
     closeCfm(); toast(m[data&&data.error]||'Buchung fehlgeschlagen.');
     return;
   }
