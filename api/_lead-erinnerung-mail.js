@@ -111,7 +111,7 @@ export function erinnerungHtml(vorname, jetzt, art) {
       <tr><td style="padding:16px 18px">
         <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#9203; ${letzter ? 'Der gro&szlig;e Rabatt gilt nur noch <span style="color:#DD0000">heute</span>' : 'Der gro&szlig;e Rabatt gilt nur bis zum <span style="color:#DD0000">31. Oktober</span>'}</div>
         <div style="font-size:15px;line-height:1.55">
-          <b>39&nbsp;&euro; statt 99&nbsp;&euro;</b> im Monat (Jahresabo) oder 49&nbsp;&euro; monatlich.
+          <b>39&nbsp;&euro; statt 139&nbsp;&euro;</b> im Monat.
           Wer sp&auml;ter kommt, zahlt den vollen Preis. Dein Preis bleibt dir, solange du dabei bist.
         </div>
       </td></tr>

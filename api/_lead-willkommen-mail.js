@@ -66,7 +66,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
       <tr><td style="padding:16px 18px">
         <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#9203; Der gro&szlig;e Rabatt gilt nur bis zum <span style="color:#DD0000">31. Oktober</span></div>
         <div style="font-size:15px;line-height:1.55">
-          <b>39&nbsp;&euro; statt 99&nbsp;&euro;</b> im Monat (Jahresabo) oder 49&nbsp;&euro; monatlich.
+          <b>39&nbsp;&euro; statt 139&nbsp;&euro;</b> im Monat.
           Wer sp&auml;ter kommt, zahlt den vollen Preis. Dein Preis bleibt dir, solange du dabei bist.
         </div>
       </td></tr>
@@ -74,7 +74,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF3D6;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
         <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#128179; Premium</div>
-        <div style="font-size:15px;line-height:1.55">83&nbsp;&euro; im Monat im Jahresabo oder 99&nbsp;&euro; monatlich, jederzeit k&uuml;ndbar.</div>
+        <div style="font-size:15px;line-height:1.55">139&nbsp;&euro; im Monat, monatlich k&uuml;ndbar.</div>
       </td></tr>
     </table>`;
 
@@ -117,13 +117,13 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
         <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; ${zu ? 'Solange kannst du in Ruhe die Lernplattform nutzen' : 'Die Lernplattform ist sofort offen'}</div>
-        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist die <b>Community-Mitgliedschaft</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick auf Premium.' : ''}</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist die <b>Basis-Mitgliedschaft</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick auf Premium.' : ''}</div>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/#preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Community-Mitgliedschaft ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
+    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/#preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Basis-Mitgliedschaft ansehen' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">

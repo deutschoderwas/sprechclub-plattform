@@ -20,7 +20,7 @@
    sprechclub.html — die Verkaufsseite fuer den Sprechclub
 
    Eine Seite, ein Angebot, ein Knopf. Wer hier landet, soll
-   nicht zwischen Community, Premium und Premium Plus waehlen
+   nicht zwischen Basis, Premium und Premium Plus waehlen
    muessen — er soll wissen, was im Sprechclub passiert, dass
    er dort nicht blossgestellt wird, was es kostet, und dann
    buchen koennen.
@@ -386,15 +386,10 @@ footer a{color:var(--weich)}
     </p>
 
     <div class="preisfeld">
-      <div class="fahne" id="pFahne">Startpreis · nur bis 31. Oktober</div>
-
-      <div class="um" role="group" aria-label="Abrechnung wählen">
-        <button class="um-knopf" id="pM" onclick="setzePremium('monat')" type="button">Monatlich</button>
-        <button class="um-knopf an" id="pJ" onclick="setzePremium('jahr')" type="button">Jährlich</button>
-      </div>
+      <div class="fahne" id="pFahne" style="display:none"></div>
 
       <div class="zahlzeile">
-        <span class="zahl" id="pZahl">39 €</span>
+        <span class="zahl" id="pZahl">139 €</span>
         <span class="je">im Monat</span>
       </div>
       <p class="alt" id="pAlt"></p>
@@ -446,10 +441,11 @@ footer a{color:var(--weich)}
       </details>
       <details>
         <summary>Kann ich kündigen?</summary>
-        <p>Im Monatsabo jederzeit zum Ende des Monats, mit einem Klick in deinem
-           Konto. Beim Jahresabo läuft die Mitgliedschaft zwölf Monate. Nach der
-           Kündigung hast du bis zum Ende des bezahlten Zeitraums Zugang — danach
-           endet er, ohne dass du etwas tun musst.</p>
+        <p>Jederzeit zum Ende des Monats, mit einem Klick in deinem Konto.
+           Nach der Kündigung hast du bis zum Ende des bezahlten Monats Zugang
+           — danach endet er, ohne dass du etwas tun musst. (Wer noch eine
+           ältere Jahresmitgliedschaft hat: die läuft wie gebucht zwölf
+           Monate weiter.)</p>
       </details>
       <details>
         <summary>Brauche ich eine Kamera und ein Mikrofon?</summary>
@@ -458,8 +454,8 @@ footer a{color:var(--weich)}
            musst nichts installieren.</p>
       </details>
       <details>
-        <summary>Was ist der Unterschied zur Community?</summary>
-        <p>Die Community ist die Lernplattform allein: Kurse, Vokabeln, Podcast,
+        <summary>Was ist der Unterschied zur Basis-Mitgliedschaft?</summary>
+        <p>Basis ist die Lernplattform allein: Kurse, Vokabeln, Podcast,
            Chat — ohne Live-Stunden. Der Sprechclub ist genau das, was dazukommt,
            wenn du Mitglied auf dieser Seite wirst. Die ganze Plattform ist
            mit drin.</p>
@@ -531,40 +527,23 @@ var CLUB_START = Date.parse('2026-11-01T00:00:00+01:00');  // ab dann buchbar
 function startpreisLaeuft(){ return Date.now() < START_ENDE; }
 function clubOffen(){ return Date.now() >= CLUB_START; }
 
-var PREMIUM = 'jahr';
+/* Julia, 3.11.2026: Premium kostet 139 \u20ac im Monat; das Jahresabo gibt
+   es nicht mehr, der Zahlweise-Schalter ist weg. Dieselbe Zahl steht
+   in api/create-checkout.js \u2014 \u00e4ndert sie sich dort, muss sie hier mit. */
+var PREMIUM = 'monat';
+var PREIS = 139, RABATT = 0;
 
-function setzePremium(was){
-  PREMIUM = was;
-  var j = (was === 'jahr'), spar = startpreisLaeuft();
+function setzePremium(){
   var $ = function(i){ return document.getElementById(i); };
-
-  $('pM').classList.toggle('an', !j);
-  $('pJ').classList.toggle('an', j);
-  $('pM').setAttribute('aria-pressed', String(!j));
-  $('pJ').setAttribute('aria-pressed', String(j));
-
-  /* proMonat = was pro Monat herauskommt. jahrGesamt = was einmal
-     im Jahr abgebucht wird. Verglichen wird immer gegen 99 EUR,
-     den regulaeren Monatspreis — das ist der Preis, den man sonst
-     zahlen wuerde, und derselbe Vergleich wie auf /preise.
-     (Gegen die 83 EUR des spaeteren Jahresabos zu rechnen waere
-     zwar auch wahr, versteht aber niemand beim Ueberfliegen.) */
-  var proMonat   = spar ? (j ? 39 : 49) : (j ? 83 : 99);
-  var jahrGesamt = spar ? 468 : 999;
-  var regulaer   = 99;
-
-  $('pZahl').textContent = proMonat + ' €';
-
-  if (spar) {
-    var proz = Math.floor((1 - proMonat / regulaer) * 100);
-    $('pAlt').innerHTML = 'statt <s>' + regulaer + ' €</s> im Monat'
-      + '<span class="spar">−' + proz + ' %</span>'
-      + (j ? '<br>einmal im Jahr abgerechnet: ' + jahrGesamt + ' €' : '')
-      + '<br><b>Dieser Preis bleibt für dich dauerhaft.</b>';
-    $('pFahne').textContent = 'Startpreis · nur bis 31. Oktober';
+  var proMonat = RABATT || PREIS;
+  $('pZahl').textContent = proMonat + ' \u20ac';
+  if (RABATT) {
+    var proz = Math.floor((1 - RABATT / PREIS) * 100);
+    $('pAlt').innerHTML = 'statt <s>' + PREIS + ' \u20ac</s> im Monat'
+      + '<span class="spar">\u2212' + proz + ' %</span>';
     $('pFahne').style.display = '';
   } else {
-    $('pAlt').innerHTML = j ? 'jährlich abgerechnet (' + jahrGesamt + ' €)' : 'monatlich kündbar';
+    $('pAlt').innerHTML = 'monatlich k\u00fcndbar';
     $('pFahne').style.display = 'none';
   }
 
@@ -581,9 +560,7 @@ function setzePremium(was){
     + 'Hier zahlst du ' + proMonat + ' € — und kommst so oft du willst, '
     + 'jeden Tag von Montag bis Sonntag.';
 
-  $('pKlein').textContent = j
-    ? 'Sichere Zahlung über Stripe · 12 Monate Laufzeit'
-    : 'Sichere Zahlung über Stripe · monatlich kündbar';
+  $('pKlein').textContent = 'Sichere Zahlung über Stripe · monatlich kündbar';
 
   var h = $('startHinweis');
   if (!clubOffen()) {
@@ -750,10 +727,10 @@ async function premiumKnopf(btn){
   meldung('');
   var alt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Einen Moment …';
-  await bezahlen(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month', btn, alt);
+  await bezahlen('premium_month', btn, alt);
 }
 
-setzePremium('jahr');
+setzePremium();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>

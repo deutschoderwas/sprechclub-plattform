@@ -123,22 +123,17 @@ ul.liste li > span{flex:1;min-width:0}
   <div class="kopf">
     <div class="eyebrow">Deine Mitgliedschaft</div>
     <h1>Zwei Wege, <span class="hl">mitzumachen</span></h1>
-    <p class="unter">Die Community läuft ab sofort — du buchst heute und legst sofort los.
-      <span id="pUnterClub">Der offene Sprechclub startet am 1. November.</span></p>
+    <p class="unter"><b>Basis</b> ist die Lernplattform ohne Sprechclub und läuft ab sofort.
+      <span id="pUnterClub"><b>Premium</b> ist die Lernplattform plus unbegrenzter Sprechclub.</span></p>
   </div>
 
   <div class="karten">
 
-    <!-- Community -->
+    <!-- Basis -->
     <div class="k jetzt">
       <span class="fahne">Ab sofort</span>
-      <h2>Community</h2>
+      <h2>Basis</h2>
       <p class="satz">Die ganze Lernplattform. Sofort, ohne Wartezeit.</p>
-
-      <div class="wahl" role="group" aria-label="Abrechnung wählen">
-        <button type="button" id="bM" class="an" onclick="setzeAbrechnung('monat')">Monatlich</button>
-        <button type="button" id="bJ" onclick="setzeAbrechnung('jahr')">Jährlich</button>
-      </div>
 
       <div class="preis"><span class="zahl" id="preisZahl">16 €</span><span class="je" id="preisJe">im Monat</span></div>
       <p class="hinweis" id="preisHinweis">Monatlich kündbar.</p>
@@ -160,17 +155,12 @@ ul.liste li > span{flex:1;min-width:0}
       <h2>Premium</h2>
       <p class="satz">Endlich sprechen — mit echten Menschen, nicht mit einer App.</p>
 
-      <div class="wahl" role="group" aria-label="Abrechnung wählen">
-        <button type="button" id="pM" onclick="setzePremium('monat')">Monatlich</button>
-        <button type="button" id="pJ" class="an" onclick="setzePremium('jahr')">Jährlich</button>
-      </div>
-
-      <div class="alt" id="pAltWrap"><s id="pAlt">59 €</s><span class="chip" id="pSpar">−22 € im Monat</span></div>
-      <div class="preis"><span class="zahl gross" id="pZahl">37 €</span><span class="je">im Monat</span></div>
-      <p class="hinweis" id="pHinweis">jährlich abgerechnet (444 €) · Preis bleibt für immer</p>
+      <div class="alt" id="pAltWrap" style="display:none"><s id="pAlt"></s><span class="chip" id="pSpar"></span></div>
+      <div class="preis"><span class="zahl gross" id="pZahl">139 €</span><span class="je">im Monat</span></div>
+      <p class="hinweis" id="pHinweis">monatlich kündbar</p>
 
       <ul class="liste">
-        <li><span><b>Alles aus der Community</b> ist dabei</span></li>
+        <li><span><b>Alles aus Basis</b> ist dabei</span></li>
         <li><span>Sprechclub: <b>täglich von Montag bis Sonntag</b></span></li>
         <li><span>Endlich mit echten Menschen sprechen — über Themen, die wirklich interessieren</span></li>
         <li><span>Ein Lehrer kommt dazu und verbessert deine Fehler</span></li>
@@ -185,7 +175,7 @@ ul.liste li > span{flex:1;min-width:0}
   <p class="meldung" id="meldung"></p>
 
   <div class="fuss">
-    <b>Du bist dir nicht sicher?</b> Fang mit der Community an. Du hast sofort die ganze Plattform,
+    <b>Du bist dir nicht sicher?</b> Fang mit Basis an. Du hast sofort die ganze Plattform,
     zahlst monatlich und kannst jederzeit kündigen. Wenn der Sprechclub wieder öffnet,
     wechselst du mit einem Klick — alles, was du schon hast, bleibt.
   </div>
@@ -197,7 +187,7 @@ ul.liste li > span{flex:1;min-width:0}
 <script>
 /* Wer eingeloggt ist, soll auch als diese Person kaufen.
    Vorher ging von dieser Seite NUR die Paket-Kennung an den Server —
-   ohne userId und ohne E-Mail. Ein Community-Mitglied, das hier auf
+   ohne userId und ohne E-Mail. Ein Basis-Mitglied, das hier auf
    Premium wechselt, galt damit als anonymer Neukauf: Die Buchung wurde
    allein ueber die bei Stripe eingetippte Adresse zugeordnet. Wer dort
    eine andere Adresse nimmt als im Konto, landete in pending_purchases
@@ -285,24 +275,11 @@ async function bezahlen(passId, knopf, alterText){
 function zurueck(knopf, alterText){ if(knopf){ knopf.disabled = false; knopf.textContent = alterText; } }
 
 /* Preise kommen aus der Server-Definition in api/create-checkout.js:
-   community_month 16 € im Monat, community_year 144 € im Jahr (das sind 12 € im Monat). */
+   community_month 16 € im Monat, premium_month 139 € im Monat.
+   Julia, 3.11.2026: "Jährliches Abo bitte weg machen" — es gibt nur
+   noch die monatliche Zahlweise, der Schalter ist weg. */
 var ABRECHNUNG = 'monat';
-
-function setzeAbrechnung(was){
-  ABRECHNUNG = was;
-  document.getElementById('bM').classList.toggle('an', was === 'monat');
-  document.getElementById('bJ').classList.toggle('an', was === 'jahr');
-  var zahl = document.getElementById('preisZahl');
-  var je   = document.getElementById('preisJe');
-  var hin  = document.getElementById('preisHinweis');
-  if (was === 'jahr') {
-    zahl.textContent = '144 €'; je.textContent = 'im Jahr';
-    hin.textContent = 'Das sind 12 € im Monat — du sparst 48 € gegenüber der Monatszahlung.';
-  } else {
-    zahl.textContent = '16 €'; je.textContent = 'im Monat';
-    hin.textContent = 'Monatlich kündbar.';
-  }
-}
+function setzeAbrechnung(){ /* Schalter entfernt */ }
 
 function meldung(text){ document.getElementById('meldung').textContent = text || ''; }
 
@@ -311,7 +288,7 @@ async function jetztMitgliedWerden(btn){
   if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); return; }
   var alt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Einen Moment …';
-  var id = (ABRECHNUNG === 'jahr') ? 'community_year' : 'community_month';
+  var id = 'community_month';
   await bezahlen(id, btn, alt);
 }
 
@@ -319,7 +296,7 @@ function aufDieWarteliste(btn){
   location.href = '/index.html#warteliste';
 }
 
-var PREMIUM = 'jahr';
+var PREMIUM = 'monat';
 var SPAR = { auf: Date.parse('2026-10-01T00:00:00+02:00'), ende: Date.parse('2026-11-01T00:00:00+01:00') };
 /* Phase 3 = Tueren zu. Ab dem 1.11.2026 ist der Sprechclub geschlossen;
    er geht im Dezember wieder auf. Dann hier UND in index.html
@@ -333,30 +310,29 @@ var SPAR = { auf: Date.parse('2026-10-01T00:00:00+02:00'), ende: Date.parse('202
 window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function sparPhase(){ var n = Date.now(), auf = window.TUEREN_AUF;
   return n < SPAR.auf ? 0 : (n < SPAR.ende ? 1 : ((auf && n >= auf) ? 2 : 3)); }
-function setzePremium(was){
-  PREMIUM = was;
-  var j = (was === 'jahr'), ph = sparPhase(), $ = function(i){ return document.getElementById(i); };
-  $('pM').classList.toggle('an', !j); $('pJ').classList.toggle('an', j);
-  /* reg = durchgestrichener Normalpreis pro Monat (immer 99 €, damit die
-     beworbenen 50 % und 60 % aufgehen). nov = was ab dem 1.11. wirklich
-     verlangt wird: monatlich 99 €, im Jahresabo 83 € (999 € / 12). */
-  var spar = j ? 39 : 49, reg = 99, nov = j ? 83 : 99;
-  $('pZahl').textContent = (ph < 2 ? spar : nov) + ' €';
-  $('pAlt').textContent = reg + ' €';
-  /* Rabatt in Prozent, aus den Preisen gerechnet. Abgerundet, damit die
-     Zahl nie groesser ist als der echte Nachlass. */
-  var proz = Math.floor((1 - spar / reg) * 100);
-  $('pSpar').textContent = '−' + proz + ' %';
-  $('pAltWrap').style.display = ph < 2 ? '' : 'none';
-  $('pHinweis').textContent = j ? ('jährlich abgerechnet (' + (ph < 2 ? 468 : 999) + ' €)' + (ph < 2 ? ' · Preis bleibt für immer' : ''))
-                                : ('monatlich kündbar' + (ph < 2 ? ' · Preis bleibt für immer' : ''));
+function setzePremium(){
+  var ph = sparPhase(), $ = function(i){ return document.getElementById(i); };
+  /* Julia, 3.11.2026: Premium kostet 139 \u20ac im Monat, j\u00e4hrlich gibt es
+     nicht mehr. Der Streichpreis bleibt leer, solange kein echter
+     Rabatt l\u00e4uft \u2014 Anfang Dezember kommt einer, dann steht hier
+     wieder ein Paar aus Aktionspreis und regul\u00e4rem Preis. */
+  var PREIS = 139, RABATT = 0, zeig = RABATT || PREIS;
+  $('pZahl').textContent = zeig + ' \u20ac';
+  var w = $('pAltWrap');
+  if (RABATT) {
+    $('pAlt').textContent = PREIS + ' \u20ac';
+    $('pSpar').textContent = '\u2212' + Math.floor((1 - RABATT / PREIS) * 100) + ' %';
+    w.style.display = '';
+  } else { w.style.display = 'none'; }
+  $('pHinweis').textContent = 'monatlich k\u00fcndbar';
   var k = $('pKnopf'), kl = $('pKlein'), f = $('pFahne');
-  if (ph === 0) { f.textContent = 'Bis zu 60 % Rabatt · Anmeldung ab 1. Oktober'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst bei der Anmeldung – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
-  else if (ph === 1) { f.textContent = proz + ' % Rabatt · nur bis 31. Oktober'; k.className = 'knopf rot'; k.textContent = 'Jetzt Premium sichern'; kl.textContent = 'Dein Willkommenspreis bleibt für immer. Du zahlst jetzt – die nächste Zahlung kommt erst am ' + (j ? '1. November 2027' : '1. Dezember') + '.'; }
-  else if (ph === 3) { var u = $('pUnterClub');
-    if (u) u.textContent = 'Der Sprechclub ist aktuell voll — neue Plätze gibt es im Dezember.';
-    f.textContent = 'Anmeldung geschlossen'; k.className = 'knopf rand'; k.textContent = '🔔 Auf die Warteliste'; kl.textContent = 'Die Türen öffnen im Dezember — mit noch mehr Live-Unterricht und noch mehr Flexibilität. Trag dich jetzt ein, die Plätze sind begrenzt.'; }
-  else { f.textContent = 'Sprechclub läuft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen'; kl.textContent = 'Sichere Zahlung über Stripe · monatlich kündbar'; }
+  if (ph === 3) { var u = $('pUnterClub');
+    if (u) u.textContent = 'Der Sprechclub ist aktuell voll \u2014 neue Pl\u00e4tze gibt es im Dezember.';
+    f.textContent = 'Anmeldung geschlossen'; k.className = 'knopf rand';
+    k.textContent = '\uD83D\uDD14 Auf die Warteliste';
+    kl.textContent = 'Die T\u00fcren \u00f6ffnen im Dezember \u2014 mit noch mehr Live-Unterricht und noch mehr Flexibilit\u00e4t. Trag dich jetzt ein, die Pl\u00e4tze sind begrenzt.'; }
+  else { f.textContent = 'Sprechclub l\u00e4uft'; k.className = 'knopf rot'; k.textContent = 'Premium buchen';
+    kl.textContent = zeig + ' \u20ac im Monat \u00b7 monatlich k\u00fcndbar \u00b7 sichere Zahlung \u00fcber Stripe'; }
 }
 async function premiumKnopf(btn){
   var ph = sparPhase();
@@ -364,9 +340,9 @@ async function premiumKnopf(btn){
   meldung('');
   if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); return; }
   var alt = btn.textContent; btn.disabled = true; btn.textContent = 'Einen Moment …';
-  await bezahlen(PREMIUM === 'jahr' ? 'premium_year' : 'premium_month', btn, alt);
+  await bezahlen('premium_month', btn, alt);
 }
-setzePremium('jahr');
+setzePremium();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
