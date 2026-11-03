@@ -42,6 +42,10 @@
     #v-community .cm-msgs{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(#fff,#fffdf7)}
     #v-community .cm-row{display:flex;gap:10px;max-width:78%}
     #v-community .cm-row.me{align-self:flex-end;flex-direction:row-reverse}
+    #v-community .cm-karte{border:none;background:none;padding:0;font:inherit;color:inherit;
+      cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+    #v-community .cm-karte:hover{color:var(--primary,#DD0000)}
+    #v-community .cm-av-klick{cursor:pointer}
     #v-community .cm-av{flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--turquoise,#7ED8EA);color:#10627A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
     #v-community .cm-bub{background:#fff;border:1px solid var(--border,#F0E5D8);border-radius:14px;padding:9px 13px;font-size:14.5px;line-height:1.45;word-break:break-word}
     #v-community .cm-row.me .cm-bub{background:#E8FBF5;border-color:#bdeee2}
@@ -224,6 +228,21 @@
     }
   }
 
+  /* Oeffnet die Schuelerkarte im Admin. Auf konto.html gibt es sie
+     nicht — dann passiert nichts, und geklickt werden kann dort auch
+     nichts, weil isTeam fuer Schueler false ist. */
+  function bindKarte(wurzel) {
+    if (!window.oeffneSchuelerKarteAusChat) return;
+    Array.prototype.forEach.call(wurzel.querySelectorAll('[data-karte]'), function (el) {
+      if (el.__karteGebunden) return;
+      el.__karteGebunden = true;
+      el.addEventListener('click', function (ev) {
+        ev.preventDefault(); ev.stopPropagation();
+        window.oeffneSchuelerKarteAusChat(el.getAttribute('data-karte'), el.getAttribute('data-kname') || '');
+      });
+    });
+  }
+
   function avColor(name) { var s = String(name || '?'), h = 0; for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return 'hsl(' + (h % 360) + ',52%,72%)'; }
   function msgHtml(m) {
     var me = m.user_id === ME.id;
@@ -236,9 +255,22 @@
       body = E(m.body || '');
     }
     var canDel = me; // (Admin-Löschung via DB)
+    /* Julia, 3.11.2026: "wenn jemand in die Community schreibt, dass ich
+       als Admin auf den Namen klicken kann und direkt die ganze
+       Historie dieser Person sehen kann". Nur fuers Team und nur fuer
+       fremde Nachrichten — Schueler sollen hier nichts anklicken
+       koennen, was es fuer sie gar nicht gibt. Den Griff selbst macht
+       admin.html (oeffneSchuelerKarteAusChat); gibt es ihn nicht, ist
+       der Name einfach Text. */
+    var klickbar = isTeam && !me && m.user_id && window.oeffneSchuelerKarteAusChat;
+    var namensHtml = klickbar
+      ? '<button class="cm-karte" data-karte="' + E(m.user_id) + '" data-kname="' + E(m.author_name || '') + '" title="Sch\u00fclerkarte \u00f6ffnen">' + E(m.author_name || 'Mitglied') + '</button>'
+      : E(m.author_name || 'Mitglied');
     return '<div class="cm-row' + (me ? ' me' : '') + '" data-id="' + E(m.id) + '">' +
-      '<div class="cm-av" style="background:' + avColor(m.author_name) + '">' + E(initials(m.author_name)) + '</div>' +
-      '<div class="cm-col"><div class="cm-meta">' + E(m.author_name || 'Mitglied') + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
+      '<div class="cm-av' + (klickbar ? ' cm-av-klick' : '') + '" style="background:' + avColor(m.author_name) + '"'
+        + (klickbar ? ' data-karte="' + E(m.user_id) + '" data-kname="' + E(m.author_name || '') + '" title="Sch\u00fclerkarte \u00f6ffnen"' : '') + '>'
+        + E(initials(m.author_name)) + '</div>' +
+      '<div class="cm-col"><div class="cm-meta">' + namensHtml + '<span class="cm-time">' + timeStr(m.created_at) + '</span>' +
       '<button class="cm-radd" data-radd="' + E(m.id) + '" title="Reagieren">😊</button>' +
       (canDel ? '<button class="cm-del" data-del="' + E(m.id) + '" title="Löschen">✕</button>' : '') + '</div>' +
       '<div class="cm-bub">' + body + '</div>' +
@@ -253,6 +285,7 @@
     Array.prototype.forEach.call(box.querySelectorAll('[data-del]'), function (b) {
       b.addEventListener('click', function () { delMsg(b.getAttribute('data-del')); });
     });
+    bindKarte(box);
     bindReactionEvents(box);
   }
 
@@ -262,7 +295,7 @@
     if (box.querySelector('.cm-empty')) box.innerHTML = '';
     box.insertAdjacentHTML('beforeend', msgHtml(m));
     var last = box.lastElementChild;
-    if (last) { var db = last.querySelector('[data-del]'); if (db) db.addEventListener('click', function () { delMsg(db.getAttribute('data-del')); }); }
+    if (last) { var db = last.querySelector('[data-del]'); if (db) db.addEventListener('click', function () { delMsg(db.getAttribute('data-del')); }); bindKarte(last); }
     if (near || m.user_id === ME.id) box.scrollTop = box.scrollHeight;
   }
 
