@@ -2442,23 +2442,24 @@
     window._inCall=false;
     if(window._provider==='daily' && dframe){ try{ dframe.leave(); }catch(e){} setTimeout(()=>{ try{ dframe.destroy(); dframe=null; }catch(e){} }, 400); }
     if(api){ try{ api.executeCommand('hangup'); }catch(e){} setTimeout(()=>{ try{ api.dispose(); }catch(e){} }, 400); }
-    const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open');
     document.getElementById('jitsi').innerHTML='<div style="color:#fff;padding:24px;text-align:center;font-family:Inter;font-size:.9rem">Du hast den Unterricht verlassen.<br><a href="konto.html" style="color:#2DD4BF;font-weight:700">Zurück zu Meine Stunden</a></div>';
+    // Du bist sofort draußen – die Sternebewertung kommt ERST DANACH und hält nichts auf.
+    if(window._meIsLehrer===false && STUNDE && !window._fbDone){ showFeedback(); }
   }
   // ---- Mini-Feedback beim Verlassen ----
   let _fbStars=0;
   function fbSet(n){ _fbStars=n; document.querySelectorAll('#fb-stars span').forEach((el,i)=>el.classList.toggle('on', i<n)); }
   function showFeedback(){ const o=document.getElementById('fb-overlay'); if(o) o.classList.add('open'); }
-  function fbSkip(){ window._fbDone=true; doLeave(); }
+  function fbClose(){ window._fbDone=true; const o=document.getElementById('fb-overlay'); if(o) o.classList.remove('open'); }
+  function fbSkip(){ fbClose(); }
   async function fbSubmit(){
-    window._fbDone=true;
     try{
       if(sb && STUNDE && _fbStars>0 && window._meId){
         const c=(document.getElementById('fb-comment').value||'').slice(0,500);
         await sb.from('ratings').upsert({ user_id:window._meId, class_id:STUNDE, stars:_fbStars, comment:c }, { onConflict:'user_id,class_id' });
       }
     }catch(e){ console.warn('Feedback', e); }
-    doLeave();
+    fbClose();
   }
 
   function meldung(txt){
