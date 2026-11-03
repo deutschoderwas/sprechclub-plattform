@@ -2961,27 +2961,21 @@ function kalEv(c){
      eingeloggten Schueler, nicht nur aktive oder gebuchte. */
   const matBtn = c.has_material ? `<button class="ev-btn mat" onclick="openClassMaterial('${c.id}',${c.mine?1:0})">📚 Material</button>` : '';
   const noPrep = (c.club==='sprachspielclub') ? `<div class="ev-note">✨ Keine Vorbereitung nötig</div>` : '';
-  const _cap=Number(c.capacity)||0, _free=Math.max(0,_cap-(Number(c.booked)||0));
+  const _cap=Number(c.capacity)||0, _booked=Number(c.booked)||0, _free=Math.max(0,_cap-_booked);
   let seats='';
-  /* Julia, 17.10.2026: "gar keine Plaetze anzeigen, das sieht keiner,
-     es sieht auch keiner wer gebucht hat, man sieht nur den Lehrer und
-     das Thema der Stunde."
-
-     Im neuen System steht also nur noch Uhrzeit, Thema und Lehrkraft
-     auf der Karte. Die 20 Plaetze sind eine interne Rechengroesse, und
-     "ausgebucht" waere ohnehin falsch: Premium kommt immer rein.
-
-     Die Oktoberstunden laufen noch nach dem alten System. Dort ist die
-     Grenze echt — wer mit Guthaben bucht, wird bei 20 abgewiesen — und
-     darum bleibt der Hinweis dort stehen. */
-  /* "ausgebucht" nur dort, wo es den Betrachter betrifft: beim alten
-     Unterricht UND nur, wenn er diese Stunde ueberhaupt buchen darf.
-     Einem Premium-Mitglied, das im Oktober sowieso nicht buchen kann,
-     die Platzlage hinzuschreiben, waere doppelt daneben — es sieht
-     keine Plaetze, und es hat ohnehin eine andere Meldung auf dem
-     Knopf. */
-  if(_cap>0 && !past && _free<=0 && !neuesSystem(c.starts_at) && stundeErlaubt(c.starts_at)){
-    seats=`<div class="ev-seats full">ausgebucht</div>`;
+  /* Julia, 03.11.2026: Die Schüler sollen sehen, wie viele Plätze belegt und
+     wie viele frei sind (nur Zahlen, KEINE Namen) – damit sie eine freiere
+     Stunde wählen können. "ausgebucht" bleibt nur beim alten Oktober-System,
+     wo die Grenze echt war. Im neuen System kommt Premium zwar immer rein,
+     aber die Zahl hilft trotzdem bei der Wahl. */
+  if(_cap>0 && !past){
+    if(!neuesSystem(c.starts_at) && _free<=0 && stundeErlaubt(c.starts_at)){
+      seats=`<div class="ev-seats full">ausgebucht</div>`;
+    } else if(_free>0){
+      seats=`<div class="ev-seats ${_free<=3?'low':'ok'}">${_booked} belegt · ${_free} frei</div>`;
+    } else {
+      seats=`<div class="ev-seats full">${_booked} belegt · voll</div>`;
+    }
   }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
   const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';

@@ -47,10 +47,17 @@ const PLANS = {
   /* --- Neues Modell: Community (ohne Live-Buchung) + Premium (LIVE
      unbegrenzt) --- Julia, 17.10.2026: "es gibt keine 8 Stunde mehr,
      PREMIUM ist immer Unlimited". */
-  community_year:  { abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Community',
-    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Jahresmitgliedschaft (12 Monate).' },
-  community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Community',
-    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community. Monatlich kündbar.' },
+  /* Julia, 3.11.2026: "Jährliches Abo bitte weg machen" und "Community
+     in Basis überall umbenennen". Die Jahresplaene stehen nur noch mit
+     alt:true hier, damit eine alte Bestellung zuzuordnen bleibt und
+     niemand sie über einen alten Link doch noch kauft. Laufende
+     Jahresabos laufen bei Stripe unberührt weiter.
+     Der interne Wert bleibt 'community' — er steht so in tausenden
+     Zeilen der Datenbank; umbenannt wird, was Menschen lesen. */
+  community_year:  { alt: true, abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Basis',
+    desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community-Chat. Jahresmitgliedschaft (12 Monate).' },
+  community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Basis',
+    desc: 'Die ganze Lernplattform ohne Sprechclub: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community-Chat. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen —
      Premium bucht unbegrenzt, book_class fragt bei einem Abo gar nicht
@@ -66,11 +73,11 @@ const PLANS = {
      "8 LIVE-Stunden", weil die Mail stunden aus der Metadaten las.
      Die Richtigstellung liegt in api/korrektur-premium-mail.js. */
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Monatlich kündbar.' },
-  premium_year:    { abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
+    desc: 'Alles aus Basis + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, unbegrenzt, mit einem Lehrer in der Gruppe. Monatlich kündbar.' },
+  premium_year:    { alt: true, abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium',
     desc: 'Alles aus Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium',
-    desc: 'Alles aus Community + Sprechclub: unbegrenzt LIVE-Stunden, sprechen mit echten Menschen.' },
+    desc: 'Alles aus Basis + Sprechclub: unbegrenzt LIVE-Stunden, sprechen mit echten Menschen.' },
 
   /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
      8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:
@@ -92,7 +99,14 @@ const PLANS = {
   pp_e6: { abo: false, stunden: 48, preis: 594, tier:'premiumplus', label: 'Premium Plus · 6 Monate im Voraus', monate: 6 },
 };
 
-/* Premium: Der regulaere Preis ist 99 EUR im Monat bzw. 1199 EUR im Jahr.
+/* Premium: Der regulaere Preis ist seit dem 3.11.2026 139 EUR im Monat.
+   Julia: "Preis bei Premium setzen wir hoeher bitte auf 139 Euro (Wir
+   werden anfang dezember dann einen Rabatt anbieten)". Der Preis gilt
+   nur fuer NEUE Abos: jedes Abo bekommt bei Stripe seinen eigenen
+   Preis mit (price_data), Aenderungen hier erreichen ein laufendes
+   Abo nie. Wer im Oktober zu 49 EUR gekauft hat, zahlt weiter 49.
+
+   Davor galt: 99 EUR im Monat bzw. 1199 EUR im Jahr.
    Im Oktober 2026 gibt es den Startrabatt fuer die Ersten:
      Monatsabo  49 EUR   (rund die Haelfte von 99 EUR)
      Jahresabo 468 EUR   (= 39 EUR pro Monat, rund 60 Prozent unter 1199 EUR)
@@ -101,7 +115,7 @@ const PLANS = {
    Aenderungen hier erreichen es nicht mehr.
    Ab dem 1.11.2026 (Berliner Zeit) gilt fuer NEUE Abos der Normalpreis. */
 const PREMIUM_REGULAER_AB = Date.parse('2026-11-01T00:00:00+01:00');
-const PREMIUM_REGULAER = { premium_month: { preis: 99 }, premium_year: { preis: 999, proMonat: 83 } };
+const PREMIUM_REGULAER = { premium_month: { preis: 139 }, premium_year: { preis: 999, proMonat: 83 } };
 function aktuellerPlan(id){
   const p = PLANS[id];
   const r = PREMIUM_REGULAER[id];
