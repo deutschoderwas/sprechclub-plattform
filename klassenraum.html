@@ -1523,7 +1523,12 @@
   async function boAutoAssignLate(id){
     if(!istLehrer || !window._breakoutActive) return;
     if(!id || window._lateBusy[id]) return;
-    if(window._breakoutGroups && window._breakoutGroups[id]) return;   // schon in einer Gruppe
+    if(window._breakoutGroups && window._breakoutGroups[id]){
+      // Rückkehrer: der Lehrer hat ihn noch in seiner Gruppe gespeichert.
+      // Zuordnung erneut senden, damit er beim Wiedereintritt wieder in SEINE Gruppe geholt wird.
+      try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups: window._breakoutGroups } }); }catch(e){}
+      return;
+    }
     window._lateBusy[id]=true;
     try{
       // Niveau des Nachzüglers sicherstellen (falls noch nicht geladen)
@@ -2430,8 +2435,7 @@
     });
   });
   function vcLeave(){
-    // Schüler:innen vor dem Verlassen kurz nach Feedback fragen (einmal pro Sitzung)
-    if(window._meIsLehrer===false && STUNDE && !window._fbDone){ showFeedback(); return; }
+    // Sofort raus – kein blockierendes Popup. Wer gebucht hat, kommt jederzeit wieder rein.
     doLeave();
   }
   function doLeave(){
