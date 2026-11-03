@@ -49,5 +49,7 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
 
 - telc C1 Beruf komplett: lesen/hoeren/schreiben/sprechen-telc-c1b.js. Quellen: telc Handbuch C1 Beruf + Übungstest 1 C1 Beruf. Aufbau wie telc C1, aber Lesen Teil 2 „In welchem Beitrag" (Mehrfachzuordnung), Teil 3 E-Mail + Fachtext mit 12 a/b/c; Schreiben 4 × 12/8/4/0 (belegt); Sprechen Präsentation für Zielgruppe, Anschlussfragen, Diskussion mit Herkunftsland-Vergleich. Bestehen 128/214, 60 % schriftlich (166) und mündlich (48), belegt.
 
+- telc C2 komplett: lesen/hoeren/schreiben/sprechen-telc-c2.js. Quellen: telc Tipps C2 + Handbuch C2. Fünf Oberthemen (Vertrauen, Langeweile, Erinnern und Vergessen, Grenzen, Stille und Lärm), je drei Lesetexte + Hörtext; Lesen Textlogik/Detail/Implizit (40), Hören und Zusammenfassen (Schreiben-Engine: a.hoertext, einmal abspielen; Inhalt 25 belegt, Sprache 15 als Übungsschätzung), Aufsatz mit Quellen 4 × 10/7/3/0 (belegt), Sprechen Einzelprüfung Präsentation + vertiefendes Gespräch. Bestehen 60 % gesamt und je Teil (72/120, 24/40), belegt.
+
 ## Als Nächstes
-telc C2 — Formate jeweils bei telc prüfen.
+Nischen — Formate jeweils bei telc prüfen.

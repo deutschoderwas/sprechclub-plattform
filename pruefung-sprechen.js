@@ -40,7 +40,7 @@
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
-                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B', 'telcB1B2':'SPRECHEN_TELC_B1B2', 'telcB2C1':'SPRECHEN_TELC_B2C1', 'telcC1B':'SPRECHEN_TELC_C1B' };
+                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B', 'telcB1B2':'SPRECHEN_TELC_B1B2', 'telcB2C1':'SPRECHEN_TELC_B2C1', 'telcC1B':'SPRECHEN_TELC_C1B', 'telcC2':'SPRECHEN_TELC_C2' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
@@ -622,7 +622,7 @@
         folge.push({ a:t, karte:k, thema:t.thema, art:t.art, runde:t }); });
     });
     starten({ niveau:niveau, daten:d, modus:'lauf', topf:'l', id:id,
-      titel:Lf.titel, unter:'Alle drei Teile · '+(Lf.minuten||d.minuten)+' Minuten',
+      titel:Lf.titel, unter:(Lf.teile.length===2?'Beide Teile':'Alle drei Teile')+' · '+(Lf.minuten||d.minuten)+' Minuten',
       folge:folge, max:laufMax(Lf) });
     uhrStarten(Lf.minuten || d.minuten);
     kopfMalen();
@@ -695,7 +695,7 @@
             + '" onclick="sprechenLauf(\''+Lf.id+'\')">'
             + '<span class="pl-karte-z">⏱️</span>'
             + '<span class="pl-karte-t"><b>'+E(Lf.titel)+'</b>'
-            +   '<span>Alle drei Teile · '+(Lf.minuten||d.minuten)+' Minuten</span></span>'
+            +   '<span>'+(Lf.teile.length===2?'Beide Teile':'Alle drei Teile')+' · '+(Lf.minuten||d.minuten)+' Minuten</span></span>'
             + '<span class="pl-karte-p">'+(s.gemacht ? s.punkte+'/'+s.max : 'noch offen')+'</span>'
             + '<span class="pl-karte-bar"><i style="width:'+Math.max(2,s.prozent)+'%"></i></span>'
             + '<span class="pl-karte-ziel">Vorstellen, fragen, bitten — hintereinander, '

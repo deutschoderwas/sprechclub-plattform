@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B', 'telcB1B2':'SCHREIBEN_TELC_B1B2', 'telcB2C1':'SCHREIBEN_TELC_B2C1', 'telcC1B':'SCHREIBEN_TELC_C1B' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B', 'telcB1B2':'SCHREIBEN_TELC_B1B2', 'telcB2C1':'SCHREIBEN_TELC_B2C1', 'telcC1B':'SCHREIBEN_TELC_C1B', 'telcC2':'SCHREIBEN_TELC_C2' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -400,8 +400,14 @@
       + '<div class="pw-mail-kopf"><div><span>Von</span><b>'+E(a.eingang.von||'')+'</b></div>'
       + (a.eingang.betreff?'<div><span>Betreff</span><b>'+E(a.eingang.betreff)+'</b></div>':'')+'</div>'
       + '<p class="pw-eingang-t">'+E(a.eingang.text||'').replace(/\n/g,'<br>')+'</p></div>';
+    if(a.hoertext){
+      var gh = W.hg && W.hg[W.i];
+      h += '<div class="pw-hoer"><button class="pw-hoer-b" id="pwHoerB" onclick="schreibenHoeren()"'+(gh?' disabled':'')+'>'
+        + (gh ? '✓ Gehört' : '▶ Anhören — nur einmal')+'</button>'
+        + '<span><b>'+E(a.hoertext.titel||'')+'</b>Etwa fünfzehn Minuten. Mach dir beim Hören Notizen auf Papier.</span></div>';
+    }
     var ZAHL = ['keine','einen','zwei','drei','vier','fünf','sechs'];
-    h += '<div class="pw-punkte"><span class="pw-punkte-t">'+(a.noetig && a.noetig < a.punkte.length
+    h += '<div class="pw-punkte"><span class="pw-punkte-t">'+(a.punkteText ? E(a.punkteText) : a.noetig && a.noetig < a.punkte.length
         ? 'Bearbeite '+ZAHL[a.noetig]+' dieser '+ZAHL[a.punkte.length]+' Punkte — oder zwei und einen eigenen Aspekt'
         : 'Diese '+(ZAHL[a.punkte.length]||a.punkte.length)+' Punkte müssen vorkommen')+'</span>'
       + '<div class="pw-pk-r">'
@@ -450,6 +456,9 @@
       h += '<div class="pw-deins"><span class="pw-deins-t">Dein Text</span><p>'+E(text).replace(/\n/g,'<br>')+'</p></div>';
       h += '<div class="pw-muster"><span class="pw-muster-t">So könnte es aussehen</span><p>'
         + E(a.muster).replace(/\n/g,'<br>')+'</p></div>';
+      if(a.hoertext) h += '<details class="pw-transkript"><summary>Den Hörtext nachlesen</summary><p>'
+        + (a.hoertext.zeilen ? a.hoertext.zeilen.map(function(z){ return '<b>'+E(z.wer)+':</b> '+E(z.text); }).join('<br>') : E(a.hoertext.text))
+        + '</p></details>';
 
       /* Der eigene Blick kommt immer — vergleichen und ehrlich abhaken
          ist die halbe Übung. Amandas Urteil kommt oben dazu, wenn es
@@ -1113,7 +1122,21 @@
     document.body.style.overflow = 'hidden';
   }
 
+  /* telc C2: der Hörtext läuft einmal am Stück. */
+  window.schreibenHoeren = function(){
+    W.hg = W.hg || {}; if(W.hg[W.i]) return;
+    W.hg[W.i] = 1;
+    var a = aktA(), b = document.getElementById('pwHoerB');
+    if(b){ b.disabled = true; b.textContent = '🔊 Läuft …'; }
+    function fertig(){ var k = document.getElementById('pwHoerB'); if(k) k.textContent = '✓ Gehört'; }
+    try{
+      if(a.hoertext.zeilen) window.dialogSprechen(a.hoertext.zeilen, { fertig:fertig });
+      else window.sagen(a.hoertext.text, { rolle:a.hoertext.wer, fertig:fertig });
+    }catch(e){ fertig(); }
+  };
+
   window.schreibenSchliessen = function(){
+    try{ if(W && W.hg && window.sagenStopp) window.sagenStopp(); }catch(e){}
     uhrStoppen();
     var o = document.getElementById('pwOv');
     if(o) o.style.display = 'none';
@@ -1369,6 +1392,14 @@
 '.pw-deins-t{ display:block; font-size:10.5px; font-weight:800; letter-spacing:.13em;',
 '  text-transform:uppercase; color:#8A97A0; margin-bottom:7px }',
 '.pw-deins p{ font-size:16px; line-height:1.7; margin:0 }',
+'.pw-hoer{ display:flex; gap:12px; align-items:center; margin:12px 0; padding:14px 16px; background:#EEF6FB; border:1.5px solid #C9E3F1; border-radius:14px }',
+'.pw-hoer-b{ flex:none; border:0; border-radius:999px; padding:11px 18px; background:#1B9BC0; color:#fff; font-weight:800; font-size:15px; cursor:pointer }',
+'.pw-hoer-b[disabled]{ background:#9AA5B1; cursor:default }',
+'.pw-hoer span{ font-size:14px; line-height:1.45; color:#3B4754 }',
+'.pw-hoer span b{ display:block; color:#16202A }',
+'.pw-transkript{ margin:14px 0; padding:12px 16px; border:1.5px solid #E2E8EE; border-radius:14px; background:#fff }',
+'.pw-transkript summary{ cursor:pointer; font-weight:800 }',
+'.pw-transkript p{ font-size:15px; line-height:1.7; margin:10px 0 0 }',
 '.pw-muster{ background:#E8F8EE; border:1.5px solid #BFE6CD; border-radius:16px;',
 '  padding:15px 18px; margin-bottom:14px }',
 '.pw-muster-t{ display:block; font-size:10.5px; font-weight:800; letter-spacing:.13em;',
