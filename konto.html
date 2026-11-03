@@ -657,7 +657,6 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 
     <div class="side-foot">
     <button class="navlink" data-view="abo" onclick="go('abo')"><span class="ic">💳</span><span><span data-i18n="nav_abo">Mein Abo</span></span></button>
-    <button class="navlink" data-view="guthaben" onclick="go('guthaben')"><span class="ic">🎫</span><span><span data-i18n="k_credit">Guthaben</span></span></button>
     <button class="navlink" data-view="profil" onclick="go('profil')"><span class="ic">👤</span><span><span data-i18n="k_profile">Profil</span></span></button>
       <button class="navlink" onclick="logout()"><span class="ic">↪</span><span data-i18n="nav_abmelden">Abmelden</span></button>
     </div>
@@ -1011,7 +1010,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <div class="tb-right"><select id="langSel" class="tb-lang" aria-label="Sprache" onchange="setLang(this.value)" style="border:1px solid var(--border,#ECECEC);border-radius:999px;padding:5px 9px;font-weight:700;font-size:13px;background:#fff;color:var(--ink,#141414);cursor:pointer;margin-right:8px"><option value="de">🇩🇪 DE</option><option value="en">🇬🇧 EN</option><option value="ru">🇷🇺 RU</option><option value="uk">🇺🇦 UK</option><option value="fa">🇮🇷 FA</option><option value="es">🇪🇸 ES</option><option value="tr">🇹🇷 TR</option><option value="it">🇮🇹 IT</option></select><button class="tb-bell" type="button" title="Benachrichtigungen" aria-label="Benachrichtigungen">🔔</button><button class="tb-live" onclick="return bucheStunde(event)">🗓️ <span data-i18n="k_book3">Sprechclub buchen</span></button></div>
   </div>
   <div class="content-inner">
-    <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Guthaben wird gerade gutgeschrieben — lade die Seite gleich neu.</div>
+    <div class="kauf-ok" id="kaufOk">🎉 Danke für deinen Kauf! Dein Zugang wird gerade freigeschaltet — lade die Seite gleich neu.</div>
 
     <section class="view active" id="v-dashboard"></section>
     <section class="view" id="v-kurse"></section>
@@ -1701,7 +1700,7 @@ function collectVocab(){
 const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],guthaben:['Konto','Guthaben'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ let v=(location.hash||'#dashboard').slice(1);
   /* Nach aussen heisst der Bereich "Chat". #chat fuehrt deshalb auf
@@ -1808,7 +1807,7 @@ function show(v){
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',guthaben:'Guthaben',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',nachrichten:'Nachrichten',amanda:'Amanda'};
 /* ============================================================
    Der Sprechclub ist Premium.
 
@@ -2316,8 +2315,8 @@ var ABO_TEXT  = 'Um im Sprechclub mitzumachen und die Lernplattform zu benutzen,
 
 function lockBanner(){
   return `<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px"><b>🔒 Dein Guthaben ist aufgebraucht</b>
-    <p class="muted" style="margin-top:4px">Mit einem neuen Paket bekommst du wieder vollen Zugriff: Stundenplan mit Buchung, neues Material, Übungen & Quizze.</p></div>
+    <div style="flex:1;min-width:200px"><b>🔒 Dein Zugang ist abgelaufen</b>
+    <p class="muted" style="margin-top:4px">Mit einer aktiven Mitgliedschaft bekommst du wieder vollen Zugriff: Stundenplan mit Buchung, neues Material, Übungen & Quizze.</p></div>
     <a class="btn btn-primary" href="index.html#pakete">Pakete ansehen</a></div>`;
 }
 // ---- Live-Masterclass (1. Donnerstag im Monat, ab 01.09.2026) ----
@@ -2642,7 +2641,7 @@ function scStartKarte(){
     + '<h2>Der LIVE-Unterricht startet am 1. November.</h2>'
     + '<p>Buchen kannst du schon jetzt: unten stehen alle Termine ab dem 1. November — '
     + SC_PLAN + '. Sichere dir die Stunden, die dir am besten passen — so viele, '
-    + 'wie du möchtest, ohne Guthaben.</p>'
+    + 'wie du möchtest.</p>'
     + '<p class="sc-tage" id="scTage">' + scTageText() + '</p>'
     + '</div>';
 }
@@ -2732,7 +2731,7 @@ function buchbarHinweis(){
     return '<div class="kal-hinweis">'
       + '<span class="ic">🗓️</span>'
       + '<span class="tx"><b>Dein Sprechclub startet am 1. November.</b>'
-      + '<span>Ab dann buchst du hier so viele Stunden, wie du m\u00f6chtest \u2014 ohne Guthaben. '
+      + '<span>Ab dann buchst du hier so viele Stunden, wie du m\u00f6chtest. '
       + SC_PLAN + '.</span></span>'
       + '</div>';
   }
@@ -3317,7 +3316,7 @@ async function cancelB(classId){
     const { data:{ session } } = await sb.auth.getSession();
     if(session){ fetch('/api/notify-cancel',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:classId }) }).catch(()=>{}); }
   }catch(e){}
-  toast('Storniert — 1 Stunde zurück aufs Guthaben.'); await load(); show('stunden');
+  toast('Storniert — der Platz ist wieder frei.'); await load(); show('stunden');
 }
 
 // Umbuchen ist kein eigener Vorgang in der Datenbank: die Stunde wird
@@ -4410,10 +4409,6 @@ function aboRestHtml(d){
       h+='<div class="abo-neben"><b>⭐ LIVE-Pass aktiv</b><span>Verlängert am '+esc(fmtShort(p))+'.</span></div>';
     }
   }
-  if(d.guthaben>0){
-    h+='<div class="abo-neben"><b>🎟️ '+d.guthaben+' '+(d.guthaben===1?'freie Stunde':'freie Stunden')+'</b>'
-      +'<span>Dein Guthaben für den LIVE-Unterricht — <a href="#guthaben" onclick="go(\'guthaben\');return false">Verlauf ansehen</a>.</span></div>';
-  }
   return h;
 }
 
@@ -4963,7 +4958,7 @@ function renderMobileHome(){
     +'<span>'+I('book',14)+'Kurse A1–C2</span><span>'+I('mic',14)+'Aussprache</span><span>'+I('headset',14)+'Podcast</span>'
     +'<span>'+I('chat',14)+'Community-Chat</span><span>'+I('speaker',14)+'Aussprache</span><span>'+I('target',14)+'Prüfungen</span>'
     +'<span>'+I('cards',14)+'Vokabeltrainer</span></div>'
-    +'<div class="mh-note">'+I('spark',17)+'<span>Kalender, Buchungen und dein Guthaben verwaltest du am Computer — dort hast du den vollen Überblick.</span></div>';
+    +'<div class="mh-note">'+I('spark',17)+'<span>Kalender und Buchungen verwaltest du am Computer — dort hast du den vollen Überblick.</span></div>';
   try{ loadCommTeaser(); }catch(e){}
   try{ var gb=document.getElementById('mhBell'); if(gb&&window.NB) NB.glocke(gb); }catch(e){}
 }
