@@ -142,6 +142,12 @@
     #v-community .mb{flex:1;min-width:0}
     #v-community .mh{display:flex;align-items:baseline;gap:8px}
     #v-community .mh .w{font-weight:600;font-size:13.5px;font-family:var(--fh);letter-spacing:-.01em}
+    /* Nur das Team sieht den Namen als Knopf - gepunktete Linie, damit
+       es als anklickbar zu erkennen ist, ohne wie ein Link auszusehen. */
+    #v-community .mh .w-karte{border:none;background:none;padding:0;color:inherit;cursor:pointer;
+      text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+    #v-community .mh .w-karte:hover{color:var(--brand-ink,#0F766E)}
+    #v-community .ava-karte{cursor:pointer}
     #v-community .mh .rl{font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;background:var(--brand-wash);color:var(--brand-ink);border:1px solid var(--brand-line)}
     #v-community .mh .lv{font-size:10px;font-weight:600;padding:1px 5px;border-radius:5px;background:var(--line);color:var(--t2)}
     #v-community .mh time{font-size:11px;color:var(--t3)}
@@ -1338,6 +1344,9 @@
   function onFeedClick(ev){
     var t=ev.target; if(!t||!t.closest) return;
     if(t.closest('a.mlink')) return;   // Links im Text ganz normal oeffnen
+    var kt=t.closest('[data-karte]');
+    if(kt && window.oeffneSchuelerKarteAusChat){ ev.preventDefault(); ev.stopPropagation();
+      window.oeffneSchuelerKarteAusChat(kt.getAttribute('data-karte'), kt.getAttribute('data-kname')||''); return; }
     var addr=t.closest('[data-addr]');
     if(addr){ ev.stopPropagation(); showRepop(addr,addr.getAttribute('data-addr')); return; }
     var rp=t.closest('[data-rep]'); if(rp){ ev.stopPropagation(); setReply(rp.getAttribute('data-rep')); return; }
@@ -1487,8 +1496,18 @@
   function msgHtml(m,istAntwort){
     var vn=vorname(m.author_name);
     var meins=!!(m.user_id&&ME&&m.user_id===ME.id);
-    return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+(meins?' me':'')+'" data-id="'+E(m.id)+'" data-u="'+E(m.user_id||'')+'" data-t="'+E(m.created_at||'')+'"><div class="ava '+avClass(m.author_name)+'">'+E(initials(vn))+'</div>'+
-      '<div class="mb"><div class="mh"><span class="w">'+E(vn)+'</span>'+schild(m.author_name)+'<time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
+    /* Julia, 3.11.2026: "wenn jemand in die Community schreibt, dass ich
+       als Admin auf den Namen klicken kann und direkt die ganze
+       Historie dieser Person sehen kann und auch eine Nachricht
+       verschicken kann und sehen kann was fuer ein Abo derjenige hat."
+       Die Schuelerkarte im Admin kann das alles schon - sie muss nur
+       von hier aus erreichbar sein. Nur fuers Team, nur bei fremden
+       Beitraegen, und nur wenn es die Karte ueberhaupt gibt: auf
+       konto.html waere ein Klick ins Leere. */
+    var karte = isTeam && !meins && m.user_id && window.oeffneSchuelerKarteAusChat;
+    var kdaten = karte ? ' data-karte="'+E(m.user_id)+'" data-kname="'+E(vn)+'" title="Sch\u00fclerkarte \u00f6ffnen"' : '';
+    return '<div class="m'+(m.pinned_at?' pinned':'')+(istAntwort?' m-a':'')+(meins?' me':'')+'" data-id="'+E(m.id)+'" data-u="'+E(m.user_id||'')+'" data-t="'+E(m.created_at||'')+'"><div class="ava '+avClass(m.author_name)+(karte?' ava-karte':'')+'"'+kdaten+'>'+E(initials(vn))+'</div>'+
+      '<div class="mb"><div class="mh">'+(karte?'<button type="button" class="w w-karte"'+kdaten+'>'+E(vn)+'</button>':'<span class="w">'+E(vn)+'</span>')+''+schild(m.author_name)+'<time>'+timeStr(m.created_at)+'</time>'+(m.pinned_at?'<span class="mh-pin" title="Angepinnt">'+svg(IC.pin,'ico-sm')+'</span>':'')+'</div>'+
       (istAntwort?'':quoteHtml(m))+bodyHtml(m)+rcHtml(m.id)+'<div data-corrslot="'+E(m.id)+'">'+corrsFor(m.id)+'</div><span class="mzeit">'+timeStr(m.created_at)+'</span></div>'+
       msgActions(m)+'</div>';
   }
