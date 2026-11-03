@@ -4,7 +4,7 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { tuerenZu, istSprechclubPlan } from './_tueren.js';
+import { tuerenZu, istSprechclubPlan, VERKAUF_PAUSIERT } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -267,6 +267,15 @@ export default async function handler(req, res) {
        ein gespeicherter Link oder eine Unterseite, die jemand beim
        Umbauen uebersehen hat, kaeme sonst durch. Die Community bleibt
        offen. */
+    /* Julia, 3.11.2026: "Nur die Warteliste." Solange der Verkauf
+       steht, kommt gar keine Kasse zustande — auch nicht ueber einen
+       alten Link oder einen Knopf, der irgendwo stehen geblieben ist. */
+    if (VERKAUF_PAUSIERT) {
+      return res.status(403).json({ error: 'verkauf_pausiert',
+        hinweis: 'Gerade kann man noch nicht buchen. Trag dich auf die Warteliste ein, '
+          + 'dann melden wir uns bei dir, sobald es losgeht: '
+          + 'https://www.deutschoderwas-club.de/index.html#warteliste' });
+    }
     if (istSprechclubPlan(id) && tuerenZu()) {
       return res.status(403).json({ error: 'tueren_zu',
         hinweis: 'Die Anmeldung für den Sprechclub ist gerade geschlossen. '

@@ -867,6 +867,14 @@ function zumPreis(){
    steht auch in api/create-checkout.js — wer hier etwas ändert, muss
    sie dort ändern, sonst verspricht die Seite etwas anderes, als
    Stripe abbucht. */
+/* Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis ist
+   nur da damit sie wissen wie teuer das ist)", "Es gibt noch kein
+   Kaufen", "Nur die Warteliste." Die Preise bleiben stehen, der Kauf
+   nicht. Der eigentliche Riegel liegt im Server (api/_tueren.js,
+   VERKAUF_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
+   erst in die Kasse laeuft und dort abgewiesen wird.
+   Wieder verkaufen: hier und dort auf false. */
+window.VERKAUF_PAUSIERT = true;
 var TAKT = 'monat';
 function setzeTakt(){ /* Schalter entfernt — bleibt nur fuer alte Aufrufe */ }
 
@@ -876,6 +884,7 @@ function setzeTakt(){ /* Schalter entfernt — bleibt nur fuer alte Aufrufe */ }
    eingebettete Kasse — auf einer Werbeseite zaehlt, dass der Knopf
    immer funktioniert, auch wenn Stripe.js nicht laedt. */
 async function kaufen(stufe){
+  if (window.VERKAUF_PAUSIERT) { zurWarteliste(); return; }
   if (stufe==='premium' && tuerenZu()) { zurWarteliste(); return; }
   var id = stufe==='premium' ? 'premium_month' : 'community_month';
   var knopf = document.getElementById(stufe==='premium' ? 'kaufPremium' : 'kaufCommunity');

@@ -1432,7 +1432,18 @@ async function initHome(){
 function setLoggedIn(u){ user = u; const nav = document.getElementById('navAuth'); if (nav){ nav.textContent='Schülerbereich'; } }
 function goBereich(e){ if (user) return; e.preventDefault(); pendingAction = ()=>{ location.href='/schuelerbereich'; }; openLogin(); }
 async function buy(packageId){ openEmbeddedCheckout({ packageId }); }
-async function buyPass(passId, trial){ openEmbeddedCheckout({ passId, trial }); }
+/* Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis ist
+   nur da damit sie wissen wie teuer das ist)", "Es gibt noch kein
+   Kaufen", "Nur die Warteliste." Die Preise bleiben stehen, der Kauf
+   nicht. Der eigentliche Riegel liegt im Server (api/_tueren.js,
+   VERKAUF_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
+   erst in die Kasse laeuft und dort abgewiesen wird.
+   Wieder verkaufen: hier und dort auf false. */
+window.VERKAUF_PAUSIERT = true;
+async function buyPass(passId, trial){
+  if (window.VERKAUF_PAUSIERT) { zurWarteliste('Premium'); return; }
+  openEmbeddedCheckout({ passId, trial });
+}
 /* Vorauswahl fuer selectPass/npBuy. Hier stand bis zum 05.10.2026
    'allinclusive' — ein Pass, den es nicht mehr gibt. 'premium' waere
    auch falsch: das ist das alte 149-Euro-Premium fuer Bestandskunden.

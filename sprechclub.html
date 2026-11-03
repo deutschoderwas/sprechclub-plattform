@@ -530,6 +530,14 @@ function clubOffen(){ return Date.now() >= CLUB_START; }
 /* Julia, 3.11.2026: Premium kostet 139 \u20ac im Monat; das Jahresabo gibt
    es nicht mehr, der Zahlweise-Schalter ist weg. Dieselbe Zahl steht
    in api/create-checkout.js \u2014 \u00e4ndert sie sich dort, muss sie hier mit. */
+/* Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis ist
+   nur da damit sie wissen wie teuer das ist)", "Es gibt noch kein
+   Kaufen", "Nur die Warteliste." Die Preise bleiben stehen, der Kauf
+   nicht. Der eigentliche Riegel liegt im Server (api/_tueren.js,
+   VERKAUF_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
+   erst in die Kasse laeuft und dort abgewiesen wird.
+   Wieder verkaufen: hier und dort auf false. */
+window.VERKAUF_PAUSIERT = true;
 var PREMIUM = 'monat';
 var PREIS = 139, RABATT = 0;
 
@@ -665,6 +673,7 @@ document.addEventListener('keydown', function(e){
 });
 
 async function bezahlen(passId, knopf, alterText){
+  if (window.VERKAUF_PAUSIERT) { location.href = '/index.html#warteliste'; return; }
   meldung('');
   if (!/^https?:$/.test(location.protocol)) {
     meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.');

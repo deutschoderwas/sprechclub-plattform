@@ -23,8 +23,23 @@ export const TUEREN_AUF   = null;   // z. B. Date.parse('2026-11-16T00:00:00+01:
 export const tuerenZu = (jetzt = Date.now()) =>
   jetzt >= TUEREN_ZU_AB && (!TUEREN_AUF || jetzt < TUEREN_AUF);
 
-/* Welcher Kauf haengt an den Tueren? Nur der Sprechclub selbst.
-   Die Community bleibt ausdruecklich offen — die Lernplattform ist
-   genau das, was wir waehrend der Pause anbieten, und die
-   Willkommensmail schickt die Leute auch dorthin. */
+/* Welcher Kauf haengt an den Tueren? Der Sprechclub selbst. */
 export const istSprechclubPlan = (id) => /^premium_/.test(String(id || ''));
+
+/* ------------------------------------------------------------
+   Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis
+   ist nur da damit sie wissen wie teuer das ist)", "Es gibt noch
+   kein Kaufen", "Nur die Warteliste."
+
+   Also steht der Verkauf still — nicht nur Premium, sondern alles.
+   Die Preise bleiben auf den Seiten stehen, damit man weiss, worauf
+   man wartet; nur kaufen kann man gerade nichts.
+
+   WIEDER VERKAUFEN sind zwei Zeilen:
+     1. hier VERKAUF_PAUSIERT auf false setzen
+     2. in index.html, club.html, preise.html und sprechclub.html
+        window.VERKAUF_PAUSIERT auf false
+   Der Riegel hier ist der entscheidende: er haelt auch, wenn jemand
+   mit einem alten Link direkt in die Kasse springt.
+   ------------------------------------------------------------ */
+export const VERKAUF_PAUSIERT = true;

@@ -235,6 +235,7 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
 else bzKlickAus();
 
 async function bezahlen(passId, knopf, alterText){
+  if (window.VERKAUF_PAUSIERT) { location.href = '/index.html#warteliste'; return; }
   meldung('');
   if (!/^https?:$/.test(location.protocol)) { meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.'); zurueck(knopf, alterText); return; }
   var pk = (window.SPRECHCLUB_CONFIG && window.SPRECHCLUB_CONFIG.STRIPE_PK) || '';
@@ -278,6 +279,14 @@ function zurueck(knopf, alterText){ if(knopf){ knopf.disabled = false; knopf.tex
    community_month 16 € im Monat, premium_month 139 € im Monat.
    Julia, 3.11.2026: "Jährliches Abo bitte weg machen" — es gibt nur
    noch die monatliche Zahlweise, der Schalter ist weg. */
+/* Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis ist
+   nur da damit sie wissen wie teuer das ist)", "Es gibt noch kein
+   Kaufen", "Nur die Warteliste." Die Preise bleiben stehen, der Kauf
+   nicht. Der eigentliche Riegel liegt im Server (api/_tueren.js,
+   VERKAUF_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
+   erst in die Kasse laeuft und dort abgewiesen wird.
+   Wieder verkaufen: hier und dort auf false. */
+window.VERKAUF_PAUSIERT = true;
 var ABRECHNUNG = 'monat';
 function setzeAbrechnung(){ /* Schalter entfernt */ }
 
