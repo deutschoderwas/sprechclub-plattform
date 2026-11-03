@@ -32,7 +32,16 @@
     uhr: null,
     pegel: 0,        // wie laut es gerade ist, 0 bis 1
     pegelStop: null, // haelt die Pegelschleife an
-    hatte: false     // schon einmal gesprochen? (nur fuer den Knopftext)
+    hatte: false,    // schon einmal gesprochen? (nur fuer den Knopftext)
+    /* Julia, 3.11.2026: "eine Schuelerin schreibt dass amanda auf der
+       plattform nicht funktioniert wenn man mit ihr LIVE reden
+       moechte." Das Bild zeigte ein ewiges "Verbinde ...".
+       Zwei Dinge fehlten: ein Wachhund, der das Warten beendet, und
+       der Grund, warum die Leitung wieder zugeht. Beides steht jetzt
+       hier und geht am Ende mit an den Server, damit es im Protokoll
+       nachlesbar ist statt nur im Gefuehl der Schuelerin. */
+    grund: '',       // warum die Leitung zuging
+    wachhund: null   // beendet das Warten nach 25 Sekunden
   };
 
   function el(id) { return document.getElementById(id); }
@@ -294,7 +303,13 @@
      ============================================================ */
   window.amStimmeStart = function () {
     if (G.lauf) return;
-    G.zustand = 'verbindet'; G.mitschrift = []; zeichnen();
+    G.zustand = 'verbindet'; G.mitschrift = []; G.grund = ''; zeichnen();
+
+    if (G.wachhund) clearTimeout(G.wachhund);
+    G.wachhund = setTimeout(function () {
+      if (G.lauf || G.zustand !== 'verbindet') return;
+      melden('Die Verbindung kommt gerade nicht zustande. Schreib Amanda so lange im Chat \u2014 sie antwortet dort genauso.', true);
+    }, 25000);
 
     var karte = null;
 
@@ -323,9 +338,24 @@
             muttersprache: karte.variablen.muttersprache || '',
             thema:         karte.variablen.thema || ''
           },
-          onConnect:    function () { G.start = Date.now(); G.zustand = 'hoert'; zeichnen(); uhrAn(); pegelAn(); },
-          onDisconnect: function () { aufraeumen(false); },
-          onError:      function (e) { melden(String((e && e.message) || e)); },
+          onConnect:    function () {
+            if (G.wachhund) { clearTimeout(G.wachhund); G.wachhund = null; }
+            G.start = Date.now(); G.zustand = 'hoert'; zeichnen(); uhrAn(); pegelAn();
+          },
+          onDisconnect: function (d) {
+            /* Den Grund festhalten, BEVOR aufgeraeumt wird. Der SDK
+               legt ihn je nach Fassung anders ab. */
+            try {
+              G.grund = (d && (d.reason || d.message
+                        || (d.details && (d.details.reason || d.details.message)))) || '';
+              if (!G.grund && d) G.grund = JSON.stringify(d).slice(0, 300);
+            } catch (e) {}
+            aufraeumen(false);
+          },
+          onError: function (e) {
+            try { G.grund = String((e && e.message) || e).slice(0, 300); } catch (x) {}
+            melden(String((e && e.message) || e));
+          },
           onModeChange: function (m) {
             G.zustand = (m && m.mode === 'speaking') ? 'spricht' : 'hoert';
             zeichnen();
@@ -343,6 +373,7 @@
       })
       .then(function (unterhaltung) { G.lauf = unterhaltung; })
       .catch(function (e) {
+        if (G.wachhund) { clearTimeout(G.wachhund); G.wachhund = null; }
         var m = String((e && e.message) || e);
         if (m === 'nicht_eingerichtet') return melden('Sprechen ist noch nicht freigeschaltet. Schreib Amanda so lange im Chat — sie antwortet dort genauso.', true);
         if (m === 'kein_zugang')       return melden('Sprechen gehört zur Mitgliedschaft. Im Chat kannst du Amanda trotzdem fragen.', true);
@@ -373,7 +404,10 @@
   };
 
   function aufraeumen(wegenZeit) {
+    if (G.wachhund) { clearTimeout(G.wachhund); G.wachhund = null; }
     var sek = G.start ? Math.round((Date.now() - G.start) / 1000) : 0;
+    var sofortWeg = (G.start > 0 && sek < 5 && !wegenZeit);
+    var grund = G.grund;
     var id = G.zeile, lauf = G.lauf;
     var gespraechId = '';
     try { gespraechId = (lauf && lauf.getId && lauf.getId()) || ''; } catch (e) {}
@@ -390,12 +424,20 @@
     }
     var u = el('asUhr'); if (u) u.textContent = sek ? 'Das Gespräch hat ' + mmss(sek) + ' gedauert.' : '';
     zeichnen();
+    /* Die Leitung ging sofort wieder zu. Das liegt nicht am Mikrofon
+       und nicht am Netz der Schuelerin — sie soll nicht glauben, sie
+       haette etwas falsch gemacht. */
+    if (sofortWeg) {
+      melden('Amanda konnte das Gespräch gerade nicht annehmen. Das liegt nicht an dir — '
+             + 'wir kümmern uns darum. Schreib ihr so lange im Chat, dort antwortet sie wie immer.', true);
+    }
     if (wegenZeit) {
       var z = el('asZustand');
       if (z) z.textContent = 'Deine Sprechminuten für diesen Monat sind aufgebraucht.';
     }
 
-    if (id) ruf({ aktion: 'ende', gespraech: id, sekunden: sek, gespraech_id: gespraechId })
+    if (id) ruf({ aktion: 'ende', gespraech: id, sekunden: sek,
+                  gespraech_id: gespraechId, grund: grund })
       .catch(function () {});
   }
 

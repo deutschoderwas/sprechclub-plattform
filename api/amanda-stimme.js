@@ -146,6 +146,18 @@ export default async function handler(req, res) {
         .eq('id', id)
         .eq('user_id', uid);
     } catch (e) { /* verloren ist verloren — die Grenze rechnet weiter */ }
+    /* Julia, 3.11.2026: Seit dem 2.11. endet JEDES Gespraech nach
+       zwei bis vier Sekunden mit null Sekunden Sprechzeit. Woran es
+       liegt, sagt uns bisher niemand — der Browser bekommt von
+       ElevenLabs einen Grund, und der ging bisher verloren. Jetzt
+       steht er im Protokoll, damit beim naechsten Mal nicht wieder
+       geraten werden muss. */
+    if (sek < 5) {
+      const grund = String(req.body?.grund || '').slice(0, 300);
+      console.log('[amanda] Gespraech ' + id + ' nach ' + sek + 's zu Ende'
+        + (grund ? ' — Grund: ' + grund : ' — ohne Grund vom SDK')
+        + ' (eleven: ' + (String(req.body?.gespraech_id || '') || 'keine Kennung') + ')');
+    }
     return res.status(200).json({ ok: true });
   }
 
