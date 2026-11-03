@@ -40,7 +40,7 @@
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
-                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B' };
+                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B', 'telcB1B2':'SPRECHEN_TELC_B1B2' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
@@ -287,6 +287,7 @@
     return '<div class="sp-karte sp-k-frage">'
       + '<div class="sp-karte-kopf"><span>'+E(k.kopf||'Teil 2 · Von sich erzählen')+'</span><b>'+E(k.kopfb||'Themenkarte')+'</b></div>'
       + '<div class="sp-thema">'+E(thema||k.thema||'')+'</div>'
+      + (k.foto ? '<div class="sp-foto"><img src="bilder/beruf/'+E(k.foto)+'.jpg" alt="'+E(k.bild||'')+'" loading="lazy"></div>' : '')
       + (k.text ? '<div class="sp-zeitschrift"><span>'+E(k.quelle||'Aus einer Zeitschrift')+'</span><p>'
           + E(k.text).replace(/\n/g,'<br>')+'</p></div>' : '')
       + '<div class="sp-stich">' + (k.punkte||[]).map(function(w){
@@ -779,6 +780,8 @@
 '  font-size:16px; font-weight:800; margin-top:2px }',
 
 '.sp-stich{ display:flex; flex-wrap:wrap; gap:9px; padding:20px 18px 6px }',
+'.sp-foto{ margin:14px 18px 0; border-radius:12px; overflow:hidden; background:#EEF1F4 }',
+'.sp-foto img{ display:block; width:100%; height:auto; max-height:360px; object-fit:cover }',
 '.sp-zeitschrift{ margin:14px 18px 0; padding:14px 16px; background:#FFFBF0; border-left:4px solid #E7B43A; border-radius:10px }',
 '.sp-zeitschrift span{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9A7414; margin-bottom:6px }',
 '.sp-zeitschrift p{ margin:0; font-size:15px; line-height:1.6; font-style:italic; color:#2A2F35 }',

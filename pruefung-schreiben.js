@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B' };
+                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B', 'telcB1B2':'SCHREIBEN_TELC_B1B2' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -573,7 +573,7 @@
     return '<div class="pw-selbst'+(voll?' fertig':'')+(dazu?' dazu':'')+'">'
       + '<div class="pw-selbst-kopf"><span class="pw-selbst-p">'+(voll?summe:'–')+'<em>/'+mMax(a)+'</em></span>'
       +   '<div><b>'+E(a.rubrikTitel || 'Bewerte dich nach den vier telc-Kriterien')+'</b>'
-      +   '<span>'+E(a.rubrikHinweis || 'Übungsschätzung: alle vier Kriterien gleich gewichtet.')+' Dein Text hat '+wz+' Wörter — verlangt sind etwa '+(a.woerter||350)+'.</span></div></div>'
+      +   '<span>'+E(a.rubrikHinweis || 'Übungsschätzung: alle vier Kriterien gleich gewichtet.')+' Dein Text hat '+wz+' Wörter'+(a.ohneWortzahl ? '.' : ' — verlangt sind etwa '+(a.woerter||350)+'.')+'</span></div></div>'
       + '<div class="pw-sr auto"><b>Erinnerung: Diese Punkte gehören in den Text</b><span class="pw-sh">'
       +   a.punkte.map(function(p){ return E(p.was); }).join(' · ')+'</span></div>'
       + a.rubrik.map(function(kr, j){

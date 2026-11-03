@@ -43,5 +43,7 @@ telc hat 24 Deutsch-Prüfungen (telc.net, Stand 01.11.2026).
   Gespräch im Betrieb, Ansagen; Brief mit 4 Leitpunkten (Zusatzpunkte IV nicht nachgebildet); Kontaktaufnahme /
   Gespräch über Arbeitsthema / Aufgabe lösen. Bestehen 180/300 und je 60 % (belegt).
 
+- telc B1·B2 Beruf komplett: lesen/hoeren/schreiben/sprechen-telc-b1b2.js. Quellen: telc Übungstest 1 B1·B2 Beruf + „Tipps zur Prüfungsvorbereitung". Hören alles einmal (4 Teile, 23), Lesen 4 Teile + Sprachbausteine 2 Teile (36), Schreiben 2 E-Mails je 4 Kriterien × 0–5 (40), Sprechen Foto/Kurzvortrag/Aufgabe (100). Grenzen belegt (HLS 27/43, Schreiben 14/30, Sprechen 35/75), Prognose typ b1b2. Fotos Teil 1: bilder/beruf/ (Unsplash, siehe bau/bildquellen-beruf.md).
+
 ## Als Nächstes
-telc B1·B2 Beruf, B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.
+telc B2·C1 Beruf, C1 Beruf — Formate jeweils bei telc prüfen.

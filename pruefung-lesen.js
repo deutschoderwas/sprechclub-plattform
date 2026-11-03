@@ -56,7 +56,7 @@
 
   var QUELLEN = { 'A1':'LESEN_A1', 'A2':'LESEN_A2', 'B1':'LESEN_B1', 'B2':'LESEN_B2', 'C1':'LESEN_C1',
                   /* 01.11.2026: eigene telc-Trainings */
-                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B', 'telcB2B':'LESEN_TELC_B2B' };
+                  'telcB1':'LESEN_TELC_B1', 'telcB2':'LESEN_TELC_B2', 'telcA2B1':'LESEN_TELC_A2B1', 'telcC1H':'LESEN_TELC_C1H', 'telcC1':'LESEN_TELC_C1', 'telcB1B':'LESEN_TELC_B1B', 'telcB2B':'LESEN_TELC_B2B', 'telcB1B2':'LESEN_TELC_B1B2' };
   function datenVon(niveau){ var n=QUELLEN[niveau]; return n ? (window[n]||null) : null; }
   window.lesenVorhanden = function(niveau){ return !!datenVon(niveau); };
   window.lesenDaten = function(niveau){ return datenVon(niveau); };
@@ -192,7 +192,8 @@
   }
 
   var SORTE_KOPF = { email:{z:'✉️',t:'E-Mail'}, zettel:{z:'📝',t:'Zettel'},
-                     sms:{z:'💬',t:'Nachricht'}, aushang:{z:'📌',t:'Aushang'} };
+                     sms:{z:'💬',t:'Nachricht'}, aushang:{z:'📌',t:'Aushang'},
+                     regel:{z:'📋',t:'Regelung'} };
 
   /* ---------- Symbolbilder ----------
      Ein Motiv pro Text. Die Bilder liegen in bilder/lesen/<schluessel>.webp.
@@ -282,7 +283,7 @@
       + (klick ? 'onclick="'+klick+'"' : 'disabled')+'>'
       + '<span class="pl-anz-b">'+buchstabe+'</span>'
       + '<span class="pl-anz-kopf">'
-      +   motivHTML(motivVon(heuhaufen(a.quelle, a.zeilen), 'anzeige'), '📰', 'klein')
+      +   motivHTML(motivVon(a.motiv ? '' : heuhaufen(a.quelle, a.zeilen), a.motiv || 'anzeige'), '📰', 'klein')
       +   '<span class="pl-anz-q">'+E(a.quelle)+'</span></span>'
       + '<span class="pl-anz-z">'+a.zeilen.map(function(z){ return '<span>'+E(z)+'</span>'; }).join('')
       + '</span></button>';
@@ -377,8 +378,9 @@
       h += optHTML(a, zeigen);
 
     } else if(art==='anzeigenX'){
-      /* A2 Teil 4: sechs Anzeigen a–f, dazu Situationen. Eine passt nie: x. */
-      h += '<div class="pl-sit"><span>Ihre Situation</span><p>'+E(a.situation)+'</p></div>';
+      /* A2 Teil 4: sechs Anzeigen a–f, dazu Situationen. Eine passt nie: x.
+         telc B1·B2 Beruf: Fragen und Tipps — eigene Beschriftung (a.sitKopf, a.xText). */
+      h += '<div class="pl-sit"><span>'+E(a.sitKopf||'Ihre Situation')+'</span><p>'+E(a.situation)+'</p></div>';
       h += '<div class="pl-anzeigen pl-anz-6">'
          + e.anzeigen.map(function(an){
              return anzeigeKarte(an, an.b, anzKlasse(a, an.b, zeigen),
@@ -390,7 +392,7 @@
              : (L.gewaehlt[L.i]==='x' ? ' schlecht' : ' blass'))
              : (L.gewaehlt[L.i]==='x' ? ' wahl' : ''))+'" '
          + (L.offen[L.i]!=null?'disabled':'onclick="lesenAnz(\'x\')"')+'>'
-         + '<b>x</b> Keine Anzeige passt</button></div>';
+         + '<b>x</b> '+E(a.xText||'Keine Anzeige passt')+'</button></div>';
 
     } else if(art==='schild'){
       h += '<div class="pl-schild-wrap">'
@@ -454,7 +456,9 @@
     blog:    { z:'💻', t:'Aus einem Blog' },
     email:   { z:'✉️', t:'E-Mail' },
     brief:   { z:'📄', t:'Brief' },
-    seite:   { z:'🌐', t:'Von einer Internetseite' }
+    seite:   { z:'🌐', t:'Von einer Internetseite' },
+    aushang: { z:'📌', t:'Aushang' },
+    regel:   { z:'📋', t:'Regelung' }
   };
 
   /* telc-Sprachbausteine: Lücken „__(3)__" als Kästchen zeigen, die gefragte hervorheben. */
