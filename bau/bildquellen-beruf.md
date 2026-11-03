@@ -17,3 +17,11 @@ Ausgewählt am 03.11.2026 über die Unsplash-Suche mit Filter „Free" (keine Un
 - mittagspause.jpg: https://unsplash.com/photos/talking-people-sitting-beside-table (images.unsplash.com/photo-1568992688065-536aad8a12f6)
 - grossraum.jpg: https://unsplash.com/photos/people-working-at-desks-in-open-office-kN_kViDchA0 (images.unsplash.com/photo-1560264280-88b68371db39)
 - workshop.jpg: https://unsplash.com/photos/three-men-sitting-while-using-laptops-and-watching-man-beside-whiteboard-wD1LRb9OeEo (images.unsplash.com/photo-1557804506-669a67965ba0)
+
+## Ergänzt für den DTZ (Sprechen Teil 2, 03.11.2026)
+- umzug.jpg: images.unsplash.com/photo-1758523670991-ee93bc48d81d („Couple carrying moving boxes into a new home")
+- markt.jpg: images.unsplash.com/photo-1761839257664-ecba169506c1 („Couple shopping for gourds at an outdoor market")
+- bus.jpg: images.unsplash.com/photo-1544190312-44b545e98ef0 („people sitting down inside vehicle")
+- kochen.jpg: images.unsplash.com/photo-1761839258803-21515f43190c („Grandfather and grandchildren prepare food in kitchen")
+- spielplatz.jpg: images.unsplash.com/photo-1593103916129-87e179a70c1f („girl in pink and white floral dress riding on swing")
+- werkstatt.jpg wird mitbenutzt (siehe oben).

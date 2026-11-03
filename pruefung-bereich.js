@@ -72,13 +72,42 @@
       hinweis:'Schriftlich zusammen 90 Minuten. Sprechen 15 Minuten zu zweit, 10 Minuten allein — '
              +'ohne Vorbereitungszeit, die Aufgabe kommt erst in der Prüfung.' },
 
+    /* 03.11.2026: Sprechen-Grenze korrigiert (B1 ab 75, nicht ab 40) und volles
+       Training ergänzt — geprüft an den g.a.s.t.-Übungssätzen 1 und 2. */
     { id:'dtz', name:'DTZ', anbieter:'Deutsch-Test für Zuwanderer', niveau:'A2–B1',
       bild:'amt', kurs:'dtz', muster:'B1', geprueft:true,
       fuer:'Der Abschluss des Integrationskurses. Zählt für Niederlassung und Einbürgerung.',
-      module:[ {id:'hoeren',n:'Hören',m:'25'}, {id:'lesen',n:'Lesen',m:'45'},
-               {id:'schreiben',n:'Schreiben',m:'30'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
-      punkte:'Hören und Lesen zusammen 45 Punkte — ab 33 ist es B1, ab 20 A2. '
-            +'Schreiben 20 Punkte, ab 15 B1. Sprechen 100 Punkte, ab 40 B1.' },
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 25', t:'Ansagen am Telefon, Radioansagen, Alltagsgespräche und Meinungen. Jeder Text nur einmal.'},
+               {id:'lesen',n:'Lesen',m:'45', t:'Ein Wegweiser, Anzeigen, kurze Texte, ein Informationsblatt und ein Brief mit Lücken.'},
+               {id:'schreiben',n:'Schreiben',m:'30', t:'Ein Brief oder eine E-Mail mit vier Leitpunkten, Aufgabe A oder B zur Wahl.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 16', t:'Zu zweit: über sich sprechen, ein Foto und eigene Erfahrungen, gemeinsam etwas planen.'} ],
+      hinweis:'Schriftlich etwa 100 Minuten: Hören ca. 25, Lesen 45, Schreiben 30. Mündlich etwa 16 Minuten zu zweit.',
+      punkte:'Hören und Lesen zusammen 45 Punkte: ab 20 A2, ab 33 B1. Schreiben 20 Punkte: ab 7 A2, ab 15 B1. '
+            +'Sprechen 100 Punkte: ab 35 A2, ab 75 B1. Ohne mindestens A2 im Sprechen gibt es kein Zertifikat; '
+            +'dazu brauchst du im Hören und Lesen oder im Schreiben mindestens dasselbe Niveau wie im Sprechen.',
+      training:{ lesen:'telcDTZ', hoeren:'telcDTZ', schreiben:'telcDTZ', sprechen:'telcDTZ' },
+      prognose:{ typ:'dtz' },
+      mat:{
+        wortschatz:['Ämter und Formulare','Wohnung, Vermieter und Nachbarn','Arzt und Gesundheit','Kita, Schule und Elterngespräch',
+                    'Arbeit, Bewerbung und Jobcenter','Einkaufen und Reklamation','Bus, Bahn und Verkehr','Freizeit, Kurse und Vereine'],
+        grammatik:['weil, dass, wenn, ob — das Verb am Ende','Perfekt beim Erzählen','Modalverben (müssen, dürfen, können, möchten)',
+                   'Höflich bitten: Könnten Sie …? Ich hätte gern …','Präpositionen mit Dativ und Akkusativ','Zeitangaben (seit, bis, ab, vor)'],
+        redemittel:[
+          ['Brief: Anfang und Schluss','Sehr geehrte Frau …, / Sehr geehrter Herr … · Mit freundlichen Grüßen · Liebe …, / Viele Grüße'],
+          ['Brief: bitten und beschweren','Leider ist … kaputt. · Könnten Sie bitte … · Ich bitte Sie, das bis … zu reparieren.'],
+          ['Sich vorstellen','Ich heiße … und komme aus … · Ich wohne seit … in … · Ich arbeite als …'],
+          ['Foto beschreiben','Auf dem Foto sehe ich … · Ich glaube, das ist … · Ich habe auch schon …'],
+          ['Gemeinsam planen','Wie wäre es mit …? · Gute Idee! · Das geht leider nicht, weil … · Dann machen wir es so.'] ],
+        bewertung:[
+          ['Hören und Lesen (45)','Jede richtige Lösung ein Punkt. A2 ab 20, B1 ab 33.'],
+          ['Schreiben (20)','Aufgabenbewältigung, Gestaltung, Korrektheit, Wortschatz, je bis 5 Punkte. A2 ab 7, B1 ab 15.'],
+          ['Sprechen (100)','50 für die Aufgaben (Teil 1 10, Teil 2 20, Teil 3 20), 50 für Aussprache, Flüssigkeit, Korrektheit, Wortschatz. A2 ab 35, B1 ab 75.'],
+          ['Zertifikat','Sprechen mindestens A2. B1 auf dem Zertifikat: Sprechen B1 und dazu Hören/Lesen oder Schreiben B1.'] ],
+        ablauf:[
+          'Schriftlich: Hören ca. 25 Minuten, Lesen 45, Schreiben 30.',
+          'Beim Hören: jeder Text nur einmal.',
+          'Mündlich zu zweit, etwa 16 Minuten.'] },
+      uebungstest:'https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf' },
 
     { id:'b1', name:'Goethe-Zertifikat B1', anbieter:'Goethe · ÖSD', niveau:'B1',
       bild:'buero', kurs:'goethetelc', muster:'B1',
@@ -1446,7 +1475,27 @@
       + '</div>','pf-ber');
   }
 
+  /* DTZ: drei Ergebnisse, jedes B1, A2 oder darunter. */
+  function prognoseDTZ(p){
+    var pr = {}; p.module.forEach(function(m){ pr[m.id] = modulProzent(p, m); });
+    var hl = Math.round(((pr.hoeren||0)*20 + (pr.lesen||0)*25)/100), sch = Math.round((pr.schreiben||0)*20/100), spr = Math.round(pr.sprechen||0);
+    var st = function(x, a2, b1){ return x>=b1 ? 'B1' : (x>=a2 ? 'A2' : '–'); };
+    var sH = st(hl,20,33), sS = st(sch,7,15), sP = st(spr,35,75);
+    var erg = null;
+    if(sP==='B1' && (sH==='B1' || sS==='B1')) erg = 'B1';
+    else if(sP!=='–' && (sH!=='–' || sS!=='–')) erg = 'A2';
+    var z = function(n, x, max, a2, b1, s){
+      return '<div class="pf-prog '+(s==='–'?'knapp':'gut')+'"><div class="pf-prog-k"><b>'+E(n)+'</b><span>'+x+' von '+max+' · A2 ab '+a2+', B1 ab '+b1+'</span></div>'
+        + '<div class="pf-prog-bar"><i style="width:'+Math.max(2,Math.round(x/max*100))+'%"></i><em style="left:'+Math.round(a2/max*100)+'%"></em><em style="left:'+Math.round(b1/max*100)+'%"></em></div></div>'; };
+    return block('5','Bist du bereit?','<div class="pf-bereit"><p>Eine Schätzung aus deinen Trainingsergebnissen, hochgerechnet auf die drei Ergebnisse des DTZ.</p>'
+      + '<div class="pf-prog '+(erg?'gut':'knapp')+'"><div class="pf-prog-k"><b>Nach deinen Übungen</b><span>'+(erg||'noch nicht A2')+'</span></div>'
+      + '<p>'+(erg==='B1' ? '✅ Das reicht für B1.' : (erg==='A2' ? '🟡 Das reicht für A2 — für B1 brauchst du B1 im Sprechen und im Hören/Lesen oder im Schreiben.' : '⏳ Noch nicht genug für A2 — wichtig: Ohne A2 im Sprechen gibt es kein Zertifikat.'))+'</p></div>'
+      + z('Hören und Lesen', hl, 45, 20, 33, sH) + z('Schreiben', sch, 20, 7, 15, sS) + z('Sprechen', spr, 100, 35, 75, sP)
+      + '</div>','pf-ber');
+  }
+
   function prognoseBlock(p){
+    if(p.prognose.typ==='dtz') return prognoseDTZ(p);
     if(p.prognose.typ==='b2c1') return prognoseB2C1(p);
     if(p.prognose.typ==='a2b1') return prognoseA2B1(p);
     if(p.prognose.typ==='b1b2') return prognoseB1B2(p);
