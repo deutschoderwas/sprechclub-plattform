@@ -414,17 +414,48 @@
     { id:'pflege', name:'Deutsch für die Pflege', anbieter:'telc B1·B2 Pflege', niveau:'B1–B2',
       bild:'pflege', kurs:'pflege', fach:true, geprueft:true, dauer:'ca. 2 Std 10 Min',
       fuer:'Anerkennung als Pflegefachkraft — Übergabe, Angehörige, Dokumentation.',
+      /* 03.11.2026: Modultexte an den telc-Übungstest 1 angepasst (Sprechen ist
+         Foto, Kurzvortrag, Diskussion; Schreiben Aufnahme- oder Biographiebericht)
+         und volles Prüfungstraining ergänzt. */
       module:[ {id:'hoeren',n:'Hören',m:'25',
-                 t:'Übergabe, Visite, Telefon — vier Teile aus dem Dienstalltag.'},
+                 t:'Telefonansagen, Gespräche im Pflegealltag, eine Teambesprechung, Meinungen. Jeder Text nur einmal.'},
                {id:'lesen',n:'Lesen und Sprachbausteine',m:'60',
-                 t:'Pflegeberichte, Dienstpläne, Medikamentenpläne — dazu die Grammatik im Text.'},
+                 t:'E-Mails, eine Pflegeplanung, Beipackzettel und Regeln, ein Infotext; dazu zwei Berichte mit Lücken.'},
                {id:'schreiben',n:'Schreiben',m:'30',
-                 t:'Ein Pflegebericht. Punkte gibt es für Vollständigkeit, nicht für schöne Sätze.'},
+                 t:'Ein Aufnahmebericht oder ein Biographiebericht aus einem Bogen. Punkte gibt es für Vollständigkeit, nicht für schöne Sätze.'},
                {id:'sprechen',n:'Sprechen',m:'ca. 16',
-                 t:'Drei Teile zu zweit: Übergabe, Gespräch mit Angehörigen, Beratung.'} ],
+                 t:'Zu zweit: ein Foto aus der Pflege, ein Kurzvortrag für eine Pflegeschülerin, eine Diskussion.'} ],
       hinweis:'Eine Prüfung, zwei Niveaus: ob am Ende B1 oder B2 auf dem Zertifikat steht, '
              +'entscheidet dein Ergebnis. Schriftlich zusammen 115 Minuten. Sprechen ca. 16 Minuten '
-             +'zu zweit — dazu 20 Minuten Vorbereitung. Einzelne Module kann man hier nicht ablegen.' },
+             +'zu zweit, dazu 20 Minuten Vorbereitung. Einzelne Module kann man hier nicht ablegen.',
+      punkte:'Drei Ergebnisse: Hören, Lesen und Sprachbausteine zusammen (59 Punkte: B1 ab 27, B2 ab 43), Schreiben (20: B1 ab 7, B2 ab 15) '
+            +'und Sprechen (100: B1 ab 35, B2 ab 75). Ohne B1 im Sprechen gibt es kein Zertifikat. B2 bekommst du mit B2 im Sprechen, '
+            +'B2 in einem schriftlichen Teil und mindestens B1 im anderen.',
+      training:{ lesen:'telcPfl', hoeren:'telcPfl', schreiben:'telcPfl', sprechen:'telcPfl' },
+      prognose:{ typ:'b1b2', schreiben:{ max:20, b1:7, b2:15, min:4 } },
+      mat:{
+        wortschatz:['Grundpflege und Körperpflege','Behandlungspflege: Wunde, Blutzucker, Medikamente','Mobilisation und Sturzprophylaxe',
+                    'Ernährung, Trinken, Schluckstörungen','Demenz und Kommunikation','Dokumentation und Pflegeplanung (AEDL/ATL)',
+                    'Übergabe und Teambesprechung','Angehörige und Hausärzte','Hygiene und Arbeitsschutz','Dienstplan und Fortbildung'],
+        grammatik:['Präteritum und Perfekt im Bericht','Passiv in der Dokumentation (wurde mobilisiert, wird gemessen)',
+                   'Zeitliche Konnektoren: nachdem, bevor, während, danach','Kausale Konnektoren: weil, da, deshalb, sodass',
+                   'Präpositionen in Fachwendungen (zur Toilette begleiten, bei Bedarf, nach Rücksprache)','Modalverben für Anweisungen'],
+        redemittel:[
+          ['Bericht schreiben','Frau … wurde am … aufgenommen. · Sie ist auf einen Rollator angewiesen. · Bei der Körperpflege braucht sie Unterstützung beim …'],
+          ['Biographie','Herr … wurde … in … geboren. · Er arbeitete viele Jahre als … · Früher ging er gern …'],
+          ['Foto beschreiben','Auf dem Foto sieht man eine Pflegerin, die … · Ich glaube, das ist … · Bei uns im Heim …'],
+          ['Einer Schülerin etwas erklären','Wichtig ist zuerst, dass … · Achte besonders darauf, … · Wenn du unsicher bist, frag …'],
+          ['Diskutieren','Ich sehe das wie die Kollegin, die sagt … · Das stimmt, aber … · Wie wäre es mit einem Kompromiss: …'] ],
+        bewertung:[
+          ['Hören, Lesen, Sprachbausteine (59)','Jede richtige Lösung ein Punkt. B1 ab 27, B2 ab 43.'],
+          ['Schreiben (20)','Aufgabenbewältigung, Gestaltung, Korrektheit, Wortschatz, je bis 5. Bei der Aufgabenbewältigung kostet jede fehlende Angabe einen Punkt. B1 ab 7, B2 ab 15.'],
+          ['Sprechen (100)','50 für die Aufgaben (Foto 5 + 5, Kurzvortrag 15 + 5, Diskussion 20), 50 für Aussprache, Flüssigkeit, Korrektheit, Wortschatz. B1 ab 35, B2 ab 75.'],
+          ['Zertifikat','B2: Sprechen B2 und schriftlich einmal B2, einmal mindestens B1. B1: Sprechen B1 und schriftlich B1; ein schwacher Teil geht nur mit Mindestpunkten (19 bzw. 4).'] ],
+        ablauf:[
+          'Schriftlich ohne Pause: Hören ca. 25 Minuten, Lesen und Sprachbausteine 60, Schreiben 30.',
+          'Beim Hören: jeder Text nur einmal.',
+          'Mündlich zu zweit, ca. 16 Minuten, vorher 20 Minuten Vorbereitung. Den Kurzvortrag nicht ablesen.'] },
+      uebungstest:'https://www.telc.net/fileadmin/user_upload/pdfs/Handbuch_und_Tipps_fuer_Pruefungsvorbereitung/Deutsch_b1_b2_pflege_tipps_zur_Pruefungsvorbereitung.pdf' },
 
     { id:'telcb1beruf', name:'telc Deutsch B1+ Beruf', anbieter:'telc · Beruf', niveau:'B1',
       bild:'kunden', kurs:'goethetelc', telc:true, fach:true, geprueft:true,
@@ -1436,13 +1467,15 @@
   /* telc B1·B2 Beruf: drei Ergebnisse, jedes B2, B1 oder darunter. */
   function prognoseB1B2(p){
     var pr = {}; p.module.forEach(function(m){ pr[m.id] = modulProzent(p, m); });
-    var hls = Math.round(((pr.hoeren||0)*23 + (pr.lesen||0)*36)/100), sch = Math.round((pr.schreiben||0)*40/100), spr = Math.round(pr.sprechen||0);
+    /* Schreiben: B1·B2 Beruf 40 Punkte (14/30), B1·B2 Pflege 20 Punkte (7/15). */
+    var SC = p.prognose.schreiben || { max:40, b1:14, b2:30, min:8 };
+    var hls = Math.round(((pr.hoeren||0)*23 + (pr.lesen||0)*36)/100), sch = Math.round((pr.schreiben||0)*SC.max/100), spr = Math.round(pr.sprechen||0);
     var st = function(x, b1, b2){ return x>=b2 ? 'B2' : (x>=b1 ? 'B1' : '–'); };
-    var sH = st(hls,27,43), sS = st(sch,14,30), sP = st(spr,35,75);
+    var sH = st(hls,27,43), sS = st(sch,SC.b1,SC.b2), sP = st(spr,35,75);
     var erg = null;
     if(sP!=='–'){
       if(sP==='B2' && sH!=='–' && sS!=='–' && (sH==='B2' || sS==='B2')) erg = 'B2';
-      else if((sH!=='–' && sS!=='–') || (sH!=='–' && sch>=8) || (sS!=='–' && hls>=19)) erg = 'B1';
+      else if((sH!=='–' && sS!=='–') || (sH!=='–' && sch>=SC.min) || (sS!=='–' && hls>=19)) erg = 'B1';
     }
     var z = function(n, x, max, b1, b2, s){
       return '<div class="pf-prog '+(s==='–'?'knapp':'gut')+'"><div class="pf-prog-k"><b>'+E(n)+'</b><span>'+x+' von '+max+' · B1 ab '+b1+', B2 ab '+b2+'</span></div>'
@@ -1450,7 +1483,7 @@
     return block('5','Bist du bereit?','<div class="pf-bereit"><p>Eine Schätzung aus deinen Trainingsergebnissen, hochgerechnet auf die drei Ergebnisse der Prüfung.</p>'
       + '<div class="pf-prog '+(erg?'gut':'knapp')+'"><div class="pf-prog-k"><b>Nach deinen Übungen</b><span>'+(erg||'noch nicht B1')+'</span></div>'
       + '<p>'+(erg==='B2' ? '✅ Das reicht für B2.' : (erg==='B1' ? '🟡 Das reicht für B1 — für B2 brauchst du B2 im Sprechen und in einem schriftlichen Teil.' : '⏳ Noch nicht genug für B1 — wichtig: Ohne B1 im Sprechen gibt es kein Zertifikat.'))+'</p></div>'
-      + z('Hören, Lesen, Sprachbausteine', hls, 59, 27, 43, sH) + z('Schreiben', sch, 40, 14, 30, sS) + z('Sprechen', spr, 100, 35, 75, sP)
+      + z('Hören, Lesen, Sprachbausteine', hls, 59, 27, 43, sH) + z('Schreiben', sch, SC.max, SC.b1, SC.b2, sS) + z('Sprechen', spr, 100, 35, 75, sP)
       + '</div>','pf-ber');
   }
 

@@ -25,3 +25,11 @@ Ausgewählt am 03.11.2026 über die Unsplash-Suche mit Filter „Free" (keine Un
 - kochen.jpg: images.unsplash.com/photo-1761839258803-21515f43190c („Grandfather and grandchildren prepare food in kitchen")
 - spielplatz.jpg: images.unsplash.com/photo-1593103916129-87e179a70c1f („girl in pink and white floral dress riding on swing")
 - werkstatt.jpg wird mitbenutzt (siehe oben).
+
+## Ergänzt für telc B1·B2 Pflege (Sprechen Teil 1, 03.11.2026)
+- blutdruck.jpg: images.unsplash.com/photo-1725870953863-4ad4db0acfc2 („A person with a blood pressure device in their hand")
+- lachen.jpg: images.unsplash.com/photo-1765896387377-e293914d1e69 („Two women laughing together indoors")
+- malen.jpg: images.unsplash.com/photo-1762955911431-4c44c7c3f408 („Caregiver assisting elderly couple with coloring")
+- rollator.jpg: images.unsplash.com/photo-1773227055624-07b515ba87c5 („Caregiver assists elderly woman with walker")
+- stricken.jpg: images.unsplash.com/photo-1762955911769-d652ceaa94bb („Caregiver assists two elderly women knitting")
+- pflege.jpg wird mitbenutzt (siehe oben).
