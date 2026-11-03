@@ -80,6 +80,32 @@
   .vid-controls button{flex:1 1 auto; min-width:62px; border:1px solid var(--rahmen); background:#fff; cursor:pointer; border-radius:9px; padding:8px 6px; font-family:'Inter'; font-weight:600; font-size:.8rem; color:var(--anthrazit);}
   .vid-controls button.leave{background:var(--rot); color:#fff; border-color:var(--rot); flex-basis:100%;}
   .vid-controls button.muted{background:#FFE0E0; border-color:var(--rot); color:var(--rot);}
+  #vc-chat.hat-neu{background:#FFF3D6; border-color:#E0A400; color:#8a6400;}
+  .chat-btn{display:flex; align-items:center; gap:7px; position:fixed; left:14px; bottom:62px; z-index:71; background:#2F72C9; color:#fff; border:none; border-radius:999px; padding:8px 18px 8px 14px; font-family:'Inter'; font-weight:800; font-size:.92rem; box-shadow:0 8px 22px rgba(0,0,0,.22); cursor:pointer;}
+  .chat-btn .cb-ic{font-size:1.05rem;}
+  .chat-btn:hover{filter:brightness(.97);}
+  .chat-btn:active{transform:translateY(1px);}
+  .chat-btn.hat-neu{animation:chatpuls 1s ease-in-out infinite;}
+  @keyframes chatpuls{0%,100%{box-shadow:0 8px 22px rgba(0,0,0,.22);}50%{box-shadow:0 0 0 6px rgba(47,114,201,.28), 0 8px 22px rgba(0,0,0,.22);}}
+  #chatBadge{position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 4px; border-radius:999px; background:var(--rot); color:#fff; font-size:.68rem; font-weight:800; align-items:center; justify-content:center; display:none; line-height:18px;}
+  .chat-panel{position:fixed; left:14px; bottom:112px; z-index:72; width:330px; max-width:calc(100vw - 28px); height:min(440px,56vh); display:flex; flex-direction:column; background:#fff; border:1px solid var(--rahmen); border-radius:16px; box-shadow:0 16px 44px rgba(0,0,0,.24); overflow:hidden;}
+  .chat-head{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; background:var(--creme-hell); border-bottom:1px solid var(--rahmen); font-family:'Inter'; font-weight:700; font-size:.9rem; color:var(--anthrazit);}
+  .chat-head small{font-weight:500; color:var(--anthrazit); opacity:.6;}
+  .chat-x{border:none; background:transparent; cursor:pointer; font-size:1rem; color:var(--anthrazit); padding:2px 6px; border-radius:7px;}
+  .chat-x:hover{background:rgba(0,0,0,.07);}
+  .chat-msgs{flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:9px; background:#fff;}
+  .chat-empty{color:var(--anthrazit); opacity:.5; font-size:.82rem; text-align:center; margin:auto 0; font-family:'Inter';}
+  .chat-msg{max-width:88%; align-self:flex-start;}
+  .chat-msg.mine{align-self:flex-end; text-align:right;}
+  .chat-msg .cm-h{font-size:.68rem; color:var(--anthrazit); opacity:.6; margin-bottom:1px; font-family:'Inter';}
+  .chat-msg .cm-n{font-weight:700;}
+  .chat-msg .cm-b{display:inline-block; background:var(--creme-hell); border:1px solid var(--rahmen); border-radius:12px; padding:6px 10px; font-size:.88rem; color:var(--anthrazit); font-family:'Inter'; line-height:1.4; word-break:break-word; white-space:pre-wrap; text-align:left;}
+  .chat-msg.mine .cm-b{background:#E7F0FB; border-color:#BBD4F3;}
+  .chat-input{display:flex; gap:6px; padding:8px 10px; border-top:1px solid var(--rahmen); background:var(--creme-hell);}
+  .chat-input input{flex:1; border:1px solid var(--rahmen); border-radius:10px; padding:8px 10px; font-family:'Inter'; font-size:.88rem; color:var(--anthrazit); outline:none;}
+  .chat-input input:focus{border-color:#8ab4e8;}
+  .chat-input button{border:none; background:var(--rot); color:#fff; border-radius:10px; padding:0 14px; cursor:pointer; font-size:1rem; font-weight:700;}
+  @media(max-width:560px){ .chat-panel{left:8px; bottom:104px; width:calc(100vw - 16px); height:52vh;} .chat-btn{left:8px;} }
   /* Hinweis, wenn das Mikrofon vom Browser/App blockiert ist */
   .mic-hint{display:flex; gap:10px; align-items:flex-start; padding:10px 13px; background:#FFF3C2; border-bottom:1px solid #F0D98A; color:#7a5b00; font-size:.8rem; line-height:1.45;}
   .mic-hint b{color:#5c4400;}
@@ -603,6 +629,11 @@
         <button id="vc-bo" onclick="toggleBoPanel()" title="Kleingruppen (Breakout-Räume) bilden" style="display:none">👥 Gruppen</button>
         <button id="vc-bg" onclick="toggleBgPanel()" title="Eigenen Hintergrund wählen (weichzeichnen oder Bild)">🖼️ Hintergrund</button>
         <button class="leave" onclick="vcLeave()" title="Unterricht verlassen">🚪 Verlassen</button>
+      </div>
+      <div id="chatPanel" class="chat-panel" style="display:none">
+        <div class="chat-head"><span>💬 Klassen-Chat <small>· alle sehen mit</small></span><button class="chat-x" onclick="toggleChat()" title="Chat schließen">✕</button></div>
+        <div class="chat-msgs" id="chatMsgs"><div class="chat-empty">Noch keine Nachrichten. Schreib etwas an alle – egal ob im Hauptraum oder in einer Kleingruppe.</div></div>
+        <div class="chat-input"><input id="chatInput" type="text" maxlength="500" placeholder="Nachricht an alle …" autocomplete="off"><button id="chatSend" onclick="chatSend()" title="Senden">➤</button></div>
       </div>
       <div class="react-bar" id="react-bar">
         <button class="rx" onclick="reaction('👍')" title="Daumen hoch">👍</button>
@@ -2717,6 +2748,19 @@
     window._impulsCh = sb.channel('impuls-'+STUNDE)
       .on('broadcast', { event:'impuls' }, ({payload})=>{ if(!payload) return; if(payload.clear) hideImpulsLocal(); else showImpulsCard(payload.text, payload.img); })
       .subscribe();
+    // ===== Klassen-Chat (für alle sichtbar, unabhängig vom Breakout-Raum) =====
+    let _chatUnread=0;
+    function chatBadgeUpd(){ const b=document.getElementById('chatBadge'); const t=document.getElementById('vc-chat'); if(!b)return; if(_chatUnread>0){ b.textContent=_chatUnread>9?'9+':String(_chatUnread); b.style.display='inline-flex'; if(t)t.classList.add('hat-neu'); } else { b.style.display='none'; if(t)t.classList.remove('hat-neu'); } }
+    function chatPanelOffen(){ const p=document.getElementById('chatPanel'); return p && p.style.display && p.style.display!=='none'; }
+    function chatAdd(name,text,mine){ const m=document.getElementById('chatMsgs'); if(!m)return; const leer=m.querySelector('.chat-empty'); if(leer)leer.remove(); const d=document.createElement('div'); d.className='chat-msg'+(mine?' mine':''); const n=new Date(); const hh=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2); const h=document.createElement('div'); h.className='cm-h'; const ns=document.createElement('span'); ns.className='cm-n'; ns.textContent=mine?'Du':(name||'Teilnehmer:in'); const ts=document.createElement('span'); ts.className='cm-t'; ts.textContent=' · '+hh; h.appendChild(ns); h.appendChild(ts); const b=document.createElement('div'); b.className='cm-b'; b.textContent=text; d.appendChild(h); d.appendChild(b); m.appendChild(d); m.scrollTop=m.scrollHeight; if(!mine && !chatPanelOffen()){ _chatUnread++; chatBadgeUpd(); } }
+    function chatOpen(focus){ const p=document.getElementById('chatPanel'); if(!p)return; p.style.display='flex'; _chatUnread=0; chatBadgeUpd(); const m=document.getElementById('chatMsgs'); if(m)m.scrollTop=m.scrollHeight; if(focus){ const i=document.getElementById('chatInput'); if(i)i.focus(); } }
+    function chatClose(){ const p=document.getElementById('chatPanel'); if(p)p.style.display='none'; }
+    window._chatCh = sb.channel('chat-'+STUNDE)
+      .on('broadcast', { event:'msg' }, ({payload})=>{ if(payload && payload.text && payload.id!==window._meId){ chatAdd(payload.name, String(payload.text).slice(0,500), false); chatOpen(false); /* poppt bei jeder fremden Nachricht auf */ } })
+      .subscribe();
+    window.chatSend=function(){ const i=document.getElementById('chatInput'); if(!i)return; let t=(i.value||'').trim(); if(!t)return; t=t.slice(0,500); try{ if(window._chatCh) window._chatCh.send({ type:'broadcast', event:'msg', payload:{ id:window._meId, name:(window._meName||'Teilnehmer:in'), text:t } }); }catch(e){} chatAdd(window._meName||'Du', t, true); i.value=''; i.focus(); };
+    window.toggleChat=function(){ if(chatPanelOffen()) chatClose(); else chatOpen(true); };
+    const _ci=document.getElementById('chatInput'); if(_ci) _ci.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); window.chatSend(); } });
     renderHands();
   }
 
@@ -2789,6 +2833,8 @@
     <button id="am-send" class="am-send" onclick="amandaSend()">Fragen</button>
   </div>
 </div>
+<!-- Klassen-Chat – Launcher direkt über Amanda (unten links), für alle sichtbar -->
+<button id="chatBtn" class="chat-btn" onclick="toggleChat()" title="Klassen-Chat – alle sehen mit, auch in Kleingruppen"><span class="cb-ic">💬</span> Chat<span id="chatBadge" style="display:none"></span></button>
 
 <!-- Mini-Feedback beim Verlassen -->
 <div class="fb-overlay" id="fb-overlay">
