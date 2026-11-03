@@ -39,7 +39,7 @@ export const rabattLaeuft = (jetzt = Date.now()) => jetzt < RABATT_ENDE;
    mit Preis und Kaufknopf. Das Datum entscheidet, nicht ein Mensch.
 
    WENN DIE TUEREN WIEDER AUFGEHEN: TUEREN_AUF auf das Datum setzen
-   (Mitte November). Dann faellt die Mail von selbst auf die
+   (im Dezember). Dann faellt die Mail von selbst auf die
    normale Fassung zum regulaeren Preis zurueck. Dasselbe Datum steht
    in index.html als window.TUEREN_AUF. */
 /* Die Rechnung selbst steht in api/_tueren.js — eine Stelle fuer
@@ -49,7 +49,7 @@ export { TUEREN_ZU_AB, TUEREN_AUF, tuerenZu } from './_tueren.js';
 
 export function willkommenBetreff(jetzt = Date.now()) {
   return tuerenZu(jetzt)
-    ? 'Schön, dass du da bist — die Türen öffnen Mitte November'
+    ? 'Schön, dass du da bist — die Türen öffnen im Dezember'
     : 'Du musst nicht warten — der Sprechclub ist offen';
 }
 
@@ -79,9 +79,9 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     </table>`;
 
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${zu ? 'Die T&uuml;ren &ouml;ffnen Mitte November' : 'Sch&ouml;n, dass du da bist'}</title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${zu ? 'Die T&uuml;ren &ouml;ffnen im Dezember' : 'Sch&ouml;n, dass du da bist'}</title></head>
 <body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${zu ? 'Der Sprechclub ist voll &middot; Mitte November &ouml;ffnen wir noch einmal f&uuml;r eine Woche' : 'Start am 1. November' + (rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : '')}</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${zu ? 'Der Sprechclub ist voll &middot; im Dezember &ouml;ffnen wir noch einmal f&uuml;r eine Woche' : 'Start am 1. November' + (rabatt ? ' &middot; Rabatt nur bis 31. Oktober' : '')}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
 
@@ -97,7 +97,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     </h1>
     <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
       ${zu
-        ? 'Danke, dass du dich eingetragen hast. Aktuell ist der Sprechclub <b>voll</b> &ndash; aber Mitte November &ouml;ffnen wir die Anmeldung noch einmal, f&uuml;r eine Woche.'
+        ? 'Danke, dass du dich eingetragen hast. Aktuell ist der Sprechclub <b>voll</b> &ndash; aber im Dezember &ouml;ffnen wir die Anmeldung noch einmal, f&uuml;r eine Woche.'
         : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Dinge sind jetzt wichtig f&uuml;r dich:'}
     </p>
   </td></tr>
@@ -105,7 +105,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   <tr><td style="padding:0 30px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
-        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Mitte November &ouml;ffnen wir noch einmal &ndash; eine Woche lang' : '&#128197; Der Unterricht startet am 1. November'}</div>
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Im Dezember &ouml;ffnen wir noch einmal &ndash; eine Woche lang' : '&#128197; Der Unterricht startet am 1. November'}</div>
         <div style="font-size:15px;line-height:1.55;color:#06403A">${zu
           ? '<b>Wir sagen dir rechtzeitig Bescheid</b>, damit du deinen Platz sicher bekommst. Du musst nichts weiter tun &ndash; du stehst auf der Liste.'
           : 'Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.'}</div>

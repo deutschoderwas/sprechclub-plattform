@@ -256,7 +256,7 @@ export default async function handler(req, res) {
     if (istSprechclubPlan(id) && tuerenZu()) {
       return res.status(403).json({ error: 'tueren_zu',
         hinweis: 'Die Anmeldung für den Sprechclub ist gerade geschlossen. '
-          + 'Die Türen öffnen Mitte November — trag dich so lange auf die Warteliste ein, '
+          + 'Die Türen öffnen im Dezember — trag dich so lange auf die Warteliste ein, '
           + 'dann bekommst du als Erste Bescheid: https://www.deutschoderwas-club.de/index.html#warteliste' });
     }
     if (plan.alt) return res.status(400).json({ error: 'plan_abgelaufen',

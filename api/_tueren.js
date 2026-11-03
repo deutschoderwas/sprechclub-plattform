@@ -2,7 +2,7 @@
 //  api/_tueren.js — die EINE Stelle fuer "sind die Tueren offen?"
 //
 //  Julia, 31.10.2026: Um Mitternacht schliesst der Sprechclub. Die
-//  Tueren oeffnen Mitte November wieder, dann mit mehr Live-Unterricht
+//  Tueren oeffnen im Dezember wieder, dann mit mehr Live-Unterricht
 //  und mehr Flexibilitaet. Bis dahin sammeln wir Leute auf der
 //  Warteliste, statt sofort zu verkaufen.
 //

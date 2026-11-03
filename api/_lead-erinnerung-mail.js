@@ -121,7 +121,7 @@ export function erinnerungHtml(vorname, jetzt, art) {
       <tr><td style="padding:16px 18px">
         <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px">&#128274; Danach bleibt der Sprechclub erst einmal zu</div>
         <div style="font-size:15px;line-height:1.55">
-          Die n&auml;chste Anmeldung ist erst <b>Mitte November</b> m&ouml;glich &ndash; dann zum regul&auml;ren Preis.
+          Die n&auml;chste Anmeldung ist erst <b>im Dezember</b> m&ouml;glich &ndash; dann zum regul&auml;ren Preis.
         </div>
       </td></tr>
     </table>` : ''}
