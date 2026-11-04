@@ -48,6 +48,24 @@ const KEY     = process.env.ELEVENLABS_API_KEY;
    hat. Beides ist recht; Vercel gewinnt. */
 const AGENT_ENV = process.env.ELEVEN_AGENT_ID || '';
 
+/* ------------------------------------------------------------------
+   Julia, 4.11.2026: "Was haben wir fuer Alternativen zu ElevenLabs
+   weil es sehr teuer bei vielen Mitgliedern wird" - "Gemini Live ist
+   gut" - "lass uns das machen."
+
+   Gemini Live kostet rund 2 Cent in der Minute statt 8 bis 10. Der
+   Browser spricht direkt mit Google, aber NIE mit unserem Schluessel:
+   der Server holt eine Eintrittskarte, die eine Minute lang gilt und
+   genau einmal benutzt werden darf. Modell und Anweisung sind in der
+   Karte festgeschrieben, damit niemand sie unterwegs austauscht.
+
+   WAS IN VERCEL GESETZT SEIN MUSS: GEMINI_API_KEY.
+   Fehlt er, antwortet der Dienst mit 503 und sagt das - es geht
+   nichts kaputt, der bisherige Weg bleibt unberuehrt.
+   ------------------------------------------------------------------ */
+const GEMINI_KEY   = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_LIVE_MODEL || 'gemini-3.8-live';
+
 const GRENZE  = Number(process.env.AMANDA_MINUTEN || 60);
 const GRENZE_PREMIUM = Number(process.env.AMANDA_MINUTEN_PREMIUM || 180);
 
@@ -99,6 +117,61 @@ async function ticketHolen(AGENT) {
   return { art: 'websocket', ticket: j.signed_url };
 }
 
+/* Amandas Haltung, in der Karte festgeschrieben. Kurz halten: im
+   Gespraech zaehlt, dass sie antwortet und zurueckfragt, nicht dass
+   sie einen Aufsatz haelt. Der ausfuehrliche Verstand steht weiter in
+   api/amanda-chat.js, fuer den geschriebenen Weg. */
+function geminiAnweisung(v) {
+  return [
+    'Du bist Amanda, Deutschlehrerin im deutschoderwas club.',
+    'Du sprichst mit ' + (v.name || 'einer erwachsenen Person') + ', die Deutsch lernt'
+      + (v.niveau ? ' (Niveau ' + v.niveau + ')' : '') + '.',
+    v.muttersprache ? 'Ihre Muttersprache ist ' + v.muttersprache + '.' : '',
+    v.thema ? 'Sie moechte gerade ueber "' + v.thema + '" sprechen.' : '',
+    'Sprich Deutsch, langsam und deutlich, in kurzen Saetzen.',
+    'Bleib kurz: ein bis drei Saetze, dann eine Rueckfrage, damit das Gespraech weitergeht.',
+    'Stellt sie eine echte Frage zu Grammatik oder Wortschatz, antworte als Lehrerin:',
+    'erst die Antwort in einem Satz, dann die Regel einfach, dann zwei Beispiele.',
+    'Korrigiere nur, wenn wirklich etwas falsch war, und freundlich im Vorbeigehen.',
+    'Du erfindest nichts. Bist du unsicher, sag es offen.',
+  ].filter(Boolean).join(' ');
+}
+
+/* Die Eintrittskarte fuer Gemini Live. Sie gilt eine Minute fuer den
+   Verbindungsaufbau und laesst sich genau einmal einloesen. */
+async function geminiKarte(variablen) {
+  const jetzt = Date.now();
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/auth_tokens', {
+    method: 'POST',
+    headers: { 'x-goog-api-key': GEMINI_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      uses: 1,
+      expireTime:           new Date(jetzt + 30 * 60 * 1000).toISOString(),
+      newSessionExpireTime: new Date(jetzt + 60 * 1000).toISOString(),
+      liveConnectConstraints: {
+        model: 'models/' + GEMINI_MODEL,
+        config: {
+          responseModalities: ['AUDIO'],
+          sessionResumption: {},
+          systemInstruction: { parts: [{ text: geminiAnweisung(variablen) }] },
+          /* Mitschrift: beide Seiten als Text zurueck, damit das
+             Gespraech danach im Schuelerbereich nachlesbar ist - so
+             wie bisher auch. */
+          inputAudioTranscription: {},
+          outputAudioTranscription: {},
+        },
+      },
+    }),
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error('gemini ' + r.status + ' ' + t.slice(0, 200));
+  }
+  const j = await r.json();
+  if (!j.name) throw new Error('gemini: keine Karte zurueck');
+  return j.name;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!erlaubteHerkunft(req)) return res.status(403).json({ error: 'forbidden' });
@@ -114,13 +187,20 @@ export default async function handler(req, res) {
   if (uerr || !ures?.user) return res.status(401).json({ error: 'invalid_token' });
   const uid = ures.user.id;
 
+  /* Welcher Weg? 'gemini' nur, wenn der Browser ihn verlangt UND der
+     Schluessel da ist - sonst bleibt alles beim Alten. */
+  const willGemini = String(req.body?.anbieter || '') === 'gemini';
+  if (willGemini && !GEMINI_KEY && String(req.body?.aktion || '') !== 'ende') {
+    return res.status(503).json({ error: 'nicht_eingerichtet', fehlt: ['GEMINI_API_KEY'] });
+  }
+
   let AGENT = AGENT_ENV;
-  if (!AGENT) {
+  if (!willGemini && !AGENT) {
     const { data: e } = await admin
       .from('einstellungen').select('wert').eq('schluessel', 'amanda_agent_id').single();
     AGENT = e?.wert || '';
   }
-  if (!AGENT && String(req.body?.aktion || '') !== 'ende') {
+  if (!willGemini && !AGENT && String(req.body?.aktion || '') !== 'ende') {
     return res.status(503).json({ error: 'nicht_eingerichtet', fehlt: ['ELEVEN_AGENT_ID'] });
   }
 
@@ -199,11 +279,26 @@ export default async function handler(req, res) {
   }
 
   // ---- Eintrittskarte holen ----------------------------------------
+  const l1v = String(prof?.native_language || '').slice(0, 5).toLowerCase();
+  const variablen = {
+    name:          String(prof?.name || '').split(' ')[0] || '',
+    niveau:        prof?.stufe || prof?.level || 'B1',
+    muttersprache: SPRACHEN[l1v] || '',
+    thema:         String(req.body?.thema || '').slice(0, 80),
+  };
+
   let karte;
   try {
-    karte = await ticketHolen(AGENT);
+    karte = willGemini
+      ? { art: 'gemini', ticket: await geminiKarte(variablen), modell: GEMINI_MODEL }
+      : await ticketHolen(AGENT);
   } catch (e) {
-    return res.status(502).json({ error: 'eleven_fehler', detail: String(e.message || e).slice(0, 220) });
+    const detail = String(e.message || e).slice(0, 220);
+    console.log('[amanda] Karte fehlgeschlagen (' + (willGemini ? 'gemini' : 'eleven') + '): ' + detail);
+    return res.status(502).json({
+      error: willGemini ? 'gemini_fehler' : 'eleven_fehler',
+      detail,
+    });
   }
 
   /* Liegengebliebene Gespraeche schliessen, bevor ein neues anfaengt.
@@ -236,20 +331,14 @@ export default async function handler(req, res) {
     zeile = data?.id || null;
   } catch (e) { /* die Zaehlung darf das Gespraech nicht verhindern */ }
 
-  const l1 = String(prof?.native_language || '').slice(0, 5).toLowerCase();
-
   return res.status(200).json({
     ok: true,
     art: karte.art,
     ticket: karte.ticket,
+    modell: karte.modell || '',
     gespraech: zeile,
     rest_sekunden: Math.max(0, rest),
     grenze_minuten: grenze,
-    variablen: {
-      name:        String(prof?.name || '').split(' ')[0] || '',
-      niveau:      prof?.stufe || prof?.level || 'B1',
-      muttersprache: SPRACHEN[l1] || '',
-      thema:       String(req.body?.thema || '').slice(0, 80),
-    },
+    variablen,
   });
 }

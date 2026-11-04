@@ -311,7 +311,16 @@
   /* ============================================================
      Anfangen
      ============================================================ */
-  window.amStimmeStart = function () {
+  /* Welcher Anbieter? Julia, 4.11.2026: "Gemini Live ist gut, lass uns
+     das machen." Gemini kostet rund 2 Cent in der Minute statt 8 bis
+     10 bei ElevenLabs. Antwortet der Server mit "nicht eingerichtet"
+     (Schluessel fehlt noch), faellt der Start von selbst auf den
+     alten Weg zurueck - und erst wenn auch der nicht kommt, auf die
+     Stimme des Geraets. Kein Zustand, den jemand von Hand umlegen
+     muss. */
+  var ANBIETER = 'gemini';
+
+  window.amStimmeStart = function (anbieter) {
     if (G.lauf) return;
     G.zustand = 'verbindet'; G.mitschrift = []; G.grund = ''; zeichnen();
 
@@ -323,14 +332,20 @@
 
     var karte = null;
 
-    sdkLaden()
+    /* Bei Gemini brauchen wir das ElevenLabs-SDK nicht - ein
+       Megabyte, das sonst bei jedem Start mitlaeuft. Und das Mikrofon
+       holt sich amanda-gemini.js selbst, direkt nach dem Klick. */
+    var erst = ((anbieter || ANBIETER) === 'gemini')
+      ? Promise.resolve()
+      : sdkLaden().then(function () {
+          return navigator.mediaDevices.getUserMedia({ audio: true });
+        }).then(function (strom) {
+          strom.getTracks().forEach(function (t) { t.stop(); });
+        });
+
+    erst
       .then(function () {
-        return navigator.mediaDevices.getUserMedia({ audio: true });
-      })
-      .then(function (strom) {
-        // Den Strom selbst braucht der SDK nicht — wir wollten nur die Erlaubnis.
-        strom.getTracks().forEach(function (t) { t.stop(); });
-        return ruf({ quelle: 'sprechen', thema: '' });
+        return ruf({ quelle: 'sprechen', thema: '', anbieter: (anbieter || ANBIETER) });
       })
       .then(function (a) {
         if (a.status === 503) throw new Error('nicht_eingerichtet');
@@ -376,6 +391,26 @@
             else if (m.source === 'user') sagen('du', m.message);
           }
         };
+        /* Gemini laeuft ueber amanda-gemini.js: eigene Leitung,
+           eigenes Audio, dieselbe Oberflaeche. */
+        if (karte.art === 'gemini') {
+          if (!window.AMGEMINI) throw new Error('gemini_fehlt');
+          return window.AMGEMINI.start(karte, function (was, wert) {
+            if (was === 'hoert')   { G.zustand = 'hoert';   zeichnen(); return; }
+            if (was === 'spricht') { G.zustand = 'spricht'; zeichnen(); return; }
+            if (was === 'du' || was === 'am') { sagen(was, wert); return; }
+            if (was === 'zu') { G.grund = String(wert || ''); aufraeumen(false); }
+          }).then(function () {
+            if (G.wachhund) { clearTimeout(G.wachhund); G.wachhund = null; }
+            G.lauf = { gemini: true,
+                       setMicMuted: function (an) { window.AMGEMINI.stumm(an); },
+                       endSession:  function () { window.AMGEMINI.ende(); },
+                       getId: function () { return ''; } };
+            G.start = Date.now(); G.zustand = 'hoert'; zeichnen(); uhrAn(); pegelAn();
+            return G.lauf;
+          });
+        }
+
         if (karte.art === 'webrtc') { o.conversationToken = karte.ticket; o.connectionType = 'webrtc'; }
         else { o.signedUrl = karte.ticket; }
 
@@ -385,7 +420,15 @@
       .catch(function (e) {
         if (G.wachhund) { clearTimeout(G.wachhund); G.wachhund = null; }
         var m = String((e && e.message) || e);
+        /* Der Gemini-Schluessel fehlt noch? Dann einmal still den
+           alten Weg versuchen, statt der Schuelerin zu sagen, es
+           ginge nicht. Nur einmal - sonst drehen wir uns im Kreis. */
+        if (m === 'nicht_eingerichtet' && (anbieter || ANBIETER) === 'gemini') {
+          G.zustand = 'aus';
+          return window.amStimmeStart('eleven');
+        }
         if (m === 'nicht_eingerichtet') return melden('Sprechen ist noch nicht freigeschaltet. Schreib Amanda so lange im Chat — sie antwortet dort genauso.', true);
+        if (m === 'gemini_fehlt') return melden('Das Sprechen konnte nicht geladen werden. Lade die Seite bitte neu.', true);
         if (m === 'kein_zugang')       return melden('Sprechen gehört zur Mitgliedschaft. Im Chat kannst du Amanda trotzdem fragen.', true);
         if (m.indexOf('monat:') === 0) return melden('Für diesen Monat sind deine Sprechminuten aufgebraucht. Ab dem Ersten geht es wieder los — bis dahin schreibt Amanda dir gern.', true);
         if (/Permission|NotAllowed|denied/i.test(m)) return melden('Ich darf das Mikrofon nicht benutzen. Erlaub es bitte im Browser und versuch es noch einmal.', true);
