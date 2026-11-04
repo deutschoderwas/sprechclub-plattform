@@ -75,7 +75,8 @@ const karten = (S.wortschatz && S.wortschatz.karten) || [];
 if (!karten.length) fehler.push('Kein Wortschatz in der Stunde — dann gibt es nichts vorzulernen');
 const wortschatz = abschnitt('wortschatz', '', 'Der Wortschatz', 'zur Stunde',
   'Lern die Wörter mit Artikel. Danach kommen die Übungen.',
-  `<div class="grid">\n` + karten.map(k => {
+  (S.wortschatz && S.wortschatz.szene ? `<img src="${attr(S.wortschatz.szene)}" alt="Das Suchbild der Stunde" style="display:block;width:100%;border-radius:14px;margin:0 0 1rem;">\n` : '') +
+  (karten.some(k => k.bild) ? `<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr));">\n` : `<div class="grid">\n`) + karten.map(k => {
     const g = gloss(k);
     if (!g) fehler.push('Wortschatzkarte „' + k.wort + '“ hat keine kurze Erklärung');
     /* Eine Erklaerung, die nur das Wort wiederholt, hilft niemandem —
@@ -86,7 +87,9 @@ const wortschatz = abschnitt('wortschatz', '', 'Der Wortschatz', 'zur Stunde',
       fehler.push('Wortschatzkarte „' + k.wort + '“: die Erklärung wiederholt nur das Wort');
     if (g && g.length > 90)
       fehler.push('Wortschatzkarte „' + k.wort + '“: die Erklärung ist zu lang für die Vorbereitung');
-    return `<div class="vocab"><div class="term">${h(k.art ? k.art + ' ' + k.wort : k.wort)}</div>` +
+    /* Optional ein echtes Foto zum Wort (z. B. Ausschnitt aus dem Suchbild) */
+    const foto = k.bild ? `<img src="${attr(k.bild)}" alt="${attr(k.wort)}" loading="lazy" style="display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;margin-bottom:.5rem;">` : '';
+    return `<div class="vocab">${foto}<div class="term">${h(k.art ? k.art + ' ' + k.wort : k.wort)}</div>` +
            `<div class="gloss">${h(g)}</div></div>`;
   }).join('\n') + `\n</div>\n` +
   (S.wortschatz.spiel ? `<div class="note info">${h(S.wortschatz.spiel.text)}</div>\n` : ''));
