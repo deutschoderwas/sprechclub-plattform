@@ -63,5 +63,13 @@
   window.addEventListener('hashchange', function () {
     stapel.length = 0;
     eigenerSchritt = 0;
+    merken();
   });
+
+  /* Von welcher Ansicht ging es in eine Lektion? lektion.html liest das
+     und führt mit "Zurück" genau dorthin, nicht immer zur Bibliothek. */
+  function merken() {
+    try { if (/^#[a-z]+$/.test(location.hash)) sessionStorage.setItem('dow_von', location.hash); } catch (e) {}
+  }
+  merken();
 })();

@@ -957,6 +957,8 @@
   /* ---------- Ebene 1: Welche Prüfung? ---------- */
   window.renderPruefungen=function(){
     var v=document.getElementById('v-pruefung'); if(!v) return;
+    window.__pfOffen = null;
+    if(window.zurueckErledigt) zurueckErledigt('pruefung');
     /* Lernziel noch nicht da (frisch eingeloggt)? Einmal nachladen, dann neu zeichnen. */
     if(!lzGeladen && window.LZ && !window.LZ.data && window.LZ.laden){
       lzGeladen=true;
@@ -1156,10 +1158,12 @@
     stilMeine();
     var v=document.getElementById('v-pruefung'); if(!v) return;
     S('pruefLetzte', id);
+    if(window.zurueckAuf) zurueckAuf('pruefung', function(){ window.renderPruefungen(); });
     var liste = bereicheVon(p);
     var offen = bereich || 'module', daIst = false;
     for(var bi=0;bi<liste.length;bi++) if(liste[bi].id===offen) daIst = true;
     if(!daIst) offen = 'module';
+    window.__pfOffen = { id: p.id, bereich: offen };
     var welt = farbwelt(p), pr = gesamtProzent(p);
 
     var schritte = liste.map(function(b){

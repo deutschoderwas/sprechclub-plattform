@@ -1109,6 +1109,7 @@
 
   /* ---------- Overlay ---------- */
 
+  var URSPRUNG = null;  /* {id, bereich}: von hier wurde das Training geöffnet */
   function oeffnen(){
     if(window.trainerStil) window.trainerStil();
     stil();
@@ -1118,7 +1119,9 @@
       o.innerHTML = '<div id="pwKopf"></div><div id="pwBody"></div>';
       document.body.appendChild(o);
     }
+    if(o.style.display !== 'block') URSPRUNG = window.__pfOffen || null;
     o.style.display = 'block';
+    if(window.zurueckAuf) zurueckAuf('pruef-schreiben', function(){ window.schreibenSchliessen(true); });
     document.body.style.overflow = 'hidden';
   }
 
@@ -1135,7 +1138,8 @@
     }catch(e){ fertig(); }
   };
 
-  window.schreibenSchliessen = function(){
+  window.schreibenSchliessen = function(vonZurueck){
+    if(!vonZurueck && window.zurueckErledigt) zurueckErledigt('pruef-schreiben');
     try{ if(W && W.hg && window.sagenStopp) window.sagenStopp(); }catch(e){}
     uhrStoppen();
     var o = document.getElementById('pwOv');
@@ -1143,8 +1147,9 @@
     document.body.style.overflow = '';
     try{
       if(window.pruefungOeffnen){
-        var letzte = J('pruefLetzte', null);
-        if(letzte) window.pruefungOeffnen(letzte, 'module');
+        var her = URSPRUNG || { id: J('pruefLetzte', null), bereich: 'module' };
+        URSPRUNG = null;
+        if(her.id) window.pruefungOeffnen(her.id, her.bereich || 'module');
       }
     }catch(e){}
   };

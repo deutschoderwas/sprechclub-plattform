@@ -174,6 +174,7 @@
     setTimeout(function(){ if(B && B.lauf === meiner) fn(); }, ms);
   }
 
+  var URSPRUNG = null;  /* {id, bereich}: von hier wurde das Training geöffnet */
   function oeffnen(){
     if(window.trainerStil) window.trainerStil();
     stil();
@@ -183,19 +184,23 @@
       o.innerHTML = '<div id="pbKopf"></div><div id="pbBody"></div>';
       document.body.appendChild(o);
     }
+    if(o.style.display !== 'block') URSPRUNG = window.__pfOffen || null;
     o.style.display = 'block';
+    if(window.zurueckAuf) zurueckAuf('pruef-bildschirm', function(){ window.bildschirmSchliessen(true); });
     document.body.style.overflow = 'hidden';
   }
 
-  window.bildschirmSchliessen = function(){
+  window.bildschirmSchliessen = function(vonZurueck){
+    if(!vonZurueck && window.zurueckErledigt) zurueckErledigt('pruef-bildschirm');
     uhrStoppen();
     var o = document.getElementById('pbOv');
     if(o) o.style.display = 'none';
     document.body.style.overflow = '';
     try{
       if(window.pruefungOeffnen){
-        var letzte = J('pruefLetzte', null);
-        if(letzte) window.pruefungOeffnen(letzte, 'bildschirm');
+        var her = URSPRUNG || { id: J('pruefLetzte', null), bereich: 'bildschirm' };
+        URSPRUNG = null;
+        if(her.id) window.pruefungOeffnen(her.id, her.bereich || 'bildschirm');
       }
     }catch(e){}
   };

@@ -717,6 +717,7 @@
 
   /* ---------- Overlay ---------- */
 
+  var URSPRUNG = null;  /* {id, bereich}: von hier wurde das Training geöffnet */
   function oeffnen(){
     if(window.trainerStil) window.trainerStil();
     stil();
@@ -726,11 +727,14 @@
       o.innerHTML = '<div id="psKopf"></div><div id="psBody"></div>';
       document.body.appendChild(o);
     }
+    if(o.style.display !== 'block') URSPRUNG = window.__pfOffen || null;
     o.style.display = 'block';
+    if(window.zurueckAuf) zurueckAuf('pruef-sprechen', function(){ window.sprechenSchliessen(true); });
     document.body.style.overflow = 'hidden';
   }
 
-  window.sprechenSchliessen = function(){
+  window.sprechenSchliessen = function(vonZurueck){
+    if(!vonZurueck && window.zurueckErledigt) zurueckErledigt('pruef-sprechen');
     uhrStoppen(); aufnahmeStoppen();
     try{ if(window.sagenStopp) window.sagenStopp();
          else if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
@@ -739,8 +743,9 @@
     document.body.style.overflow = '';
     try{
       if(window.pruefungOeffnen){
-        var letzte = J('pruefLetzte', null);
-        if(letzte) window.pruefungOeffnen(letzte, 'module');
+        var her = URSPRUNG || { id: J('pruefLetzte', null), bereich: 'module' };
+        URSPRUNG = null;
+        if(her.id) window.pruefungOeffnen(her.id, her.bereich || 'module');
       }
     }catch(e){}
   };

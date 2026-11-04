@@ -361,7 +361,13 @@ var qs=new URLSearchParams(location.search);
 var K=(qs.get('k')||'').replace(/[^a-z0-9_]/g,''), L=(qs.get('l')||'').replace(/[^0-9]/g,'');
 var LID=K+'-'+L;
 document.getElementById('backBtn').innerHTML=I('arrowL',19);
-function fail(m){ document.getElementById('stage').innerHTML='<div class="card err"><div style="color:var(--ink3);margin-bottom:14px">'+I('book',40)+'</div><h1>Nicht gefunden</h1><p class="lead" style="max-width:340px;margin:0 auto 22px">'+m+'</p><a class="btn btn-p" style="text-decoration:none" href="konto.html#kurse">Zur Kursbibliothek</a></div>'; }
+/* Zurück geht dorthin, wo man herkam (Mein Kurs, Bibliothek, Prüfung …). */
+var VON=(function(){ var v=(qs.get('von')||'').replace(/[^a-z]/g,'');
+  if(!v){ try{ v=(sessionStorage.getItem('dow_von')||'').replace(/[^a-z]/g,''); }catch(e){} }
+  return v||'kurse'; })();
+var VON_TEXT={lernen:'Zu Mein Kurs',kurse:'Zur Bibliothek',pruefung:'Zur Prüfung',bereiche:'Zu Themen & Orte',dashboard:'Zur Startseite'}[VON]||'Zurück';
+document.getElementById('backBtn').href='konto.html#'+VON;
+function fail(m){ document.getElementById('stage').innerHTML='<div class="card err"><div style="color:var(--ink3);margin-bottom:14px">'+I('book',40)+'</div><h1>Nicht gefunden</h1><p class="lead" style="max-width:340px;margin:0 auto 22px">'+m+'</p><a class="btn btn-p" style="text-decoration:none" href="konto.html#'+VON+'">'+VON_TEXT+'</a></div>'; }
 if(!K||!L){ fail('Diese Lektion existiert nicht.'); return; }
 /* Muttersprache des Mitglieds — dafuer laden wir die Uebersetzungen */
 var L1=null;
@@ -1244,11 +1250,11 @@ async function adVerstehen(blob){
 }
 function vFin(){
   return '<div class="card fin"><div class="mark">'+I('check',34)+'</div>'
-    +'<h1>Lektion abgeschlossen</h1><p class="lead" style="max-width:400px;margin:0 auto">Stark, dass du drangeblieben bist. Genau so baut man Deutsch auf — Schritt für Schritt.</p>'
+    +'<h1>Lektion abgeschlossen</h1><p class="lead" style="max-width:400px;margin:0 auto">Stark, dass du drangeblieben bist. So baut man Deutsch auf, Schritt für Schritt.</p>'
     +'<div class="kpis"><div class="kpi"><div class="v">'+first+'/'+total+'</div><div class="l">beim 1. Versuch</div></div>'
     +'<div class="kpi"><div class="v">'+(D.vokabeln?D.vokabeln.length:0)+'</div><div class="l">'+((D.vokabeln&&D.vokabeln.length===1)?'neues Wort':'neue Wörter')+'</div></div></div>'
     +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'
-    +'<a class="btn btn-s" style="text-decoration:none" href="konto.html#kurse">Zur Bibliothek</a>'
+    +'<a class="btn btn-s" style="text-decoration:none" href="konto.html#'+VON+'">'+VON_TEXT+'</a>'
     +'<a class="btn btn-p" style="text-decoration:none" href="konto.html#amanda">'+I('mic',17)+'<span>Sprechen üben</span></a></div></div>';
 }
 function saveDone(){

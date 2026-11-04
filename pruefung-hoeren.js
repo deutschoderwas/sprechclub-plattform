@@ -563,6 +563,7 @@
 
   /* ---------- Overlay ---------- */
 
+  var URSPRUNG = null;  /* {id, bereich}: von hier wurde das Training geöffnet */
   function oeffnen(){
     if(window.trainerStil) window.trainerStil();
     stil();
@@ -572,19 +573,23 @@
       o.innerHTML = '<div id="phKopf"></div><div id="phBody"></div>';
       document.body.appendChild(o);
     }
+    if(o.style.display !== 'block') URSPRUNG = window.__pfOffen || null;
     o.style.display = 'block';
+    if(window.zurueckAuf) zurueckAuf('pruef-hoeren', function(){ window.hoerenSchliessen(true); });
     document.body.style.overflow = 'hidden';
   }
 
-  window.hoerenSchliessen = function(){
+  window.hoerenSchliessen = function(vonZurueck){
+    if(!vonZurueck && window.zurueckErledigt) zurueckErledigt('pruef-hoeren');
     uhrStoppen(); stoppen();
     var o = document.getElementById('phOv');
     if(o) o.style.display = 'none';
     document.body.style.overflow = '';
     try{
       if(window.pruefungOeffnen){
-        var letzte = J('pruefLetzte', null);
-        if(letzte) window.pruefungOeffnen(letzte, 'module');
+        var her = URSPRUNG || { id: J('pruefLetzte', null), bereich: 'module' };
+        URSPRUNG = null;
+        if(her.id) window.pruefungOeffnen(her.id, her.bereich || 'module');
       }
     }catch(e){}
   };
