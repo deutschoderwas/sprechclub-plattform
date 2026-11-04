@@ -373,7 +373,9 @@
   /* --- Noch keine Stufe: die Einstufung --- */
   function zeichneEinstufung() {
     var karten = (plan().stufen || []).map(function (s) {
+      var L1 = (s.lektionen || [])[0];
       return '<button class="mw-stufe" onclick="wegStufeSetzen(\'' + s.id + '\',\'selbst\')">'
+        + (L1 ? '<img class="mw-stufe-bild" src="' + lektionBild(s.id, L1, true) + '" alt="" loading="lazy" onerror="this.remove()">' : '')
         + '<b>' + E(s.id) + '</b>'
         + '<span class="mw-stufe-t">' + E(s.t.replace(/^[A-C]\d\s*—\s*/, '')) + '</span>'
         + '<span class="mw-stufe-u">' + E(s.u) + '</span>'
@@ -388,7 +390,7 @@
       + '<div class="mw-start">'
       + '<div class="mw-start-kopf">'
       + '<h2>Wo fängst du an?</h2>'
-      + '<p>Tipp einfach dein Niveau an — danach steht hier deine erste Lektion und jeden Tag, was dran ist. Du kannst es später jederzeit ändern.</p>'
+      + '<p>Tipp einfach dein Niveau an. Danach steht hier deine erste Lektion und jeden Tag, was dran ist. Du kannst es später jederzeit ändern.</p>'
       + '</div>'
       + '<div class="mw-stufen">' + karten + '</div>'
       + '<div class="mw-oder"><span>oder du bist dir nicht sicher</span></div>'
@@ -716,6 +718,8 @@
       '  padding:16px;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;gap:3px}',
       '.mw-stufe:hover{border-color:var(--mw-turqd);background:var(--mw-mint)}',
       '.mw-stufe b{font-size:21px;color:var(--mw-turqd);line-height:1}',
+      '.mw-stufe-bild{display:block;align-self:stretch;width:auto;max-width:none;margin:-16px -16px 10px;aspect-ratio:16/8;object-fit:cover;border-radius:14px 14px 0 0;background:#FAF4E6}',
+      '.mw-stufe{overflow:hidden}',
       '.mw-stufe-t{font-weight:700;font-size:14.5px}',
       '.mw-stufe-u{color:var(--mw-soft);font-size:12.5px;line-height:1.4}',
       '.mw-stufe-n{margin-top:5px;font-size:11.5px;color:var(--mw-turqd);font-weight:600}',
