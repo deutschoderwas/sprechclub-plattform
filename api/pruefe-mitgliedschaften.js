@@ -158,8 +158,16 @@ export default async function handler(req, res) {
      wird weiter jede Nacht angesehen. Findet sich dort wieder ein
      bezahltes Abo, geht der Zugang auf. Findet sich keins, passiert
      nichts — zugemacht wird nur, wer gerade Zugang hat. */
+  /* Seit dem 4.11.2026 landen Abgelaufene im Archiv statt auf
+     'gekuendigt'. Das Netz muss also beide Zustaende ansehen, sonst
+     faengt es niemanden mehr. Wer absichtlich draussen ist
+     ('erstattet_raus', z. B. nach einer Erstattung), bleibt draussen -
+     bei ihm laeuft das Stripe-Abo vielleicht noch, und genau der
+     sollte nicht wieder hereinkommen. */
   const { data: geschlossen } = await sb.from('profiles').select(FELDER)
-    .eq('status', 'gekuendigt').not('stripe_customer_id', 'is', null);
+    .in('status', ['gekuendigt', 'archiv'])
+    .not('stripe_customer_id', 'is', null)
+    .or('abo_stripe_status.is.null,abo_stripe_status.neq.erstattet_raus');
   const kennen = new Set((leute || []).map(x => x.id));
   for (const g of (geschlossen || [])) if (!kennen.has(g.id)) (leute || []).push(g);
 
@@ -409,12 +417,20 @@ export default async function handler(req, res) {
         bericht.entsperrt.push({ name: p.name || p.email, vorher: p.status, stufe: auf.tier || p.tier || '—' });
       } else if (!sollAktiv && istAktiv
                  && !(alle.length === 0 && (subs.data || []).length > 0)) {
-        /* Kein laufendes Abo mehr: Status auf 'gekuendigt' statt
-           'inaktiv', damit Julia in der Liste nachvollziehen kann,
-           warum jemand weg ist. Und das Abzeichen faellt weg — wer
-           nicht mehr zahlt, soll nicht weiter als Premium dastehen.
-           Was bleibt: die Materialien und das Material der gebuchten
-           Stunden (RLS, siehe ist_altschueler()). */
+        /* Kein laufendes Abo mehr. Julia, 4.11.2026: "bei laufendem
+           Abo immer noch bei Premium und gekuendigt, nach der
+           Kuendigung also nach dem Ablauf dann archiviert." Bis zum
+           Ablauf traegt die Person beide Pillen (das macht die
+           Oberflaeche), danach steht sie im Archiv - nicht mehr in
+           der laufenden Liste.
+           Und das Abzeichen faellt weg: wer nicht mehr zahlt, soll
+           nicht weiter als Premium dastehen. Was bleibt: die
+           Materialien und das Material der gebuchten Stunden (RLS,
+           siehe ist_altschueler()).
+           Frueher stand hier 'gekuendigt'. Der naechtliche Lauf sieht
+           Archivierte weiterhin an (die zweite Abfrage oben), eine
+           durchgegangene Nachzahlung macht also weiterhin von allein
+           wieder auf. */
         if (!trocken) {
           /* Der Fehler wird jetzt angesehen. supabase-js wirft nicht,
              es gibt { error } zurueck — und das stand hier nirgends.
@@ -426,21 +442,21 @@ export default async function handler(req, res) {
              protokolliert — stattdessen steht sie im Bericht unter
              'fehler'. */
           const { error: sperrErr } = await sb.from('profiles')
-            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
+            .update({ status: 'archiv', tier: null, tier_ab: null })
             .eq('id', p.id);
           if (sperrErr) {
             bericht.fehler.push({
               name: p.name || p.email,
-              fehler: 'konnte nicht auf gekuendigt setzen: ' + sperrErr.message,
+              fehler: 'konnte nicht archivieren: ' + sperrErr.message,
             });
             continue;
           }
           await sb.from('zugang_log').insert({
-            user_id: p.id, email: p.email, aktion: 'gekuendigt',
-            grund: 'kein laufendes Abo bei Stripe mehr'
+            user_id: p.id, email: p.email, aktion: 'archiviert',
+            grund: 'Abo abgelaufen, kein laufendes Abo bei Stripe mehr'
               + (abo.abo_ende ? ' (lief bis ' + String(abo.abo_ende).slice(0, 10) + ')' : ''),
             vorher:  { status: p.status, tier: p.tier },
-            nachher: { status: 'gekuendigt', tier: null },
+            nachher: { status: 'archiv', tier: null },
           });
         }
         bericht.gesperrt.push({
@@ -771,19 +787,21 @@ export default async function handler(req, res) {
         }
 
         if (!trocken) {
+          /* Dieselbe Regel wie bei den Stripe-Abos: nach dem Ablauf
+             ins Archiv, nicht nur auf 'gekuendigt'. */
           const { error: zuErr } = await sb.from('profiles')
-            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
+            .update({ status: 'archiv', tier: null, tier_ab: null })
             .eq('id', h.id);
           if (zuErr) {
-            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, konnte nicht zumachen: ' + zuErr.message });
+            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, konnte nicht archivieren: ' + zuErr.message });
             continue;
           }
           await sb.from('zugang_log').insert({
-            user_id: h.id, email: h.email, aktion: 'gekuendigt',
+            user_id: h.id, email: h.email, aktion: 'archiviert',
             grund: 'von Hand gesetzte Mitgliedschaft abgelaufen (lief bis '
               + String(h.abo_ende).slice(0, 10) + ')',
             vorher:  { status: h.status, tier: h.tier },
-            nachher: { status: 'gekuendigt', tier: null },
+            nachher: { status: 'archiv', tier: null },
           });
         }
         bericht.gesperrt.push({
