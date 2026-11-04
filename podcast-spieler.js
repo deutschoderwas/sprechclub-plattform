@@ -92,8 +92,18 @@
     el('psZurueck').onclick  = function () { A.currentTime = Math.max(0, A.currentTime - 15); };
     el('psVor').onclick      = function () { A.currentTime = Math.min(A.duration || 1e9, A.currentTime + 15); };
     el('psLesen').onclick    = function () { textSchalten(); };
-    el('psTextZu').onclick   = function () { textSchalten(false); };
-    el('psZu').onclick       = function () { schliessen(); };
+    el('psTextZu').onclick   = function (e) { if (e) { e.preventDefault(); e.stopPropagation(); } textSchalten(false); };
+    el('psTextZu').addEventListener('touchend', function (e) { e.preventDefault(); textSchalten(false); });
+    el('psZu').onclick       = function (e) { if (e) { e.preventDefault(); e.stopPropagation(); } schliessen(); };
+    /* Auf dem Handy kam der Klick manchmal gar nicht an: der Finger
+       loest touchend aus, und wenn dazwischen gescrollt wurde, bleibt
+       der Klick aus. Deshalb beide Wege, und der zweite verhindert
+       den nachgereichten Klick. */
+    el('psZu').addEventListener('touchend', function (e) { e.preventDefault(); schliessen(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (mitlesen) textSchalten(false); else if (!el('psBar').hidden) schliessen();
+    });
     el('psFolgen').onclick   = function () {
       folgen = !folgen;
       el('psFolgen').classList.toggle('an', folgen);
@@ -232,11 +242,20 @@
     document.body.classList.toggle('ps-text-auf', mitlesen);
   }
 
+  /* Zumachen muss IMMER funktionieren. Vorher konnte ein Fehler in
+     einem der Schritte die folgenden mitreissen - dann blieb die
+     Leiste stehen, und der Knopf tat scheinbar nichts. Jetzt ist
+     jeder Schritt fuer sich abgesichert, und die Leiste geht als
+     Erstes weg, damit man die Wirkung sofort sieht. */
   function schliessen() {
+    try { var b = el('psBar'); if (b) b.hidden = true; } catch (e) {}
+    try { var t = el('psText'); if (t) t.hidden = true; } catch (e) {}
+    try { document.body.classList.remove('ps-an', 'ps-text-auf'); } catch (e) {}
     try { A.pause(); } catch (e) {}
-    el('psBar').hidden = true;
-    textSchalten(false);
-    document.body.classList.remove('ps-an');
+    try { A.src = ''; } catch (e) {}
+    mitlesen = false;
+    try { var l = el('psLesen'); if (l) l.classList.remove('an'); } catch (e) {}
+    satzJetzt = -1; wortJetzt = -1;
     folge = null;
   }
 
@@ -330,17 +349,33 @@
       '.ps-satz.jetzt .ps-w.jetzt{background:#FFE9A8;color:#14181B;',
       '  padding:2px 3px;margin:0 -3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}',
       '.ps-ohne{color:#6B7B82;font-size:15px}',
+      /* ---- Handy ----
+         Julia, 4.11.2026: "man kann im Handy nicht auf schliessen
+         druecken". Die Leiste lief in einer einzigen Zeile um und
+         schob das Kreuz aus dem Bild. Jetzt zwei feste Zeilen: oben
+         Bild, Titel und das Kreuz - das Kreuz immer sichtbar, immer
+         44 Pixel gross. Unten die Bedienung. */
       '@media(max-width:720px){',
-      '  body.ps-an{padding-bottom:124px}',
-      '  .ps-in{flex-wrap:wrap;gap:10px;padding:10px 12px}',
-      '  .ps-meta{order:1;flex:1 1 60%}',
-      '  .ps-bild{order:0;width:40px;height:40px}',
-      '  .ps-zu{order:2}',
-      '  .ps-steuer{order:3;flex:1 1 auto;justify-content:center}',
-      '  .ps-zeit{order:4}',
-      '  .ps-tempo,.ps-kl{order:5}',
-      '  .ps-text{bottom:124px;max-height:52vh}',
-      '  .ps-saetze{font-size:17px}',
+      '  body.ps-an{padding-bottom:142px}',
+      '  .ps-in{display:grid;grid-template-columns:40px 1fr 44px;',
+      '    grid-template-areas:"bild meta zu" "steuer steuer steuer";',
+      '    gap:8px 10px;padding:10px 12px 12px;align-items:center}',
+      '  .ps-bild{grid-area:bild;width:40px;height:40px}',
+      '  .ps-meta{grid-area:meta;min-width:0}',
+      '  .ps-meta b{font-size:14.5px}',
+      '  .ps-zu{grid-area:zu;width:44px;height:44px;min-width:44px;font-size:19px;justify-self:end}',
+      '  .ps-steuer{grid-area:steuer;display:flex;align-items:center;justify-content:space-between;',
+      '    gap:8px;width:100%}',
+      '  .ps-steuer .ps-rund{min-width:52px;height:40px}',
+      '  .ps-play{width:52px;height:52px;font-size:18px}',
+      '  .ps-zeit,.ps-kl{display:none}',
+      '  .ps-steuer .ps-zeit-m{display:block;font-size:12.5px;color:var(--ps-soft);',
+      '    font-variant-numeric:tabular-nums}',
+      '  .ps-steuer .ps-lesen-m{display:inline-block}',
+      '  .ps-text{bottom:142px;max-height:50vh}',
+      '  .ps-text-kopf{padding:10px 12px}',
+      '  .ps-text-kopf .ps-kl{display:inline-block;padding:10px 14px;min-height:44px}',
+      '  .ps-saetze{font-size:17px;padding:14px 14px 22px}',
       '}',
       '@media(prefers-reduced-motion:reduce){.ps-fort i,.ps-w,.ps-satz{transition:none}}'
     ].join('\n');
