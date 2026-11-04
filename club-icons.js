@@ -152,32 +152,6 @@
   function pcEsc(t){ return String(t==null?'':t).replace(/[<>&"]/g,function(c){
     return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]); }); }
 
-  /* Aus dem zeitgenauen Transkript wird hier einfach Fließtext */
-  function pcTranskript(f){
-    if(typeof f.transkript === 'string') return f.transkript;
-    if(!f.transkript || !f.transkript.length) return '';
-    var text = f.transkript.map(function(z){ return z.x; }).join(' ');
-    var saetze = text.split(/(?<=[.!?])\s+/);
-    var abs = [], puffer = '';
-    saetze.forEach(function(x){
-      puffer += (puffer?' ':'') + x;
-      if(puffer.length > 320){ abs.push(puffer); puffer=''; }
-    });
-    if(puffer) abs.push(puffer);
-    var html = abs.map(function(x){ return '<p>'+pcEsc(x)+'</p>'; }).join('');
-    if(f.woerter && f.woerter.length){
-      /* Ein Wort ist entweder nur ein Wort ("der Koffer") oder ein
-         Wort mit kurzer Erklärung auf Deutsch. Beides muss gehen. */
-      html += '<p style="margin-top:12px"><b>Wörter der Folge:</b></p><ul class="pc-woerter">'
-            + f.woerter.map(function(w){
-                var t = (w && typeof w==='object') ? (w.w||'') : String(w||'');
-                var e = (w && typeof w==='object') ? (w.e||w.info||'') : '';
-                return '<li><b>'+pcEsc(t)+'</b>'+(e?' — '+pcEsc(e):'')+'</li>';
-              }).join('') + '</ul>';
-    }
-    return html;
-  }
-
   /* Alle Folgen, neueste zuerst */
   function pcFolgen(){
     var roh = (window.PODCASTS && window.PODCASTS.length) ? window.PODCASTS : [];
@@ -191,11 +165,17 @@
         dauer:  f.dauer || '',
         kurz:   f.kurz || '',
         datum:  f.datum || '',
-        transkript: pcTranskript(f)
+        hatText: !!(f.transkript && f.transkript.length)
       };
     }).filter(function(f){ return f.datei; });
     liste.sort(function(x,y){ return String(y.datum||'').localeCompare(String(x.datum||'')); });
     return liste;
+  }
+
+  /* "4:11" -> 251. Ohne Zahl kein Strich, das ist in Ordnung. */
+  function dauerSek(t){
+    var m = String(t || '').match(/^(\d+):(\d{1,2})$/);
+    return m ? (+m[1]) * 60 + (+m[2]) : 0;
   }
 
   /* ---- Wo jemand stehengeblieben ist ---- */
@@ -248,6 +228,20 @@
     };
   };
 
+  /* ------------------------------------------------------------
+     Die Liste.
+
+     Julia, 4.11.2026, auf die alte Fassung: "Das schaut fuerchterlich
+     aus." Das stimmte: unter jeder Folge klebte eine nackte
+     <audio>-Leiste des Browsers - auf jedem Geraet anders, immer grau -
+     und darunter liess sich das ganze Transkript aufklappen, sodass
+     eine Folge den halben Bildschirm fuellte.
+
+     Jetzt ist jede Folge eine Karte, auf die man einfach drueckt.
+     Abgespielt wird unten in der Leiste, mitgelesen wird dort auch -
+     die Liste bleibt eine Liste. Wo jemand stehengeblieben ist, zeigt
+     ein duenner Strich unter dem Titel.
+     ------------------------------------------------------------ */
   function podcastHTML(){
     var liste = pcFolgen();
     var head = '<div class="pagehead"><h1>Julias 5-Minuten-Podcast <span style="color:#10627A">für tägliches Deutsch</span></h1>'+
@@ -256,65 +250,45 @@
     var pills = '<div class="pc-filter"><button class="pc-pill active" data-lvl="all">Alle</button>'+
       levels.map(function(l){ return '<button class="pc-pill" data-lvl="'+l+'"><span class="pc-dot" style="background:'+(LVL_COLORS[l]||'#7ED8EA')+'"></span>'+l+'</button>'; }).join('')+'</div>';
     var pos = posLesen();
+    /* "neu" gehoert an EINE Folge, nicht an jede: frueher bekam jede
+       Karte den roten Punkt, solange noch nichts gehoert war. */
+    var juengste = liste.length ? liste[0] : null;
+    var istNeu = !!(juengste && pcIstNeu(juengste));
     var items = liste.map(function(f){
       var p = pos[f.id];
+      var ganz = dauerSek(f.dauer);
+      var laeuft = !!(p && !p.fertig && p.t > 15);
       var stand = '';
       if(p && p.fertig) stand = '<span class="pc-stand fertig">✓ gehört</span>';
-      else if(p && p.t > 15) stand = '<span class="pc-stand">▸ weiterhören ab '+zeit(p.t)+'</span>';
-      return '<div class="pc-ep" data-lvl="'+pcEsc(f.level)+'" data-id="'+pcEsc(f.id)+'">'+
-        '<div class="pc-cover" style="background-image:url(\''+pcEsc(f.cover)+'\')"><span class="pc-lv">'+pcEsc(f.level)+'</span></div>'+
-        '<div class="pc-body">'+
-        '<div class="pc-day"><span class="pc-lvtag" style="background:'+(LVL_COLORS[f.level]||'#7ED8EA')+'">'+pcEsc(f.level)+'</span>'+
-          (f.dauer?pcEsc(f.dauer):'')+(pcIstNeu(f)?'<span class="pc-neu">neu</span>':'')+'</div>'+
-        '<h3 class="pc-title">'+pcEsc(f.titel)+'</h3>'+
-        (f.kurz?'<p class="pc-kurz">'+pcEsc(f.kurz)+'</p>':'')+
-        '<audio controls preload="metadata" src="'+pcEsc(f.datei)+'"></audio>'+
-        stand+
-        (f.transkript ? '<button class="pc-tbtn" type="button">📄 Mitlesen</button><div class="pc-transcript" hidden>'+f.transkript+'</div>' : '<div class="pc-tnote">📄 Transkript folgt</div>')+
-        '</div></div>';
+      else if(laeuft)   stand = '<span class="pc-stand">▸ weiterhören ab '+zeit(p.t)+'</span>';
+      var strich = (laeuft && ganz) ?
+        '<span class="pc-fort"><i style="width:'+Math.min(100, (p.t/ganz)*100).toFixed(1)+'%"></i></span>' : '';
+      return '<button class="pc-ep" type="button" data-lvl="'+pcEsc(f.level)+'" data-id="'+pcEsc(f.id)+'">'+
+        '<span class="pc-cover" style="background-image:url(\''+pcEsc(f.cover)+'\')">'+
+          '<span class="pc-ab" aria-hidden="true">▶</span></span>'+
+        '<span class="pc-body">'+
+        '<span class="pc-day"><span class="pc-lvtag" style="background:'+(LVL_COLORS[f.level]||'#7ED8EA')+'">'+pcEsc(f.level)+'</span>'+
+          (f.dauer?pcEsc(f.dauer):'')+((istNeu && juengste && f.id===juengste.id)?'<span class="pc-neu">neu</span>':'')+'</span>'+
+        '<span class="pc-title">'+pcEsc(f.titel)+'</span>'+
+        (f.kurz?'<span class="pc-kurz">'+pcEsc(f.kurz)+'</span>':'')+
+        strich + stand +
+        (f.hatText ? '<span class="pc-mit">📄 zum Mitlesen</span>' : '')+
+        '</span></button>';
     }).join('');
     return head + pills + '<div class="pc-list">' + (items || '<div class="pc-tnote">Die erste Folge kommt bald.</div>') + '</div>';
   }
 
   /* Merkt sich beim Hören, wo jemand steht — und setzt beim nächsten
      Mal genau dort wieder an. */
-  function wirePodcastAudio(sec){
+  function wirePodcastKlick(sec){
     sec.querySelectorAll('.pc-ep').forEach(function(ep){
-      var au = ep.querySelector('audio'); if(!au || au.dataset.pos==='1') return;
-      au.dataset.pos = '1';
-      var id = ep.getAttribute('data-id');
-      var gesetzt = false, zuletzt = 0;
-
-      au.addEventListener('loadedmetadata', function(){
-        if(gesetzt) return; gesetzt = true;
-        var p = posVon(id);
-        if(p && !p.fertig && p.t > 15 && au.duration && p.t < au.duration - 10){
-          try{ au.currentTime = p.t; }catch(e){}
-        }
-      });
-      au.addEventListener('timeupdate', function(){
-        var jetzt = Date.now();
-        if(jetzt - zuletzt < 4000) return;
-        zuletzt = jetzt;
-        var o = posLesen();
-        o[id] = { t: au.currentTime, wann: jetzt, fertig: false };
-        posSchreiben(o);
-      });
-      au.addEventListener('ended', function(){
-        var o = posLesen();
-        o[id] = { t: 0, wann: Date.now(), fertig: true };
-        posSchreiben(o);
-        var st = ep.querySelector('.pc-stand');
-        if(st){ st.className = 'pc-stand fertig'; st.textContent = '✓ gehört'; }
-      });
-      au.addEventListener('play', pcGesehen);
-      /* Immer nur EINE Folge (Julia, 24.10.2026): Startet eine Folge,
-         wird jede andere, die gerade läuft, angehalten. Sie behält ihre
-         Stelle — beim nächsten Abspielen geht sie dort weiter. */
-      au.addEventListener('play', function(){
-        document.querySelectorAll('.pc-ep audio').forEach(function(andere){
-          if(andere !== au && !andere.paused){ try{ andere.pause(); }catch(e){} }
-        });
+      if(ep.dataset.k === '1') return;
+      ep.dataset.k = '1';
+      ep.addEventListener('click', function(){
+        var id = ep.getAttribute('data-id');
+        pcGesehen();
+        if(window.PODSPIELER && window.PODSPIELER.oeffnen) window.PODSPIELER.oeffnen(id, true);
+        else if(window.podcastOeffnen) window.podcastOeffnen(id, true);
       });
     });
   }
@@ -331,18 +305,17 @@
         var soon = sec.querySelector('.pc-soon'); if(soon) soon.style.display = (lvl==='all') ? '' : 'none';
       });
     });
-    sec.querySelectorAll('.pc-tbtn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var panel = btn.nextElementSibling;
-        if(panel.hasAttribute('hidden')){ panel.removeAttribute('hidden'); btn.textContent = '📄 Transkript ausblenden'; }
-        else { panel.setAttribute('hidden',''); btn.textContent = '📄 Mitlesen'; }
-      });
-    });
-    wirePodcastAudio(sec);
+    wirePodcastKlick(sec);
   }
 
   /* Von der Startseite aus: Podcast öffnen und ggf. gleich abspielen */
   window.podcastOeffnen = function(id, abspielen){
+    /* Seit es die Leiste unten gibt, gehoert ihr das Abspielen. Sie
+       ueberschreibt diese Funktion ohnehin, wenn sie geladen ist -
+       aber auf die Ladereihenfolge will ich mich nicht verlassen. */
+    if(window.PODSPIELER && window.PODSPIELER.oeffnen && window.PODSPIELER.oeffnen !== window.podcastOeffnen){
+      return window.PODSPIELER.oeffnen(id, abspielen);
+    }
     /* Vorher klickte diese Zeile auf einen Menuepunkt, den es nicht
        mehr gibt — und es geschah nichts. Der Router kennt 'podcast',
        also fragen wir ihn direkt. */

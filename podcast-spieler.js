@@ -32,6 +32,7 @@
   var tempi = [1, 1.25, 1.5, 0.85], tempoI = 0;
   var handBis = 0;       // bis wann der Finger das Scrollen behaelt
   var scrollLauf = null; // laufende Scroll-Bewegung
+  var zuletztGemerkt = 0; // wann die Stelle zuletzt gespeichert wurde
 
   function E(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -39,6 +40,27 @@
     });
   }
   function el(id) { return document.getElementById(id); }
+
+  /* ---------- Wo jemand stehengeblieben ist ----------
+     Dieselbe Schublade, die die Liste in Medien liest (dow_pod_pos),
+     damit "weiterhoeren ab 1:20" und die Karte auf der Startseite
+     weiter stimmen. Frueher schrieb die <audio>-Leiste in der Liste
+     hier hinein; die gibt es nicht mehr, also schreibt jetzt der
+     Spieler. */
+  var POS_KEY = 'dow_pod_pos';
+  function posLesen() {
+    try { return JSON.parse(localStorage.getItem(POS_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function posMerken(fertig) {
+    if (!folge || !folge.id) return;
+    try {
+      var o = posLesen();
+      o[folge.id] = fertig
+        ? { t: 0, wann: Date.now(), fertig: true }
+        : { t: A.currentTime || 0, wann: Date.now(), fertig: false };
+      localStorage.setItem(POS_KEY, JSON.stringify(o));
+    } catch (e) {}
+  }
   function zeit(s) {
     s = Math.max(0, Math.floor(s || 0));
     return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
@@ -130,11 +152,12 @@
     fort.addEventListener('touchstart', function (e) { setzen(e); }, { passive: true });
 
     A.addEventListener('play',  function () { el('psPlay').textContent = '❚❚'; });
-    A.addEventListener('pause', function () { el('psPlay').textContent = '▶'; });
+    A.addEventListener('pause', function () { el('psPlay').textContent = '▶'; posMerken(false); });
     A.addEventListener('loadedmetadata', function () { el('psGanz').textContent = zeit(A.duration); });
     A.addEventListener('timeupdate', takt);
     A.addEventListener('ended', function () {
       el('psPlay').textContent = '▶';
+      posMerken(true);
       if (folge && window.PODSPIELER_GEHOERT) {
         try { window.PODSPIELER_GEHOERT(folge.id); } catch (e) {}
       }
@@ -145,6 +168,7 @@
   function takt() {
     var t = A.currentTime || 0;
     el('psJetzt').textContent = zeit(t);
+    if (!A.paused && Date.now() - zuletztGemerkt > 4000) { zuletztGemerkt = Date.now(); posMerken(false); }
     var p = A.duration ? (t / A.duration) * 100 : 0;
     el('psFortIn').style.width = p.toFixed(2) + '%';
     if (!mitlesen || !folge || !folge.transkript || !folge.transkript.length) return;
@@ -297,6 +321,7 @@
      jeder Schritt fuer sich abgesichert, und die Leiste geht als
      Erstes weg, damit man die Wirkung sofort sieht. */
   function schliessen() {
+    try { posMerken(false); } catch (e) {}
     try { var b = el('psBar'); if (b) b.hidden = true; } catch (e) {}
     try { var t = el('psText'); if (t) t.hidden = true; } catch (e) {}
     try { document.body.classList.remove('ps-an', 'ps-text-auf'); } catch (e) {}
@@ -330,6 +355,17 @@
     if (neu) {
       A.src = f.datei;
       A.playbackRate = tempi[tempoI];
+      /* Da, wo man aufgehoert hat, weitermachen - aber nicht in den
+         letzten zehn Sekunden, sonst ist die Folge sofort zu Ende. */
+      (function () {
+        var p = posLesen()[f.id];
+        if (!p || p.fertig || !(p.t > 15)) return;
+        var einmal = function () {
+          A.removeEventListener('loadedmetadata', einmal);
+          if (A.duration && p.t < A.duration - 10) { try { A.currentTime = p.t; } catch (e) {} }
+        };
+        A.addEventListener('loadedmetadata', einmal);
+      })();
       satzJetzt = -1; wortJetzt = -1;
       if (mitlesen) { el('psTextTitel').textContent = f.titel || ''; textBauen(); }
     }

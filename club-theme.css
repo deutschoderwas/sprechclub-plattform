@@ -148,13 +148,24 @@ input:focus,select:focus,textarea:focus{outline:none !important;border-color:var
 .pc-pill{border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;color:var(--soft);cursor:pointer;font-family:inherit}
 .pc-pill.active{background:linear-gradient(135deg,var(--turq),var(--turq-dark)) !important;color:#fff !important;border-color:transparent !important}
 .pc-list{display:flex;flex-direction:column;gap:14px;max-width:720px}
-.pc-ep{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--border) !important;border-radius:18px !important;padding:14px;box-shadow:0 10px 26px rgba(20,40,50,.06) !important}
+.pc-ep{display:flex;gap:16px;align-items:center;background:#fff;border:1px solid var(--border) !important;border-radius:18px !important;padding:14px;box-shadow:0 10px 26px rgba(20,40,50,.06) !important;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease}
+.pc-ep:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(20,40,50,.11) !important}
+.pc-ep:active{transform:translateY(0)}
+.pc-ep .pc-day,.pc-ep .pc-title,.pc-ep .pc-kurz,.pc-ep .pc-mit{display:block}
+/* Der Knopf auf dem Bild: er zeigt, dass die ganze Karte losgeht. */
+.pc-cover .pc-ab{position:absolute;right:7px;bottom:7px;width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;background:var(--turq);color:#06403A;font-size:13px;
+  box-shadow:0 6px 16px rgba(20,40,50,.24);transition:transform .16s ease}
+.pc-ep:hover .pc-ab{transform:scale(1.12)}
+/* Wie weit die Folge schon gehoert ist */
+.pc-fort{display:block;height:4px;border-radius:999px;background:rgba(18,113,140,.14);margin:9px 0 2px;max-width:280px}
+.pc-fort i{display:block;height:100%;border-radius:999px;background:var(--turq-dark)}
+.pc-mit{margin-top:7px;font-size:12.5px;color:var(--soft)}
 .pc-cover{width:104px;height:104px;border-radius:14px;background-size:cover;background-position:center;flex:0 0 auto;position:relative;background-color:var(--turq)}
 .pc-lv{position:absolute;top:7px;left:7px;background:rgba(20,40,45,.62);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px}
 .pc-body{flex:1;min-width:0}
 .pc-day{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--turq-dark)}
 .pc-title{font-size:18px;margin:3px 0 10px;font-family:'Space Grotesk',sans-serif}
-.pc-ep audio{width:100%;height:40px}
 /* Kommt man ueber einen Link auf genau diese Folge (#podcast/<id>),
    leuchtet sie kurz auf — sonst sucht man in einer langen Liste. */
 .pc-ep.pc-ziel{border-color:#3FBDDC !important;box-shadow:0 0 0 3px rgba(63,189,220,.28),0 10px 26px rgba(20,40,50,.10) !important}
@@ -173,7 +184,17 @@ input:focus,select:focus,textarea:focus{outline:none !important;border-color:var
 .navlink .pc-punkt{width:8px;height:8px;border-radius:50%;background:#D83636;margin-left:auto;
   flex:none;box-shadow:0 0 0 3px rgba(216,54,54,.18)}
 .pc-soon{background:#fff;border:1px dashed var(--border);border-radius:16px;padding:16px 18px;color:var(--soft);font-size:14px;text-align:center}
-@media(max-width:560px){.pc-ep{flex-direction:column;align-items:stretch}.pc-cover{width:100%;height:170px}}
+/* Handy: die Karte bleibt eine Zeile. Frueher wurde das Bild hier
+   ueber die ganze Breite gezogen - dann fuellte eine einzige Folge
+   den halben Bildschirm, und von der Liste sah man nichts mehr. */
+@media(max-width:560px){
+  .pc-ep{gap:12px;padding:11px;align-items:flex-start}
+  .pc-cover{width:76px;height:76px;border-radius:12px}
+  .pc-cover .pc-ab{width:28px;height:28px;right:5px;bottom:5px;font-size:10px}
+  .pc-title{font-size:16px;margin:2px 0 6px}
+  .pc-kurz{font-size:13px}
+  .pc-fort{max-width:none}
+}
 
 .pc-lvtag{display:inline-block;color:#fff !important;font-weight:800;font-size:11px;padding:2px 9px;border-radius:999px;margin-right:9px;letter-spacing:.02em;vertical-align:middle}
 .pc-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
