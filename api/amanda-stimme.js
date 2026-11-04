@@ -173,6 +173,19 @@ async function geminiKarte(variablen) {
 }
 
 export default async function handler(req, res) {
+  /* Ein kleiner Blick von aussen: steht der Schluessel in Vercel?
+     Nur ja/nein, nie ein Wert - damit sich nach einem Deploy
+     nachsehen laesst, ob Gemini bereitsteht, ohne dass jemand einen
+     Schluessel herumschicken muss. */
+  if (req.method === 'GET' && String(req.query?.pruefen || '') === '1') {
+    return res.status(200).json({
+      ok: true,
+      gemini:      !!GEMINI_KEY,
+      gemini_modell: GEMINI_MODEL,
+      elevenlabs:  !!KEY,
+      eleven_agent: !!AGENT_ENV,
+    });
+  }
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!erlaubteHerkunft(req)) return res.status(403).json({ error: 'forbidden' });
 
