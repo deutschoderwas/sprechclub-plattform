@@ -40,6 +40,7 @@
        der Grund, warum die Leitung wieder zugeht. Beides steht jetzt
        hier und geht am Ende mit an den Server, damit es im Protokoll
        nachlesbar ist statt nur im Gefuehl der Schuelerin. */
+    modus: 'live',   // live (ElevenLabs) oder frei (Browser-Stimme)
     grund: '',       // warum die Leitung zuging
     wachhund: null   // beendet das Warten nach 25 Sekunden
   };
@@ -246,6 +247,15 @@
       b.innerHTML = '<button class="as-los" onclick="amStimmeStart()">'
         + '<span class="as-mik" aria-hidden="true">\uD83C\uDF99\uFE0F</span>'
         + (G.hatte ? 'Noch einmal sprechen' : 'Gespräch beginnen') + '</button>';
+      /* Kam die Leitung nicht zustande, steht der freie Weg bereit:
+         das Gerät hört zu und liest vor. Andere Stimme, aber es geht
+         sofort und es kostet nichts. */
+      if (G.zustand === 'fehler' && freiMoeglich()) {
+        b.innerHTML += '<button class="as-neben" onclick="amFreiStart()">'
+          + 'Trotzdem sprechen — mit der Stimme deines Geräts</button>';
+      }
+    } else if (G.modus === 'frei') {
+      b.innerHTML = '<button class="as-auf" onclick="amFreiEnde()">Auflegen</button>';
     } else if (G.zustand === 'verbindet') {
       b.innerHTML = '<button class="as-los" disabled>'
         + '<span class="as-mik" aria-hidden="true">\uD83C\uDF99\uFE0F</span>Verbinde …</button>';
@@ -598,5 +608,180 @@
     document.head.appendChild(s);
   }
 
-  window.AMSTIMME = { start: window.amStimmeStart, ende: window.amStimmeEnde };
+
+  /* ============================================================
+     Der freie Weg: das Gerät hört zu, das Gerät spricht
+
+     Julia, 3.11.2026: "wir müssen das reparieren oder einen anderen
+     Anbieter finden, der zuverlässig funktioniert und kostenlos ist."
+
+     Einen Anbieter, der beides ist, gibt es nicht — jeder rechnet pro
+     Minute ab. Was es gibt, ist der Browser selbst: er kann zuhören
+     (Spracherkennung) und vorlesen (Sprachausgabe), beides kostenlos
+     und ohne fremdes Konto. Amandas Verstand bleibt derselbe wie im
+     Chat (api/amanda-chat).
+
+     Ehrlich zu den Grenzen, damit niemand überrascht wird:
+       - Die Stimme ist die des Geräts, NICHT Julias Stimme.
+       - Man kann Amanda nicht ins Wort fallen; sie redet zu Ende.
+       - Firefox kann keine Spracherkennung. Safari erst ab iOS 14.5.
+     Dafür kostet es nichts und fällt nie wegen eines fremden Kontos
+     aus. Deshalb ist es der Rückfall, nicht der Hauptweg.
+     ============================================================ */
+  var F = { hoerer: null, laeuft: false, denkt: false, stimme: null, verlauf: [] };
+
+  function freiMoeglich() {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+        && !!window.speechSynthesis;
+  }
+
+  /* Eine deutsche Stimme aussuchen. Die Liste kommt bei manchen
+     Browsern erst verzögert, deshalb fragen wir bei jedem Satz neu. */
+  function deutscheStimme() {
+    if (F.stimme) return F.stimme;
+    var alle = [];
+    try { alle = window.speechSynthesis.getVoices() || []; } catch (e) {}
+    var de = alle.filter(function (v) { return /^de(-|_|$)/i.test(v.lang || ''); });
+    if (!de.length) return null;
+    /* Eine weibliche Stimme, wenn es sie gibt — Amanda ist eine Frau. */
+    var lieb = de.filter(function (v) { return /anna|petra|katja|marlene|female|weib/i.test(v.name || ''); });
+    F.stimme = lieb[0] || de[0];
+    return F.stimme;
+  }
+
+  function vorlesen(text) {
+    return new Promise(function (fertig) {
+      if (!text) return fertig();
+      var sp;
+      try {
+        window.speechSynthesis.cancel();
+        sp = new SpeechSynthesisUtterance(text);
+      } catch (e) { return fertig(); }
+      var st = deutscheStimme();
+      if (st) sp.voice = st;
+      sp.lang = (st && st.lang) || 'de-DE';
+      sp.rate = 0.96;
+      var schonFertig = false;
+      function raus() { if (!schonFertig) { schonFertig = true; fertig(); } }
+      sp.onend = raus;
+      sp.onerror = raus;
+      /* Sicherheitsnetz: manche Geräte melden das Ende nie. */
+      setTimeout(raus, Math.min(45000, 2500 + text.length * 90));
+      try { window.speechSynthesis.speak(sp); } catch (e) { raus(); }
+    });
+  }
+
+  function hoererBauen() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var h = new SR();
+    h.lang = 'de-DE';
+    h.interimResults = true;
+    h.continuous = false;
+    h.maxAlternatives = 1;
+
+    h.onresult = function (ev) {
+      var fertig = '', vorlaeufig = '';
+      for (var i = ev.resultIndex; i < ev.results.length; i++) {
+        var t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) fertig += t; else vorlaeufig += t;
+      }
+      if (vorlaeufig && !fertig) {
+        var z = el('asZustand');
+        if (z) z.textContent = '… ' + vorlaeufig;
+      }
+      if (fertig.trim()) antworten(fertig.trim());
+    };
+
+    h.onerror = function (ev) {
+      var art = (ev && ev.error) || '';
+      if (art === 'no-speech' || art === 'aborted') return;   /* einfach nichts gesagt */
+      if (art === 'not-allowed' || art === 'service-not-allowed') {
+        freiEnde();
+        return melden('Ich darf das Mikrofon nicht benutzen. Erlaub es bitte im Browser und versuch es noch einmal.', true);
+      }
+      freiEnde();
+      melden('Das Zuhören hat gerade nicht geklappt. Versuch es noch einmal — oder schreib Amanda im Chat.', true);
+    };
+
+    /* Nach jeder Pause neu anfangen, solange das Gespräch läuft.
+       continuous=true halten viele Browser nicht durch. */
+    h.onend = function () {
+      if (F.laeuft && !F.denkt) { try { h.start(); } catch (e) {} }
+    };
+    return h;
+  }
+
+  function antworten(gesagt) {
+    sagen('du', gesagt);
+    F.verlauf.push({ wer: 'du', text: gesagt });
+    F.denkt = true;
+    try { F.hoerer.abort(); } catch (e) {}
+    G.zustand = 'spricht'; zeichnen();
+    var z = el('asZustand'); if (z) z.textContent = 'Amanda denkt nach …';
+
+    token().then(function (t) {
+      return fetch('/api/amanda-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({ verlauf: F.verlauf.slice(-12) })
+      });
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j || !j.ok || !j.text) throw new Error('keine Antwort');
+      F.verlauf.push({ wer: 'am', text: j.text });
+      sagen('am', j.text);
+      return vorlesen(j.text);
+    })
+    .catch(function () {
+      var t = 'Entschuldige, da ist etwas dazwischengekommen. Sag es bitte noch einmal.';
+      sagen('am', t);
+      return vorlesen(t);
+    })
+    .then(function () {
+      F.denkt = false;
+      if (!F.laeuft) return;
+      G.zustand = 'hoert'; zeichnen();
+      try { F.hoerer.start(); } catch (e) {}
+    });
+  }
+
+  window.amFreiStart = function () {
+    if (F.laeuft || G.lauf) return;
+    if (!freiMoeglich()) {
+      return melden('Dieser Browser kann noch nicht zuhören. In Chrome oder Safari geht es — '
+                    + 'oder schreib Amanda im Chat, dort antwortet sie wie immer.', true);
+    }
+    /* Die Stimmen laden bei manchen Browsern erst nach dem ersten
+       Zugriff. Also jetzt schon einmal anstossen. */
+    try { window.speechSynthesis.getVoices(); } catch (e) {}
+    F.verlauf = []; F.denkt = false; F.laeuft = true;
+    G.modus = 'frei'; G.mitschrift = []; G.hatte = true;
+    try { F.hoerer = hoererBauen(); } catch (e) {
+      F.laeuft = false;
+      return melden('Dieser Browser kann noch nicht zuhören. Schreib Amanda im Chat.', true);
+    }
+    G.zustand = 'hoert'; zeichnen();
+    var z = el('asZustand'); if (z) z.textContent = 'Ich höre dir zu — sprich einfach los.';
+    /* Der erste Satz kommt von Amanda, damit es sich wie ein Gespräch
+       anfühlt und nicht wie ein Diktiergerät. */
+    vorlesen('Hallo! Schön, dass du da bist. Erzähl mir einfach, was du möchtest.');
+    try { F.hoerer.start(); } catch (e) {}
+  };
+
+  window.amFreiEnde = function () { freiEnde(); };
+
+  function freiEnde() {
+    F.laeuft = false; F.denkt = false;
+    try { F.hoerer && F.hoerer.abort(); } catch (e) {}
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+    F.hoerer = null;
+    G.modus = 'live';
+    G.zustand = 'aus';
+    zeichnen();
+    if (window.AmandaMitschrift) { try { window.AmandaMitschrift.spuelen(); } catch (e) {} }
+  }
+
+  window.AMSTIMME = { start: window.amStimmeStart, ende: window.amStimmeEnde,
+                       frei: window.amFreiStart, freiEnde: window.amFreiEnde };
 })();
