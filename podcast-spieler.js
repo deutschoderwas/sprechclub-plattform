@@ -30,6 +30,8 @@
   var mitlesen = false;  // Textfenster offen?
   var folgen = true;     // Text mitscrollen?
   var tempi = [1, 1.25, 1.5, 0.85], tempoI = 0;
+  var handBis = 0;       // bis wann der Finger das Scrollen behaelt
+  var scrollLauf = null; // laufende Scroll-Bewegung
 
   function E(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -107,7 +109,7 @@
     el('psFolgen').onclick   = function () {
       folgen = !folgen;
       el('psFolgen').classList.toggle('an', folgen);
-      if (folgen) scrollen();
+      if (folgen) { handBis = 0; scrollen(true); }
     };
     el('psTempo').onclick = function () {
       tempoI = (tempoI + 1) % tempi.length;
@@ -188,12 +190,46 @@
     }
   }
 
-  function scrollen() {
+  /* Mitscrollen.
+     Vorher stand hier ein scrollTo({behavior:'smooth'}) und offsetTop.
+     Zwei Fehler, die auf dem Handy zusammen dafuer sorgten, dass der
+     Text stehenblieb:
+       - offsetTop zaehlt vom naechsten positionierten Vorfahren, und
+         das ist das Textfenster, nicht die Textspalte. Die Kopfzeile
+         war also immer mitgerechnet - auf dem kleinen Schirm genug,
+         um das laufende Wort unter den Rand zu schieben.
+       - 'smooth' wird von Safari bei jedem neuen Aufruf abgebrochen,
+         und Saetze kommen schneller, als so eine Bewegung dauert.
+         Ergebnis: es ruckelt und bleibt irgendwo haengen.
+     Jetzt wird mit Rechtecken gerechnet (stimmt immer) und selbst
+     bewegt (bricht sauber ab). Und wer mit dem Finger scrollt, behaelt
+     die Fuehrung fuer vier Sekunden. */
+  function scrollen(sofort) {
     var box = el('psSaetze'), n = box && box.querySelector('.ps-satz.jetzt');
     if (!box || !n) return;
-    var ziel = n.offsetTop - box.clientHeight / 2 + n.offsetHeight / 2;
-    box.scrollTo({ top: Math.max(0, ziel), behavior: 'smooth' });
+    if (!sofort && Date.now() < handBis) return;
+    var rb = box.getBoundingClientRect(), rn = n.getBoundingClientRect();
+    var ziel = box.scrollTop + (rn.top - rb.top) - (box.clientHeight / 2 - rn.height / 2);
+    ziel = Math.max(0, Math.min(box.scrollHeight - box.clientHeight, ziel));
+    var weg = ziel - box.scrollTop;
+    if (Math.abs(weg) < 4) return;
+    if (scrollLauf) { cancelAnimationFrame(scrollLauf); scrollLauf = null; }
+    /* Ein weiter Sprung (Satz angeklickt, Fenster neu geoeffnet) wird
+       nicht animiert - das sieht nach Absturz aus. */
+    if (sofort || Math.abs(weg) > box.clientHeight * 2) { box.scrollTop = ziel; return; }
+    var von = box.scrollTop, start = 0;
+    function schritt(ts) {
+      if (!start) start = ts;
+      var f = Math.min(1, (ts - start) / 280);
+      var e = f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+      box.scrollTop = von + weg * e;
+      scrollLauf = f < 1 ? requestAnimationFrame(schritt) : null;
+    }
+    scrollLauf = requestAnimationFrame(schritt);
   }
+
+  /* Der Finger meldet sich: ab jetzt vier Sekunden nicht dazwischenfahren. */
+  function handAn() { handBis = Date.now() + 4000; }
 
   /* ---------- Text aufbauen ---------- */
   function textBauen() {
@@ -221,9 +257,19 @@
     box.onclick = function (ev) {
       var p = ev.target.closest && ev.target.closest('.ps-satz');
       if (!p) return;
+      handBis = 0;
       A.currentTime = parseFloat(p.getAttribute('data-t')) + 0.03;
       if (A.paused) A.play().catch(function () {});
     };
+
+    /* Scrollt jemand selbst, hoert das Mitwandern kurz auf - sonst
+       zieht es den Text unter dem Finger weg. */
+    if (!box.dataset.hand) {
+      box.dataset.hand = '1';
+      box.addEventListener('touchstart', handAn, { passive: true });
+      box.addEventListener('touchmove', handAn, { passive: true });
+      box.addEventListener('wheel', handAn, { passive: true });
+    }
   }
 
   function textSchalten(auf) {
@@ -234,7 +280,10 @@
       textBauen();
       t.hidden = false;
       satzJetzt = -1; wortJetzt = -1;
+      handBis = 0;
       takt();
+      /* Nach dem Aufklappen steht die Hoehe erst im naechsten Bild fest. */
+      requestAnimationFrame(function () { scrollen(true); });
     } else {
       t.hidden = true;
     }
@@ -300,6 +349,9 @@
     var s = document.createElement('style'); s.id = 'ps-stil';
     s.textContent = [
       ':root{--ps-ink:#14181B;--ps-soft:#8A9BA2;--ps-turq:#2DD4BF;--ps-turq-d:#14B8A6}',
+      /* Eigene Rechnung, damit das Innenmass nicht von der Seite abhaengt:
+         ohne das lief der Text auf dem Handy rechts aus dem Bild. */
+      '#psWrap,#psWrap *{box-sizing:border-box}',
       'body.ps-an{padding-bottom:92px}',
       '.ps-bar{position:fixed;left:0;right:0;bottom:0;z-index:1200;background:#14181B;color:#fff;',
       '  box-shadow:0 -10px 34px rgba(0,0,0,.26);font-family:inherit}',
@@ -328,14 +380,28 @@
       '.ps-kl.an{background:var(--ps-turq);color:#06403A;border-color:transparent}',
       /* Das Textfenster sitzt über der Leiste */
       '.ps-text{position:fixed;left:0;right:0;bottom:92px;top:auto;max-height:58vh;z-index:1199;',
+      '  max-height:58dvh;',
       '  background:#FFFCF5;border-top:1px solid #F0E5D8;box-shadow:0 -14px 40px rgba(20,24,27,.14);',
       '  display:flex;flex-direction:column}',
+      /* Ohne diese Zeile schloss das Textfenster NIE: das hidden-Attribut
+         setzt display:none, aber die Regel oben setzt display:flex - und
+         die eigene Regel gewinnt gegen die des Browsers. Der Knopf tat
+         also alles richtig, und das Fenster blieb trotzdem stehen. */
+      '.ps-text[hidden]{display:none}',
+      '.ps-bar[hidden]{display:none}',
       '.ps-text-kopf{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid #F0E5D8}',
       '.ps-text-kopf b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
       '.ps-text-knoepfe{display:flex;gap:8px;flex:0 0 auto}',
       '.ps-text-kopf .ps-kl{border-color:#E2D9CC;color:#5A6B72}',
       '.ps-text-kopf .ps-kl.an{background:var(--ps-turq);color:#06403A;border-color:transparent}',
-      '.ps-saetze{overflow:auto;padding:16px 18px 26px;max-width:760px;margin:0 auto;width:100%;',
+      /* flex:1 1 auto und min-height:0 sind das Entscheidende: ohne sie
+         waechst die Spalte in einer Spalten-Flexbox auf ihre ganze
+         Texthoehe, laeuft unten aus dem Fenster heraus und scrollt
+         ueberhaupt nicht. Auf dem Handy war genau das der Grund,
+         warum der Mitlesetext haengenblieb. */
+      '.ps-saetze{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;',
+      '  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;',
+      '  padding:16px 18px 26px;max-width:760px;margin:0 auto;width:100%;',
       '  font-size:18px;line-height:1.85;color:#14181B}',
       '.ps-satz{margin:0 0 10px;cursor:pointer;color:#9AA7AD;transition:color .2s}',
       '.ps-satz.vorbei{color:#6B7B82}',
@@ -356,23 +422,22 @@
          Bild, Titel und das Kreuz - das Kreuz immer sichtbar, immer
          44 Pixel gross. Unten die Bedienung. */
       '@media(max-width:720px){',
-      '  body.ps-an{padding-bottom:142px}',
-      '  .ps-in{display:grid;grid-template-columns:40px 1fr 44px;',
-      '    grid-template-areas:"bild meta zu" "steuer steuer steuer";',
-      '    gap:8px 10px;padding:10px 12px 12px;align-items:center}',
-      '  .ps-bild{grid-area:bild;width:40px;height:40px}',
-      '  .ps-meta{grid-area:meta;min-width:0}',
+      '  body.ps-an{padding-bottom:140px}',
+      '  .ps-in{display:grid;max-width:none;align-items:center;',
+      '    grid-template-columns:40px minmax(0,1fr) auto 44px;',
+      '    gap:8px 10px;padding:10px 12px 12px}',
+      '  .ps-bild{grid-column:1;grid-row:1;width:40px;height:40px}',
+      '  .ps-meta{grid-column:2;grid-row:1;min-width:0}',
       '  .ps-meta b{font-size:14.5px}',
-      '  .ps-zu{grid-area:zu;width:44px;height:44px;min-width:44px;font-size:19px;justify-self:end}',
-      '  .ps-steuer{grid-area:steuer;display:flex;align-items:center;justify-content:space-between;',
-      '    gap:8px;width:100%}',
-      '  .ps-steuer .ps-rund{min-width:52px;height:40px}',
+      '  .ps-zeit{grid-column:3;grid-row:1;font-size:12px}',
+      '  .ps-zu{grid-column:4;grid-row:1;width:44px;height:44px;min-width:44px;',
+      '    font-size:19px;justify-self:end}',
+      '  .ps-steuer{grid-column:1/3;grid-row:2;display:flex;align-items:center;gap:10px}',
+      '  .ps-steuer .ps-rund{min-width:52px;height:42px}',
       '  .ps-play{width:52px;height:52px;font-size:18px}',
-      '  .ps-zeit,.ps-kl{display:none}',
-      '  .ps-steuer .ps-zeit-m{display:block;font-size:12.5px;color:var(--ps-soft);',
-      '    font-variant-numeric:tabular-nums}',
-      '  .ps-steuer .ps-lesen-m{display:inline-block}',
-      '  .ps-text{bottom:142px;max-height:50vh}',
+      '  #psTempo{display:none}',
+      '  #psLesen{grid-column:3/5;grid-row:2;justify-self:end;min-height:44px;padding:10px 14px}',
+      '  .ps-text{bottom:140px;max-height:46vh;max-height:46dvh}',
       '  .ps-text-kopf{padding:10px 12px}',
       '  .ps-text-kopf .ps-kl{display:inline-block;padding:10px 14px;min-height:44px}',
       '  .ps-saetze{font-size:17px;padding:14px 14px 22px}',
