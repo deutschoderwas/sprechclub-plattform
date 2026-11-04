@@ -3079,7 +3079,12 @@ function setSchuelerGruppe(g){
 }
 function zeichneGruppenPillen(){
   var box = document.getElementById('grpPills'); if(!box) return;
-  var zaehler = {}; (SCHUELER||[]).forEach(function(p){ var g=gruppeVon(p); zaehler[g]=(zaehler[g]||0)+1; });
+  var zaehler = {}; (SCHUELER||[]).forEach(function(p){ var g=gruppeVon(p); zaehler[g]=(zaehler[g]||0)+1;
+    /* Wer gekuendigt hat und noch laeuft, zaehlt auch bei seiner
+       Stufe mit - sonst zeigt die PREMIUM-Pille weniger an, als
+       wirklich zahlen. Dieselbe Regel wie im Filter darunter. */
+    if (g === 'geht') { var t = (p.tier === 'community') ? 'community' : 'premium'; zaehler[t]=(zaehler[t]||0)+1; }
+  });
   var teile = ['alle'].concat(Object.keys(GRUPPEN));
   box.innerHTML = teile.map(function(g){
     var an = SCHUELER_GRUPPE===g;
@@ -3170,7 +3175,22 @@ function renderSchuelerTable(){
   /* Gruppe und Status sind zwei verschiedene Fragen: WAS jemand ist und WIE es
      ihm gerade geht. Frueher steckten beide in einer Auswahl, dann liess sich
      "alle Premium, auch die in Pause" gar nicht erst hinschreiben. */
-  if (SCHUELER_GRUPPE !== 'alle') rows = rows.filter(p => gruppeVon(p) === SCHUELER_GRUPPE);
+  /* Julia, 4.11.2026: "Caiju hat gekündigt, ist aber bis zum 30.11.
+     Premium-Mitglied, warum wird sie nur bei den Gekündigten gezeigt
+     und nicht bei den Premium?"
+     Weil die Pille ⏳ eine eigene Gruppe ist - gewollt seit dem
+     18.10., damit man sieht, wer geht. Nur: wer gekündigt hat und noch
+     läuft, IST weiter Premium und zahlt. Stand er nur unter ⏳, log die
+     Premium-Zahl. Also zählt er jetzt bei seiner Stufe mit und trägt
+     die Pille trotzdem. */
+  if (SCHUELER_GRUPPE !== 'alle') rows = rows.filter(p => {
+    const g = gruppeVon(p);
+    if (g === SCHUELER_GRUPPE) return true;
+    if (g !== 'geht') return false;
+    if (SCHUELER_GRUPPE === 'premium')   return p.tier === 'premium' || p.tier === 'premium_plus';
+    if (SCHUELER_GRUPPE === 'community') return p.tier === 'community';
+    return false;
+  });
   /* Niveau: level, sonst stufe, sonst Zielniveau — dieselbe Reihenfolge
      wie im Klassenraum, damit beide dasselbe meinen. */
   const nf = document.getElementById('schuelerNiveau')?.value || '';
