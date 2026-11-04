@@ -772,14 +772,18 @@
     var unter = st ? (E(st.niveau || '') + ' · Lektion ' + st.nr + ' von ' + st.anzahl)
                    : 'Vierzehn Lektionen pro Stufe, Schritt für Schritt';
     var knopf = st ? (st.angefangen ? 'Weitermachen' : 'Los geht’s') : 'Kurs öffnen';
-    return '<h2 class="hs-titel">Weiterlernen</h2>'
+    return '<div id="hsWeiter"><h2 class="hs-titel">Weiterlernen</h2>'
       + '<button class="hs-weiter druck" type="button" onclick="' + klick + '">'
       +   '<img src="' + E(bild) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
       +   '<span class="hs-weiter-tx"><small>' + unter + '</small><b>' + titel + '</b>'
       +     (st ? '<span class="hs-weiter-bal"><i style="width:' + Math.max(3, st.prozent || 0) + '%"></i></span>' : '')
       +     '<span class="hs-weiter-k">' + knopf + ikon('chevron-right','z-s') + '</span></span>'
-      + '</button>';
+      + '</button></div>';
   }
+  window.addEventListener('meinweg-da', function(){
+    try{ var a = document.getElementById('hsWeiter'); if(a) a.outerHTML = hsWeiter(); }catch(e){}
+    try{ var b = document.getElementById('sfWeiterSlot'); if(b) b.innerHTML = weiterKarte(); }catch(e){}
+  });
 
   /* Die vier Wege in den Lernbereich, jeder mit einem echten Foto. */
   var HS_BEREICHE = [
@@ -872,7 +876,7 @@
       +         '<button onclick="go(\'nachrichten\')">' + T('k_msg','Nachrichten') + '</button>'
       +       '</div>'
       +       '<div id="sfAnschlag"></div>'
-      +       weiterKarte()
+      +       '<div id="sfWeiterSlot">' + weiterKarte() + '</div>'
       +       '<div id="sfFeed"><div class="sf-k"><div class="sf-leer">' + T('sf_ladet','Wird geladen …') + '</div></div></div>'
       +       '<div class="st-titel"><span class="tag">' + T('sn_tag','Dein Übungsplatz') + '</span>'
       +         '<h2>' + T('sn_weiter','Weitermachen') + '</h2></div>'

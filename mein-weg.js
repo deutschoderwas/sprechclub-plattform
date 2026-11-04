@@ -448,7 +448,7 @@
       +   '<p>' + E(n.L.ziel || '') + '</p>'
       +   '<div class="lw-weiter-knopf">'
       +     '<button class="mw-btn gross" onclick="wegTeil(\'' + stufe + '\',' + n.L.nr + ',\'' + x.T.k + '\')">'
-      +       x.T.nr + ' ' + x.T.t + ' →</button>'
+      +       'Schritt ' + x.T.nr + ': ' + x.T.t + ' →</button>'
       +     '<button class="lw-link" onclick="wegLektion(' + n.L.nr + ')">Lektion ansehen</button>'
       +   '</div>'
       + '</div></div>';
@@ -614,6 +614,10 @@
      in der Datenbank steht: einmal nachtragen. */
   window.addEventListener('DOMContentLoaded', function () {
     standLaden().then(function () {
+      /* Die Startseite steht oft schon, bevor der Stand da ist. Dann
+         zeigte sie "Fang mit Lektion 1 an", obwohl die Person mitten
+         in A2 steckt. Jetzt zeichnet sie ihre Karte neu. */
+      try { window.dispatchEvent(new Event('meinweg-da')); } catch (e) {}
       if (STAND.stufe) return;
       try {
         var r = JSON.parse(localStorage.getItem('dow_niveautest') || 'null');
