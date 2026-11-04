@@ -439,6 +439,25 @@
     + '.hs-schild.jetzt{background:var(--rot);color:#fff}'
     + '.hs-schild.frei{background:var(--tq-soft);color:var(--tq-t)}'
     + '.hs-z .pfeil{color:var(--ink3)}'
+    + '.hs .hs-weiter{display:block;position:relative;width:100%;padding:0;border:none;border-radius:20px;overflow:hidden;'
+    +   'background:#14181B;color:#fff;text-align:left;cursor:pointer;aspect-ratio:16/10;box-shadow:0 10px 24px rgba(20,24,27,.18)}'
+    + '.hs-weiter img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}'
+    + '.hs-weiter-tx{position:absolute;left:0;right:0;bottom:0;padding:44px 18px 16px;display:flex;flex-direction:column;gap:5px;'
+    +   'background:linear-gradient(to top,rgba(10,14,16,.88) 0%,rgba(10,14,16,.55) 55%,rgba(10,14,16,0) 100%)}'
+    + '.hs-weiter-tx small{font-size:12.5px;font-weight:600;letter-spacing:.02em;color:#E7ECEE}'
+    + '.hs-weiter-tx b{font-family:"Space Grotesk",sans-serif;font-size:21px;line-height:1.2;font-weight:700}'
+    + '.hs-weiter-bal{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;margin-top:4px}'
+    + '.hs-weiter-bal i{display:block;height:100%;background:#FFE100;border-radius:99px}'
+    + '.hs-weiter-k{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;margin-top:8px;background:#D42A21;'
+    +   'color:#fff;font-weight:700;font-size:15px;border-radius:999px;padding:11px 18px;min-height:44px}'
+    + '.hs-bereiche{display:grid;grid-template-columns:1fr 1fr;gap:12px}'
+    + '.hs .hs-bk{position:relative;display:block;padding:0;border:none;border-radius:18px;overflow:hidden;aspect-ratio:1/1;'
+    +   'background:#10627A;color:#fff;text-align:left;cursor:pointer;box-shadow:0 6px 16px rgba(20,24,27,.12)}'
+    + '.hs-bk img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}'
+    + '.hs-bk span{position:absolute;left:0;right:0;bottom:0;padding:34px 13px 12px;display:flex;flex-direction:column;gap:2px;'
+    +   'background:linear-gradient(to top,rgba(10,14,16,.86) 0%,rgba(10,14,16,.5) 60%,rgba(10,14,16,0) 100%)}'
+    + '.hs-bk b{font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:700;line-height:1.2}'
+    + '.hs-bk small{font-size:12px;color:#E7ECEE}'
     + '.hs-chatkopf{padding:0 2px;margin:26px 0 10px}'
     + '.hs-chatkopf h2{font-size:20px}'
     + '.hs-post{align-items:flex-start;min-height:64px;cursor:pointer}'
@@ -628,14 +647,15 @@
     try{ id = window.user && user.id; }catch(e){}
     var ziel = document.getElementById('hsRinge');
     if(!ziel) return;
-    if(!c || !id){ ziel.innerHTML = ''; return; }
+    if(!c || !id){ var b0 = ziel.closest ? ziel.closest('.hs-ring-k') : null; if(b0) b0.style.display = 'none'; return; }
     c.from('ueben_stand').select('skill,best').eq('user_id', id).then(function(r){
       var reihen = (r && r.data) || [];
       var ziel2 = document.getElementById('hsRinge'); if(!ziel2) return;
       if(!reihen.length){
-        ziel2.className = 'hs-leer';
-        ziel2.innerHTML = 'Hier steht bald, wie du in Hören, Lesen, Schreiben und Sprechen stehst — '
-          + 'sobald du die ersten Übungen gemacht hast.';
+        /* Noch nichts geübt: der Block verschwindet, statt einen
+           Platzhaltersatz zu zeigen. */
+        var blk = ziel2.closest ? ziel2.closest('.hs-ring-k') : null;
+        if(blk) blk.style.display = 'none';
         return;
       }
       var je = {};
@@ -648,7 +668,7 @@
         var d = je[f[0]];
         return hsRing(f[1], f[2], Math.round(d.summe / Math.max(1, d.n)));
       });
-      if(!stuecke.length){ ziel2.className='hs-leer'; ziel2.innerHTML='Noch keine Übungen gemacht.'; return; }
+      if(!stuecke.length){ var blk2 = ziel2.closest ? ziel2.closest('.hs-ring-k') : null; if(blk2) blk2.style.display = 'none'; return; }
       ziel2.className = 'hs-feld';
       ziel2.innerHTML = '<div class="hs-ringe">' + stuecke.join('') + '</div>';
     }).catch(function(){
@@ -709,6 +729,8 @@
     ziel.innerHTML = '<div class="hs">'
       + hsKopf(k, s)
       + hsWoche(k, s)
+      + hsWeiter()
+      + hsBereiche()
       + hsChat()
       + hsAmanda()
       + hsFertigkeiten()
@@ -730,6 +752,49 @@
     }catch(e){ console.error('Klicks:', e); }
     try{ hsRingeFuellen(); }catch(e){ console.error('Fertigkeiten:', e); }
     try{ stromLaden(); }catch(e){ console.error('Chat:', e); }
+  }
+
+  /* Weiterlernen: ein Foto, die Lektion, der Balken, ein Knopf.
+     Dieselben Daten wie die Karte am Rechner (weiterKarte). */
+  function hsWeiter(){
+    var st = null;
+    try{
+      if(window.wegStand){
+        var w = window.wegStand();
+        if(w && w.stufe && w.lektion) st = { niveau:w.niveau, nr:w.nr, anzahl:w.anzahl, prozent:w.prozent,
+          lektion:w.titel, bild:w.bild, angefangen:w.angefangen, weg:w.weg };
+      }
+    }catch(e){}
+    if(!st){ try{ if(window.kursStand) st = window.kursStand(); }catch(e){} }
+    var bild = st ? (st.bild || kursBild(st.niveau, st.id)) : 'bilder/thema/menschen.jpg';
+    var klick = st ? 'kursOeffnen(' + st.nr + ',\'' + E(st.weg || st.niveau) + '\')' : 'go(\'weg\')';
+    var titel = st ? E(st.lektion) : 'Fang mit Lektion 1 an';
+    var unter = st ? (E(st.niveau || '') + ' · Lektion ' + st.nr + ' von ' + st.anzahl)
+                   : 'Vierzehn Lektionen pro Stufe, Schritt für Schritt';
+    var knopf = st ? (st.angefangen ? 'Weitermachen' : 'Los geht’s') : 'Kurs öffnen';
+    return '<h2 class="hs-titel">Weiterlernen</h2>'
+      + '<button class="hs-weiter druck" type="button" onclick="' + klick + '">'
+      +   '<img src="' + E(bild) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'' + ersatzBild() + '\'">'
+      +   '<span class="hs-weiter-tx"><small>' + unter + '</small><b>' + titel + '</b>'
+      +     (st ? '<span class="hs-weiter-bal"><i style="width:' + Math.max(3, st.prozent || 0) + '%"></i></span>' : '')
+      +     '<span class="hs-weiter-k">' + knopf + ikon('chevron-right','z-s') + '</span></span>'
+      + '</button>';
+  }
+
+  /* Die vier Wege in den Lernbereich, jeder mit einem echten Foto. */
+  var HS_BEREICHE = [
+    ['lernen',   'Mein Kurs',          'Lektion für Lektion', 'bildung'],
+    ['ueben',    'Üben & Grammatik',   'Kurz und gezielt',    'live-unterricht'],
+    ['vokabeln', 'Wörter',             'Aus deinen Stunden',  'umgangssprache'],
+    ['pruefung', 'Prüfung',            'Goethe, telc, DTZ',   'redemittel']
+  ];
+  function hsBereiche(){
+    return '<h2 class="hs-titel">Dein Lernbereich</h2>'
+      + '<div class="hs-bereiche">' + HS_BEREICHE.map(function(b){
+          return '<button class="hs-bk druck" type="button" onclick="go(\'' + b[0] + '\')">'
+            + '<img src="bilder/thema/' + b[3] + '-s.jpg" alt="" loading="lazy" onerror="this.remove()">'
+            + '<span><b>' + E(b[1]) + '</b><small>' + E(b[2]) + '</small></span></button>';
+        }).join('') + '</div>';
   }
 
   /* Die neuesten Beiträge aus dem Community-Chat. Jeder ist eine eigene,
