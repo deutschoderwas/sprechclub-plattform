@@ -61,7 +61,7 @@
     var s = document.createElement('style');
     s.id = 'apptipp-stil';
     s.textContent = [
-      '#apptipp{position:fixed;left:10px;right:10px;bottom:10px;z-index:9600;',
+      '#apptipp{position:fixed;left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9600;',
       '  display:flex;align-items:center;gap:11px;',
       '  background:var(--karte,var(--card,#FFFFFF));border:2px solid var(--tinte,var(--ink,#14181B));',
       '  border-radius:18px;padding:10px 12px;box-shadow:3px 5px 0 rgba(32,33,31,.16);',
@@ -100,15 +100,20 @@
     location.href = 'app-installieren.html';
   };
 
+  /* Nur auf der Startseite. Im Chat lag der Hinweis über dem Eingabefeld,
+     und man konnte nicht mehr tippen. */
+  function aufStart() { return !location.hash || location.hash === '#dashboard'; }
+  window.addEventListener('hashchange', function () { if (!aufStart()) weg(); });
+
   function zeigen() {
-    if (document.getElementById('apptipp')) return;
+    if (document.getElementById('apptipp') || !aufStart()) return;
     stil();
     var d = document.createElement('div');
     d.id = 'apptipp';
     d.innerHTML =
       '<img src="icons/icon-192.png" alt="" onerror="this.remove()">'
       + '<span class="tx"><b>Auf den Startbildschirm legen</b>'
-      + '<span>Dann bist du mit einem Tipp hier — ohne Store.</span></span>'
+      + '<span>Dann bist du mit einem Tipp hier, ganz ohne App-Store.</span></span>'
       + '<button class="los" id="apptipp-los" type="button" onclick="appTippLos()">Wie geht das?</button>'
       + '<button class="zu" type="button" aria-label="Hinweis schließen" onclick="appTippZu()">✕</button>';
     document.body.appendChild(d);

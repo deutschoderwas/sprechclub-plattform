@@ -489,6 +489,11 @@
   #v-community .thr-a{margin-left:2px;padding-left:9px}
   #v-community .schnell{gap:3px;margin-top:6px;padding-top:6px}
   #v-community .schnell .sr-e{font-size:19px;padding:4px 5px}
+  /* Groessere Tippflaechen am Handy: Finger sind keine Mauszeiger. */
+  #v-community .schnell .sr-e{min-width:38px;min-height:36px}
+  #v-community .schnell .sr-r{min-height:36px;padding-left:12px;padding-right:12px}
+  #v-community .cmp .ct{min-width:40px;min-height:40px}
+  #v-community .ch-hd .bk{min-width:42px;min-height:42px;justify-content:center;align-items:center}
   #v-community .schnell .sr-r{padding:4px 10px;font-size:12px}
   #v-community .cmp-in textarea{font-size:16px!important}
 }
@@ -1178,7 +1183,9 @@
 
   function bindSidebar(){
     var r=root();
-    Array.prototype.forEach.call(r.querySelectorAll('[data-ch]'),function(b){ b.addEventListener('click',function(){ var s=b.getAttribute('data-ch'); if(mode==='channel'&&s===cur) return; mode='channel'; cur=s; refreshSideActive(); openChannel(s); }); });
+    Array.prototype.forEach.call(r.querySelectorAll('[data-ch]'),function(b){ b.addEventListener('click',function(){ var s=b.getAttribute('data-ch'); /* Am Handy ist der zuletzt offene Kanal schon "cur", die Liste liegt aber
+       obendrauf. Dann muss ein Tipp ihn trotzdem oeffnen. */
+    var w0=q('.comm'); if(mode==='channel'&&s===cur&&w0&&w0.classList.contains('chatauf')) return; mode='channel'; cur=s; refreshSideActive(); openChannel(s); }); });
     Array.prototype.forEach.call(r.querySelectorAll('[data-dm]'),function(b){ b.addEventListener('click',function(){ openDM(b.getAttribute('data-dm'),b.getAttribute('data-nm')); }); });
     Array.prototype.forEach.call(r.querySelectorAll('[data-gtog]'),function(b){
       b.addEventListener('click',function(){

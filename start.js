@@ -439,6 +439,15 @@
     + '.hs-schild.jetzt{background:var(--rot);color:#fff}'
     + '.hs-schild.frei{background:var(--tq-soft);color:var(--tq-t)}'
     + '.hs-z .pfeil{color:var(--ink3)}'
+    + '.hs-chatkopf{padding:0 2px;margin:26px 0 10px}'
+    + '.hs-chatkopf h2{font-size:20px}'
+    + '.hs-post{align-items:flex-start;min-height:64px;cursor:pointer}'
+    + '.hs-post .pfeil{align-self:center}'
+    + '.hs-z .kachel.hs-av{border-radius:50%;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}'
+    + '.hs-z .tx .hs-raum{font-style:normal;font-weight:600;font-size:11px;color:var(--tq-t);background:var(--tq-soft);border-radius:999px;padding:2px 7px;margin-left:4px;white-space:nowrap}'
+    + '.hs-z .tx .hs-text{color:var(--ink);font-size:13.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}'
+    + '.hs-z .tx .hs-wann{font-size:11.5px;color:var(--ink3);margin-top:3px}'
+    + '.hs-z .tx .hs-wann span,.hs-z .tx .hs-text span{display:inline;margin:0;font-size:inherit;color:inherit}'
     ;
 
   var HANDY_ZEICHEN = '<symbol id="s-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /> <path d="M8 14h.01" /> <path d="M12 14h.01" /> <path d="M16 14h.01" /> <path d="M8 18h.01" /> <path d="M12 18h.01" /> <path d="M16 18h.01" /></symbol><symbol id="s-sparkles" viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></symbol><symbol id="s-mic" viewBox="0 0 24 24"><path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" /></symbol><symbol id="s-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></symbol><symbol id="s-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="s-ear" viewBox="0 0 24 24"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0" /> <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4" /></symbol><symbol id="s-book-open" viewBox="0 0 24 24"><path d="M12 7v14" /> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></symbol><symbol id="s-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol><symbol id="s-brain" viewBox="0 0 24 24"><path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path d="M18 18a4 4 0 0 0 2-7.464" /> <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path d="M6 18a4 4 0 0 1-2-7.464" /> <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></symbol><symbol id="s-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol><symbol id="s-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" /></symbol><symbol id="s-file-text" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /> <path d="M14 2v4a2 2 0 0 0 2 2h4" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></symbol><symbol id="s-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /> <path d="M22 10v6" /> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></symbol><symbol id="s-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" /> <path d="m14.5 12.5 2-2" /> <path d="m11.5 9.5 2-2" /> <path d="m8.5 6.5 2-2" /> <path d="m17.5 15.5 2-2" /></symbol><symbol id="s-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol><symbol id="s-radio" viewBox="0 0 24 24"><path d="M16.247 7.761a6 6 0 0 1 0 8.478" /> <path d="M19.075 4.933a10 10 0 0 1 0 14.134" /> <path d="M4.925 19.067a10 10 0 0 1 0-14.134" /> <path d="M7.753 16.239a6 6 0 0 1 0-8.478" /> <circle cx="12" cy="12" r="2" /></symbol><symbol id="s-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /></symbol>';
@@ -700,6 +709,7 @@
     ziel.innerHTML = '<div class="hs">'
       + hsKopf(k, s)
       + hsWoche(k, s)
+      + hsChat()
       + hsAmanda()
       + hsFertigkeiten()
       + hsUnterricht(k, s)
@@ -719,7 +729,55 @@
       }
     }catch(e){ console.error('Klicks:', e); }
     try{ hsRingeFuellen(); }catch(e){ console.error('Fertigkeiten:', e); }
+    try{ stromLaden(); }catch(e){ console.error('Chat:', e); }
   }
+
+  /* Die neuesten Beiträge aus dem Community-Chat. Jeder ist eine eigene,
+     große Tippfläche und öffnet genau diesen Kanal. */
+  function hsChat(){
+    return '<div class="hs-kopfz hs-chatkopf"><h2>Aus dem Chat</h2>'
+      + '<button class="mehr druck" type="button" onclick="go(\'community\')">Alle Kanäle' + ikon('chevron-right') + '</button></div>'
+      + '<section class="hs-karte hs-liste" id="hsChat">'
+      +   '<div class="hs-z"><span class="kachel">' + ikon('message-circle') + '</span>'
+      +   '<span class="tx"><b>Wird geladen …</b><span>Die neuesten Beiträge</span></span></div>'
+      + '</section>';
+  }
+  function hsChatZeile(m){
+    var teil = teile(m.body);
+    var kurz = kuerzen(teil.titel || teil.text, 90).text;
+    var kanal = m._kanal || {};
+    return '<button class="hs-z druck hs-post" type="button" data-kanal="' + E(m.channel) + '" data-msg="' + E(m.id) + '">'
+      + '<span class="kachel hs-av" style="background:' + avFarbe(m.author_name) + '">' + E(initialen(m.author_name)) + '</span>'
+      + '<span class="tx"><b>' + E(m.author_name || 'Jemand aus dem Club')
+      +   (kanal.name ? ' <i class="hs-raum">' + E(kanal.name) + '</i>' : '') + '</b>'
+      +   '<span class="hs-text">' + E(kurz) + '</span>'
+      +   '<span class="hs-wann">' + wann(m.created_at) + '</span></span>'
+      + ikon('chevron-right','pfeil') + '</button>';
+  }
+  function hsChatFuellen(strom){
+    var el = document.getElementById('hsChat');
+    if(!el) return;
+    var drei = (strom || []).slice(0, 3);
+    el.innerHTML = (drei.length ? drei.map(hsChatZeile).join('')
+        : '<div class="hs-z"><span class="kachel">' + ikon('message-circle') + '</span>'
+          + '<span class="tx"><b>Noch ist es ruhig</b><span>Schreib den ersten Beitrag.</span></span></div>')
+      + '<button class="hs-z druck" type="button" onclick="go(\'community\')">'
+      +   '<span class="kachel">' + ikon('message-circle') + '</span>'
+      +   '<span class="tx"><b>Zum Chat</b><span>Mitlesen, fragen, mitschreiben</span></span>'
+      +   ikon('chevron-right','pfeil') + '</button>';
+  }
+
+  /* Ein Tipp auf einen Beitrag öffnet seinen Kanal. Ein Zuhörer für die
+     ganze Seite, damit es auch nach jedem Neuzeichnen funktioniert. */
+  document.addEventListener('click', function(ev){
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-kanal]') : null;
+    if(!t || !document.getElementById('v-dashboard') || !document.getElementById('v-dashboard').contains(t)) return;
+    if(ev.target.closest('a')) return;
+    ev.preventDefault();
+    var slug = t.getAttribute('data-kanal'), id = t.getAttribute('data-msg') || null;
+    if(window.communityOeffne) window.communityOeffne(slug, id);
+    else if(window.go) window.go('community');
+  });
 
   STARTSEITE.zeichne = function(ziel, k){
     if(!ziel) return;
@@ -1144,7 +1202,10 @@
   + '.sf-reiter button:hover{color:var(--ink)}'
 
   /* Ein Beitrag */
-  + '.sf-post{padding:14px 15px;border-bottom:1px solid var(--linie2)}'
+  + '.sf-post{padding:14px 15px;border-bottom:1px solid var(--linie2);cursor:pointer;transition:background .15s}'
+  + '.sf-post:hover{background:var(--tq-soft,#EAF6FA)}'
+  + '.sf-tickz{cursor:pointer;border-radius:8px;margin:0 -6px;padding:3px 6px}'
+  + '.sf-tickz:hover{background:var(--tq-soft,#EAF6FA)}'
   + '.sf-post:last-child{border-bottom:none}'
   + '.sf-pkopf{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px}'
   + '.sf-av{width:34px;height:34px;border-radius:50%;flex:0 0 34px;display:flex;align-items:center;'
@@ -1307,7 +1368,8 @@
     var team  = m._team;
     var ki    = m._ki;
     var kanal = m._kanal || {};
-    return '<div class="sf-post"' + (fest?' style="padding-top:13px"':'') + '>'
+    return '<div class="sf-post" role="button" tabindex="0" data-kanal="' + E(m.channel) + '" data-msg="' + E(m.id) + '"'
+      + (fest?' style="padding-top:13px"':'') + '>'
       + '<div class="sf-pkopf">'
       +   avatar(m.author_name, true)
       +   '<div><div class="sf-wer">' + E(m.author_name || T('sf_jemand','Jemand aus dem Club'))
@@ -1318,7 +1380,7 @@
       + '</div>'
       + (teil.titel ? '<h3>' + E(teil.titel) + '</h3>' : '')
       + '<p>' + E(lang.text) + '</p>'
-      + (lang.lang ? '<button class="sf-mehr" onclick="go(\'community\')">' + T('sf_ganz','Ganzen Beitrag lesen →') + '</button>' : '')
+      + (lang.lang ? '<button class="sf-mehr" type="button">' + T('sf_ganz','Ganzen Beitrag lesen →') + '</button>' : '')
       + '<div class="sf-pfuss">'
       +   (m._herzen ? '<span>💛 ' + m._herzen + '</span>' : '')
       +   (m._antworten ? '<span>💬 ' + m._antworten + ' ' + (m._antworten===1?T('sf_antw1','Antwort'):T('sf_antw','Antworten')) + '</span>' : '')
@@ -1333,7 +1395,8 @@
     var c = window.sb;
     var festEl = document.getElementById('sfAnschlag');
     var feedEl = document.getElementById('sfFeed');
-    if(!c || (!festEl && !feedEl)) return;
+    var hsEl = document.getElementById('hsChat');
+    if(!c || (!festEl && !feedEl && !hsEl)) return;
 
     var KANAELE = {};
     c.from('community_channels').select('slug,name,emoji,team_only').eq('is_active', true)
@@ -1379,6 +1442,7 @@
               : ('<div class="sf-k"><div class="sf-leer">' + T('sf_keine','Hier ist noch nichts geschrieben worden. Sobald dein Lehrer oder jemand aus dem Club etwas postet, steht es hier.') + '</div></div>');
           }
           tickerFuellen(oben);
+          hsChatFuellen(fest ? [fest].concat(strom) : strom);
         };
 
         if(!ids.length){ fertig({}); return; }
@@ -1391,6 +1455,8 @@
           .catch(function(){ fertig({}); });
       })
       .catch(function(e){
+        if(hsEl) hsEl.innerHTML = '<button class="hs-z druck" type="button" onclick="go(\'community\')"><span class="tx"><b>Zum Chat</b>'
+          + '<span>Die Beiträge konnten gerade nicht geladen werden.</span></span></button>';
         if(feedEl) feedEl.innerHTML = '<div class="sf-k"><div class="sf-leer">'
           + T('sf_feedweg','Die Beiträge konnten gerade nicht geladen werden. Lade die Seite bitte neu.') + '</div></div>';
       });
@@ -1410,7 +1476,7 @@
     el.innerHTML = letzte.map(function(m){
       var teil = teile(m.body);
       var kurz = kuerzen(teil.titel || teil.text, 54).text;
-      return '<div><b>' + E(m.author_name || T('sf_jemand','Jemand aus dem Club')) + '</b> — ' + E(kurz)
+      return '<div class="sf-tickz" role="button" tabindex="0" data-kanal="' + E(m.channel) + '" data-msg="' + E(m.id) + '"><b>' + E(m.author_name || T('sf_jemand','Jemand aus dem Club')) + '</b>: ' + E(kurz)
            + ' <span style="opacity:.7">· ' + wann(m.created_at) + '</span></div>';
     }).join('');
   }
