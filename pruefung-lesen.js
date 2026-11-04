@@ -644,6 +644,8 @@
     L.gewaehlt[L.i] = wahl;
     L.offen[L.i] = korrekt;
     if(korrekt) L.punkte++;
+    /* Im Training mit sofortiger Rückmeldung ein kurzer Ton, im Prüfungslauf nicht. */
+    try{ if(L.sofort && window.klang) window.klang(korrekt?'richtig':'falsch'); }catch(_k){}
     zuWahl = null; luWahl = null;
     if(!L.sofort && L.i < L.folge.length-1){ L.i++; malen(); return; }
     malen();

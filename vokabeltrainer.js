@@ -1190,11 +1190,12 @@
     var zaehlt = !SERIE[v.id] && richtig;
     var neuStufe = zaehlt ? Math.min(st + 1, 6) : (st <= 1 ? 0 : 1);
     var ue = trWort(v);
+    try { if (window.klang) window.klang(richtig ? 'richtig' : 'falsch'); } catch (_k) {}
     var f = document.getElementById('vtFuss');
     f.className = 'vt-fuss an ' + (richtig ? 'gut' : 'schlecht');
     f.innerHTML = '<div class="vt-fuss-in"><div class="vt-fuss-tx">'
       + '<b>' + (richtig ? '<span>✅</span>' + zufall(['Richtig!', 'Sitzt!', 'Genau so.', 'Sehr gut!', 'Perfekt.'])
-        : '<span>💡</span>Noch nicht — so ist es richtig') + '</b>'
+        : '<span>💡</span>Noch nicht. So ist es richtig') + '</b>'
       + '<div class="lsg"><em>' + artikelChip(v.artikel) + esc(v.wort || v.de) + '</em>'
       + (ue ? ' — ' + esc(ue) : '') + ' ' + lauts(v.de, 1) + '</div>'
       + (v.bedeutung ? '<div class="bedz">' + esc(v.bedeutung) + '</div>' : '')

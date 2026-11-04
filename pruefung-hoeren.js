@@ -350,6 +350,8 @@
     H.gewaehlt[H.i] = wahl;
     H.offen[H.i] = korrekt;
     if(korrekt) H.punkte++;
+    /* Im Training mit sofortiger Rückmeldung ein kurzer Ton, im Prüfungslauf nicht. */
+    try{ if(H.sofort && window.klang) window.klang(korrekt?'richtig':'falsch'); }catch(_k){}
     if(!H.sofort && H.i < H.folge.length-1){ H.i++; malen(); return; }
     malen();
   }

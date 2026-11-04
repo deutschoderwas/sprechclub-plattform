@@ -1442,6 +1442,8 @@
       fb.innerHTML=(e.type==='karte'?'Gemerkt? Das Wort kommt gleich noch einmal.':'Klasse! Weiter so.')+' +'+Math.round((META().xpPerCorrect||10)/2)+' XP'; }
     /* Nach der Antwort den vollstaendigen, richtigen Satz hoeren —
        so praegt sich die Loesung ueber das Ohr ein, nicht nur ueber das Auge. */
+    /* Ein kurzer Ton sagt sofort: richtig oder falsch (klang.js, abschaltbar). */
+    try{ if(window.klang && !schonGewertet) window.klang(/\bok\b/.test(fb.className)?'richtig':'falsch'); }catch(_k){}
     var loesung='';
     if(e.type==='gap' && e.text) loesung=String(e.text).replace('___', String(e.answer||''));
     else if(e.type==='order') loesung=String(e.answer||'');
@@ -1489,8 +1491,9 @@
     // Der Lernpfad hoert mit: welche Runde ist gerade fertig geworden?
     try { window.dispatchEvent(new CustomEvent('ub:fertig', { detail:{
       skId:S.skId, thId:S.thId, titel:S.title||'', richtig:S.correct, gesamt:total, prozent:pct }})); } catch(e){}
+    try{ if(window.klang && !outOfHearts && pct>=50) window.klang('fertig'); }catch(_k){}
     var em = outOfHearts?'💔':(pct>=80?'🏆':(pct>=50?'💪':'🙂'));
-    var msg= outOfHearts?'Keine Herzen mehr – kein Problem, übernächste Runde klappt’s besser!':(pct>=80?'Stark gemacht!':(pct>=50?'Gut – dranbleiben!':'Übung macht den Meister.'));
+    var msg= outOfHearts?'Keine Herzen mehr. Kein Problem, nächste Runde klappt es besser!':(pct>=80?'Stark gemacht!':(pct>=50?'Gut – dranbleiben!':'Übung macht den Meister.'));
     var body=document.getElementById('ubBody');
     body.innerHTML='<div class="ub-end"><div class="em">'+em+'</div><h2>'+E(msg)+'</h2>'+
       '<p>'+S.correct+' von '+total+' richtig</p>'+
