@@ -377,7 +377,7 @@
         + '<b>' + E(s.id) + '</b>'
         + '<span class="mw-stufe-t">' + E(s.t.replace(/^[A-C]\d\s*—\s*/, '')) + '</span>'
         + '<span class="mw-stufe-u">' + E(s.u) + '</span>'
-        + '<span class="mw-stufe-n">' + s.lektionen.length + ' Lektionen · Ziel: ' + E(s.pruefung) + '</span>'
+        + '<span class="mw-stufe-n">' + s.lektionen.length + ' Lektionen</span>'
         + '</button>';
     }).join('');
     /* Ein Klick reicht. Der Test ist ein Angebot, keine Tuer:
@@ -467,7 +467,7 @@
       + (meine ? weiterKarte(zeige)
                : '<div class="lw-fremd">Du schaust dir <b>' + zeige + '</b> an. Deine Stufe ist ' + E(STAND.stufe || '—') + '.'
                  + ' <button class="lw-link" onclick="wegStufeSetzen(\'' + zeige + '\',\'selbst\')">' + zeige + ' als meine Stufe festlegen</button></div>')
-      + '<div class="lw-liste-kopf"><h3>Alle Lektionen</h3><span>Ziel: ' + E(st.pruefung) + '</span></div>'
+      + '<div class="lw-liste-kopf"><h3>Alle Lektionen</h3><span>' + st.lektionen.length + ' Lektionen</span></div>'
       + '<div class="lw-git">' + st.lektionen.map(function (L) { return karte(zeige, L, meine && L.nr === dranNr); }).join('') + '</div>'
       + zeichneFach();
   }
@@ -522,11 +522,13 @@
 
   /* --- Fachwege --- */
   function zeichneFach() {
-    var f = plan().fach || [];
+    /* Prüfungskurse stehen nur unter "Prüfung". */
+    var NUR_PRUEFUNG = { telcmed: 1, dtz: 1, goethetelc: 1 };
+    var f = (plan().fach || []).filter(function (k) { return !NUR_PRUEFUNG[k.id]; });
     if (!f.length) return '';
     return '<div class="mw-fach">'
-      + '<h3>Für den Beruf und die Prüfung</h3>'
-      + '<p class="mw-fach-u">Eigene Kurse, die neben deiner Stufe laufen.</p>'
+      + '<h3>Für den Beruf</h3>'
+      + '<p class="mw-fach-u">Kurse für die Arbeit, die neben deiner Stufe laufen.</p>'
       + '<div class="mw-fach-git">'
       + f.map(function (k) {
         return '<a class="mw-fk" href="lektion.html?k=' + encodeURIComponent(k.id) + '&l=1">'

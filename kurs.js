@@ -850,7 +850,7 @@
     /* 5 — Schreiben */
     if(l.schreiben){
       teile.push('<section class="ku-ab" id="kuAbSchreiben">'
-        +abKopf('✉️','Schreiben',(l.schreiben.punkte||[]).length+' Leitpunkte — genau so läuft es in der Prüfung',st.schreiben,'#FDECEC')
+        +abKopf('✉️','Schreiben',(l.schreiben.punkte||[]).length+' Leitpunkte, die in deinen Text gehören',st.schreiben,'#FDECEC')
         +'<div class="ku-mitbild"><div class="txt">'
         +'<p style="margin:0 0 13px;font-size:14px;line-height:1.55;color:#3C4756">'+E(l.schreiben.auf||'')+'</p>'
         +'<button class="ku-btn blau breit" onclick="kuSchreibenStarten()">Schreibtrainer öffnen →</button>'
@@ -1478,7 +1478,7 @@
     el('swOv').classList.add('auf');
     document.body.style.overflow='hidden';
     el('swTitel').textContent=a.t;
-    el('swUnter').textContent=a.lvl+' · '+a.art+(a.pruef&&a.pruef!=='frei'?' · '+a.pruef:'');
+    el('swUnter').textContent=a.lvl+' · '+a.art;
 
     var text=J('schreib_'+a.id,'')||'';
 
@@ -1571,7 +1571,7 @@
     var h='<div class="sw-kasten" style="margin-top:14px">'
       +'<h4>Erst du selbst</h4>'
       +'<p>'+n+' Wörter'
-      +(n<a.woerter[0]?' — das ist unter der Spanne. Kurze Texte kosten in der Prüfung Punkte.':
+      +(n<a.woerter[0]?'. Das ist noch zu kurz, schreib ein paar Sätze dazu.':
         n>a.woerter[1]?' — etwas über der Spanne. Das ist meist kein Problem, kostet aber Zeit.':' — genau in der Spanne.')
       +(offen.length?' '+offen.length+' Leitpunkt'+(offen.length===1?'':'e')+' finde ich noch nicht: '+E(offen.join(', '))+'.':' Alle Leitpunkte kommen vor.')
       +'</p>';
@@ -1690,9 +1690,8 @@
     });
 
     var kopf='<div class="ku-kopf"><h1>Schreiben</h1>'
-      +'<p>Die größte Lücke — und die, die kaum eine App übt. '
-      +alle.length+' Aufgaben von A1 bis C1: Brief ans Amt, Beschwerde, Krankmeldung, '
-      +'Bewerbung, Widerspruch, Forumsbeitrag. Jede mit den echten Kriterien und einem Text zum Vergleichen.</p></div>';
+      +'<p>'+alle.length+' Aufgaben von A1 bis C1: der Brief ans Amt, eine Beschwerde, die Krankmeldung, '
+      +'eine Bewerbung, ein Widerspruch, ein Beitrag im Forum. Zu jeder gibt es einen Text zum Vergleichen.</p></div>';
 
     var chips='<div class="ku-chips">'
       +['alle','A1','A2','B1','B2','C1'].map(function(l){
@@ -1711,7 +1710,6 @@
             +'<p>'+E(String(a.sit||'').slice(0,110))+(String(a.sit||'').length>110?' …':'')+'</p>'
             +'<span class="unten"><span class="ku-pill">'+E(a.lvl)+'</span>'
             +'<span class="ku-pill grau">'+E(a.art)+'</span>'
-            +(a.pruef&&a.pruef!=='frei'?'<span class="ku-pill gelb">'+E(a.pruef)+'</span>':'')
             +(angefangen?'<span class="angefangen">angefangen</span>':'')
             +'</span></button>';
         }).join('')+'</div>'

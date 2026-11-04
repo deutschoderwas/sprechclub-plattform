@@ -394,6 +394,7 @@
 
     { id:'telcmed', name:'telc Medizin', anbieter:'Fachsprachprüfung', niveau:'B2–C1',
       bild:'gesundheit', kurs:'telcmed', fach:true, geprueft:true, dauer:'ca. 2 Std 25 Min',
+      nurEigenesTraining:true,
       fuer:'Die Fachsprachprüfung auf dem Weg zur Approbation.',
       module:[ {id:'hoeren',n:'Hören',m:'ca. 30',
                  t:'Drei Teile: Visite, Übergabe, Telefonat — Klinikalltag im Ohr.'},
@@ -849,6 +850,7 @@
     /* telc-Seiten haben eigene Trainings je Fertigkeit (p.training), z. B.
        { lesen:'telcB1' }. Was es noch nicht gibt, faellt aufs Niveau zurueck. */
     if (p && p.training && modId && p.training[modId]) return p.training[modId];
+    if (p && p.nurEigenesTraining) return '';
     var roh = String((p && p.niveau) || '').trim();
     if (!/[–-]/.test(roh)) return roh;
     var teile = roh.split(/[–-]/).map(function(x){ return x.trim(); });
@@ -970,7 +972,7 @@
       return '<div class="pf-gruppe"><span class="pf-gr-t">Die Sprachprüfungen</span></div>'
         + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return !p.fach && nicht(p); }).map(kachel).join('') + '</div>'
         + '<div class="pf-gruppe"><span class="pf-gr-t">Für deinen Beruf</span></div>'
-        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach && nicht(p); }).map(kachel).join('') + '</div>';
+        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach && !p.ohnePruefung && nicht(p); }).map(kachel).join('') + '</div>';
     };
     var unten;
     if(mein){
@@ -1095,7 +1097,16 @@
     material:['Wortschatz & Grammatik','Der Wortschatz, der im Büroalltag wirklich vorkommt.'],
     bereit:  ['Wo stehst du?','Eine ehrliche Einschätzung, Bereich für Bereich.']
   };
+  function uebungVon(p){ return /gast\.de/.test(p.uebungstest||'') ? 'g.a.s.t.' : 'telc'; }
   function bereicheVon(p){
+    var muster = (p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]) || p.uebungstest;
+    return bereicheRoh(p).filter(function(b){
+      if(b.id==='video') return !!p.video;
+      if(b.id==='muster') return !!muster;
+      return true;
+    });
+  }
+  function bereicheRoh(p){
     if(p.mat) return BEREICHE.map(function(b){
       return b.id==='material' ? { id:b.id, z:'🧭', f:b.f, t:'Alles für die Prüfung',
         k:'Ablauf, Bewertung, Themen, Grammatik und die wichtigsten Sätze.' } : b; });
@@ -1137,7 +1148,7 @@
     }
     if(b.id==='muster'){
       var da = (p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]) || p.uebungstest;
-      return { text: da ? 'bereit zum Ansehen' : 'in Vorbereitung', leer:!da };
+      return { text: p.uebungstest ? 'Übungstest von '+uebungVon(p) : (da ? 'Aufbau und Aufgaben' : ''), leer:!da };
     }
     /* material war der einzige Bereich ohne leer-Flag — die Schrittleiste
        zeigte ihn deshalb als erledigt, obwohl dort fuer alle neun
@@ -1375,7 +1386,7 @@
   /* 2 — Musterprüfung */
   function musterBlock(p){
     var inhalt;
-    if(p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]){
+    if(!p.uebungstest && p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]){
       var m=window.PRUEFUNG[p.muster];
       var teile = m.teile.map(function(t){
         var n=(t.aufgaben||[]).length;
@@ -1386,17 +1397,15 @@
         +'<span>'+m.minuten+' Minuten · '
         + m.teile.reduce(function(a,t){ return a+(t.aufgaben||[]).length; },0)+' Aufgaben</span>'
         +'<div class="pf-teile">'+teile+'</div>'
-        +'<span class="pf-hinw2">Schreiben und Sprechen fehlen hier noch, ebenso die Uhr und die '
-        +'Punktebewertung. Das ist Schritt 4.</span></div>'
-        +'<button class="pf-b1" onclick="pruefMusterStarten(\''+p.muster+'\')">Aufgaben ansehen →</button>'
+        +'<span class="pf-hinw2">Die ganze Prüfung mit Uhr übst du im Training jedes Teils, '
+        +'in der letzten Stufe.</span></div>'
         +'</div>';
     } else {
-      inhalt='<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung. '
-        +'Vorhanden sind bisher A2, B1, B2 und C1.</div>';
+      inhalt = p.uebungstest ? '' : '<div class="pf-leer">Für diese Prüfung gibt es noch keine Musterprüfung.</div>';
     }
     if(p.uebungstest){
-      inhalt = '<div class="pf-muster"><div class="pf-muster-tx"><b>Der offizielle Übungstest von telc</b>'
-        + '<span>Eine komplette Prüfung im echten telc-Format, kostenlos als PDF. '
+      inhalt = '<div class="pf-muster"><div class="pf-muster-tx"><b>Der offizielle Übungstest von '+uebungVon(p)+'</b>'
+        + '<span>Eine komplette Prüfung im echten Format, kostenlos als PDF. '
         + 'Druck ihn aus und mach ihn einmal mit Uhr, wie am Prüfungstag.</span></div>'
         + '<a class="pf-b1" href="'+E(p.uebungstest)+'" target="_blank" rel="noopener">Übungstest öffnen →</a></div>'
         + inhalt;
@@ -1417,20 +1426,19 @@
       var inh = '<div class="pf-mat pf-mat-voll">'
         + '<div class="pf-mat-k"><h4>📋 So läuft der Prüfungstag</h4>'+liste(M.ablauf)+'</div>'
         + '<div class="pf-mat-k"><h4>⚖️ So wird bewertet</h4>'+paare(M.bewertung)+'</div>'
-        + '<div class="pf-mat-k"><h4>🗂️ Typische Themen auf B1</h4><div class="pf-mat-tags">'
+        + '<div class="pf-mat-k"><h4>🗂️ Typische Themen</h4><div class="pf-mat-tags">'
         +   M.wortschatz.map(function(w){ return '<span>'+E(w)+'</span>'; }).join('')+'</div>'
         +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Wortschatz üben →</button></div></div>'
         + '<div class="pf-mat-k"><h4>🧩 Grammatik, die in den Sprachbausteinen oft drankommt</h4>'+liste(M.grammatik)
-        +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Grammatik üben →</button></div></div>'
+        +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'ueben\')">Grammatik üben →</button></div></div>'
         + '<div class="pf-mat-k"><h4>💬 Sätze, die du sicher können solltest</h4>'+paare(M.redemittel)+'</div>'
         + '</div>';
       return block('3', 'Alles für diese Prüfung', inh, 'pf-mat-b');
     }
     var inhalt='<div class="pf-mat">'
-      +'<p>Die vorhandenen Grammatik- und Wortschatzseiten werden hier eingehängt: '
-      +'17 Grammatikkapitel, 34 Wortschatzseiten, 8 Aussprachekapitel.</p>'
+      +'<p>Grammatik und Wörter übst du in den Grundlagen, passend zu deinem Niveau.</p>'
       +'<div class="pf-mat-knoepfe">'
-      +'<button class="pf-b2 pf-b-s" onclick="go(\'lernen\')">Zum Lernbereich →</button>'
+      +'<button class="pf-b2 pf-b-s" onclick="go(\'ueben\')">Grammatik üben →</button>'
       +'<button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Vokabeltrainer →</button>'
       +'</div></div>';
     return block('3', 'Wortschatz & Grammatik für diese Prüfung', inhalt, 'pf-mat-b');
