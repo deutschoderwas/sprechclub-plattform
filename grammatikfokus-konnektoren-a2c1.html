@@ -338,20 +338,28 @@ mark.konj{background:#FFE59E;color:#7a5600;padding:.05em .35em;border-radius:5px
 .kq-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.6rem;color:#1b6b3c;line-height:1;}
 .kq-ende p{color:var(--ink-soft);margin:.5rem 0 1rem;}
 .kq-ctrls{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
-/* Frage-Antwort-Drill */
-.fa-wrap{background:var(--paper);border:2px solid var(--sand);border-radius:20px;padding:1.4rem 1.3rem;box-shadow:0 4px 16px rgba(32,36,43,.06);max-width:720px;margin:1rem auto;}
-.fa-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;gap:1rem;}
-.fa-zaehler{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blau);}
-.fa-lvl{font-size:.75rem;font-weight:700;color:var(--ink-mute);white-space:nowrap;}
-.fa-frage{font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.1rem,2.4vw,1.4rem);line-height:1.4;margin-bottom:.9rem;color:var(--ink);}
-.fa-input{width:100%;box-sizing:border-box;border:1.5px solid var(--sand);border-radius:12px;padding:.7rem .9rem;font-family:'Inter';font-size:1rem;color:var(--ink);resize:vertical;outline:none;}
-.fa-input:focus{border-color:var(--blau);}
-.fa-loesung{margin-top:.9rem;background:#DFF3E7;border:2px dashed var(--gruen);border-radius:14px;padding:.8rem 1rem;font-size:.98rem;line-height:1.5;color:var(--ink);}
-.fa-loesung .fa-a{font-weight:700;color:#1b6b3c;}
-.fa-loesung .fa-h{display:block;margin-top:.35rem;font-size:.86rem;color:var(--ink-soft);}
-.fa-ctrl{display:flex;gap:.7rem;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;}
+/* Drehrad */
+.wheel-stage{position:relative;width:300px;max-width:88vw;margin:1rem auto .5rem;}
+.wheel-svg{width:100%;height:auto;display:block;border-radius:50%;box-shadow:0 8px 24px rgba(0,0,0,.14);}
+#wheelG{transform-origin:150px 150px;transition:transform 4.2s cubic-bezier(.16,.84,.26,1);}
+.wheel-seg-label{font-family:'Inter',sans-serif;font-weight:800;fill:#fff;}
+.wheel-pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--red);z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28));}
+.wheel-hub{fill:#fff;stroke:var(--sand);stroke-width:2;}
+.wheel-result{max-width:620px;margin:1rem auto;background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;text-align:center;box-shadow:0 4px 16px rgba(32,36,43,.06);animation:fade .3s ease;}
+.wheel-result .wr-k{display:inline-block;font-family:'Inter';font-weight:800;font-size:.78rem;color:var(--blau);background:#EAF2FD;border-radius:20px;padding:.15em .75em;margin-bottom:.6rem;}
+.wheel-result .wr-task{font-size:.85rem;font-weight:700;color:var(--ink-soft);margin-bottom:.5rem;}
+.wheel-result .wr-q{font-family:'Space Grotesk';font-weight:800;font-size:1.22rem;line-height:1.35;color:var(--ink);margin-bottom:.4rem;}
+.wheel-result .wr-ex{display:none;margin-top:.6rem;background:#DFF3E7;border:2px dashed var(--gruen);border-radius:12px;padding:.6rem .9rem;font-weight:700;color:#1b6b3c;}
+.wheel-result .wr-ex.on{display:block;}
 /* Dialoge */
 .dlg-intro{max-width:620px;margin:0 auto 1.3rem;text-align:center;}
+.dlg-cover{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;justify-content:center;max-width:620px;margin:-.6rem auto 1.3rem;font-size:.85rem;font-weight:700;color:var(--ink-soft);}
+.dlg-cover button{border:1.5px solid var(--sand);background:var(--paper);color:var(--ink);border-radius:999px;padding:.3rem .85rem;font-family:'Inter';font-weight:700;font-size:.82rem;cursor:pointer;}
+.dlg-cover button.on{background:#EAF2FD;border-color:var(--blau);color:var(--blau);}
+#dlgSection.cv-a .drow.a .dbubble:not(.show),#dlgSection.cv-b .drow.b .dbubble:not(.show){color:transparent;filter:blur(6px);cursor:pointer;user-select:none;}
+#dlgSection.cv-a .drow.a .dbubble:not(.show) mark,#dlgSection.cv-b .drow.b .dbubble:not(.show) mark{color:transparent;box-shadow:none;}
+#dlgSection.cv-a .drow.a .dbubble:not(.show)::after,#dlgSection.cv-b .drow.b .dbubble:not(.show)::after{content:"🙈 tippen zum Prüfen";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:var(--ink-mute);font-size:.8rem;font-weight:700;filter:blur(0);}
+#dlgSection .dbubble{position:relative;}
 .dlg-roles{display:inline-flex;gap:.6rem;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.4rem .9rem;font-size:.9rem;font-weight:600;color:var(--ink-soft);}
 .dlg-roles b{display:inline-flex;align-items:center;gap:.3rem;}
 .rdot{width:16px;height:16px;border-radius:50%;display:inline-block;}
@@ -446,15 +454,14 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 </section>
 
 <section class="section" data-section="6">
-<h2 class="section-title">🎤 Frage &amp; <em>Antwort</em></h2>
-<p class="section-sub">Direkt üben: Lies die Frage, <b>antworte selbst</b> (laut oder tippen) – dann die Lösung aufdecken und vergleichen. Oben das Niveau umschalten.</p>
-<div class="fa-wrap">
-  <div class="fa-top"><span class="fa-zaehler" id="faZaehler"></span><span class="fa-lvl" id="faLvl"></span></div>
-  <div class="fa-frage" id="faFrage"></div>
-  <textarea id="faInput" class="fa-input" rows="2" placeholder="Deine Antwort (optional tippen) …"></textarea>
-  <div class="fa-loesung" id="faLoesung" style="display:none"></div>
-  <div class="fa-ctrl"><button class="btn-secondary" id="faShow">💡 Lösung zeigen</button><button class="btn-primary" id="faNext">Nächste Frage →</button></div>
+<h2 class="section-title">🎡 <em>Drehrad</em></h2>
+<p class="section-sub">Dreh das Rad, lies die Frage vor und stell sie einer Person in deiner Gruppe. Antworte mit einem <b>Konnektor</b> (weil, denn, obwohl, damit …). Oben das Niveau umschalten.</p>
+<div class="wheel-stage">
+  <div class="wheel-pointer"></div>
+  <svg id="wheelSvg" class="wheel-svg" viewBox="0 0 300 300" aria-label="Drehrad"><g id="wheelG"></g></svg>
 </div>
+<div style="text-align:center;margin:.3rem 0 .2rem;"><button class="btn-primary" id="wheelSpin">🎡 Drehen</button></div>
+<div class="wheel-result" id="wheelResult" style="display:none"></div>
 </section>
 
 <section class="section" data-section="1">
@@ -520,8 +527,9 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 <section class="section" data-section="4"><h2 class="section-title">🗣️ <em>Sprechen</em> &amp; wiederholen</h2><p class="section-sub">Die <b>90-Sekunden-Challenge</b>: Thema ziehen, Stichpunkte lesen und 90 Sekunden am Stück frei sprechen. Passt sich dem Niveau an (oben umschalten).</p>
 <div class="spk-steps"><div class="spk-step"><span class="sn">1</span> Thema ziehen</div><div class="spk-step"><span class="sn">2</span> Stichpunkte lesen</div><div class="spk-step"><span class="sn">3</span> 90 Sek. frei sprechen</div></div><div class="exblock challenge"><h3>⏱️ 90-Sekunden-Challenge</h3><div class="exhow">Eine Person spricht <b>90 Sekunden am Stück</b> über das Thema. Nimm die Stichpunkte als Hilfe und benutze so viele Konnektoren wie möglich (weil, denn, obwohl, deshalb, damit …) – die Gruppe zählt mit!</div><div class="ch-level" id="chLevel">Niveau: B1/B2</div><img class="ch-img" id="chImg" alt="" style="display:none;"><div class="ch-topic" id="chTopic">Tippe auf „Thema &amp; Start"</div><ul class="ch-help" id="chHelp"></ul><div class="ch-timer-ring" id="chRing"><svg viewBox="0 0 120 120"><circle class="rbg" cx="60" cy="60" r="52"></circle><circle class="rfg" id="chRfg" cx="60" cy="60" r="52"></circle></svg><div class="ch-timer" id="chTimer">01:30</div></div>
 <div class="ch-hint" id="chHint">👆 Tippe auf den Timer zum Starten</div><div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;"><button class="btn-primary" id="chStart">🎲 Thema &amp; Start</button><button class="btn-no" id="chStop" style="display:none;">⏹ Stopp</button></div><div class="tip blue" style="max-width:560px;margin:1.2rem auto 0;text-align:center;">👥 <strong>Tipp fürs Sprechen:</strong> Sprecht in ganzen Sätzen und benutzt die Struktur dieser Stunde so oft wie möglich – je öfter, desto sicherer sitzt sie!</div></div></section>
-<section class="section" data-section="5"><h2 class="section-title">💬 <em>Dialoge</em> zum Mitlesen</h2><p class="section-sub">Lest die kurzen Alltagsszenen <b>zu zweit</b> laut vor – Rolle A und Rolle B. Die <mark style="background:#FFE59E;padding:0 3px;border-radius:4px;">markierten</mark> Teile zeigen den Konnektor. Tauscht danach die Rollen. (Niveau oben umschalten.)</p>
+<section class="section" data-section="5" id="dlgSection"><h2 class="section-title">💬 <em>Dialoge</em> zum Mitlesen</h2><p class="section-sub">Lest die kurzen Alltagsszenen <b>zu zweit</b> laut vor – Rolle A und Rolle B. Die <mark style="background:#FFE59E;padding:0 3px;border-radius:4px;">markierten</mark> Teile zeigen den Konnektor. Tauscht danach die Rollen. <b>Zum freien Üben: unten eine Seite verdecken</b> – die andere spricht frei, zum Prüfen auf die verdeckte Blase tippen. (Niveau oben umschalten.)</p>
 <div class="dlg-intro"><span class="dlg-roles"><b><span class="rdot a"></span> Rolle A</span> <span style="color:var(--ink-mute)">&amp;</span> <b><span class="rdot b"></span> Rolle B</span></span></div>
+<div class="dlg-cover" id="dlgCover"><span>🙈 Verdecken:</span><button type="button" data-cv="a">Rolle A</button><button type="button" data-cv="b">Rolle B</button><button type="button" data-cv="none" class="on">👁️ nichts</button></div>
 
 <div class="lv" data-lvl="einfach"><span class="lvtag e">A2/B1 · Grund, Gegensatz &amp; Folge</span>
 <div class="dlgcard"><div class="dlg-sit"><span class="emoji">📞</span> Absage für heute Abend</div>
@@ -843,60 +851,86 @@ var _w=$('kqWeiter');if(_w)_w.addEventListener('click',weiter);
 window._kqRebuild=rebuild;
 rebuild();
 })();
-/* ===== Frage-Antwort-Drill (niveau-abhängig) ===== */
+/* ===== Drehrad (niveau-abhängig) ===== */
 (function(){
-var FA={
+var WHEEL={
 einfach:[
- {f:"Gib einen Grund mit „weil“ an.",a:"„Ich bleibe zu Hause, weil ich müde bin.“",h:"weil → Verb ans Ende"},
- {f:"Nenne einen Grund mit „denn“.",a:"„Ich bleibe zu Hause, denn ich bin müde.“",h:"denn → normale Wortstellung"},
- {f:"Verbinde zwei Tätigkeiten mit „und“.",a:"„Ich koche und du deckst den Tisch.“",h:"und → verbindet zwei Sätze"},
- {f:"Drücke einen Gegensatz mit „aber“ aus.",a:"„Ich bin müde, aber ich komme mit.“",h:"aber → Wortstellung bleibt normal"},
- {f:"Nenne eine Folge mit „deshalb“.",a:"„Ich bin müde, deshalb gehe ich ins Bett.“",h:"deshalb → Verb direkt danach (Inversion)"},
- {f:"Formuliere eine Bedingung mit „wenn“.",a:"„Wenn ich Zeit habe, rufe ich dich an.“",h:"wenn → Verb ans Ende"},
- {f:"Begründe mit „weil“, warum du Deutsch lernst.",a:"„Ich lerne Deutsch, weil ich in Berlin wohne.“",h:"weil → Verb ans Ende"},
- {f:"Sag mit „wenn“, was du immer samstags machst.",a:"„Wenn Samstag ist, schlafe ich lange.“",h:"wenn → Verb ans Ende"},
- {f:"Sag mit „deshalb“, warum du den Schirm nimmst.",a:"„Es regnet, deshalb nehme ich den Schirm.“",h:"deshalb → Verb an Position 2"},
- {f:"Begründe mit „denn“, warum du zu Hause bleibst.",a:"„Ich bleibe zu Hause, denn es regnet.“",h:"denn → normale Wortstellung"}
+ {k:"🧠 Grund",q:"Warum lernst du Deutsch?",a:"„Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte.“"},
+ {k:"🏠 Zuhause",q:"Warum bleibst du heute zu Hause?",a:"„Ich bleibe zu Hause, denn es regnet.“"},
+ {k:"➡️ Folge",q:"Du bist müde – was machst du?",a:"„Ich bin müde, deshalb gehe ich früh ins Bett.“"},
+ {k:"🌧️ Wenn",q:"Was machst du, wenn das Wetter schlecht ist?",a:"„Wenn es regnet, bleibe ich drinnen.“"},
+ {k:"☕ Café",q:"Warum trinkst du gerade Kaffee?",a:"„Ich trinke Kaffee, weil ich müde bin.“"},
+ {k:"📅 Frei",q:"Was machst du, wenn du frei hast?",a:"„Wenn ich frei habe, schlafe ich lange.“"},
+ {k:"🤝 Und",q:"Was machst du morgens zuerst und dann?",a:"„Ich dusche und dann frühstücke ich.“"},
+ {k:"🙂 Aber",q:"Was machst du gern, aber selten?",a:"„Ich lese gern, aber ich habe wenig Zeit.“"}
 ],
 komplexer:[
- {f:"Verbinde zwei Sätze mit „obwohl“.",a:"„Ich gehe joggen, obwohl es regnet.“",h:"obwohl → Nebensatz, Verb ans Ende"},
- {f:"Drücke denselben Gegensatz mit „trotzdem“ aus.",a:"„Es regnet, trotzdem gehe ich joggen.“",h:"trotzdem → Inversion, Verb an Position 2"},
- {f:"Nenne ein Ziel mit „damit“ (anderes Subjekt).",a:"„Ich erkläre es langsam, damit du es verstehst.“",h:"damit → anderes Subjekt"},
- {f:"Nenne dasselbe Ziel mit „um … zu“ (gleiches Subjekt).",a:"„Ich lerne viel, um die Prüfung zu bestehen.“",h:"um … zu → gleiches Subjekt"},
- {f:"Sag mit „als“, was einmal in der Vergangenheit war.",a:"„Als ich klein war, wohnten wir am Meer.“",h:"als → einmalig, Vergangenheit"},
- {f:"Sag mit „wenn“, was sich immer wiederholt.",a:"„Immer wenn es regnet, bleibe ich drinnen.“",h:"wenn → wiederholt"},
- {f:"Formuliere einen Gegensatz mit „obwohl“ über das Wetter.",a:"„Obwohl es kalt ist, trage ich keine Jacke.“",h:"obwohl → Verb ans Ende"},
- {f:"Wandle „obwohl es spät ist“ in einen „trotzdem“-Satz um.",a:"„Es ist spät, trotzdem arbeite ich weiter.“",h:"trotzdem → Verb direkt danach"},
- {f:"Bilde einen Zielsatz mit „um … zu“ (sparen, reisen).",a:"„Wir sparen Geld, um zu reisen.“",h:"um … zu → gleiches Subjekt"},
- {f:"Nutze „damit“ in einem Satz mit zwei Personen.",a:"„Ich schreibe es auf, damit du es nicht vergisst.“",h:"damit → anderes Subjekt"}
+ {k:"💪 Trotzdem",q:"Was machst du, obwohl es anstrengend ist?",a:"„Ich gehe joggen, obwohl ich oft müde bin.“"},
+ {k:"🎯 Ziel",q:"Wofür sparst du gerade?",a:"„Ich spare, damit ich reisen kann.“"},
+ {k:"📚 Zweck",q:"Warum lernst du so viel?",a:"„Ich lerne viel, um die Prüfung zu bestehen.“"},
+ {k:"🌦️ Obwohl",q:"Was machst du, obwohl das Wetter schlecht ist?",a:"„Ich gehe spazieren, obwohl es regnet.“"},
+ {k:"⏱️ Spät",q:"Es ist spät – arbeitest du weiter?",a:"„Es ist spät, trotzdem arbeite ich weiter.“"},
+ {k:"🧒 Als",q:"Wie war es, als du klein warst?",a:"„Als ich klein war, wohnten wir am Meer.“"},
+ {k:"🍳 Während",q:"Was macht ihr gleichzeitig zu Hause?",a:"„Während ich koche, deckst du den Tisch.“"},
+ {k:"🗣️ Damit",q:"Warum sprichst du langsam?",a:"„Ich spreche langsam, damit alle mich verstehen.“"}
 ],
 schwierig:[
- {f:"Sag locker/gesprochen, dass du es trotzdem machst.",a:"„Ich mach’s trotzdem.“",h:"gesprochen: trotzdem kurz eingeschoben"},
- {f:"Warne mit „sonst“ vor einer negativen Folge.",a:"„Beeil dich, sonst verpassen wir den Zug.“",h:"sonst → andernfalls, danach Inversion"},
- {f:"Drücke mit „dabei“ einen Vorwurf aus.",a:"„Dabei hatte ich dich gewarnt.“",h:"dabei → obwohl doch, gesprochen"},
- {f:"Bremse höflich mit „trotzdem“ in einer Diskussion.",a:"„Das stimmt, trotzdem sehe ich das anders.“",h:"trotzdem → Verb direkt danach"},
- {f:"Formuliere eine Folge mit „sonst“.",a:"„Mach die Hausaufgaben, sonst gibt’s Ärger.“",h:"sonst → negative Folge"},
- {f:"Sag gesprochen mit „dabei“, dass etwas unpassend ist.",a:"„Er beschwert sich – dabei war es seine Idee.“",h:"dabei → überraschender Gegensatz"},
- {f:"Leite eine Warnung mit „sonst“ beim Wetter ein.",a:"„Nimm einen Schirm mit, sonst wirst du nass.“",h:"sonst → andernfalls"},
- {f:"Räume kurz ein und widersprich mit „trotzdem“.",a:"„Es ist teuer – trotzdem kaufe ich es.“",h:"trotzdem → Inversion"},
- {f:"Nutze „dabei“, um einen Widerspruch zu betonen.",a:"„Sie tut unschuldig, dabei weiß sie Bescheid.“",h:"dabei → obwohl in Wirklichkeit"},
- {f:"Verbinde eine Aufforderung mit „sonst“.",a:"„Ruf vorher an, sonst ist niemand da.“",h:"sonst → sonst passiert etwas"}
+ {k:"📈 Je…desto",q:"Wie verändert sich etwas, je mehr du es tust?",a:"„Je mehr ich übe, desto sicherer werde ich.“"},
+ {k:"⚠️ Sonst",q:"Wovor würdest du jemanden warnen?",a:"„Beeil dich, sonst verpassen wir den Zug!“"},
+ {k:"🌊 Sodass",q:"Was war so stark, dass es Folgen hatte?",a:"„Es regnete so stark, sodass wir zu Hause blieben.“"},
+ {k:"🤨 Dabei",q:"Worüber beschwert sich jemand zu Unrecht?",a:"„Er beschwert sich, dabei war es seine Idee.“"},
+ {k:"💼 Zufrieden",q:"Worüber bist du zufrieden, obwohl etwas fehlt?",a:"„Obwohl ich wenig verdiene, bin ich zufrieden.“"},
+ {k:"⚖️ Kontrast",q:"Was ist bei dir anders, während andere etwas tun?",a:"„Während andere Pause machen, lerne ich weiter.“"},
+ {k:"📖 Da",q:"Warum seid ihr früher gegangen?",a:"„Da es schon spät war, gingen wir nach Hause.“"},
+ {k:"✍️ Erinnern",q:"Warum erinnerst du jemanden an etwas?",a:"„Ich schreibe es auf, damit du es nicht vergisst.“"}
 ]
 };
-var $=function(id){return document.getElementById(id);};
-var idx=0,order=[];
-function pool(){return FA[curLevel]||FA.komplexer;}
-function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-function render(){var P=pool();if(!P.length)return;var q=P[order[idx]];if(!q)return;var lab={einfach:'A2/B1',komplexer:'B1/B2',schwierig:'B2/C1'};if($('faZaehler'))$('faZaehler').textContent='Frage '+(idx+1)+' / '+P.length;if($('faLvl'))$('faLvl').textContent=lab[curLevel]||'';if($('faFrage'))$('faFrage').textContent=q.f;var inp=$('faInput');if(inp)inp.value='';var l=$('faLoesung');if(l){l.style.display='none';l.innerHTML='';}}
-function show(){var P=pool();var q=P[order[idx]];if(!q)return;var l=$('faLoesung');if(!l)return;l.innerHTML='<span class="fa-a">💬 '+q.a+'</span>'+(q.h?'<span class="fa-h">👉 '+q.h+'</span>':'');l.style.display='block';}
-function next(){idx++;if(idx>=pool().length){order=sh(pool().map(function(_,i){return i;}));idx=0;}render();}
-function rebuild(){order=sh(pool().map(function(_,i){return i;}));idx=0;render();}
-var bS=$('faShow');if(bS)bS.addEventListener('click',show);
-var bN=$('faNext');if(bN)bN.addEventListener('click',next);
-window._faRebuild=rebuild;
-rebuild();
+var PAL=['#2F72C9','#2E9E5B','#E0A400','#9B4DC4','#D42A21','#1B9BC0','#E8743B','#3B7A57'];
+var G=document.getElementById('wheelG'),SPIN=document.getElementById('wheelSpin'),RES=document.getElementById('wheelResult');
+var cx=150,cy=150,R=140,n=0,seg=0,cur=0,spinning=false,pending=0;
+function P(){return WHEEL[curLevel]||WHEEL.komplexer;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function pt(ang,r){var a=(ang-90)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function build(){
+  if(!G)return;var A=P();n=A.length;seg=360/n;cur=0;G.style.transition='none';G.style.transform='rotate(0deg)';
+  var svg='';
+  for(var i=0;i<n;i++){
+    var a0=i*seg,a1=(i+1)*seg,p0=pt(a0,R),p1=pt(a1,R),large=seg>180?1:0;
+    svg+='<path d="M'+cx+' '+cy+' L'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A'+R+' '+R+' 0 '+large+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' Z" fill="'+PAL[i%PAL.length]+'"/>';
+    var mid=a0+seg/2,lp=pt(mid,R*0.58),rot=mid-90;if(mid>90&&mid<270)rot=mid+90;
+    svg+='<text class="wheel-seg-label" x="'+lp[0].toFixed(1)+'" y="'+lp[1].toFixed(1)+'" font-size="8.5" text-anchor="middle" dominant-baseline="middle" transform="rotate('+rot.toFixed(1)+' '+lp[0].toFixed(1)+' '+lp[1].toFixed(1)+')">'+esc(A[i].k)+'</text>';
+  }
+  svg+='<circle class="wheel-hub" cx="'+cx+'" cy="'+cy+'" r="20"/>';
+  G.innerHTML=svg;if(RES){RES.style.display='none';RES.innerHTML='';}
+}
+function spin(){
+  if(spinning)return;var A=P();if(!A.length)return;spinning=true;
+  var win=Math.floor(Math.random()*n),base=(360-(win*seg+seg/2))%360;
+  cur=cur+5*360+((base-(cur%360))+360)%360;pending=win;
+  G.style.transition='transform 4.2s cubic-bezier(.16,.84,.26,1)';void G.getBoundingClientRect();
+  G.style.transform='rotate('+cur+'deg)';
+}
+if(G)G.addEventListener('transitionend',function(){
+  spinning=false;var A=P(),q=A[pending];if(!q||!RES)return;
+  RES.innerHTML='<div class="wr-k">'+esc(q.k)+'</div><div class="wr-task">🗣️ Stelle einer Person in deiner Gruppe diese Frage:</div><div class="wr-q">'+esc(q.q)+'</div>'+(q.a?'<button class="btn-secondary" type="button" id="wheelEx">💡 mögliche Antwort</button><div class="wr-ex" id="wheelExBox">'+esc(q.a)+'</div>':'');
+  RES.style.display='block';
+  var ex=document.getElementById('wheelEx');if(ex)ex.addEventListener('click',function(){var bx=document.getElementById('wheelExBox');if(bx)bx.classList.toggle('on');});
+});
+if(SPIN)SPIN.addEventListener('click',spin);
+window._wheelBuild=build;build();
 })();
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});if(window._syncChLvl)window._syncChLvl();if(window._kqRebuild)window._kqRebuild();if(window._faRebuild)window._faRebuild();}
+/* ===== Dialoge: eine Seite verdecken (freies Sprechen) ===== */
+(function(){
+var sec=document.getElementById('dlgSection');if(!sec)return;
+var ctl=document.getElementById('dlgCover');
+if(ctl)ctl.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){
+  var cv=b.dataset.cv;sec.classList.remove('cv-a','cv-b');if(cv==='a')sec.classList.add('cv-a');else if(cv==='b')sec.classList.add('cv-b');
+  ctl.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+  sec.querySelectorAll('.dbubble.show').forEach(function(d){d.classList.remove('show');});
+});});
+sec.addEventListener('click',function(e){var d=e.target.closest('.dbubble');if(!d)return;if(sec.classList.contains('cv-a')||sec.classList.contains('cv-b'))d.classList.toggle('show');});
+})();
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});if(window._syncChLvl)window._syncChLvl();if(window._kqRebuild)window._kqRebuild();if(window._wheelBuild)window._wheelBuild();}
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <script>

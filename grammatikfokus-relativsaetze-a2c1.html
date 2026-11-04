@@ -338,20 +338,28 @@ mark.konj{background:#FFE59E;color:#7a5600;padding:.05em .35em;border-radius:5px
 .kq-ende .gross{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.6rem;color:#1b6b3c;line-height:1;}
 .kq-ende p{color:var(--ink-soft);margin:.5rem 0 1rem;}
 .kq-ctrls{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
-/* Frage-Antwort-Drill */
-.fa-wrap{background:var(--paper);border:2px solid var(--sand);border-radius:20px;padding:1.4rem 1.3rem;box-shadow:0 4px 16px rgba(32,36,43,.06);max-width:720px;margin:1rem auto;}
-.fa-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;gap:1rem;}
-.fa-zaehler{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blau);}
-.fa-lvl{font-size:.75rem;font-weight:700;color:var(--ink-mute);white-space:nowrap;}
-.fa-frage{font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.1rem,2.4vw,1.4rem);line-height:1.4;margin-bottom:.9rem;color:var(--ink);}
-.fa-input{width:100%;box-sizing:border-box;border:1.5px solid var(--sand);border-radius:12px;padding:.7rem .9rem;font-family:'Inter';font-size:1rem;color:var(--ink);resize:vertical;outline:none;}
-.fa-input:focus{border-color:var(--blau);}
-.fa-loesung{margin-top:.9rem;background:#DFF3E7;border:2px dashed var(--gruen);border-radius:14px;padding:.8rem 1rem;font-size:.98rem;line-height:1.5;color:var(--ink);}
-.fa-loesung .fa-a{font-weight:700;color:#1b6b3c;}
-.fa-loesung .fa-h{display:block;margin-top:.35rem;font-size:.86rem;color:var(--ink-soft);}
-.fa-ctrl{display:flex;gap:.7rem;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;}
+/* Drehrad */
+.wheel-stage{position:relative;width:300px;max-width:88vw;margin:1rem auto .5rem;}
+.wheel-svg{width:100%;height:auto;display:block;border-radius:50%;box-shadow:0 8px 24px rgba(0,0,0,.14);}
+#wheelG{transform-origin:150px 150px;transition:transform 4.2s cubic-bezier(.16,.84,.26,1);}
+.wheel-seg-label{font-family:'Inter',sans-serif;font-weight:800;fill:#fff;}
+.wheel-pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--red);z-index:3;filter:drop-shadow(0 2px 2px rgba(0,0,0,.28));}
+.wheel-hub{fill:#fff;stroke:var(--sand);stroke-width:2;}
+.wheel-result{max-width:620px;margin:1rem auto;background:var(--paper);border:2px solid var(--sand);border-radius:16px;padding:1.1rem 1.2rem;text-align:center;box-shadow:0 4px 16px rgba(32,36,43,.06);animation:fade .3s ease;}
+.wheel-result .wr-k{display:inline-block;font-family:'Inter';font-weight:800;font-size:.78rem;color:var(--blau);background:#EAF2FD;border-radius:20px;padding:.15em .75em;margin-bottom:.6rem;}
+.wheel-result .wr-task{font-size:.85rem;font-weight:700;color:var(--ink-soft);margin-bottom:.5rem;}
+.wheel-result .wr-q{font-family:'Space Grotesk';font-weight:800;font-size:1.22rem;line-height:1.35;color:var(--ink);margin-bottom:.4rem;}
+.wheel-result .wr-ex{display:none;margin-top:.6rem;background:#DFF3E7;border:2px dashed var(--gruen);border-radius:12px;padding:.6rem .9rem;font-weight:700;color:#1b6b3c;}
+.wheel-result .wr-ex.on{display:block;}
 /* Dialoge */
 .dlg-intro{max-width:620px;margin:0 auto 1.3rem;text-align:center;}
+.dlg-cover{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;justify-content:center;max-width:620px;margin:-.6rem auto 1.3rem;font-size:.85rem;font-weight:700;color:var(--ink-soft);}
+.dlg-cover button{border:1.5px solid var(--sand);background:var(--paper);color:var(--ink);border-radius:999px;padding:.3rem .85rem;font-family:'Inter';font-weight:700;font-size:.82rem;cursor:pointer;}
+.dlg-cover button.on{background:#EAF2FD;border-color:var(--blau);color:var(--blau);}
+#dlgSection.cv-a .drow.a .dbubble:not(.show),#dlgSection.cv-b .drow.b .dbubble:not(.show){color:transparent;filter:blur(6px);cursor:pointer;user-select:none;}
+#dlgSection.cv-a .drow.a .dbubble:not(.show) mark,#dlgSection.cv-b .drow.b .dbubble:not(.show) mark{color:transparent;box-shadow:none;}
+#dlgSection.cv-a .drow.a .dbubble:not(.show)::after,#dlgSection.cv-b .drow.b .dbubble:not(.show)::after{content:"🙈 tippen zum Prüfen";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:var(--ink-mute);font-size:.8rem;font-weight:700;filter:blur(0);}
+#dlgSection .dbubble{position:relative;}
 .dlg-roles{display:inline-flex;gap:.6rem;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.4rem .9rem;font-size:.9rem;font-weight:600;color:var(--ink-soft);}
 .dlg-roles b{display:inline-flex;align-items:center;gap:.3rem;}
 .rdot{width:16px;height:16px;border-radius:50%;display:inline-block;}
@@ -446,15 +454,14 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 </section>
 
 <section class="section" data-section="6">
-<h2 class="section-title">🎤 Frage &amp; <em>Antwort</em></h2>
-<p class="section-sub">Direkt üben: Lies die Frage, <b>antworte selbst</b> (laut oder tippen) – dann die Lösung aufdecken und vergleichen. Oben das Niveau umschalten.</p>
-<div class="fa-wrap">
-  <div class="fa-top"><span class="fa-zaehler" id="faZaehler"></span><span class="fa-lvl" id="faLvl"></span></div>
-  <div class="fa-frage" id="faFrage"></div>
-  <textarea id="faInput" class="fa-input" rows="2" placeholder="Deine Antwort (optional tippen) …"></textarea>
-  <div class="fa-loesung" id="faLoesung" style="display:none"></div>
-  <div class="fa-ctrl"><button class="btn-secondary" id="faShow">💡 Lösung zeigen</button><button class="btn-primary" id="faNext">Nächste Frage →</button></div>
+<h2 class="section-title">🎡 <em>Drehrad</em></h2>
+<p class="section-sub">Dreh am Rad, lies die Frage – und antworte frei mit einem <b>Relativsatz</b>. Brauchst du Hilfe, blende eine mögliche Antwort ein. Oben das Niveau umschalten.</p>
+<div class="wheel-stage">
+  <div class="wheel-pointer"></div>
+  <svg id="wheelSvg" class="wheel-svg" viewBox="0 0 300 300" aria-label="Drehrad"><g id="wheelG"></g></svg>
 </div>
+<div style="text-align:center;margin:.3rem 0 .2rem;"><button class="btn-primary" id="wheelSpin">🎡 Drehen</button></div>
+<div class="wheel-result" id="wheelResult" style="display:none"></div>
 </section>
 
 <section class="section" data-section="1">
@@ -520,8 +527,9 @@ mark{background:#FFD24A!important;color:#4a3600!important;border-radius:5px;padd
 <section class="section" data-section="4"><h2 class="section-title">🗣️ <em>Sprechen</em> &amp; wiederholen</h2><p class="section-sub">Die <b>90-Sekunden-Challenge</b>: Thema ziehen, Stichpunkte lesen und 90 Sekunden am Stück frei sprechen. Passt sich dem Niveau an (oben umschalten).</p>
 <div class="spk-steps"><div class="spk-step"><span class="sn">1</span> Thema ziehen</div><div class="spk-step"><span class="sn">2</span> Stichpunkte lesen</div><div class="spk-step"><span class="sn">3</span> 90 Sek. frei sprechen</div></div><div class="exblock challenge"><h3>⏱️ 90-Sekunden-Challenge</h3><div class="exhow">Eine Person spricht <b>90 Sekunden am Stück</b> über das Thema. Nimm die Stichpunkte als Hilfe und benutze so viele Relativsätze wie möglich – die Gruppe zählt mit!</div><div class="ch-level" id="chLevel">Niveau: B1/B2</div><img class="ch-img" id="chImg" alt="" style="display:none;"><div class="ch-topic" id="chTopic">Tippe auf „Thema &amp; Start"</div><ul class="ch-help" id="chHelp"></ul><div class="ch-timer-ring" id="chRing"><svg viewBox="0 0 120 120"><circle class="rbg" cx="60" cy="60" r="52"></circle><circle class="rfg" id="chRfg" cx="60" cy="60" r="52"></circle></svg><div class="ch-timer" id="chTimer">01:30</div></div>
 <div class="ch-hint" id="chHint">👆 Tippe auf den Timer zum Starten</div><div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;"><button class="btn-primary" id="chStart">🎲 Thema &amp; Start</button><button class="btn-no" id="chStop" style="display:none;">⏹ Stopp</button></div><div class="tip blue" style="max-width:560px;margin:1.2rem auto 0;text-align:center;">👥 <strong>Tipp fürs Sprechen:</strong> Sprecht in ganzen Sätzen und benutzt die Struktur dieser Stunde so oft wie möglich – je öfter, desto sicherer sitzt sie!</div></div></section>
-<section class="section" data-section="5"><h2 class="section-title">💬 <em>Dialoge</em> zum Mitlesen</h2><p class="section-sub">Lest die kurzen Alltagsszenen <b>zu zweit</b> laut vor – Rolle A und Rolle B. Die <mark style="background:#FFE59E;padding:0 3px;border-radius:4px;">markierten</mark> Teile zeigen das Relativpronomen. Tauscht danach die Rollen. (Niveau oben umschalten.)</p>
+<section class="section" data-section="5" id="dlgSection"><h2 class="section-title">💬 <em>Dialoge</em> zum Mitlesen</h2><p class="section-sub">Lest die kurzen Alltagsszenen <b>zu zweit</b> laut vor – Rolle A und Rolle B. Die <mark style="background:#FFE59E;padding:0 3px;border-radius:4px;">markierten</mark> Teile zeigen das Relativpronomen. Tauscht danach die Rollen. <b>Zum freien Üben: unten eine Seite verdecken</b> – die andere spricht frei, zum Prüfen auf die verdeckte Blase tippen. (Niveau oben umschalten.)</p>
 <div class="dlg-intro"><span class="dlg-roles"><b><span class="rdot a"></span> Rolle A</span> <span style="color:var(--ink-mute)">&amp;</span> <b><span class="rdot b"></span> Rolle B</span></span></div>
+<div class="dlg-cover" id="dlgCover"><span>🙈 Verdecken:</span><button type="button" data-cv="a">Rolle A</button><button type="button" data-cv="b">Rolle B</button><button type="button" data-cv="none" class="on">👁️ nichts</button></div>
 
 <div class="lv" data-lvl="einfach"><span class="lvtag e">A2/B1 · Nominativ (der/die/das)</span>
 <div class="dlgcard"><div class="dlg-sit"><span class="emoji">🧍</span> Jemanden vorstellen</div>
@@ -843,60 +851,86 @@ var _w=$('kqWeiter');if(_w)_w.addEventListener('click',weiter);
 window._kqRebuild=rebuild;
 rebuild();
 })();
-/* ===== Frage-Antwort-Drill (niveau-abhängig) ===== */
+/* ===== Drehrad (niveau-abhängig) ===== */
 (function(){
-var FA={
+var WHEEL={
 einfach:[
- {f:"Beschreibe: der Mann + er wohnt nebenan.",a:"„Das ist der Mann, der nebenan wohnt.“",h:"der (Nominativ, maskulin)"},
- {f:"Beschreibe: die Frau + sie arbeitet hier.",a:"„Das ist die Frau, die hier arbeitet.“",h:"die (Nominativ, feminin)"},
- {f:"Beschreibe: das Kind + es spielt draußen.",a:"„Das ist das Kind, das draußen spielt.“",h:"das (Nominativ, neutrum)"},
- {f:"Beschreibe: die Leute + sie lachen laut.",a:"„Das sind die Leute, die laut lachen.“",h:"die (Plural)"},
- {f:"Verbinde: der Hund + er bellt.",a:"„Das ist der Hund, der bellt.“",h:"der (maskulin) + Verb ans Ende"},
- {f:"Verbinde: die Lehrerin + sie kommt aus Berlin.",a:"„Das ist die Lehrerin, die aus Berlin kommt.“",h:"die (feminin)"},
- {f:"Verbinde: das Auto + es steht vor der Tür.",a:"„Das ist das Auto, das vor der Tür steht.“",h:"das (neutrum)"},
- {f:"Beschreibe: der Zug + er fährt nach Hamburg.",a:"„Das ist der Zug, der nach Hamburg fährt.“",h:"der + Verb ans Ende"},
- {f:"Beschreibe: die Nachbarn + sie grüßen immer.",a:"„Das sind die Nachbarn, die immer grüßen.“",h:"die (Plural)"},
- {f:"Verbinde: das Handy + es klingelt.",a:"„Das ist das Handy, das klingelt.“",h:"das (neutrum)"}
+ {k:"🧑 Mensch",q:"Wer ist ein Mensch, der dir wichtig ist?",a:"„Meine Oma ist ein Mensch, der mir viel bedeutet.“"},
+ {k:"👩 Person",q:"Wer ist eine Person, die dich oft zum Lachen bringt?",a:"„Meine Freundin ist eine Person, die mich oft zum Lachen bringt.“"},
+ {k:"🐶 Tier",q:"Was ist ein Tier, das dir gefällt?",a:"„Der Hund ist ein Tier, das treu ist.“"},
+ {k:"🎬 Film",q:"Was ist ein Film, der dich berührt hat?",a:"„Das ist ein Film, der mich sehr berührt hat.“"},
+ {k:"🎵 Lied",q:"Was ist ein Lied, das dir gut gefällt?",a:"„Das ist ein Lied, das mir richtig gut gefällt.“"},
+ {k:"🏙️ Stadt",q:"Was ist eine Stadt, die dich beeindruckt?",a:"„Berlin ist eine Stadt, die mich beeindruckt.“"},
+ {k:"🍕 Gericht",q:"Was ist ein Gericht, das immer schmeckt?",a:"„Pizza ist ein Gericht, das immer schmeckt.“"},
+ {k:"📱 Ding",q:"Was ist ein Ding, das nie fehlen darf?",a:"„Das Handy ist ein Ding, das nie fehlen darf.“"}
 ],
 komplexer:[
- {f:"Verbinde: das Buch + ich habe es gekauft.",a:"„Das ist das Buch, das ich gekauft habe.“",h:"das (Akkusativ, neutrum)"},
- {f:"Verbinde: der Film + ich habe ihn gesehen.",a:"„Das ist der Film, den ich gesehen habe.“",h:"den (Akkusativ, maskulin)"},
- {f:"Verbinde: die Serie + ich mag sie.",a:"„Das ist die Serie, die ich mag.“",h:"die (Akkusativ, feminin)"},
- {f:"Verbinde: der Mann + ich helfe ihm.",a:"„Das ist der Mann, dem ich helfe.“",h:"dem (Dativ, nach helfen)"},
- {f:"Verbinde: die Freunde + ich vertraue ihnen.",a:"„Das sind die Freunde, denen ich vertraue.“",h:"denen (Dativ Plural)"},
- {f:"Verbinde: der Kollege + ich arbeite mit ihm.",a:"„Das ist der Kollege, mit dem ich arbeite.“",h:"mit dem (Präposition + Dativ)"},
- {f:"Verbinde: die Frau + ich danke ihr.",a:"„Das ist die Frau, der ich danke.“",h:"der (Dativ, feminin)"},
- {f:"Verbinde: der Bon + ich habe ihn bekommen.",a:"„Wo ist der Bon, den ich bekommen habe?“",h:"den (Akkusativ)"},
- {f:"Verbinde: das Projekt + ich arbeite an ihm.",a:"„Das ist das Projekt, an dem ich arbeite.“",h:"an dem (Präposition + Dativ)"},
- {f:"Verbinde: der Freund + ich verlasse mich auf ihn.",a:"„Das ist der Freund, auf den ich mich verlasse.“",h:"auf den (Präposition + Akkusativ)"}
+ {k:"🎬 Film",q:"Was ist ein Film, den du gern magst?",a:"„Das ist ein Film, den ich schon oft gesehen habe.“"},
+ {k:"📖 Buch",q:"Was ist ein Buch, das du jedem empfehlen würdest?",a:"„Das ist ein Buch, das ich jedem empfehle.“"},
+ {k:"🤝 Mensch",q:"Wer ist ein Mensch, dem du vertraust?",a:"„Mein Bruder ist ein Mensch, dem ich voll vertraue.“"},
+ {k:"👫 Freund",q:"Wer ist ein Freund, mit dem du alles teilst?",a:"„Das ist ein Freund, mit dem ich alles teilen kann.“"},
+ {k:"🎁 Geschenk",q:"Was ist ein Geschenk, über das du dich gefreut hast?",a:"„Das ist ein Geschenk, über das ich mich sehr gefreut habe.“"},
+ {k:"👩‍🏫 Person",q:"Wer ist eine Person, der du viel zu verdanken hast?",a:"„Meine Lehrerin ist eine Person, der ich viel zu verdanken habe.“"},
+ {k:"🎧 Lied",q:"Was ist ein Lied, das du immer wieder hörst?",a:"„Das ist ein Lied, das ich immer wieder höre.“"},
+ {k:"✈️ Reise",q:"Was ist eine Reise, an die du dich gern erinnerst?",a:"„Das ist eine Reise, an die ich mich gern erinnere.“"}
 ],
 schwierig:[
- {f:"Sag mit „wo“: die Stadt + ich wohne dort.",a:"„Das ist die Stadt, wo ich wohne.“",h:"wo = in der (Ort)"},
- {f:"Sag mit „was“: alles + ich weiß es.",a:"„Das ist alles, was ich weiß.“",h:"was (nach alles)"},
- {f:"Sag mit „was“: etwas + es gefällt mir.",a:"„Das ist etwas, was mir gefällt.“",h:"was (nach etwas)"},
- {f:"Verbinde mit „was“: das + es zählt wirklich.",a:"„Das ist das, was wirklich zählt.“",h:"das, was (nach „das“)"},
- {f:"Sag locker/gesprochen: der Typ + er steht da immer.",a:"„Das ist der Typ, der da immer steht.“",h:"gesprochen: „der Typ, der …“"},
- {f:"Sag mit „wo“: das Café + wir treffen uns dort.",a:"„Das ist das Café, wo wir uns treffen.“",h:"wo (Ort)"},
- {f:"Sag mit „was“: nichts + es überrascht mich.",a:"„Es gibt nichts, was mich überrascht.“",h:"was (nach nichts)"},
- {f:"Sag locker/gesprochen: so einer + er sagt nie ab.",a:"„Er ist so einer, der nie absagt.“",h:"gesprochen: „so einer, der …“"},
- {f:"Genitiv: der Mann + sein Auto ist kaputt.",a:"„Das ist der Mann, dessen Auto kaputt ist.“",h:"dessen (Genitiv m/n)"},
- {f:"Sag mit „was“: das Beste + man kann es machen.",a:"„Das ist das Beste, was man machen kann.“",h:"was (nach Superlativ/„das“)"}
+ {k:"📍 Ort",q:"Was ist ein Ort, wo du dich wohlfühlst?",a:"„Der Park ist ein Ort, wo ich mich wohlfühle.“"},
+ {k:"🏠 Zuhause",q:"Was ist ein Ort, wo du dich sicher fühlst?",a:"„Mein Zuhause ist ein Ort, wo ich mich sicher fühle.“"},
+ {k:"💡 Etwas",q:"Was ist etwas, was dich glücklich macht?",a:"„Musik ist etwas, was mich glücklich macht.“"},
+ {k:"🌟 Bestes",q:"Was ist das Beste, was dir je passiert ist?",a:"„Meine Familie ist das Beste, was mir je passiert ist.“"},
+ {k:"🤔 Wichtig",q:"Was ist etwas, was im Leben wirklich zählt?",a:"„Gesundheit ist etwas, was wirklich zählt.“"},
+ {k:"👨 Mensch",q:"Wer ist ein Mensch, dessen Meinung dir wichtig ist?",a:"„Mein Vater ist ein Mensch, dessen Meinung mir wichtig ist.“"},
+ {k:"🎤 Vorbild",q:"Wer ist eine Person, deren Arbeit du bewunderst?",a:"„Das ist eine Künstlerin, deren Arbeit ich bewundere.“"},
+ {k:"🌆 Traumstadt",q:"Was ist eine Stadt, wo du gern leben würdest?",a:"„Wien ist eine Stadt, wo ich gern leben würde.“"}
 ]
 };
-var $=function(id){return document.getElementById(id);};
-var idx=0,order=[];
-function pool(){return FA[curLevel]||FA.komplexer;}
-function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-function render(){var P=pool();if(!P.length)return;var q=P[order[idx]];if(!q)return;var lab={einfach:'A2/B1',komplexer:'B1/B2',schwierig:'B2/C1'};if($('faZaehler'))$('faZaehler').textContent='Frage '+(idx+1)+' / '+P.length;if($('faLvl'))$('faLvl').textContent=lab[curLevel]||'';if($('faFrage'))$('faFrage').textContent=q.f;var inp=$('faInput');if(inp)inp.value='';var l=$('faLoesung');if(l){l.style.display='none';l.innerHTML='';}}
-function show(){var P=pool();var q=P[order[idx]];if(!q)return;var l=$('faLoesung');if(!l)return;l.innerHTML='<span class="fa-a">💬 '+q.a+'</span>'+(q.h?'<span class="fa-h">👉 '+q.h+'</span>':'');l.style.display='block';}
-function next(){idx++;if(idx>=pool().length){order=sh(pool().map(function(_,i){return i;}));idx=0;}render();}
-function rebuild(){order=sh(pool().map(function(_,i){return i;}));idx=0;render();}
-var bS=$('faShow');if(bS)bS.addEventListener('click',show);
-var bN=$('faNext');if(bN)bN.addEventListener('click',next);
-window._faRebuild=rebuild;
-rebuild();
+var PAL=['#2F72C9','#2E9E5B','#E0A400','#9B4DC4','#D42A21','#1B9BC0','#E8743B','#3B7A57'];
+var G=document.getElementById('wheelG'),SPIN=document.getElementById('wheelSpin'),RES=document.getElementById('wheelResult');
+var cx=150,cy=150,R=140,n=0,seg=0,cur=0,spinning=false,pending=0;
+function P(){return WHEEL[curLevel]||WHEEL.komplexer;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function pt(ang,r){var a=(ang-90)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function build(){
+  if(!G)return;var A=P();n=A.length;seg=360/n;cur=0;G.style.transition='none';G.style.transform='rotate(0deg)';
+  var svg='';
+  for(var i=0;i<n;i++){
+    var a0=i*seg,a1=(i+1)*seg,p0=pt(a0,R),p1=pt(a1,R),large=seg>180?1:0;
+    svg+='<path d="M'+cx+' '+cy+' L'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A'+R+' '+R+' 0 '+large+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' Z" fill="'+PAL[i%PAL.length]+'"/>';
+    var mid=a0+seg/2,lp=pt(mid,R*0.58),rot=mid-90;if(mid>90&&mid<270)rot=mid+90;
+    svg+='<text class="wheel-seg-label" x="'+lp[0].toFixed(1)+'" y="'+lp[1].toFixed(1)+'" font-size="8.5" text-anchor="middle" dominant-baseline="middle" transform="rotate('+rot.toFixed(1)+' '+lp[0].toFixed(1)+' '+lp[1].toFixed(1)+')">'+esc(A[i].k)+'</text>';
+  }
+  svg+='<circle class="wheel-hub" cx="'+cx+'" cy="'+cy+'" r="20"/>';
+  G.innerHTML=svg;if(RES){RES.style.display='none';RES.innerHTML='';}
+}
+function spin(){
+  if(spinning)return;var A=P();if(!A.length)return;spinning=true;
+  var win=Math.floor(Math.random()*n),base=(360-(win*seg+seg/2))%360;
+  cur=cur+5*360+((base-(cur%360))+360)%360;pending=win;
+  G.style.transition='transform 4.2s cubic-bezier(.16,.84,.26,1)';void G.getBoundingClientRect();
+  G.style.transform='rotate('+cur+'deg)';
+}
+if(G)G.addEventListener('transitionend',function(){
+  spinning=false;var A=P(),q=A[pending];if(!q||!RES)return;
+  RES.innerHTML='<div class="wr-k">'+esc(q.k)+'</div><div class="wr-task">🗣️ Stelle einer Person in deiner Gruppe diese Frage:</div><div class="wr-q">'+esc(q.q)+'</div>'+(q.a?'<button class="btn-secondary" type="button" id="wheelEx">💡 mögliche Antwort</button><div class="wr-ex" id="wheelExBox">'+esc(q.a)+'</div>':'');
+  RES.style.display='block';
+  var ex=document.getElementById('wheelEx');if(ex)ex.addEventListener('click',function(){var bx=document.getElementById('wheelExBox');if(bx)bx.classList.toggle('on');});
+});
+if(SPIN)SPIN.addEventListener('click',spin);
+window._wheelBuild=build;build();
 })();
-function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});if(window._syncChLvl)window._syncChLvl();if(window._kqRebuild)window._kqRebuild();if(window._faRebuild)window._faRebuild();}
+/* ===== Dialoge: eine Seite verdecken (freies Sprechen) ===== */
+(function(){
+var sec=document.getElementById('dlgSection');if(!sec)return;
+var ctl=document.getElementById('dlgCover');
+if(ctl)ctl.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){
+  var cv=b.dataset.cv;sec.classList.remove('cv-a','cv-b');if(cv==='a')sec.classList.add('cv-a');else if(cv==='b')sec.classList.add('cv-b');
+  ctl.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+  sec.querySelectorAll('.dbubble.show').forEach(function(d){d.classList.remove('show');});
+});});
+sec.addEventListener('click',function(e){var d=e.target.closest('.dbubble');if(!d)return;if(sec.classList.contains('cv-a')||sec.classList.contains('cv-b'))d.classList.toggle('show');});
+})();
+function setLevel(l){curLevel=l;document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l);});if(window._syncChLvl)window._syncChLvl();if(window._kqRebuild)window._kqRebuild();if(window._wheelBuild)window._wheelBuild();}
 </script>
 <script src="lektion-konto.js?v=1"></script>
 <script>
