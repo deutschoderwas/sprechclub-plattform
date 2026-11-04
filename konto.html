@@ -2514,7 +2514,7 @@ function renderLernpfad(){
           </div></div>`;
       }).join('')}
     </div>
-    <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deine Lehrerin, wenn du unsicher bist.</p>
+    <div class="card" style="margin-top:18px"><b>So funktioniert's</b><p class="muted" style="margin-top:5px">Dein aktuelles Niveau richtet sich nach den Stunden, die du buchst. Buch Stunden im nächsthöheren Niveau, wenn du dich bereit fühlst — frag Amanda oder deinen Lehrer, wenn du unsicher bist.</p>
       <a class="btn btn-primary btn-sm" style="margin-top:10px" href="#" onclick="go('kalender');return false">Stunden ansehen</a></div>`;
 }
 
@@ -3339,7 +3339,7 @@ async function umbuchen(classId, titel){
 // ---------- Bewertung ----------
 function rateClass(classId){
   let sel=0;
-  const html=`<h3 style="margin-bottom:6px">Wie war die Stunde?</h3><p class="muted" style="margin-bottom:12px">Dein Feedback hilft deiner Lehrerin.</p>
+  const html=`<h3 style="margin-bottom:6px">Wie war die Stunde?</h3><p class="muted" style="margin-bottom:12px">Dein Feedback hilft deinem Lehrer.</p>
     <div class="stars" id="rateStars">${[1,2,3,4,5].map(i=>`<span data-i="${i}" onclick="setStars(${i})">☆</span>`).join('')}</div>
     <textarea id="rateComment" placeholder="Kommentar (optional)" style="width:100%;margin-top:12px;min-height:70px;padding:11px;border:2px solid var(--border);border-radius:12px;font-family:inherit"></textarea>
     <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="submitRating('${classId}')">Bewertung senden</button>`;
@@ -3810,8 +3810,8 @@ function renderNachrichten(){
     }
   }catch(e){}
   document.getElementById('v-nachrichten').innerHTML=`
-    <div class="pagehead"><h1 data-i18n="na_h1">Nachrichten</h1><p data-i18n="na_sub">Schreib deiner Lehrerin — Fragen, Wünsche, Feedback.</p></div>
-    <div class="thread" id="thread">${messages.length?messages.map(m=>`<div class="msg ${m.sender}">${esc(m.body)}<small>${m.sender==='teacher'?'Lehrerin · ':''}${fmtShort(new Date(m.created_at))}</small></div>`).join(''):'<div class="empty">Noch keine Nachrichten. Schreib gern die erste! 😊</div>'}</div>
+    <div class="pagehead"><h1 data-i18n="na_h1">Nachrichten</h1><p data-i18n="na_sub">Schreib deinem Lehrer — Fragen, Wünsche, Feedback.</p></div>
+    <div class="thread" id="thread">${messages.length?messages.map(m=>`<div class="msg ${m.sender}">${esc(m.body)}<small>${m.sender==='teacher'?'Lehrer · ':''}${fmtShort(new Date(m.created_at))}</small></div>`).join(''):'<div class="empty">Noch keine Nachrichten. Schreib gern die erste! 😊</div>'}</div>
     <div class="composer"><input id="msgInput" placeholder="Nachricht schreiben…" onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary" onclick="sendMsg()"><span data-i18n="na_send">Senden</span></button></div>`;
   const t=document.getElementById('thread'); t.scrollTop=t.scrollHeight;
 }
@@ -4424,12 +4424,12 @@ function nativeOptionen(){
 
 function renderProfil(){
   document.getElementById('v-profil').innerHTML=`
-    <div class="pagehead"><h1 data-i18n="pr_h1">Dein Profil</h1><p data-i18n="pr_sub">Damit Amanda und deine Lehrerin dich besser unterstützen können.</p></div>
+    <div class="pagehead"><h1 data-i18n="pr_h1">Dein Profil</h1><p data-i18n="pr_sub">Damit Amanda und dein Lehrer dich besser unterstützen können.</p></div>
     <div class="card">
       <div class="field"><label>Name</label><input id="pName" value="${esc(profile.name||'')}" placeholder="Wie heißt du?"></div>
       <div class="field"><label>Mein Lernziel</label><textarea id="pGoal" placeholder="z.B. Ich will fließend im Job sprechen / die B2-Prüfung schaffen">${esc(profile.goal||'')}</textarea></div>
       <div class="field"><label>Mein aktuelles Niveau 📊</label><select id="pLevel"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${(profile.level||'')===l?'selected':''}>${l}</option>`).join('')}</select>
-        <p class="muted" style="margin:6px 0 0">Damit deine Lehrerin dich in der passenden Gruppe einteilen kann. Noch unsicher? <a href="niveau-test.html" style="color:var(--primary);font-weight:700">Mach den Einstufungstest →</a></p></div>
+        <p class="muted" style="margin:6px 0 0">Damit dein Lehrer dich in der passenden Gruppe einteilen kann. Noch unsicher? <a href="niveau-test.html" style="color:var(--primary);font-weight:700">Mach den Einstufungstest →</a></p></div>
       <div class="field"><label>Mein Zielniveau 🎯</label><select id="pTarget"><option value="">— wählen —</option>${LEVELS.map(l=>`<option ${profile.target_level===l?'selected':''}>${l}</option>`).join('')}</select></div>
       <div class="field"><label>Meine Muttersprache</label>
         <select id="pNative">${nativeOptionen()}</select>

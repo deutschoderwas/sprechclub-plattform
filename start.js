@@ -544,7 +544,7 @@
         +   '<span class="was">Sprechclub</span>'
         +   '<span class="rechts">Wochenplan ' + ikon('chevron-right','z-s') + '</span></span>'
         + '<span class="gross">Noch keine Stunde gebucht</span>'
-        + '<span class="klein">Such dir im Wochenplan eine Stunde aus — kleine Gruppen, echte Lehrerin.</span>'
+        + '<span class="klein">Such dir im Wochenplan eine Stunde aus.</span>'
         + '</button>';
     }
     var tage = tageBis(naechste.starts_at);
