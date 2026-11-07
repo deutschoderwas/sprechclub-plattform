@@ -4,4 +4,4 @@ Alle Fotos: Unsplash, Unsplash License (kostenlos, auch kommerziell, keine Namen
 
 - buero (wortschatzfokus-buero-b1-b2.html): https://unsplash.com/photos/woman-working-with-documents-at-office-desk-Vvn0OD0IxBM (images.unsplash.com/photo-1758876201660-103984519266)
 - wohnzimmer (wortschatzfokus-wohnzimmer-b1-b2.html): https://unsplash.com/s/photos/cozy-living-room (images.unsplash.com/photo-1641232458416-feace752b346)
-- kaufhaus (wortschatzfokus-kaufhaus-b1-b2.html): https://unsplash.com/photos/inside-of-a-department-store-with-clothes-on-display-XmfAjdvSZIU (images.unsplash.com/photo-1743228672550-8b8f22cf0031)
+- kaufhaus (wortschatzfokus-kaufhaus-b1-b2.html): https://unsplash.com/photos/a-clothing-store-with-clothes-and-hats-on-display-2gLL2ZgBlcU (images.unsplash.com/photo-1718985342149-7178154e0aee). Englische Buchrücken oben links weichgezeichnet.
