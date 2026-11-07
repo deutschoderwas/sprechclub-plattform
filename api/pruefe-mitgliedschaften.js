@@ -458,6 +458,20 @@ export default async function handler(req, res) {
             vorher:  { status: p.status, tier: p.tier },
             nachher: { status: 'archiv', tier: null },
           });
+          /* Und die Stunden, die nach dem Ende noch gebucht sind, weg.
+
+             Julia, 4.11.2026: "sie koennen zwar vorbuchen, aber SOBALD
+             sie kuendigen, werden die Stunden fuer den Monat wofuer sie
+             nicht bezahlt haben sofort storniert." Fuer die Kuendigung
+             macht das ein Griff in der Datenbank. Lief eine
+             Mitgliedschaft dagegen einfach aus, blieben die Buchungen
+             stehen: die Person kommt nicht mehr hinein, steht aber
+             weiter in der Teilnehmerliste, und die Lehrkraft wartet
+             auf jemanden, der nicht kommen kann. Dieselbe Regel, nur
+             der andere Weg hinaus. */
+          try { await sb.rpc('stunden_nach_abo_ende_stornieren', { p_user: p.id }); }
+          catch (e) { bericht.fehler.push({ name: p.name || p.email, fehler: 'Stunden nach Ablauf: ' + String(e).slice(0, 120) }); }
+
         }
         bericht.gesperrt.push({
           name: p.name || p.email,
@@ -803,6 +817,12 @@ export default async function handler(req, res) {
             vorher:  { status: h.status, tier: h.tier },
             nachher: { status: 'archiv', tier: null },
           });
+          /* Dieselbe Regel wie bei der Kuendigung: was nach dem Ende
+             gebucht ist, faellt weg. Sonst steht jemand in der
+             Teilnehmerliste, der nicht mehr hineinkommt. */
+          try { await sb.rpc('stunden_nach_abo_ende_stornieren', { p_user: h.id }); }
+          catch (e) { bericht.fehler.push({ name: h.name || h.email, fehler: 'Stunden nach Ablauf: ' + String(e).slice(0, 120) }); }
+
         }
         bericht.gesperrt.push({
           name: h.name || h.email, email: h.email,
