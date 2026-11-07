@@ -532,12 +532,22 @@ function clubOffen(){ return Date.now() >= CLUB_START; }
    in api/create-checkout.js \u2014 \u00e4ndert sie sich dort, muss sie hier mit. */
 /* Julia, 3.11.2026: "Es gibt erstmal nur die Warteliste (der Preis ist
    nur da damit sie wissen wie teuer das ist)", "Es gibt noch kein
-   Kaufen", "Nur die Warteliste." Die Preise bleiben stehen, der Kauf
-   nicht. Der eigentliche Riegel liegt im Server (api/_tueren.js,
-   VERKAUF_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
+   Kaufen", "Nur die Warteliste."
+
+   Julia, 7.11.2026: "Die Basis community kann man immer kaufen also
+   das abonnieren." Der Stopp galt bis dahin fuer ALLES — gemeint war
+   der Sprechclub. Jetzt haelt er nur noch Premium an, und er heisst
+   auch so. Die Basis-Community laeuft durch.
+
+   Der eigentliche Riegel liegt im Server (api/_tueren.js,
+   PREMIUM_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
    erst in die Kasse laeuft und dort abgewiesen wird.
-   Wieder verkaufen: hier und dort auf false. */
-window.VERKAUF_PAUSIERT = true;
+   Premium wieder verkaufen: hier und dort auf false. */
+window.PREMIUM_PAUSIERT = true;
+/* Nur Premium-Plaene sind angehalten — alles mit "premium" im Namen. */
+function premiumGesperrt(id){
+  return !!window.PREMIUM_PAUSIERT && /premium/i.test(String(id || ''));
+}
 var PREMIUM = 'monat';
 var PREIS = 139, RABATT = 0;
 
@@ -673,7 +683,7 @@ document.addEventListener('keydown', function(e){
 });
 
 async function bezahlen(passId, knopf, alterText){
-  if (window.VERKAUF_PAUSIERT) { location.href = '/index.html#warteliste'; return; }
+  if (premiumGesperrt(passId)) { location.href = '/index.html#warteliste'; return; }
   meldung('');
   if (!/^https?:$/.test(location.protocol)) {
     meldung('Vorschau — die Bezahlung läuft auf der Live-Seite.');
@@ -744,5 +754,6 @@ setzePremium();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
+<script src="/basis-popup.js?v=1" defer></script>
 </body>
 </html>

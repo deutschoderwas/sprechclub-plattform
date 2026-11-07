@@ -31,7 +31,12 @@ export const istSprechclubPlan = (id) => /^premium_/.test(String(id || ''));
    ist nur da damit sie wissen wie teuer das ist)", "Es gibt noch
    kein Kaufen", "Nur die Warteliste."
 
-   Also steht der Verkauf still — nicht nur Premium, sondern alles.
+   Also stand der Verkauf still — und zwar alles, auch die Basis.
+
+   Julia, 7.11.2026: "Die Basis community kann man immer kaufen also
+   das abonnieren." Der Riegel haelt seitdem nur noch Premium an; er
+   heisst deshalb PREMIUM_PAUSIERT. Die Basis-Community laeuft
+   durch.
    Die Preise bleiben auf den Seiten stehen, damit man weiss, worauf
    man wartet; nur kaufen kann man gerade nichts.
 
@@ -42,4 +47,7 @@ export const istSprechclubPlan = (id) => /^premium_/.test(String(id || ''));
    Der Riegel hier ist der entscheidende: er haelt auch, wenn jemand
    mit einem alten Link direkt in die Kasse springt.
    ------------------------------------------------------------ */
-export const VERKAUF_PAUSIERT = true;
+export const PREMIUM_PAUSIERT = true;
+
+/* Alter Name, damit nichts bricht, was ihn noch benutzt. */
+export const VERKAUF_PAUSIERT = PREMIUM_PAUSIERT;

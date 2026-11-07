@@ -4,7 +4,7 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { tuerenZu, istSprechclubPlan, VERKAUF_PAUSIERT } from './_tueren.js';
+import { tuerenZu, istSprechclubPlan, PREMIUM_PAUSIERT } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -267,10 +267,12 @@ export default async function handler(req, res) {
        ein gespeicherter Link oder eine Unterseite, die jemand beim
        Umbauen uebersehen hat, kaeme sonst durch. Die Community bleibt
        offen. */
-    /* Julia, 3.11.2026: "Nur die Warteliste." Solange der Verkauf
-       steht, kommt gar keine Kasse zustande — auch nicht ueber einen
-       alten Link oder einen Knopf, der irgendwo stehen geblieben ist. */
-    if (VERKAUF_PAUSIERT) {
+    /* Julia, 3.11.2026: "Nur die Warteliste." — und am 7.11.2026:
+       "Die Basis community kann man immer kaufen also das
+       abonnieren." Der Riegel gilt also nur noch fuer Premium. Dort
+       kommt gar keine Kasse zustande, auch nicht ueber einen alten
+       Link oder einen Knopf, der irgendwo stehen geblieben ist. */
+    if (PREMIUM_PAUSIERT && istSprechclubPlan(id)) {
       return res.status(403).json({ error: 'verkauf_pausiert',
         hinweis: 'Gerade kann man noch nicht buchen. Trag dich auf die Warteliste ein, '
           + 'dann melden wir uns bei dir, sobald es losgeht: '
