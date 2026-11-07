@@ -73,6 +73,17 @@ export default async function handler(req, res) {
 
   /* ---------- Die Seite holt ihre Texte ---------- */
   if (req.method === 'GET') {
+    /* Kurzer Blick von aussen, ob alles eingerichtet ist - ohne dass
+       irgendein Schluessel die Maschine verlaesst. Nur ja oder nein. */
+    if (String(req.query?.pruefen || '') === '1') {
+      return res.status(200).json({
+        ok: true,
+        brevo_schluessel: !!process.env.BREVO_API_KEY,
+        brevo_liste: Number(process.env.BREVO_FREEBIE_LIST_ID || 0) || null,
+        datenbank: !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+        freebies: Object.keys(FREEBIES),
+      });
+    }
     if (String(req.query?.alle || '') === '1') {
       return res.status(200).json({ ok: true, schluessel: Object.keys(FREEBIES) });
     }
