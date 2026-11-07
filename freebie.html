@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dein Geschenk · deutschoderwas</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Trag deine E-Mail ein und bekomm dein kostenloses Material von deutschoderwas.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- ============================================================
+     freebie.html — eine Seite für alle Geschenke
+
+     Julia, 7.11.2026: "Ich brauche eben eine kurze Seite, die aufgeht,
+     wenn ich ein Freebie geben möchte die ein Wort kommentieren, so
+     dass sie die Email eintragen und dafür ein freebie bekommen."
+
+     Die Seite weiß nichts über das einzelne Geschenk. Sie fragt
+     api/freebie.js, was sie zeigen soll — und die Antwort kommt aus
+     api/_freebies.js. Ein neues Geschenk heißt also: PDF in den
+     Ordner freebies/, vier Zeilen in die Liste, fertig.
+
+     Die Farben sind die des SOS-Heftes: tiefes Petrol, Creme, Gelb.
+     Wer von Instagram kommt, soll dieselbe Seite wiedererkennen, die
+     er gleich als PDF öffnet.
+     ============================================================ -->
+<style>
+:root{
+  --petrol:#1B525F; --petrol-tief:#14414C; --creme:#FDF5EA; --creme-hell:#FFFCF5;
+  --gelb:#F2C14E; --tuerkis:#4FC3D9; --rot:#D9342B; --koralle:#E8705A;
+  --ink:#1A1A1A; --weich:#6B7280; --rand:#EADFD0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--petrol);color:#fff;font-family:Inter,'Segoe UI',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.55}
+.band{height:7px;display:flex}
+.band i{flex:1}
+.band i:nth-child(1){background:var(--petrol-tief)}
+.band i:nth-child(2){background:var(--rot)}
+.band i:nth-child(3){background:var(--gelb)}
+.band i:nth-child(4){background:var(--tuerkis)}
+
+.wrap{max-width:620px;margin:0 auto;padding:22px 20px 44px}
+.marke{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:18px;letter-spacing:-.01em}
+.marke img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.14)}
+
+.augen{display:inline-block;background:var(--gelb);color:#14414C;font-size:12px;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;padding:8px 15px;border-radius:999px;margin:26px 0 0}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(40px,13vw,68px);line-height:.98;margin:14px 0 0;text-wrap:balance}
+.zeile2{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(25px,7.6vw,38px);line-height:1.12;margin:12px 0 0;text-wrap:balance}
+.zeile2 b{color:var(--gelb);font-weight:700}
+
+.zitat{background:#fff;color:var(--ink);border-radius:16px;padding:15px 18px;margin:24px 0 0;
+  font-size:17px;font-weight:600;position:relative;max-width:420px}
+.zitat::after{content:"";position:absolute;left:26px;bottom:-11px;border:12px solid transparent;
+  border-top-color:#fff;border-bottom:0}
+.antwort{background:var(--gelb);color:#14414C;border-radius:16px;padding:14px 18px;margin:20px 0 0;
+  font-size:16.5px;font-weight:700;max-width:420px}
+
+.punkte{list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:11px}
+.punkte li{display:flex;gap:11px;align-items:flex-start;font-size:16px;color:rgba(255,255,255,.92)}
+.punkte .h{flex:0 0 auto;width:23px;height:23px;border-radius:50%;background:var(--tuerkis);
+  color:#0E3A44;display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:1px}
+
+/* ---- Der Kasten mit dem Feld ---- */
+.karte{background:var(--creme-hell);color:var(--ink);border-radius:22px;padding:22px 20px;margin:30px 0 0;
+  box-shadow:0 18px 44px rgba(0,0,0,.22)}
+.karte h2{font-family:'Space Grotesk',sans-serif;font-size:20px;margin:0 0 4px;letter-spacing:-.01em}
+.karte p.k{margin:0 0 16px;font-size:14.5px;color:var(--weich)}
+label{display:block;font-size:13.5px;font-weight:700;margin:0 0 7px}
+input[type=email]{width:100%;font:inherit;font-size:17px;padding:15px 16px;border-radius:14px;
+  border:1.5px solid var(--rand);background:#fff;color:var(--ink)}
+input[type=email]:focus{outline:none;border-color:var(--tuerkis);box-shadow:0 0 0 3px rgba(79,195,217,.28)}
+button.los{width:100%;margin-top:12px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;
+  border:0;border-radius:999px;padding:16px 20px;color:#06403A;
+  background:linear-gradient(135deg,#2DD4BF,#14B8A6);box-shadow:0 10px 24px rgba(20,184,166,.3)}
+button.los:hover{background:#14B8A6}
+button.los[disabled]{opacity:.6;cursor:default;box-shadow:none}
+.klein{margin:13px 0 0;font-size:12.5px;line-height:1.55;color:var(--weich)}
+.klein a{color:#0F766E}
+.fehler{margin:11px 0 0;font-size:14px;font-weight:600;color:var(--rot)}
+
+/* ---- Nach dem Eintragen ---- */
+.fertig{display:none}
+.fertig.an{display:block}
+.form.aus{display:none}
+.haken{width:52px;height:52px;border-radius:50%;background:#EAF9F0;color:#14532D;
+  display:grid;place-items:center;font-size:25px;margin:0 0 12px}
+a.laden{display:block;text-align:center;margin-top:16px;font-weight:700;font-size:17px;
+  text-decoration:none;border-radius:999px;padding:16px 20px;color:#06403A;
+  background:linear-gradient(135deg,#2DD4BF,#14B8A6);box-shadow:0 10px 24px rgba(20,184,166,.3)}
+
+.fuss{margin:30px 0 0;font-size:12.5px;color:rgba(255,255,255,.62);text-align:center}
+.fuss a{color:rgba(255,255,255,.82)}
+.laedt{opacity:.45}
+@media(prefers-reduced-motion:no-preference){
+  .karte,h1,.zeile2{animation:rein .5s ease both}
+  @keyframes rein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<div class="band"><i></i><i></i><i></i><i></i></div>
+
+<main class="wrap">
+  <div class="marke"><img src="/julia-rund.png" alt="" onerror="this.style.display='none'"><span>deutschoderwas</span></div>
+
+  <span class="augen" id="augen" hidden></span>
+  <h1 id="titel" class="laedt">Einen Moment …</h1>
+  <p class="zeile2" id="zeile2"></p>
+
+  <div class="zitat" id="zitat" hidden></div>
+  <div class="antwort" id="unter" hidden></div>
+
+  <ul class="punkte" id="punkte"></ul>
+
+  <section class="karte">
+    <div class="form" id="form">
+      <h2>Wohin dürfen wir es schicken?</h2>
+      <p class="k">Du bekommst es sofort hier auf der Seite — und zusätzlich per E-Mail, damit es nicht verlorengeht.</p>
+      <form id="f" novalidate>
+        <label for="mail">Deine E-Mail-Adresse</label>
+        <input id="mail" type="email" name="email" autocomplete="email" inputmode="email"
+               placeholder="du@beispiel.de" required>
+        <button class="los" id="knopf" type="submit">Schick es mir</button>
+      </form>
+      <p class="fehler" id="fehler" hidden></p>
+      <p class="klein">Kostenlos. Du bekommst danach unsere E-Mails mit Lerntipps und kannst dich
+        jederzeit mit einem Klick wieder abmelden.
+        <a href="/datenschutz.html">Datenschutz</a></p>
+    </div>
+
+    <div class="fertig" id="fertig">
+      <div class="haken">✓</div>
+      <h2>Fertig — hier ist es</h2>
+      <p class="k" id="fertigText">Wir haben es dir auch per E-Mail geschickt.</p>
+      <a class="laden" id="laden" href="#" download>PDF öffnen</a>
+      <p class="klein">Unser Tipp: druck es aus und leg es neben dich. Sprich jeden Satz einmal laut —
+        erst dann bleibt er im Kopf.</p>
+    </div>
+  </section>
+
+  <p class="fuss">deutschoderwas · <a href="/impressum.html">Impressum</a> · <a href="/datenschutz.html">Datenschutz</a></p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var E = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
+    });
+  };
+  var el = function (id) { return document.getElementById(id); };
+
+  /* Der Schlüssel steht in der Adresse: /f/sos oder ?f=sos.
+     Beides muss gehen — der kurze Link ist der, den Julia verschickt,
+     der lange der, den Vercel daraus macht. */
+  function schluessel() {
+    var p = new URLSearchParams(location.search).get('f');
+    if (p) return p;
+    var m = location.pathname.match(/\/f\/([^\/?#]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  var SCHL = schluessel();
+  var DATEI = '';
+
+  function zeigen(d) {
+    document.title = (d.titel || 'Dein Geschenk') + ' · deutschoderwas';
+    if (d.augen) { el('augen').textContent = d.augen; el('augen').hidden = false; }
+    el('titel').textContent = d.titel || '';
+    el('titel').classList.remove('laedt');
+    el('zeile2').innerHTML = E(d.zeile2 || '') + (d.stark ? (d.zeile2 ? '<br>' : '') + '<b>' + E(d.stark) + '</b>' : '');
+    if (d.zitat) { el('zitat').textContent = d.zitat; el('zitat').hidden = false; }
+    if (d.unter) { el('unter').textContent = d.unter; el('unter').hidden = false; }
+    el('punkte').innerHTML = (d.punkte || []).map(function (x) {
+      return '<li><span class="h">✓</span><span>' + E(x) + '</span></li>';
+    }).join('');
+    if (d.knopf) el('knopf').textContent = d.knopf;
+  }
+
+  function ohneGeschenk(d) {
+    zeigen(d);
+    el('form').style.display = 'none';
+  }
+
+  fetch('/api/freebie?f=' + encodeURIComponent(SCHL))
+    .then(function (r) { return r.json(); })
+    .then(function (a) {
+      if (!a || !a.freebie) throw new Error('leer');
+      if (a.ok) zeigen(a.freebie); else ohneGeschenk(a.freebie);
+    })
+    .catch(function () {
+      el('titel').textContent = 'Das klappt gerade nicht';
+      el('titel').classList.remove('laedt');
+      el('zeile2').textContent = 'Probier es bitte gleich noch einmal — oder schreib uns.';
+      el('form').style.display = 'none';
+    });
+
+  el('f').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var mail = el('mail').value.trim();
+    el('fehler').hidden = true;
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) {
+      el('fehler').textContent = 'Diese Adresse stimmt noch nicht ganz.';
+      el('fehler').hidden = false;
+      el('mail').focus();
+      return;
+    }
+    var k = el('knopf');
+    k.disabled = true;
+    var alt = k.textContent;
+    k.textContent = 'Einen Moment …';
+
+    fetch('/api/freebie', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ f: SCHL, email: mail })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (a) {
+        if (!a || !a.ok || !a.datei) throw new Error('nein');
+        DATEI = a.datei;
+        el('laden').href = DATEI;
+        el('fertigText').textContent = a.gemailt
+          ? 'Wir haben es dir auch per E-Mail geschickt.'
+          : 'Lad es dir gleich hier herunter.';
+        el('form').classList.add('aus');
+        el('fertig').classList.add('an');
+        try { el('fertig').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+      })
+      .catch(function () {
+        k.disabled = false;
+        k.textContent = alt;
+        el('fehler').textContent = 'Das hat gerade nicht geklappt. Probier es bitte noch einmal.';
+        el('fehler').hidden = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>
