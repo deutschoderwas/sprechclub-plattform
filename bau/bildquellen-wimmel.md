@@ -2,6 +2,8 @@
 
 Alle Fotos: Unsplash, Unsplash License (kostenlos, auch kommerziell, keine Namensnennung nötig). Ersetzen die früheren KI-Suchbilder. Die Karten sind Ausschnitte aus dem jeweiligen Suchbild.
 
-- buero (wortschatzfokus-buero-b1-b2.html): https://unsplash.com/photos/woman-working-with-documents-at-office-desk-Vvn0OD0IxBM (images.unsplash.com/photo-1758876201660-103984519266)
-- wohnzimmer (wortschatzfokus-wohnzimmer-b1-b2.html): https://unsplash.com/s/photos/cozy-living-room (images.unsplash.com/photo-1641232458416-feace752b346)
 - kaufhaus (wortschatzfokus-kaufhaus-b1-b2.html): https://unsplash.com/photos/a-clothing-store-with-clothes-and-hats-on-display-2gLL2ZgBlcU (images.unsplash.com/photo-1718985342149-7178154e0aee). Englische Buchrücken oben links weichgezeichnet.
+- buero (wortschatzfokus-buero-b1-b2.html): https://unsplash.com/photos/a-desk-with-a-computer-and-a-laptop-on-it-YV9iO-DrT8Y (images.unsplash.com/photo-1625496015040-2f461a6a717b), oben und unten beschnitten, damit kein Druckerlogo zu sehen ist
+- wohnzimmer (wortschatzfokus-wohnzimmer-b1-b2.html): https://unsplash.com/photos/black-and-white-sofa-near-brown-woven-basket-GauZ7h1txNU (images.unsplash.com/photo-1603283297623-f44d1dde80e5)
+
+Alle Ausschnitte aus dem Originalfoto in voller Auflösung, 480 px, leicht nachgeschärft. Nur Dinge, die man im Ausschnitt eindeutig erkennt.
