@@ -325,6 +325,9 @@
   .dtile video{ width:100%; height:100%; object-fit:cover; display:block; }
   .dtile.self video{ transform:scaleX(-1); }                                     /* Selbstbild gespiegelt (wie im Spiegel) */
   .dtile .nm{ position:absolute; left:5px; bottom:5px; background:rgba(0,0,0,.62); color:#fff; font-size:.7rem; font-weight:600; padding:1px 7px; border-radius:6px; max-width:80%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dtile.teacher{ box-shadow: inset 0 0 0 3px #0FB9A6, 0 0 0 2px rgba(15,185,166,.35); }
+  .dtile.teacher .nm{ background:#0FB9A6; color:#06302b; font-weight:800; }
+  .dtile .tlbl{ position:absolute; top:5px; left:5px; background:#0FB9A6; color:#06302b; font-size:.66rem; font-weight:800; padding:2px 7px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,.25); z-index:2; }
   .dtile .camoff{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-size:1.4rem; color:#94a3b8; background:#1f2937; }
   .dtile.nocam .camoff{ display:flex; }
   .dtile.nocam video{ visibility:hidden; }
@@ -1266,6 +1269,11 @@
       }
       const v=tile.querySelector('video'), nm=tile.querySelector('.nm');
       nm.textContent = (p.user_name && String(p.user_name).trim()) || (p.local?'Ich':'Teilnehmer:in');
+      // Lehrkraft im Hauptraum farbig hervorheben (Rahmen + Label)
+      tile.classList.toggle('teacher', !!p.owner);
+      let tl=tile.querySelector('.tlbl');
+      if(p.owner){ if(!tl){ tl=document.createElement('div'); tl.className='tlbl'; tl.textContent='👩‍🏫 Lehrkraft'; tile.appendChild(tl); } }
+      else if(tl){ tl.remove(); }
       // Lehrer-Stummschalter: Sichtbarkeit + Zustand (stumm = rot)
       if(!p.local){
         const mb=tile.querySelector('.dmute');
