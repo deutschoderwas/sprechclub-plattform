@@ -564,18 +564,18 @@
     if(!curSkill) curSkill=UEBUNGEN.skills[0].id;
     var sk=skillById(curSkill)||UEBUNGEN.skills[0];
     var head=
-      '<div class="ub-hero"><h1>Üben 🎮</h1><p>Üb wann du willst – Vokabeln, Grammatik, Hören & Aussprache. Sammle XP, halte deinen Streak und öffne zu jedem Thema die passende Lektion.</p></div>'+
+      '<div class="ub-hero"><h1>Üben</h1><p>Wortschatz, Grammatik, Hören und Aussprache in kurzen Runden. '+(window.ICH?'Deine Stufe '+E(window.ICH.niveau())+' steht oben.':'Zu jedem Thema gibt es die passende Lektion.')+'</p></div>'+
       '<div class="ub-top">'+
-        '<div class="ub-stat"><span class="ico">🔥</span><div><div class="big">'+(s.streak||0)+'</div><div class="lbl">Tage-Streak</div></div></div>'+
-        '<div class="ub-stat"><span class="ico">⭐</span><div><div class="big">'+(s.xp||0)+'</div><div class="lbl">XP gesamt</div></div></div>'+
+        '<div class="ub-stat"><div><div class="big">'+(s.streak||0)+'</div><div class="lbl">'+((s.streak||0)===1?'Tag':'Tage')+' in Folge</div></div></div>'+
+        '<div class="ub-stat"><div><div class="big">'+(s.xp||0)+'</div><div class="lbl">Punkte gesamt</div></div></div>'+
         '<div class="ub-stat"><div class="ub-ring" style="--p:'+pct+'"><span>'+(s.dayXP||0)+'</span></div><div><div class="big">'+Math.min(s.dayXP||0,goal)+'/'+goal+'</div><div class="lbl">Tagesziel</div></div></div>'+
       '</div>'+
       '<div class="ub-zwei">'+
-        '<button class="ub-mix" onclick="ubStartMix()">⚡ Schnell-Mix · 10 Aufgaben quer durch alles</button>'+
-        (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">🔁 Wiederholen · '+fael+(fael===1?' Wort':' Wörter')+' sind heute dran</button>':'')+
+        '<button class="ub-mix" onclick="ubStartMix()">Schnell-Mix: 10 gemischte Aufgaben</button>'+
+        (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">Wiederholen: '+fael+(fael===1?' Wort ist':' Wörter sind')+' heute dran</button>':'')+
       '</div>';
     var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
-        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#D42A21')+';border-color:'+(x.color||'#D42A21'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+x.emoji+' '+E(x.name)+'</button>';
+        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#D42A21')+';border-color:'+(x.color||'#D42A21'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+E(x.name)+'</button>';
       }).join('')+'</div>';
     /* Nach Niveau geordnet. Vorher lagen alle Themen eines Bereichs in
        einem einzigen Gitter - bei 47 Hoerthemen fand ein Anfaenger
@@ -599,7 +599,7 @@
             '<div class="meta">'+t.exercises.length+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</div>'+
             '<div class="ub-pbar"><span style="width:'+tp+'%;background:'+grad+'"></span></div>'+
             '<button class="ub-go2" style="background:'+grad+'" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">Üben →</button>'+
-            (lu?'<a class="ub-lesson" href="'+lu+'" target="_blank" rel="noopener">📖 Passende Lektion</a>':'')+
+            (lu?'<a class="ub-lesson" href="'+lu+'" target="_blank" rel="noopener">Passende Lektion</a>':'')+
           '</div>'+
         '</div>';
     }
@@ -647,7 +647,11 @@
       btn.textContent = d.hidden ? ('Alle '+btn.getAttribute('data-alle')+' Themen zeigen ▾') : 'Weniger zeigen ▴';
     };
     var teile=[];
-    NIV.forEach(function(lv){ var f=faecher[lv]; if(f&&f.length) teile.push(fach(lv,NIV_TEXT[lv],f)); });
+    /* Die eigene Stufe zuerst (fuer-dich.js weiss sie), danach die
+       anderen in der gewohnten Reihenfolge. */
+    var meine=null; try{ meine=window.ICH?window.ICH.niveau():null; }catch(e){}
+    var folge=NIV.slice(); if(meine&&NIV.indexOf(meine)>=0){ folge.splice(folge.indexOf(meine),1); folge.unshift(meine); }
+    folge.forEach(function(lv){ var f=faecher[lv]; if(f&&f.length) teile.push(fach(lv,(lv===meine?'Deine Stufe · ':'')+NIV_TEXT[lv],f)); });
     if(rest.length) teile.push(fach('alle','Für jedes Niveau',rest));
     var cards=teile.join('');
     el.innerHTML=head+pills+cards;
