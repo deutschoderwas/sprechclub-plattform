@@ -70,6 +70,15 @@
     }).join('') + '</div>';
   }
   function kachel(o) {
+    if (o.bild) {
+      return '<button class="hb-k mitbild" onclick="' + o.tun + '">'
+        + '<span class="hb-kbild"><img src="' + o.bild + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>'
+        + '<span class="hb-kkoerper">'
+        + '<span class="hb-kt">' + E(o.t) + '</span>'
+        + (o.u ? '<span class="hb-ku">' + E(o.u) + '</span>' : '')
+        + (o.wert ? '<span class="hb-wert">' + E(o.wert) + '</span>' : '')
+        + '</span></button>';
+    }
     return '<button class="hb-k" onclick="' + o.tun + '">'
       + '<span class="hb-em">' + (o.em || '•') + '</span>'
       + '<span class="hb-kt">' + E(o.t) + '</span>'
@@ -210,6 +219,17 @@
     pflege: '🩺', medizin: '🩻', telcmed: '📋',
     buero: '🗂️', dtz: '🇩🇪', goethetelc: '🏅'
   };
+  /* Echte Fotos statt Zeichen (8.11.2026): jeder Bereich zeigt eine
+     typische Szene, jedes Gespräch sein eigenes Bild aus bilder/dialog. */
+  var BEREICHBILD = {
+    essen: 'restaurant', einkaufen: 'supermarkt', gesundheit: 'arzt-termin',
+    notfall: 'notruf-112', wohnen: 'nachbarn', amt: 'anmeldung-buergeramt',
+    unterwegs: 'bahnhof', menschen: 'kaffee-einladen', gefuehle: 'jemanden-troesten',
+    familie: 'kita-eingewoehnung', bildung: 'kurs-nachfragen', vertrag: 'konto-eroeffnen',
+    buero: 'meeting', bewerbung: 'bewerbung', team: 'neue-kollegin-zeigen',
+    kunden: 'telefon-melden', pflege: 'uebergabe-station', handwerk: 'anweisung-baustelle'
+  };
+  function dialogBild(id) { return id ? 'bilder/dialog/' + id + '-s.jpg' : ''; }
   function bereichEmoji(id) {
     return THEMENEM[id] || (BEREICH[id] || [])[0] || '💬';
   }
@@ -231,7 +251,7 @@
         var lv = {}; nach[k].forEach(function (d) { lv[(d.lvl || '').split('–')[0]] = 1; });
         var stufen = Object.keys(lv).filter(Boolean).sort().join(' · ');
         return kachel({
-          em: b[0], t: b[1],
+          em: b[0], t: b[1], bild: dialogBild(BEREICHBILD[k]),
           u: nach[k].length + (nach[k].length === 1 ? ' Gespräch' : ' Gespräche'),
           wert: stufen,
           tun: "hubSprechBereich('" + k + "')"
@@ -265,7 +285,7 @@
       + '<h3 class="hb-h3">' + b[0] + ' ' + E(b[1]) + '</h3>'
       + liste.map(function (d) {
         return '<button class="hb-d" onclick="hubDialog(\'' + d.id + '\')">'
-          + '<span class="hb-d-em">' + (d.em || '💬') + '</span>'
+          + '<span class="hb-d-bild"><img src="' + dialogBild(d.id) + '" alt="" loading="lazy" onerror="this.parentNode.outerHTML=\'<span class=&quot;hb-d-em&quot;>' + (d.em || '💬') + '</span>\'"></span>'
           + '<span class="hb-d-t"><b>' + E(d.titel) + '</b>'
           + '<small>' + E(d.ort || '') + '</small></span>'
           + '<span class="hb-d-lv">' + E(d.lvl || '') + '</span></button>';
@@ -587,6 +607,13 @@
       '  cursor:pointer;background:#fff;border:1.5px solid var(--hb-line);border-radius:14px;padding:13px 15px;margin-bottom:9px}',
       '.hb-d:hover{border-color:var(--hb-turq)}',
       '.hb-d-em{font-size:21px;flex:0 0 auto}',
+      '.hb-d-bild{flex:0 0 auto;width:76px;height:52px;border-radius:10px;overflow:hidden;background:#EEF2F6}',
+      '.hb-d-bild img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.hb-k.mitbild{padding:0;overflow:hidden;gap:0}',
+      '.hb-kbild{display:block;aspect-ratio:16/9;overflow:hidden;background:#EEF2F6}',
+      '.hb-kbild img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}',
+      '.hb-k.mitbild:hover .hb-kbild img{transform:scale(1.04)}',
+      '.hb-kkoerper{display:flex;flex-direction:column;gap:3px;padding:12px 15px 14px}',
       '.hb-d-t{flex:1;min-width:0}',
       '.hb-d-t b{display:block;font-size:15px;line-height:1.25}',
       '.hb-d-t small{display:block;color:var(--hb-soft);font-size:12.5px;margin-top:1px}',
@@ -651,6 +678,7 @@
       '  .hb-git{grid-template-columns:1fr 1fr;gap:10px}',
       '  .hb-k{padding:13px 12px;border-radius:15px}',
       '  .hb-em{font-size:22px}.hb-kt{font-size:14.5px}.hb-ku{font-size:12px}',
+      '  .hb-k.mitbild{padding:0}.hb-kkoerper{padding:10px 11px 12px}.hb-d-bild{width:64px;height:46px}',
       '  .hb-band{padding:14px 15px;border-radius:16px}',
       '  .hb-kopf h2{font-size:26px}',
       '  .hb-r{padding:9px 16px;font-size:14.5px;min-height:44px}',
