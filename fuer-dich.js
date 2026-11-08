@@ -377,6 +377,18 @@
     setTimeout(function () { try { if (typeof window.show === 'function') window.show('fuerdich'); } catch (e) {} }, 0);
   }
 
+  /* Das Lernziel einmal nach der Anmeldung holen, damit es überall
+     bereitsteht (Mein Bereich, Schreiben, Gespräche), nicht erst,
+     wenn jemand "Für dich" öffnet. */
+  var holVersuche = 0;
+  (function holen() {
+    if (window.user && window.LZ && window.LZ.laden) {
+      if (!window.LZ.data && !lzVersucht) { lzVersucht = true; window.LZ.laden().then(function () { try { if (window.renderMeinBereich && el('v-fortschritt') && el('v-fortschritt').classList.contains('active')) window.renderMeinBereich(); } catch (e) {} }, function () {}); }
+      return;
+    }
+    if (holVersuche++ < 40) setTimeout(holen, 500);
+  })();
+
   /* ---------- Stil ---------- */
   function stil() {
     if (el('fd-stil')) return;

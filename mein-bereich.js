@@ -60,6 +60,9 @@
   +   'letter-spacing:-.02em;color:var(--ink);line-height:1.15}'
   + '@media(max-width:560px){.mb-kopf{padding:18px 16px}.mb-kopf h1{font-size:23px}}'
   + '.mb-kopf p{margin:5px 0 0;font-size:14px;color:var(--leise);line-height:1.5}'
+  + '.mb-kopf .mb-wofuer{margin:14px 0 0;font-size:14.5px;color:var(--leise)}'
+  + '.mb-wofuer b{color:#12181F}'
+  + '.mb-wofuer button{border:0;background:none;font:inherit;font-weight:700;color:#14708B;cursor:pointer;padding:0 2px;text-decoration:underline;text-underline-offset:3px}'
   + '.mb-tarif{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--tint);'
   +   'color:var(--tint);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700}'
 
@@ -246,7 +249,19 @@
                    + (bis ? ' · ' + T('mb_bis','bis') + ' ' + E(bis) : '') + '</span>' : '')
       + '</div>'
       + '<div id="mbNiveau">' + niveauFelder() + '</div>'
+      + wofuer()
       + '</div>';
+  }
+  /* 8.11.2026: das Lernziel aus dem Assistenten (Tabelle lernziel),
+     damit "Für dich" und "Mein Bereich" dasselbe zeigen. */
+  function wofuer() {
+    var ich = window.ICH; if (!ich) return '';
+    var z = ich.ziel();
+    return '<p class="mb-wofuer">'
+      + (z ? 'Wofür du lernst: <b>' + E(ich.zielName()) + '</b> '
+             + '<button type="button" onclick="fdZielAendern()">ändern</button>'
+           : '<button type="button" onclick="fdZielAendern()">Wofür lernst du? Ziel festlegen</button>')
+      + '</p>';
   }
 
   /* ---------- 1b. Niveau und Ziel ----------
