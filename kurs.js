@@ -560,7 +560,14 @@
 '.ku-sw b{font-size:15px;color:#12181F;line-height:1.3}',
 '.ku-sw p{margin:0;font-size:12.5px;color:#5E6A78;line-height:1.45}',
 '.ku-sw .unten{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:auto}',
-'.ku-sw .angefangen{font-size:11.5px;font-weight:800;color:#0F7738}'
+'.ku-sw .angefangen{font-size:11.5px;font-weight:800;color:#0F7738}',
+'.ku-sw.mitbild{padding:0;overflow:hidden}',
+'.ku-swbild{display:block;aspect-ratio:16/9;overflow:hidden;background:#EEF2F6}',
+'.ku-swbild img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}',
+'.ku-sw:hover .ku-swbild img{transform:scale(1.04)}',
+'.ku-swkoerper{display:flex;flex-direction:column;gap:8px;flex:1}',
+'.ku-sw.mitbild .ku-swkoerper{padding:13px 16px 15px}',
+'@media(max-width:520px){.ku-swbild{aspect-ratio:2/1}}'
 
     ].join('\n');
     document.head.appendChild(s);
@@ -1671,6 +1678,7 @@
   /* --- die Übersicht über alle Schreibaufgaben --- */
   var swNiveau='alle', swArt='alle';
 
+  var SW_BILD={"anmeldung-buergeramt":"bilder/dialog/anmeldung-buergeramt-s.jpg","formular-sportverein":"bilder/beruf/spielplatz.jpg","formular-vhs-kurs":"bilder/dialog/kurs-nachfragen-s.jpg","postkarte-ostsee":"bilder/thema/strand-s.jpg","entschuldigung-kita":"bilder/dialog/kita-eingewoehnung-s.jpg","sms-nachbarin-paket":"bilder/dialog/post-s.jpg","mail-termin-zahnarzt":"bilder/dialog/zahnarzt-kostenplan-s.jpg","sms-lehrerin-verspaetung":"bilder/dialog/verspaetung-entschuldigen-s.jpg","einladung-geburtstag-a1":"bilder/dialog/geburtstag-planen-s.jpg","mail-schluessel-hausverwaltung":"bilder/dialog/wohnung-s.jpg","krankmeldung-arbeitgeber":"bilder/dialog/krankmeldung-s.jpg","sms-freundin-absage":"bilder/dialog/einladung-absagen-s.jpg","termin-verschieben-auslaenderbehoerde":"bilder/dialog/aufenthaltstitel-verlaengern-s.jpg","einladung-einweihung":"bilder/dialog/party-s.jpg","beschwerde-heizung-a2":"bilder/dialog/heizung-kaputt-s.jpg","anzeige-antworten-fahrrad":"bilder/dialog/fahrrad-reparatur-s.jpg","nachricht-lehrerin-schwimmen":"bilder/dialog/elterngespraech-schule-s.jpg","mail-kursleiter-fehlen":"bilder/dialog/kurs-entschuldigung-s.jpg","sms-nachbarin-bohrmaschine":"bilder/dialog/nachbarn-s.jpg","mail-bibliothek-verlaengern":"bilder/thema/bildung-s.jpg","anzeige-wohnung-anfragen":"bilder/thema/wohnen-s.jpg","entschuldigung-elternabend":"bilder/dialog/c1-elternabend-klassenfahrt-s.jpg","mail-verein-abmelden-a2":"bilder/dialog/abo-kuendigen-s.jpg","nachricht-kollegin-schichttausch":"bilder/dialog/schichttausch-ablehnen-s.jpg","widerspruch-jobcenter":"bilder/dialog/jobcenter-weiterbewilligung-s.jpg","reklamation-online-shop":"bilder/dialog/rechnung-reklamieren-s.jpg","krankenkasse-zuschuss":"bilder/dialog/widerspruch-krankenkasse-s.jpg","vermieter-schimmel":"bilder/dialog/wasserschaden-melden-s.jpg","arbeitgeber-urlaub-beantragen":"bilder/dialog/urlaub-s.jpg","schule-befreiung-unterricht":"bilder/dialog/elterngespraech-schule-s.jpg","verein-mitgliedschaft-kuendigen":"bilder/dialog/handyvertrag-kuendigen-s.jpg","werkstatt-reklamation":"bilder/beruf/werkstatt.jpg","kita-betreuungszeiten":"bilder/dialog/kinderbetreuung-bitten-s.jpg","nachbarschaft-laerm":"bilder/dialog/laerm-nachbar-s.jpg","stadtwerke-abrechnung":"bilder/dialog/zu-viel-verlangt-s.jpg","internet-stoerung":"bilder/dialog/handyvertrag-abschliessen-s.jpg","bahn-fahrgastrechte":"bilder/dialog/anschluss-verpasst-s.jpg","familienkasse-kindergeld":"bilder/dialog/kindergeld-familienkasse-s.jpg","versicherung-schaden-melden":"bilder/dialog/polizei-fahrraddiebstahl-s.jpg","auskunft-integrationskurs":"bilder/dialog/weiterbildung-beratung-s.jpg","terminabsage-jobcenter":"bilder/dialog/termin-verschieben-s.jpg","dankschreiben-praktikum":"bilder/dialog/praktikum-s.jpg","sparkasse-adressaenderung":"bilder/dialog/konto-eroeffnen-s.jpg","hausverwaltung-treppenhaus":"bilder/dialog/c1-rauch-treppenhaus-s.jpg","bewerbung-pflegefachkraft":"bilder/thema/pflege-s.jpg","bewerbung-quereinstieg-buero":"bilder/dialog/bewerbung-s.jpg","bewerbung-interne-stelle":"bilder/dialog/bewerbung-nachfassen-s.jpg","motivationsschreiben-weiterbildung":"bilder/beruf/workshop.jpg","beschwerde-sprachschule":"bilder/dialog/feedback-s.jpg","beschwerde-fitnessstudio":"bilder/wimmel/fitnessstudio/szene.jpg","beschwerde-mietminderung":"bilder/dialog/b2-handwerker-dreck-s.jpg","widerspruch-nebenkosten":"bilder/dialog/kaution-zurueckfordern-s.jpg","widerspruch-anerkennung":"bilder/dialog/c1-amt-falscher-bescheid-s.jpg","forum-homeoffice":"bilder/beruf/homeoffice.jpg","forum-handy-schule":"bilder/dialog/bildschirmzeit-absprache-s.jpg","forum-vier-tage-woche":"bilder/beruf/grossraum.jpg","mail-vorgesetzte-fortbildung":"bilder/thema/live-unterricht-s.jpg","mail-kunde-lieferverzug":"bilder/dialog/lieferung-annehmen-s.jpg","mail-kunde-preiserhoehung":"bilder/dialog/kunde-s.jpg","leserbrief-oepnv":"bilder/beruf/bus.jpg","stellungnahme-schichtplan":"bilder/dialog/dienstplan-fehler-s.jpg","bericht-arbeitsunfall":"bilder/dialog/sicherheitsunterweisung-s.jpg","bericht-praktikum-b2":"bilder/dialog/praktikum-fragen-s.jpg","protokoll-teambesprechung":"bilder/dialog/meeting-s.jpg","forum-c1-arbeitszeit":"bilder/beruf/abends.jpg","forum-c1-ki-arbeitswelt":"bilder/thema/ki-arbeitswelt-s.jpg","forum-c1-ehrenamt":"bilder/thema/menschen-s.jpg","forum-c1-sprachnachweis":"bilder/dialog/pruefung-wiederholen-s.jpg","mail-c1-beschwerde-fortbildung":"bilder/dialog/c1-aufgabe-zurueckgeben-s.jpg","mail-c1-hausverwaltung":"bilder/dialog/c1-hausversammlung-fahrradkeller-s.jpg","mail-c1-erstattung-reise":"bilder/dialog/c1-zug-faellt-aus-s.jpg","eroerterung-fachkraeftemangel":"bilder/beruf/produktion.jpg","eroerterung-mobilitaetswende":"bilder/thema/stadt-s.jpg","zusammenfassung-mehrsprachigkeit":"bilder/thema/menschen-s.jpg","zusammenfassung-fachartikel-pflege":"bilder/beruf/rollator.jpg","kommentar-wohnungsnot":"bilder/dialog/wohnung-s.jpg"};
   window.renderSchreiben=function(){
     stil();
     var v=flaeche(); if(!v) return;
@@ -1705,13 +1713,16 @@
     var karten = liste.length
       ? '<div class="ku-swraster">'+liste.map(function(a){
           var angefangen=!!J('schreib_'+a.id,'');
-          return '<button class="ku-sw" onclick="schreibTrainer(\''+E(a.id)+'\')">'
+          var bild=SW_BILD[a.id];
+          return '<button class="ku-sw'+(bild?' mitbild':'')+'" onclick="schreibTrainer(\''+E(a.id)+'\')">'
+            +(bild?'<span class="ku-swbild"><img src="'+bild+'" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>':'')
+            +'<span class="ku-swkoerper">'
             +'<b>'+E(a.t)+'</b>'
             +'<p>'+E(String(a.sit||'').slice(0,110))+(String(a.sit||'').length>110?' …':'')+'</p>'
             +'<span class="unten"><span class="ku-pill">'+E(a.lvl)+'</span>'
             +'<span class="ku-pill grau">'+E(a.art)+'</span>'
             +(angefangen?'<span class="angefangen">angefangen</span>':'')
-            +'</span></button>';
+            +'</span></span></button>';
         }).join('')+'</div>'
       : '<div class="ku-leer">Mit diesem Filter finde ich nichts. Nimm einen anderen.</div>';
 
