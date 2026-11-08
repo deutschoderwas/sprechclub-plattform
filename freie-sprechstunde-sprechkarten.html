@@ -147,6 +147,14 @@ kbd{font-family:'Inter';font-size:.8rem;font-weight:800;background:#fff;border:2
   font-size:clamp(.95rem,1.8vw,1.1rem);color:var(--ink-soft);font-weight:600}
 .gk-hilfe span{display:block;font-size:.7rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink-mute);margin-bottom:.22rem}
+.gk-tipp{margin-top:.8rem;background:#fff;border:2px solid var(--linie);border-radius:14px;overflow:hidden}
+.gk-tipp summary{list-style:none;cursor:pointer;font-weight:800;font-size:.92rem;color:var(--f-d);padding:.75rem 1.05rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.gk-tipp summary::-webkit-details-marker{display:none}
+.gk-tipp summary::after{content:'aufklappen';font-size:.68rem;font-weight:800;color:#fff;background:var(--f);border-radius:999px;padding:.22rem .7rem;white-space:nowrap}
+.gk-tipp[open] summary::after{content:'zu';background:var(--ink-mute)}
+.gk-tipp .inhalt{padding:0 1.05rem 1rem;font-size:1.02rem;color:var(--ink-soft);line-height:1.65}
+.gk-tipp .inhalt b{color:var(--ink);font-weight:700}
+.gk-tipp .dlg{display:block;margin-top:.5rem;padding-left:.7rem;border-left:3px solid var(--f)}
 .gk-fuss{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.55rem}
 .gk-fuss .knopf{font-size:.95rem;padding:.58rem 1.2rem .5rem}
 .lvtag{display:inline-block;font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
@@ -203,6 +211,7 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
       <p class="gk-text" id="gkText"></p>
     </div>
     <div class="gk-hilfe" id="gkHilfe"><span>W&ouml;rter, die helfen</span><em id="gkHilfeT"></em></div>
+    <details class="gk-tipp" id="gkTipp"><summary>&#128161; Beispielantwort</summary><div class="inhalt" id="gkTippT"></div></details>
     <div class="gk-fuss">
       <button class="knopf voll" id="gkWeiter">N&auml;chste Karte</button>
       <button class="knopf" id="gkZu">Schlie&szlig;en</button>
@@ -210,6 +219,10 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
   </div></div>
 </div>
 
+<script src="sprechkarten-beispiele-1.js"></script>
+<script src="sprechkarten-beispiele-2.js"></script>
+<script src="sprechkarten-beispiele-3.js"></script>
+<script src="sprechkarten-beispiele-4.js"></script>
 <script>
 /* Nur die Inhalte. Wird beim Bauen in die HTML-Datei eingesetzt.
    Jede Karte: [ Satz, Woerter die helfen, Zeichen-Schluessel aus Z ] */
@@ -864,6 +877,16 @@ function zeigen(pos){
   var hilfe = document.getElementById('gkHilfe');
   if (k[1]) { hilfe.style.display = ''; document.getElementById('gkHilfeT').innerHTML = k[1]; }
   else hilfe.style.display = 'none';
+  var tipp = document.getElementById('gkTipp'), tippT = document.getElementById('gkTippT');
+  tipp.open = false;
+  var bsp = k[3];
+  if (!bsp && window.BSP && BSP[bereich] && BSP[bereich][niveau]) bsp = BSP[bereich][niveau][idx];
+  if (!bsp) {
+    if (niveau === 'einfach') bsp = 'Antworte in ein, zwei kurzen S&auml;tzen. Fang zum Beispiel so an: <b>&bdquo;Also, ich &hellip;&ldquo;</b> oder <b>&bdquo;Bei mir ist das so: &hellip;&ldquo;</b> &mdash; und nenn ein Beispiel.';
+    else if (niveau === 'komplexer') bsp = 'Antworte in mehreren S&auml;tzen und begr&uuml;nde: <b>&bdquo;Ich finde &hellip;, weil &hellip;&ldquo;</b> Nimm die W&ouml;rter oben zu Hilfe und gib ein Beispiel aus deinem Leben.';
+    else bsp = 'Nimm klar Stellung und begr&uuml;nde mit Beispiel: <b>&bdquo;Meiner Meinung nach &hellip;, denn &hellip;&ldquo;</b> Nenn auch die Gegenseite: <b>&bdquo;Man k&ouml;nnte zwar sagen &hellip;, aber &hellip;&ldquo;</b>.';
+  }
+  tippT.innerHTML = bsp;
 
   s.weg[idx] = true;
   offen = pos;
