@@ -72,9 +72,23 @@ export default async function handler(req, res) {
           continue;
         }
 
-        const { data: notiz } = await sb.from('email_log')
-          .insert({ user_id: p.id, kind: KENNUNG, ref: String(p.abo_start || '').slice(0, 10) })
+        /* ref war bis zum 8.11.2026 das Kaufdatum - und email_log hat
+           UNIQUE (kind, ref). Bei vier Leuten an drei Tagen hiess das:
+           der Erste eines Tages bekam seine Zeile, die anderen liefen
+           in den Unique-Fehler, der hier niemanden interessierte. Die
+           Mail ging trotzdem raus, nur ohne Eintrag - und beim
+           naechsten Aufruf noch einmal. Genau die zweite
+           Entschuldigung, die der Kopf dieser Datei ausschliessen
+           wollte. Jetzt steht die Person im ref, und ohne Zeile wird
+           nicht geschickt. */
+        const { data: notiz, error: notizFehler } = await sb.from('email_log')
+          .insert({ user_id: p.id, kind: KENNUNG, ref: String(p.id) })
           .select('id').maybeSingle();
+        if (notizFehler || !notiz) {
+          bericht.uebersprungen.push({ name: p.name || p.email,
+            grund: 'kein Eintrag im Mail-Protokoll — lieber nicht schicken als doppelt' });
+          continue;
+        }
 
         const r = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
