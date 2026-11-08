@@ -1676,7 +1676,15 @@
   };
 
   /* --- die Übersicht über alle Schreibaufgaben --- */
-  var swNiveau='alle', swArt='alle';
+  var swNiveau='alle', swArt='alle', swBereich='alle';
+  /* Aufgaben aus dem Arbeitsleben (8.11.2026). Alles andere gilt als Alltag. */
+  var SW_BERUF={'krankmeldung-arbeitgeber':1,'nachricht-kollegin-schichttausch':1,'arbeitgeber-urlaub-beantragen':1,
+    'dankschreiben-praktikum':1,'bewerbung-pflegefachkraft':1,'bewerbung-quereinstieg-buero':1,'bewerbung-interne-stelle':1,
+    'motivationsschreiben-weiterbildung':1,'widerspruch-anerkennung':1,'forum-homeoffice':1,'forum-vier-tage-woche':1,
+    'mail-vorgesetzte-fortbildung':1,'mail-kunde-lieferverzug':1,'mail-kunde-preiserhoehung':1,'stellungnahme-schichtplan':1,
+    'bericht-arbeitsunfall':1,'bericht-praktikum-b2':1,'protokoll-teambesprechung':1,'forum-c1-arbeitszeit':1,
+    'forum-c1-ki-arbeitswelt':1,'mail-c1-beschwerde-fortbildung':1,'zusammenfassung-fachartikel-pflege':1};
+  function swBereichVon(a){ return SW_BERUF[a.id]?'beruf':'alltag'; }
 
   var SW_BILD={"anmeldung-buergeramt":"bilder/dialog/anmeldung-buergeramt-s.jpg","formular-sportverein":"bilder/beruf/spielplatz.jpg","formular-vhs-kurs":"bilder/dialog/kurs-nachfragen-s.jpg","postkarte-ostsee":"bilder/thema/strand-s.jpg","entschuldigung-kita":"bilder/dialog/kita-eingewoehnung-s.jpg","sms-nachbarin-paket":"bilder/dialog/post-s.jpg","mail-termin-zahnarzt":"bilder/dialog/zahnarzt-kostenplan-s.jpg","sms-lehrerin-verspaetung":"bilder/dialog/verspaetung-entschuldigen-s.jpg","einladung-geburtstag-a1":"bilder/dialog/geburtstag-planen-s.jpg","mail-schluessel-hausverwaltung":"bilder/dialog/wohnung-s.jpg","krankmeldung-arbeitgeber":"bilder/dialog/krankmeldung-s.jpg","sms-freundin-absage":"bilder/dialog/einladung-absagen-s.jpg","termin-verschieben-auslaenderbehoerde":"bilder/dialog/aufenthaltstitel-verlaengern-s.jpg","einladung-einweihung":"bilder/dialog/party-s.jpg","beschwerde-heizung-a2":"bilder/dialog/heizung-kaputt-s.jpg","anzeige-antworten-fahrrad":"bilder/dialog/fahrrad-reparatur-s.jpg","nachricht-lehrerin-schwimmen":"bilder/dialog/elterngespraech-schule-s.jpg","mail-kursleiter-fehlen":"bilder/dialog/kurs-entschuldigung-s.jpg","sms-nachbarin-bohrmaschine":"bilder/dialog/nachbarn-s.jpg","mail-bibliothek-verlaengern":"bilder/thema/bildung-s.jpg","anzeige-wohnung-anfragen":"bilder/thema/wohnen-s.jpg","entschuldigung-elternabend":"bilder/dialog/c1-elternabend-klassenfahrt-s.jpg","mail-verein-abmelden-a2":"bilder/dialog/abo-kuendigen-s.jpg","nachricht-kollegin-schichttausch":"bilder/dialog/schichttausch-ablehnen-s.jpg","widerspruch-jobcenter":"bilder/dialog/jobcenter-weiterbewilligung-s.jpg","reklamation-online-shop":"bilder/dialog/rechnung-reklamieren-s.jpg","krankenkasse-zuschuss":"bilder/dialog/widerspruch-krankenkasse-s.jpg","vermieter-schimmel":"bilder/dialog/wasserschaden-melden-s.jpg","arbeitgeber-urlaub-beantragen":"bilder/dialog/urlaub-s.jpg","schule-befreiung-unterricht":"bilder/dialog/elterngespraech-schule-s.jpg","verein-mitgliedschaft-kuendigen":"bilder/dialog/handyvertrag-kuendigen-s.jpg","werkstatt-reklamation":"bilder/beruf/werkstatt.jpg","kita-betreuungszeiten":"bilder/dialog/kinderbetreuung-bitten-s.jpg","nachbarschaft-laerm":"bilder/dialog/laerm-nachbar-s.jpg","stadtwerke-abrechnung":"bilder/dialog/zu-viel-verlangt-s.jpg","internet-stoerung":"bilder/dialog/handyvertrag-abschliessen-s.jpg","bahn-fahrgastrechte":"bilder/dialog/anschluss-verpasst-s.jpg","familienkasse-kindergeld":"bilder/dialog/kindergeld-familienkasse-s.jpg","versicherung-schaden-melden":"bilder/dialog/polizei-fahrraddiebstahl-s.jpg","auskunft-integrationskurs":"bilder/dialog/weiterbildung-beratung-s.jpg","terminabsage-jobcenter":"bilder/dialog/termin-verschieben-s.jpg","dankschreiben-praktikum":"bilder/dialog/praktikum-s.jpg","sparkasse-adressaenderung":"bilder/dialog/konto-eroeffnen-s.jpg","hausverwaltung-treppenhaus":"bilder/dialog/c1-rauch-treppenhaus-s.jpg","bewerbung-pflegefachkraft":"bilder/thema/pflege-s.jpg","bewerbung-quereinstieg-buero":"bilder/dialog/bewerbung-s.jpg","bewerbung-interne-stelle":"bilder/dialog/bewerbung-nachfassen-s.jpg","motivationsschreiben-weiterbildung":"bilder/beruf/workshop.jpg","beschwerde-sprachschule":"bilder/dialog/feedback-s.jpg","beschwerde-fitnessstudio":"bilder/wimmel/fitnessstudio/szene.jpg","beschwerde-mietminderung":"bilder/dialog/b2-handwerker-dreck-s.jpg","widerspruch-nebenkosten":"bilder/dialog/kaution-zurueckfordern-s.jpg","widerspruch-anerkennung":"bilder/dialog/c1-amt-falscher-bescheid-s.jpg","forum-homeoffice":"bilder/beruf/homeoffice.jpg","forum-handy-schule":"bilder/dialog/bildschirmzeit-absprache-s.jpg","forum-vier-tage-woche":"bilder/beruf/grossraum.jpg","mail-vorgesetzte-fortbildung":"bilder/thema/live-unterricht-s.jpg","mail-kunde-lieferverzug":"bilder/dialog/lieferung-annehmen-s.jpg","mail-kunde-preiserhoehung":"bilder/dialog/kunde-s.jpg","leserbrief-oepnv":"bilder/beruf/bus.jpg","stellungnahme-schichtplan":"bilder/dialog/dienstplan-fehler-s.jpg","bericht-arbeitsunfall":"bilder/dialog/sicherheitsunterweisung-s.jpg","bericht-praktikum-b2":"bilder/dialog/praktikum-fragen-s.jpg","protokoll-teambesprechung":"bilder/dialog/meeting-s.jpg","forum-c1-arbeitszeit":"bilder/beruf/abends.jpg","forum-c1-ki-arbeitswelt":"bilder/thema/ki-arbeitswelt-s.jpg","forum-c1-ehrenamt":"bilder/thema/menschen-s.jpg","forum-c1-sprachnachweis":"bilder/dialog/pruefung-wiederholen-s.jpg","mail-c1-beschwerde-fortbildung":"bilder/dialog/c1-aufgabe-zurueckgeben-s.jpg","mail-c1-hausverwaltung":"bilder/dialog/c1-hausversammlung-fahrradkeller-s.jpg","mail-c1-erstattung-reise":"bilder/dialog/c1-zug-faellt-aus-s.jpg","eroerterung-fachkraeftemangel":"bilder/beruf/produktion.jpg","eroerterung-mobilitaetswende":"bilder/thema/stadt-s.jpg","zusammenfassung-mehrsprachigkeit":"bilder/thema/menschen-s.jpg","zusammenfassung-fachartikel-pflege":"bilder/beruf/rollator.jpg","kommentar-wohnungsnot":"bilder/dialog/wohnung-s.jpg"};
   window.renderSchreiben=function(){
@@ -1694,6 +1702,7 @@
     var liste=alle.filter(function(a){
       if(swNiveau!=='alle' && a.lvl!==swNiveau) return false;
       if(swArt!=='alle' && a.art!==swArt) return false;
+      if(swBereich!=='alle' && swBereichVon(a)!==swBereich) return false;
       return true;
     });
 
@@ -1701,7 +1710,12 @@
       +'<p>'+alle.length+' Aufgaben von A1 bis C1: der Brief ans Amt, eine Beschwerde, die Krankmeldung, '
       +'eine Bewerbung, ein Widerspruch, ein Beitrag im Forum. Zu jeder gibt es einen Text zum Vergleichen.</p></div>';
 
+    var nB=alle.filter(function(a){return swBereichVon(a)==='beruf';}).length;
     var chips='<div class="ku-chips">'
+      +[['alle','Alle Aufgaben'],['alltag','Alltag · '+(alle.length-nB)],['beruf','Beruf · '+nB]].map(function(x){
+        return '<button class="ku-chip'+(swBereich===x[0]?' on':'')+'" onclick="swFilter(\'b\',\''+x[0]+'\')">'+x[1]+'</button>';
+      }).join('')+'</div>'
+      +'<div class="ku-chips">'
       +['alle','A1','A2','B1','B2','C1'].map(function(l){
         return '<button class="ku-chip lv'+(swNiveau===l?' on':'')+'" onclick="swFilter(\'n\',\''+l+'\')">'+(l==='alle'?'Alle Niveaus':l)+'</button>';
       }).join('')+'</div>'
@@ -1731,7 +1745,7 @@
   };
 
   window.swFilter=function(art,wert){
-    if(art==='n') swNiveau=wert; else swArt=wert;
+    if(art==='n') swNiveau=wert; else if(art==='b') swBereich=wert; else swArt=wert;
     window.renderSchreiben();
   };
 
