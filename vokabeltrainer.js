@@ -24,7 +24,7 @@
      Startseite; THEMEN haelt die zuletzt gezeigte Liste, damit der
      Klick nur eine Nummer uebergeben muss und kein Thema mit
      Anfuehrungszeichen durch ein onclick-Attribut gefaedelt wird. */
-  var NIVEAU_FILTER = '', THEMEN = [];
+  var NIVEAU_FILTER = '', THEMEN = [], NIVEAU_VOREINGESTELLT = false;
   var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false, SERIE = {};
   var ZIEL_VORGABE = [10, 15, 25, 40];
 
@@ -826,6 +826,11 @@
     }
 
     /* ---------- 3b  Nach Thema und Niveau ---------- */
+    /* Beim ersten Öffnen auf der eigenen Stufe (fuer-dich.js), "Alle" bleibt ein Klick */
+    if (!NIVEAU_VOREINGESTELLT) {
+      NIVEAU_VOREINGESTELLT = true;
+      try { if (window.ICH) { var meine = window.ICH.niveau(); if (themenNach(meine).length) NIVEAU_FILTER = meine; } } catch (e) {}
+    }
     THEMEN = themenNach(NIVEAU_FILTER);
     var niv = niveauZaehlung();
     if (THEMEN.length) {

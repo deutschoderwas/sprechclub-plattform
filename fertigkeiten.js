@@ -68,7 +68,7 @@
       ]
     },
     wortschatz: {
-      t: 'Wortschatz', em: '🧠', zei: 'vokabeln', farbe: '#7C3AED',
+      t: 'Wortschatz', em: '🃏', zei: 'vokabeln', farbe: '#7C3AED',
       satz: 'Wörter, die du wirklich brauchst — und die auch hängen bleiben.',
       ueben: ['wortschatz'], pruef: null,
       karten: [
@@ -78,7 +78,7 @@
       ]
     },
     grammatik: {
-      t: 'Grammatik', em: '📐', zei: 'ueben', farbe: '#13A89A',
+      t: 'Grammatik', em: '💡', zei: 'ueben', farbe: '#13A89A',
       satz: 'Die Regeln dahinter — erklärt und geübt, nicht auswendig gelernt.',
       ueben: ['grammatik'], pruef: null,
       karten: [
