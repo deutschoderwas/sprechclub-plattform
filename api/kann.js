@@ -26,6 +26,25 @@ async function agentDa() {
   } catch (e) { return false; }
 }
 
+/* ------------------------------------------------------------
+   Amanda spricht gerade nicht.
+
+   Julia, 8.11.2026: "Nimm Amanda sprechen dann aus der Plattform
+   raus (nur schreiben) Also blende sie aus."
+
+   Hintergrund: Das Guthaben bei ElevenLabs ist aufgebraucht, und der
+   Weg ueber Gemini wartet noch auf den Schluessel. Die Oberflaeche
+   hat das Sprechen trotzdem angeboten — eine Schuelerin drueckte auf
+   "Gespraech beginnen" und sah "Verbinde ..." bis sie aufgab. Lieber
+   gar kein Knopf als ein Knopf, der nichts tut.
+
+   WIEDER EINSCHALTEN: hier auf false setzen — und in konto.html
+   window.AMANDA_SPRECHEN_AUS ebenfalls. Zwei Stellen, weil die eine
+   im Server steht und die andere in der Seite; sie heissen absichtlich
+   gleich, damit man beide findet.
+   ------------------------------------------------------------ */
+const SPRECHEN_AUS = true;
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=120');
   const eleven = !!process.env.ELEVENLABS_API_KEY;
@@ -34,6 +53,6 @@ export default async function handler(req, res) {
     hoeren:    !!process.env.OPENAI_API_KEY,
     vorlesen:  !!(eleven || process.env.OPENAI_API_KEY || process.env.GOOGLE_TTS_API_KEY),
     echteStimme: eleven,
-    sprechen:  eleven && (await agentDa()),
+    sprechen:  !SPRECHEN_AUS && eleven && (await agentDa()),
   });
 }

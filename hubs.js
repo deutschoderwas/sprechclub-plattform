@@ -262,9 +262,11 @@
       /* Amanda steht oben, noch vor dem Sprechclub: sie ist rund um
          die Uhr da, der Club einmal am Abend. Wer sprechen will,
          soll nicht erst bis morgen warten muessen. */
-      + band({ em: '🎙️', t: 'Mit Amanda sprechen',
+      /* Nur, wenn Amanda auch wirklich sprechen kann. Der Schalter
+         steht in konto.html (AMANDA_SPRECHEN_AUS) und in api/kann.js. */
+      + (window.AMANDA_SPRECHEN_AUS ? '' : band({ em: '🎙️', t: 'Mit Amanda sprechen',
                u: 'Sie hört zu und antwortet sofort — in Julias Stimme',
-               tun: "go('amandasprechen')" })
+               tun: "go('amandasprechen')" }))
       + '<div id="hbClub"></div>'
       + reiter('sprechen', SPRECHREITER)
       + '<p class="hb-hin">' + D.length + ' Gespräche in ' + Object.keys(nach).length + ' Bereichen. '

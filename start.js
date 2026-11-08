@@ -590,7 +590,8 @@
       + '<div class="hs-karte feld">'
       +   '<div class="eingabe">'
       +     '<textarea id="hsAmText" rows="2" placeholder="Frag mich etwas auf Deutsch …"></textarea>'
-      +     '<button class="mik druck" onclick="go(\'amandasprechen\')" aria-label="Sprechen statt tippen">' + ikon('mic') + '</button>'
+      +     (window.AMANDA_SPRECHEN_AUS ? '' :
+            '<button class="mik druck" onclick="go(\'amandasprechen\')" aria-label="Sprechen statt tippen">' + ikon('mic') + '</button>')
       +     '<button class="send druck" onclick="hsFragen()" aria-label="Abschicken">' + ikon('arrow-up','z-s') + '</button>'
       +   '</div>'
       +   '<p class="oder">Oder tipp auf einen Vorschlag:</p>'
@@ -1136,10 +1137,14 @@
       ]],
       ['🗣️', T('nv_grp_sprechen','Sprechen'), [
         ['💭', T('nv_gespraeche','Gespräche üben'),        "go('sprechen')"],
-        ['🎙️', T('nv_amanda_sp','Mit Amanda sprechen'),    "go('amandasprechen')"],
+        /* Nur zeigen, wenn Amanda auch wirklich sprechen kann —
+           der Schalter steht in konto.html und in api/kann.js. */
+      ].concat(window.AMANDA_SPRECHEN_AUS ? [] : [
+        ['🎙️', T('nv_amanda_sp','Mit Amanda sprechen'),    "go('amandasprechen')"]
+      ]).concat([
         ['🤖', T('nv_amanda_fr','Amanda fragen'),          "go('amanda')"],
         ['👥', T('nv_tandem','Sprech-Tandem'),             "go('buddy')"]
-      ]],
+      ])],
       /* Chat, Postfach und das eigene Konto gehoeren weder zum Ueben
          noch zum Sprechen — sie sind der Club selbst. */
       ['💬', T('sn_kgrp_club','Mein Club'), [

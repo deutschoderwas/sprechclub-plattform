@@ -2,6 +2,45 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<!-- ============================================================
+     Amanda spricht gerade nicht — nur schreiben.
+
+     Julia, 8.11.2026: "Nimm Amanda sprechen dann aus der Plattform
+     raus (nur schreiben) Also blende sie aus."
+
+     Das Guthaben bei ElevenLabs ist aufgebraucht, der Weg ueber
+     Gemini wartet noch auf den Schluessel. Die Oberflaeche bot das
+     Sprechen trotzdem an — eine Schuelerin drueckte auf "Gespraech
+     beginnen" und sah "Verbinde ..." bis sie aufgab. Lieber gar kein
+     Knopf als einer, der nichts tut.
+
+     Ausgeblendet werden: der Menuepunkt in der Seitenleiste und im
+     Handy-Menue, das Mikrofon neben Amandas Eingabefeld und das Band
+     im Sprechen-Bereich. Die Ansicht selbst bleibt; wer einen alten
+     Link aufruft, landet bei Amanda im Chat.
+
+     Dieser Schalter steht absichtlich ganz vorn und in einem eigenen
+     Skript: er muss auch dann gelten, wenn weiter unten etwas
+     schiefgeht.
+
+     WIEDER EINSCHALTEN: hier auf false — und in api/kann.js
+     SPRECHEN_AUS ebenfalls. Zwei Stellen, weil die eine in der Seite
+     steht und die andere im Server; sie heissen absichtlich gleich.
+     ============================================================ -->
+<script>
+window.AMANDA_SPRECHEN_AUS = true;
+(function(){
+  function ausblenden(){
+    if(!window.AMANDA_SPRECHEN_AUS) return;
+    try{
+      var l = document.querySelectorAll('[data-view="amandasprechen"]');
+      for(var i=0;i<l.length;i++) l[i].hidden = true;
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ausblenden);
+  else ausblenden();
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <!-- PWA / Als App installierbar -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -1761,6 +1800,9 @@ const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard',
    hatte. */
 const ALTSCHUELER_OFFEN=['materialien','stunden'];
 function show(v){
+  /* Ist das Sprechen ausgeblendet, fuehrt ein alter Link oder ein
+     Lesezeichen nicht ins Leere, sondern zu Amanda im Chat. */
+  if(v==='amandasprechen' && window.AMANDA_SPRECHEN_AUS) v='amanda';
   VIEWS.forEach(x=>{var _e=document.getElementById('v-'+x); if(_e) _e.classList.toggle('active',x===v);});
   document.querySelectorAll('.navlink[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   // Der Stufenkurs hat keinen eigenen Menüpunkt mehr — er gehört zum
