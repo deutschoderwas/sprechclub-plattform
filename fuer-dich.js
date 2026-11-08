@@ -170,6 +170,31 @@
     return d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }) + ', ' + uhr + ' Uhr';
   }
 
+  /* ---------- Die Woche in einem Satz ----------
+     Nur was wirklich gezählt wird: gebuchte Stunden dieser Woche
+     (Montag bis Sonntag), Tage in Folge im Vokabeltrainer und wie
+     viele Wörter schon sitzen. Steht überall null, kommt kein Satz,
+     sondern ein freundlicher Anstoss. */
+  function wochenSatz() {
+    var teile = [];
+    try {
+      var jetzt = new Date(), mo = new Date(jetzt);
+      mo.setHours(0, 0, 0, 0); mo.setDate(mo.getDate() - ((mo.getDay() + 6) % 7));
+      var so = new Date(mo); so.setDate(so.getDate() + 7);
+      var st = ((window.stats && stats.booked) || []).filter(function (b) {
+        var d = new Date(b.starts_at); return d >= mo && d < so;
+      }).length;
+      if (st) teile.push('<b>' + st + '</b> ' + (st === 1 ? 'Stunde' : 'Stunden') + ' im Sprechclub');
+    } catch (e) {}
+    try {
+      var v = window.vokabelStand && window.vokabelStand();
+      if (v && v.serie > 1) teile.push('<b>' + v.serie + '</b> Tage in Folge Wörter geübt');
+      if (v && v.gelernt) teile.push('<b>' + v.gelernt + '</b> ' + (v.gelernt === 1 ? 'Wort sitzt' : 'Wörter sitzen'));
+    } catch (e) {}
+    if (!teile.length) return 'Diese Woche ist noch frisch. Zehn Minuten heute bringen mehr als zwei Stunden nächste Woche.';
+    return 'Diese Woche: ' + teile.join(' · ');
+  }
+
   /* ---------- Die Ansicht ---------- */
   window.renderFuerDich = function () {
     var v = el('v-fuerdich'); if (!v) return;
@@ -195,6 +220,9 @@
       + '<div class="fd-chips">' + chips
       + '<button class="fd-aendern" onclick="fdZielAendern()">' + (lz ? 'Ziel ändern' : 'Ziel festlegen') + '</button></div>'
       + '</header>';
+
+    var ws = wochenSatz();
+    if (ws) h += '<p class="fd-woche">' + ws + '</p>';
 
     if (!lz) {
       h += '<div class="fd-hinweis"><div><b>Wofür lernst du Deutsch?</b>'
@@ -363,6 +391,8 @@
       '.fd-chip{display:inline-flex;gap:7px;align-items:baseline;background:#fff;border:1px solid var(--fd-line);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:700;color:var(--fd-ink)}',
       '.fd-chip i{font-style:normal;font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--fd-soft)}',
       '.fd-aendern{border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--fd-petrol);cursor:pointer;padding:7px 4px;text-decoration:underline;text-underline-offset:3px}',
+      '.fd-woche{margin:-8px 0 22px;font-size:15px;color:var(--fd-soft);line-height:1.5}',
+      '.fd-woche b{color:var(--fd-ink);font-weight:700}',
       '.fd-hinweis{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#EAF6FA;border:1px solid #C7E9F3;border-radius:18px;padding:18px 20px;margin:0 0 22px}',
       '.fd-hinweis b{display:block;font-size:16.5px;color:var(--fd-ink);margin-bottom:3px}',
       '.fd-hinweis span{font-size:14px;color:var(--fd-soft);line-height:1.5}',
