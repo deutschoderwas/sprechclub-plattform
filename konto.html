@@ -658,6 +658,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <div class="navgrp" id="g-lernen" data-farbe="turq">
       <button class="navlink navhead" data-gruppe-ikon="buch" onclick="navGruppe('lernen')"><span class="ic">📚</span><span data-i18n="nv_grp_lernen2">Lernen</span><span class="pf">▾</span></button>
       <div class="navsub">
+        <button class="navlink" data-view="fuerdich" onclick="go('fuerdich')"><span class="ic">⭐</span><span data-i18n="nv_fuerdich">Für dich</span></button>
         <button class="navlink" data-view="lernen" onclick="go('lernen')"><span class="ic">🧭</span><span data-i18n="nv_kurs">Mein Kurs</span></button>
         <button class="navlink" data-view="kurse" onclick="go('kurse')"><span class="ic">📖</span><span data-i18n="nv_bib">Kursbibliothek</span></button>
         <button class="navlink" data-view="bereiche" onclick="go('bereiche')"><span class="ic">🗺️</span><span data-i18n="nv_themen">Themen &amp; Orte</span></button>
@@ -1126,6 +1127,7 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
     <section class="view" id="v-profil"></section>
     <section class="view" id="v-fehler"></section>
     <section class="view" id="v-buddy"></section>
+    <section class="view" id="v-fuerdich"></section>
     <section class="view" id="v-fertigkeit"></section>
   </div>
   </main>
@@ -1736,10 +1738,10 @@ function collectVocab(){
 }
 
 // ---------- Router ----------
-const VIEWS=['dashboard','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
+const VIEWS=['dashboard','fuerdich','weg','lernen','sprechen','medien','bereiche','kurs','pruefung','schreiben','kurse','ueben','community','dm','lernpfad','szenen','kalender','stunden','materialien','vokabeln','fortschritt','abo','nachrichten','amanda','profil','fehler','buddy','fertigkeit','podcast','amandasprechen'];
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
-const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
+const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],fuerdich:['Lernen','Für dich'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
 function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
 function routeFromHash(){ let v=(location.hash||'#dashboard').slice(1);
   /* Nach aussen heisst der Bereich "Chat". #chat fuehrt deshalb auf
@@ -1782,7 +1784,7 @@ const /* Vorverkauf: Wer Premium vor dem 1.11. kauft, zahlt sofort und darf die
    1. November (kalEv/erstAbStart). Die Liste bleibt leer stehen, falls
    wieder einmal ein Bereich vor einem Start zugehen soll. */
 VORVERKAUF_ZU=[];
-const LOCKED_VIEWS=['szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','nachrichten','amanda','fehler','buddy','fertigkeit'];
+const LOCKED_VIEWS=['fuerdich','szenen','pruefung','amandasprechen','kalender','dashboard','weg','lernen','sprechen','medien','bereiche','kurs','schreiben','kurse','ueben','community','dm','lernpfad','stunden','materialien','vokabeln','fortschritt','nachrichten','amanda','fehler','buddy','fertigkeit'];
 /* Diese beiden Ansichten bleiben auch gesperrten Altschuelern offen:
    die Materialien und der Stundenplan mit dem Material der Stunden,
    die sie gebucht hatten. Alles andere aus LOCKED_VIEWS ist zu —
@@ -1813,7 +1815,7 @@ function show(v){
      noch nicht da, wird gewartet statt leer gezeichnet — und die Seite
      sagt das auch, statt stumm zu bleiben. */
   if (typeof window.spaetLaden === 'function' && !window.SPAET_DA
-      && ['ueben','lernen','bereiche','kurs','weg','szenen','schreiben','fertigkeit',
+      && ['fuerdich','ueben','lernen','bereiche','kurs','weg','szenen','schreiben','fertigkeit',
           'pruefung','fehler','lernpfad','vokabeln','sprechen','kurse'].includes(v)) {
     var _z = document.getElementById('v-' + v);
     if (_z && !_z.innerHTML.trim()) {
@@ -1837,7 +1839,7 @@ function show(v){
     var _zu = false; try{ _zu = nurCommunity(); }catch(e){}
     if(_zu){ renderSprechclubZu(v); window.scrollTo(0,0); return; }
   }
-  ({dashboard:renderDashboard,weg:(window.renderWeg||renderDashboard),sprechen:(window.renderSprechen||renderDashboard),medien:(window.renderMedien||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
+  ({dashboard:renderDashboard,fuerdich:(window.renderFuerDich||renderDashboard),weg:(window.renderWeg||renderDashboard),sprechen:(window.renderSprechen||renderDashboard),medien:(window.renderMedien||renderDashboard),kurse:(window.renderKurse||renderDashboard),ueben:(window.renderUeben||renderDashboard),lernen:(window.renderLernen||renderDashboard),bereiche:(window.renderBereiche||window.renderLernen||renderDashboard),kurs:(window.renderNiveau||renderDashboard),schreiben:(window.renderSchreiben||renderDashboard),community:(window.renderCommunity||renderDashboard),dm:(window.renderDM||renderDashboard),lernpfad:renderLernpfad,szenen:function(){ if(window.LERNPFAD) LERNPFAD.pfad('v-szenen'); },kalender:renderKalender,stunden:renderStunden,pruefung:(window.renderPruefungen||renderDashboard),materialien:renderMaterialien,vokabeln:(window.renderVokabeln||renderVokabelnAlt),
     fortschritt:(window.renderMeinBereich||renderFortschritt),guthaben:renderGuthaben,abo:renderAbo,nachrichten:renderNachrichten,
     amanda:renderAmanda,amandasprechen:(window.renderSprechenAmanda||renderDashboard),profil:renderProfil,fehler:(window.renderFehlerTrainer||renderDashboard),buddy:(window.renderBuddy||renderDashboard),fertigkeit:(window.renderFertigkeit||renderDashboard)}[v]
     /* Nicht jede Ansicht hat einen Zeichner — der Podcast zum Beispiel
@@ -1849,7 +1851,7 @@ function show(v){
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
   window.scrollTo(0,0);
 }
-const LOCK_LABELS={kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',nachrichten:'Nachrichten',amanda:'Amanda'};
+const LOCK_LABELS={fuerdich:'Für dich',kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',nachrichten:'Nachrichten',amanda:'Amanda'};
 /* ============================================================
    Der Sprechclub ist Premium.
 
@@ -4588,7 +4590,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
      Notausgang: ?voll=1 an die Adresse haengen laedt alles sofort wie
      frueher.
      ============================================================ -->
-<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "ueben.js?v=6", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=4", "pruefung.js", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=17", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=16", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=15", "pruefung-schreiben.js?v=15", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=19"]</script>
+<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "ueben.js?v=6", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=5", "pruefung.js", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=17", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=16", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=15", "pruefung-schreiben.js?v=15", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=19"]</script>
 <script>
 (function(){
   var liste = [];
@@ -4642,7 +4644,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
 <script src="bereiche-anschluss.js?v=1"></script>
 <script src="lern-struktur.js?v=1"></script>
 <script src="lern-start.js?v=1"></script>
-<script src="fertigkeiten.js?v=3"></script>
+<script src="fertigkeiten.js?v=4"></script>
 <script src="nachueben.js"></script>
 <script src="community.js?v=tipp2"></script>
 <script src="direct-messages.js?v=2"></script>
@@ -5082,7 +5084,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
      MUSS nach lernen.js und mein-weg.js stehen: hubs.js uebernimmt
      die alte Themenansicht als renderLernenThemen und benutzt die
      Weiter-Karte des Kurses. -->
-<script src="hubs.js?v=4"></script>
+<script src="hubs.js?v=5"></script>
 
 <!-- Amanda spricht. Laedt selbst nichts nach, solange niemand auf den
      Knopf tippt — der ElevenLabs-Werkzeugkasten ist ein Megabyte gross. -->
@@ -5162,6 +5164,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
      diesem Dokument; an den Lernmodulen ist nichts zu aendern.
      Entfernt man diese Zeile, ist alles genau wie vorher. -->
 <script src="fortschritt.js?v=1"></script>
+<script src="fuer-dich.js?v=1"></script>
 <script src="nav-icons.js"></script>
 <script src="lernpfad.js?v=3"></script>
 <script src="lernpfad-b1.js"></script>

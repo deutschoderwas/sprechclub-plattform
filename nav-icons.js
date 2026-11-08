@@ -47,7 +47,7 @@
 
   /* Welches Symbol gehört zu welchem Eintrag */
   var ZU_ANSICHT = {
-    dashboard:'haus', kalender:'kalender', stunden:'kalender', kurs:'hut',
+    dashboard:'haus', fuerdich:'stern', kalender:'kalender', stunden:'kalender', kurs:'hut',
     pruefung:'ziel', ueben:'leiter',
     lernen:'kompass', vokabeln:'karten', fehler:'buch', buddy:'zweipersonen',
     materialien:'ordner', fortschritt:'pokal', nachrichten:'brief',

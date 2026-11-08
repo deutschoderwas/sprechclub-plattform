@@ -283,6 +283,10 @@
     var liste = daten('DIALOGE').filter(function (d) {
       return (d.kat === kat) && ((d.modus || 'alltag') === offen.sprechen);
     });
+    /* Die eigene Stufe zuerst (fuer-dich.js kennt sie), dann die Nachbarn */
+    if (window.ICH) liste = liste.slice().sort(function (a, b) {
+      return window.ICH.abstand(a.lvl) - window.ICH.abstand(b.lvl);
+    });
     ziel.innerHTML = '<div class="hb-liste">'
       + '<h3 class="hb-h3">' + b[0] + ' ' + E(b[1]) + '</h3>'
       + liste.map(function (d) {
@@ -290,7 +294,7 @@
           + '<span class="hb-d-bild"><img src="' + dialogBild(d.id) + '" alt="" loading="lazy" onerror="this.parentNode.outerHTML=\'<span class=&quot;hb-d-em&quot;>' + (d.em || '💬') + '</span>\'"></span>'
           + '<span class="hb-d-t"><b>' + E(d.titel) + '</b>'
           + '<small>' + E(d.ort || '') + '</small></span>'
-          + '<span class="hb-d-lv">' + E(d.lvl || '') + '</span></button>';
+          + '<span class="hb-d-lv' + (window.ICH && window.ICH.abstand(d.lvl) === 0 ? ' meins' : '') + '">' + E(d.lvl || '') + '</span></button>';
       }).join('')
       + '</div>';
     try { ziel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
@@ -609,6 +613,7 @@
       '  cursor:pointer;background:#fff;border:1.5px solid var(--hb-line);border-radius:14px;padding:13px 15px;margin-bottom:9px}',
       '.hb-d:hover{border-color:var(--hb-turq)}',
       '.hb-d-em{font-size:21px;flex:0 0 auto}',
+      '.hb-d-lv.meins{background:var(--hb-turq-ink);color:#fff}',
       '.hb-d-bild{flex:0 0 auto;width:76px;height:52px;border-radius:10px;overflow:hidden;background:#EEF2F6}',
       '.hb-d-bild img{width:100%;height:100%;object-fit:cover;display:block}',
       '.hb-k.mitbild{padding:0;overflow:hidden;gap:0}',
