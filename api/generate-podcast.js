@@ -310,10 +310,32 @@ export default async function handler(req, res) {
   if (!SUPA || !SERVICE) return res.status(500).json({ error: 'supabase_fehlt' });
 
   const geheim = process.env.CRON_SECRET;
-  const erlaubt = !geheim
+  let erlaubt = !geheim
     || req.headers['x-vercel-cron']
     || req.headers['x-intern'] === geheim
     || (req.query && req.query.key === geheim);
+
+  /* Julia darf auch von Hand anstossen.
+
+     Bis zum 9.11.2026 kam man hier nur mit dem Cron-Geheimnis hinein.
+     Wenn der Lauf am Morgen ins Leere lief — etwa weil die Stimme
+     gerade kein Guthaben hatte —, blieb der Tag bis zum naechsten
+     Lauf leer, und niemand konnte etwas dagegen tun. Jetzt reicht ein
+     Admin-Token aus dem Admin-Bereich. */
+  if (!erlaubt) {
+    const token = (req.headers.authorization || '').replace('Bearer ', '');
+    if (token) {
+      try {
+        const pruef = createClient(SUPA, SERVICE, { auth: { persistSession: false } });
+        const { data: { user } = {} } = await pruef.auth.getUser(token);
+        if (user) {
+          const { data: ich } = await pruef.from('profiles')
+            .select('is_admin').eq('id', user.id).maybeSingle();
+          if (ich && ich.is_admin) erlaubt = true;
+        }
+      } catch (e) { /* bleibt verboten */ }
+    }
+  }
   if (!erlaubt) return res.status(401).json({ error: 'nicht_erlaubt' });
 
   const db = createClient(SUPA, SERVICE, { auth: { persistSession: false } });

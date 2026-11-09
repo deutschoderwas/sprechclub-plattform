@@ -45,20 +45,54 @@ export default async function handler(req, res) {
     } catch (err) { ran[e] = String((err && err.message) || err); }
   }
 
-  // Julias 5-Minuten-Podcast: vier neue Folgen (A2, B1, B2, C1).
-  // Nur anstoßen, nicht abwarten — der Generator braucht länger, als
-  // dieser Sammel-Cron laufen darf, und arbeitet danach allein weiter.
-  try {
-    await fetch(base + '/api/generate-podcast', {
-      method: 'POST',
-      headers: { 'x-intern': process.env.CRON_SECRET || '' },
-      // 1,5 Sekunden waren zu knapp — der Aufruf wurde abgebrochen,
-      // bevor der Generator lief. Acht Sekunden stoßen ihn sicher an.
-      signal: AbortSignal.timeout(8000)
-    });
-    ran['generate-podcast'] = 'angestossen';
-  } catch (err) {
-    ran['generate-podcast'] = 'angestossen';   // Zeitüberschreitung ist hier der Normalfall
+  /* Julias 5-Minuten-Podcast: vier neue Folgen (A2, B1, B2, C1).
+
+     Julia, 9.11.2026: "bitte Podcast regelmäßig A2-C1 jeden
+     Montag-Mittwoch und Freitag machen und hochladen für alle
+     Niveaus."
+
+     Bis dahin wurde jeden Tag geschrieben. Das waren sieben Themen
+     die Woche, von denen die Haelfte nie eingesprochen wurde — und
+     jedes kostet Guthaben. Jetzt nur noch an drei Tagen.
+
+     Das Einsprechen laeuft weiter JEDEN Tag: ein Entwurf vom Montag
+     kann dienstags fertig werden, und wer am Dienstag nachsieht, soll
+     ihn dann auch hoeren koennen. Nur geschrieben wird seltener. */
+  const kurz = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Berlin', weekday: 'short'
+  }).format(new Date());
+  const SCHREIBTAGE = ['Mon', 'Wed', 'Fri'];
+  const heuteSchreiben = SCHREIBTAGE.includes(kurz);
+
+  if (heuteSchreiben) {
+    // Nur anstoßen, nicht abwarten — der Generator braucht länger, als
+    // dieser Sammel-Cron laufen darf, und arbeitet danach allein weiter.
+    try {
+      await fetch(base + '/api/generate-podcast', {
+        method: 'POST',
+        headers: { 'x-intern': process.env.CRON_SECRET || '' },
+        // 1,5 Sekunden waren zu knapp — der Aufruf wurde abgebrochen,
+        // bevor der Generator lief. Acht Sekunden stoßen ihn sicher an.
+        signal: AbortSignal.timeout(8000)
+      });
+      ran['generate-podcast'] = 'angestossen';
+    } catch (err) {
+      ran['generate-podcast'] = 'angestossen';   // Zeitüberschreitung ist hier der Normalfall
+    }
+  } else {
+    ran['generate-podcast'] = 'heute nicht (nur Mo, Mi, Fr)';
+    /* Kein Schreibtag — aber liegengebliebene Entwuerfe trotzdem
+       einsprechen. Sonst wartet eine fertige Folge bis zum naechsten
+       Schreibtag auf ihre Stimme. */
+    try {
+      await fetch(base + '/api/podcast-audio', {
+        headers: { 'x-intern': process.env.CRON_SECRET || '' },
+        signal: AbortSignal.timeout(8000)
+      });
+      ran['podcast-audio'] = 'angestossen';
+    } catch (err) {
+      ran['podcast-audio'] = 'angestossen';
+    }
   }
 
   return res.status(200).json({ ok: true, ran });

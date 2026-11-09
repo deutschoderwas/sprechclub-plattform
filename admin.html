@@ -3908,6 +3908,57 @@ setTimeout(function(){var tbl=document.getElementById('schuelerTable');if(tbl&&d
    Der Job im Hintergrund schaut alle 15 Minuten nach, was faellig
    ist. Was hier auf „aus" steht, wird nie geschrieben.
    ============================================================ */
+/* ------------------------------------------------------------
+   Den Podcast-Lauf von Hand anstossen.
+
+   Julia, 9.11.2026: "bitte Podcast regelmaessig A2-C1 jeden
+   Montag-Mittwoch und Freitag machen und hochladen fuer alle
+   Niveaus."
+
+   Der Lauf am Morgen macht das von selbst. Faellt er aber einmal
+   aus — am 9.11. war der Tag leer, weil die Stimme am Morgen noch
+   kein Guthaben hatte —, konnte bisher niemand etwas dagegen tun:
+   der Knopf fehlte, und der Endpunkt liess nur den Cron herein.
+   Jetzt kommt auch ein Admin-Token durch.
+
+   Es dauert: Erst schreibt Claude vier Skripte, dann spricht
+   ElevenLabs sie ein. Der Knopf stoesst nur an — fertig ist es ein
+   paar Minuten spaeter. */
+async function podcastJetzt(){
+  const knopf = document.getElementById('podJetztBtn');
+  const text  = document.getElementById('podJetztText');
+  if(!knopf) return;
+  knopf.disabled = true;
+  const alt = knopf.textContent;
+  knopf.textContent = 'L\u00e4uft \u2026';
+  if(text) text.textContent = 'Das dauert ein paar Minuten.';
+  try{
+    const r = await fetch('/api/generate-podcast', {
+      method:'POST',
+      headers:{ 'Authorization':'Bearer ' + await authToken() }
+    });
+    const j = await r.json().catch(function(){ return {}; });
+    if(text){
+      if(j && j.ok && j.geschrieben && j.geschrieben.length){
+        text.textContent = 'Geschrieben: ' + j.geschrieben.join(', ')
+          + ' \u2014 die Stimme kommt gleich dazu.';
+      } else if(j && j.info){
+        text.textContent = j.info;
+      } else if(j && j.error){
+        text.textContent = 'Hat nicht geklappt: ' + j.error;
+      } else {
+        text.textContent = 'Angesto\u00dfen. Sieh in ein paar Minuten im Sch\u00fclerbereich nach.';
+      }
+    }
+  }catch(e){
+    /* Der Generator braucht laenger, als der Browser wartet - das ist
+       hier der Normalfall und kein Fehler. */
+    if(text) text.textContent = 'Angesto\u00dfen. Sieh in ein paar Minuten im Sch\u00fclerbereich nach.';
+  }
+  knopf.disabled = false;
+  knopf.textContent = alt;
+}
+
 async function ladeKiTeam(){
   const kasten = document.getElementById('kiteam');
   kasten.innerHTML = '<div class="card"><p class="muted">Wird geladen …</p></div>';
@@ -3937,6 +3988,14 @@ async function ladeKiTeam(){
   + '<p>Amanda, Mila und Tom schreiben nach Plan in die Kan\u00e4le. Jeder Beitrag tr\u00e4gt im Chat ein KI-Schild \u2014 '
   + 'niemand h\u00e4lt sie f\u00fcr Mitsch\u00fcler. Die Inhalte kommen aus deinen eigenen Podcastfolgen.</p></div>'
   + '<div class="card" style="margin-bottom:14px"><b>' + offen + ' geplant</b> \u00b7 ' + raus + ' ver\u00f6ffentlicht \u00b7 ' + aus + ' aus</div>'
+  + '<div class="card" style="margin-bottom:14px">'
+    + '<b>\u{1F3A7} Podcast</b>'
+    + '<p class="muted" style="margin:4px 0 10px">Geschrieben wird automatisch montags, mittwochs und freitags \u2014 '
+    + 'alle vier Niveaus auf einmal. Eingesprochen wird jeden Tag, was fertig ist. '
+    + 'Hier kannst du den Lauf von Hand ansto\u00dfen, wenn ein Tag ausgefallen ist.</p>'
+    + '<button class="btn btn-sm" id="podJetztBtn" onclick="podcastJetzt()">Folgen f\u00fcr heute erzeugen</button>'
+    + '<span id="podJetztText" class="muted" style="margin-left:10px"></span>'
+  + '</div>'
   + (reihen.length
       ? '<div class="card" style="padding:0;overflow:hidden">'
         + reihen.map(function(r){
