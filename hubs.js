@@ -467,7 +467,10 @@
       +   '<span class="pk-play" aria-hidden="true">▶</span></span>'
       + '<span class="pk-tx">'
       +   '<b>' + E(x.titel || 'Folge') + '</b>'
-      +   '<small>' + (x.dauer ? E(x.dauer) + ' · ' : '') + E(pcDatum(x.datum)) + '</small>'
+      /* Julia, 9.11.2026: "kein Datum schreiben". Ein Datum macht aus
+         einer Folge eine Nachricht von gestern - die Themen sind aber
+         zeitlos genug, um sie auch in drei Wochen zu hoeren. */
+      +   '<small>' + (x.dauer ? E(x.dauer) : '') + '</small>'
       + '</span></button>';
   }
 
