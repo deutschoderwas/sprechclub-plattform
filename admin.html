@@ -3924,6 +3924,48 @@ setTimeout(function(){var tbl=document.getElementById('schuelerTable');if(tbl&&d
    Es dauert: Erst schreibt Claude vier Skripte, dann spricht
    ElevenLabs sie ein. Der Knopf stoesst nur an — fertig ist es ein
    paar Minuten spaeter. */
+/* ------------------------------------------------------------
+   Die naechste Abbuchung einer einzelnen Person nach hinten setzen.
+
+   Julia, 9.11.2026: Maria hat gekuendigt, ihre Mutter uebernimmt den
+   Monat - "kannst du den Testzeitraum fuer sie auch bis zum 31.12
+   machen, so dass ihr am 01.12 nichts abgezogen wird?"
+
+   Den Lauf dafuer gibt es seit Oktober (api/abbuchung-verschieben.js),
+   er konnte aber nur alle auf den 1. Dezember setzen. Jetzt nimmt er
+   eine Person und ein Datum. "Erst nachsehen" fasst nichts an und
+   sagt nur, was passieren wuerde - bei Geld ist das die Reihenfolge.
+   ------------------------------------------------------------ */
+async function abbVerschieben(nurSchauen){
+  const mail = (document.getElementById('abbMail').value || '').trim();
+  const bis  = (document.getElementById('abbBis').value || '').trim();
+  const text = document.getElementById('abbText');
+  if(!mail || !bis){ text.textContent = 'Bitte E-Mail und Datum ausf\u00fcllen.'; return; }
+  if(!nurSchauen && !confirm('Die n\u00e4chste Abbuchung von ' + mail + ' wirklich auf den '
+      + bis.split('-').reverse().join('.') + ' setzen?')) return;
+  text.textContent = 'Einen Moment \u2026';
+  try{
+    const r = await fetch('/api/abbuchung-verschieben?email=' + encodeURIComponent(mail)
+      + '&bis=' + encodeURIComponent(bis) + (nurSchauen ? '&trocken=1' : ''), {
+      headers:{ 'Authorization':'Bearer ' + await authToken() }
+    });
+    const j = await r.json().catch(function(){ return {}; });
+    if(j && j.error){ text.textContent = 'Ging nicht: ' + j.error + (j.hinweis ? ' \u2014 ' + j.hinweis : ''); return; }
+    const v = (j && j.verschoben) || [];
+    const u = (j && j.unveraendert) || [];
+    if(v.length){
+      text.textContent = (nurSchauen ? 'W\u00fcrde verschoben: ' : 'Verschoben: ')
+        + v.map(function(x){ return x.name + ' von ' + x.vorher + ' auf ' + x.nachher; }).join('; ');
+    } else if(u.length){
+      text.textContent = 'Nichts zu tun: ' + u.map(function(x){ return x.name + ' \u2014 ' + x.grund; }).join('; ');
+    } else {
+      text.textContent = 'Kein laufendes Abo gefunden, das sich verschieben l\u00e4sst.';
+    }
+  }catch(e){
+    text.textContent = 'Ging nicht: ' + String(e && e.message || e);
+  }
+}
+
 async function podcastJetzt(){
   const knopf = document.getElementById('podJetztBtn');
   const text  = document.getElementById('podJetztText');
@@ -3995,6 +4037,21 @@ async function ladeKiTeam(){
     + 'Hier kannst du den Lauf von Hand ansto\u00dfen, wenn ein Tag ausgefallen ist.</p>'
     + '<button class="btn btn-sm" id="podJetztBtn" onclick="podcastJetzt()">Folgen f\u00fcr heute erzeugen</button>'
     + '<span id="podJetztText" class="muted" style="margin-left:10px"></span>'
+  + '</div>'
+  + '<div class="card" style="margin-bottom:14px">'
+    + '<b>\u{1F4C5} Abbuchung verschieben</b>'
+    + '<p class="muted" style="margin:4px 0 10px">Setzt bei einer Person das Datum der n\u00e4chsten Abbuchung '
+    + 'nach hinten \u2014 es wird nichts berechnet und nichts erstattet, nur das Datum wandert. '
+    + 'Nach vorne geht es nie.</p>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
+      + '<input id="abbMail" type="email" placeholder="E-Mail des Mitglieds" '
+        + 'style="flex:1 1 230px;padding:9px 11px;border:1px solid #E2E8EA;border-radius:9px;font:inherit">'
+      + '<input id="abbBis" type="date" '
+        + 'style="padding:9px 11px;border:1px solid #E2E8EA;border-radius:9px;font:inherit">'
+      + '<button class="btn btn-sm btn-ghost" onclick="abbVerschieben(true)">Erst nachsehen</button>'
+      + '<button class="btn btn-sm" onclick="abbVerschieben(false)">Verschieben</button>'
+    + '</div>'
+    + '<p id="abbText" class="muted" style="margin:10px 0 0"></p>'
   + '</div>'
   + (reihen.length
       ? '<div class="card" style="padding:0;overflow:hidden">'

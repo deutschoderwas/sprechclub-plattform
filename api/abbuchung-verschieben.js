@@ -29,6 +29,21 @@
 //  Aufruf ueber die Warteschlange mail_auftraege:
 //    'abbuchung_vorschau'    -> zeigt, was er taete
 //    'abbuchung_verschieben' -> tut es
+//
+//  SEIT 9.11.2026 AUCH FUER EINE EINZELNE PERSON
+//  Julia: "masha.brinza2009@gmail.com hat Abo gekuendigt ... Ihre Mama
+//  sbrinza.pop@bk.ru uebernimmt ihren Monat und muss also im Dezember
+//  nichts zahlen, sondern erst am 01.01, kannst du den Testzeitraum
+//  fuer sie auch bis zum 31.12 machen?"
+//
+//  Dafuer gibt es jetzt zwei Zusaetze an der Adresse:
+//    ?email=<adresse>     nur diese eine Person
+//    ?bis=JJJJ-MM-TT      dieses Datum statt der festen Regel
+//  Beides zusammen, dazu ?trocken=1 zum Nachsehen ohne Anfassen.
+//  Die Vorverkaufs-Grenze (gekauft vor dem 1.11.) gilt dann nicht —
+//  wer eine Person und ein Datum nennt, meint genau die.
+//  Was sich NIE aendert: nur nach hinten, nie nach vorne, und
+//  proration_behavior 'none' — es wird nichts berechnet.
 // ============================================================
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
@@ -70,6 +85,27 @@ export default async function handler(req, res) {
   }
 
   const trocken = String(req.query?.trocken || '') === '1';
+
+  /* Eine einzelne Person und ein eigenes Datum. Fehlt beides, laeuft
+     alles wie bisher. */
+  const nurEmail = String(req.query?.email || '').trim().toLowerCase();
+  const bisRoh   = String(req.query?.bis || '').trim();
+  let zielFrei = null;
+  if (bisRoh) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(bisRoh)) {
+      return res.status(400).json({ ok: false, error: 'bis_ungueltig',
+        hinweis: 'Datum bitte als JJJJ-MM-TT, zum Beispiel 2026-12-31.' });
+    }
+    /* 23:59 Ortszeit: "bis zum 31.12." heisst, dass der 31. noch
+       dazugehoert. Um Mitternacht waere er es nicht mehr. */
+    const t = Date.parse(bisRoh + 'T23:59:00+01:00');
+    if (!t || isNaN(t)) return res.status(400).json({ ok: false, error: 'bis_ungueltig' });
+    if (t < Date.now()) {
+      return res.status(400).json({ ok: false, error: 'bis_liegt_zurueck',
+        hinweis: 'Verschoben wird nur nach hinten.' });
+    }
+    zielFrei = Math.floor(t / 1000);
+  }
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -77,9 +113,15 @@ export default async function handler(req, res) {
   const alsDatum = (sek) => new Date(sek * 1000).toISOString().slice(0, 10);
 
   try {
-    const { data: leute } = await sb.from('profiles')
-      .select('id,name,email,tier,status,stripe_customer_id,abo_stripe_status')
-      .in('tier', PREMIUM);
+    let frage = sb.from('profiles')
+      .select('id,name,email,tier,status,stripe_customer_id,abo_stripe_status');
+    /* Bei einer genannten Person zaehlt die Person, nicht die Stufe —
+       sonst faellt jemand durch, der gerade zwischen zwei Stufen steht. */
+    frage = nurEmail ? frage.ilike('email', nurEmail) : frage.in('tier', PREMIUM);
+    const { data: leute } = await frage;
+    if (nurEmail && !(leute || []).length) {
+      return res.status(404).json({ ok: false, error: 'niemand_gefunden', email: nurEmail });
+    }
 
     for (const p of (leute || [])) {
       if (!p.stripe_customer_id) continue;
@@ -101,7 +143,7 @@ export default async function handler(req, res) {
           /* Wer erst nach dem 1. November gekauft hat, faellt nicht unter
              die Regel — der zahlt nach seinem eigenen Rhythmus. */
           const begonnen = s.start_date || s.created || null;
-          if (begonnen && begonnen >= VOR_DEM_START) {
+          if (!zielFrei && begonnen && begonnen >= VOR_DEM_START) {
             bericht.uebersprungen.push({
               name: p.name || p.email, abo: s.id,
               grund: 'erst nach dem 01.11. gekauft — die Regel gilt nur fuer den Vorverkauf',
@@ -112,14 +154,14 @@ export default async function handler(req, res) {
           /* Monat oder Jahr? Danach richtet sich das Ziel. */
           const pos  = s.items && s.items.data && s.items.data[0];
           const takt = (pos && pos.price && pos.price.recurring && pos.price.recurring.interval) || null;
-          if (takt !== 'month' && takt !== 'year') {
+          if (!zielFrei && takt !== 'month' && takt !== 'year') {
             bericht.uebersprungen.push({
               name: p.name || p.email, abo: s.id,
               grund: 'Takt nicht erkennbar (' + (takt || 'keiner') + ') — lieber nichts anfassen',
             });
             continue;
           }
-          const ziel = takt === 'year' ? ZIEL_JAHR : ZIEL_MONAT;
+          const ziel = zielFrei || (takt === 'year' ? ZIEL_JAHR : ZIEL_MONAT);
 
           /* Nur nach hinten, nie nach vorne. */
           if (ende >= ziel) {
@@ -139,7 +181,8 @@ export default async function handler(req, res) {
             await sb.from('zugang_log').insert({
               user_id: p.id, email: p.email, aktion: 'abbuchung_verschoben',
               grund: 'erste Abbuchung von ' + alsDatum(ende) + ' auf ' + alsDatum(ziel)
-                     + ' — wer vor dem 01.11. kauft, zahlt erst dann wieder',
+                     + (zielFrei ? ' — von Hand gesetzt'
+                                 : ' — wer vor dem 01.11. kauft, zahlt erst dann wieder'),
               vorher:  { abo: s.id, zahlt_am: alsDatum(ende), status: s.status },
               nachher: { abo: s.id, zahlt_am: alsDatum(ziel), status: 'trialing' },
             }).then(() => {}, () => {});
