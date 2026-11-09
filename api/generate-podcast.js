@@ -75,8 +75,30 @@ const LAENGE = {
   C1: { woerter: 760, tempo: 1.00, satz: 'differenziert, mit Nebensatzketten und Nominalstil, wo es passt' }
 };
 
-const QUELLE_PRO_TAG = ['grammatik', 'aktuelles', 'alltag', 'wochenplan', 'grammatik', 'aktuelles', 'alltag'];
-//                        So            Mo            Di        Mi           Do          Fr            Sa
+/* Bis zum 9.11.2026 schrieb der Generator jeden Tag, und diese Tabelle gab
+   jedem Wochentag seine Art von Thema. Seit dem Wechsel auf Montag, Mittwoch
+   und Freitag griffen davon nur noch drei Felder — und zwei davon waren
+   „aktuelles“. Grammatik und Alltag kamen gar nicht mehr vor. Darum hat jetzt
+   jeder der drei Schreibtage seine eigene Art, angelehnt an die Rubriken, nach
+   denen Julia ihre eigenen Folgen aufnimmt:
+     Montag    — Alltag und Kultur („Typisch Deutsch“)
+     Mittwoch  — das Thema der Sprechclub-Woche
+     Freitag   — im Wechsel: Aktuelles aus Deutschland / Sprache und Wortschatz
+   Für jeden anderen Tag — also wenn jemand von Hand ?datum= setzt — bleibt die
+   Tabelle in Kraft. */
+const QUELLE_PRO_TAG = ['grammatik', 'alltag', 'alltag', 'wochenplan', 'grammatik', 'aktuelles', 'alltag'];
+//                        So            Mo       Di       Mi           Do          Fr           Sa
+
+function quelleFuerTag(datum) {
+  const d = new Date(datum + 'T12:00:00Z');
+  if (d.getUTCDay() === 5) {
+    /* Gerade Woche Aktuelles, ungerade Sprache — damit beides vorkommt,
+       ohne dass ein vierter Schreibtag nötig ist. */
+    const woche = Math.floor((d.getTime() - Date.UTC(2026, 0, 1)) / (7 * 86400000));
+    return woche % 2 === 0 ? 'aktuelles' : 'grammatik';
+  }
+  return QUELLE_PRO_TAG[d.getUTCDay()];
+}
 
 function heute() {
   // Europe/Zurich — Julias Zeitzone, sonst kippt der Tag um Mitternacht UTC.
@@ -419,8 +441,7 @@ export default async function handler(req, res) {
 
   const db = createClient(SUPA, SERVICE, { auth: { persistSession: false } });
   const datum = (req.query && req.query.datum) || heute();
-  const wochentag = new Date(datum + 'T12:00:00Z').getUTCDay();
-  const quelleHeute = (req.query && req.query.quelle) || QUELLE_PRO_TAG[wochentag];
+  const quelleHeute = (req.query && req.query.quelle) || quelleFuerTag(datum);
 
   try {
     // Gibt es den Tag schon? Dann nichts doppelt machen.
