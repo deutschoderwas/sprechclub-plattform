@@ -203,6 +203,9 @@ async function claude(system, prompt, { suche = false, maxTokens = 4000 } = {}) 
 // ---------------------------------------------------------------
 //  Schritt 1: Das Thema des Tages finden
 // ---------------------------------------------------------------
+/* Wird seit dem 9.11.2026 nicht mehr aufgerufen: ein Thema fuer alle vier
+   Niveaus will Julia ausdruecklich nicht. Bleibt als Nachschlagewerk stehen,
+   wie die einzelnen Quellen frueher recherchiert wurden. */
 async function themaFinden(db, datum, quelle) {
   const tag = wochentagName(datum);
 
@@ -312,8 +315,28 @@ async function themenJeNiveau(db, datum, quelle) {
   });
 
   const welt = NIVEAUS.map(n => `${n}: ${NIVEAU_WELT[n]}\n  Schon gehabt auf ${n}: ${bisher[n]}`).join('\n\n');
-  const was = quelle === 'grammatik'
-    ? 'Grammatik- oder Wortschatzthemen, erzählbar statt wie ein Regelbuch — '
+
+  /* Mittwoch dockt am Sprechclub an: Wer am Mittwoch hoert, soll dieselbe
+     Welt wiederfinden, ueber die er in der Woche spricht. Das stand frueher
+     nur in themaFinden und ging verloren, als die Themen je Niveau gewaehlt
+     wurden. Gleiche Welt heisst aber ausdruecklich NICHT gleiches Thema —
+     jedes Niveau bekommt seinen eigenen Ausschnitt davon. */
+  let clubWoche = '';
+  if (quelle === 'wochenplan') {
+    const { data: std } = await db.from('classes')
+      .select('title,topic,starts_at')
+      .gte('starts_at', new Date(Date.now() - 2 * 864e5).toISOString())
+      .lte('starts_at', new Date(Date.now() + 6 * 864e5).toISOString())
+      .order('starts_at').limit(40);
+    clubWoche = [...new Set((std || []).map(x => x.topic || x.title).filter(Boolean))].slice(0, 6).join(', ');
+  }
+
+  const was = clubWoche
+    ? 'Diese Woche im Sprechclub: ' + clubWoche + '. Bleib in dieser Welt, aber gib jedem Niveau '
+      + 'einen EIGENEN Ausschnitt davon — nicht viermal dasselbe aus vier Blickwinkeln, sondern '
+      + 'vier verschiedene Geschichten, die alle in diese Woche passen.'
+    : quelle === 'grammatik'
+      ? 'Grammatik- oder Wortschatzthemen, erzählbar statt wie ein Regelbuch — '
       + 'also lieber „Warum sagen Deutsche doch?" als „Modalpartikeln".'
     : quelle === 'aktuelles'
       ? 'Themen, über die in Deutschland gerade gesprochen wird. Kein Krieg, keine Katastrophen, '
@@ -327,7 +350,11 @@ async function themenJeNiveau(db, datum, quelle) {
     + `für jedes Niveau ein eigenes, inhaltlich deutlich verschieden.\n\n`
     + `Art der Themen heute: ${was}\n\n`
     + `Das passt zu welchem Niveau:\n${welt}\n\n`
-    + `Regeln: Die vier Themen dürfen einander nicht ähneln — nicht dasselbe in schwerer. `
+    + `Regeln: Es müssen VIER VERSCHIEDENE Geschichten sein. Nicht dasselbe Thema in vier `
+    + `Schwierigkeitsgraden, nicht dasselbe Thema aus vier Blickwinkeln, nicht vier Varianten `
+    + `desselben Wortes. Falsch wäre: A2 „Warum sagen Deutsche eigentlich?", B1 „Warum sagen `
+    + `Deutsche eigentlich?" — das ist dieselbe Folge zweimal. Richtig ist: vier Themen, die `
+    + `nichts miteinander zu tun haben und jedes für sich interessant sind. `
     + `Keines darf ein Thema wiederholen, das auf seinem Niveau schon dran war.\n\n`
     + `Gib genau dieses JSON zurück:\n`
     + `{"A2":{"thema":"kurz, 3-6 Wörter","hintergrund":"5-8 Sätze konkrete Inhalte, Zahlen, typische Situationen"},`
@@ -472,19 +499,38 @@ export default async function handler(req, res) {
       });
     }
 
-    /* Erst vier eigene Themen versuchen. Geht das schief, bekommen alle
-       dasselbe — so wie frueher. Lieber vier gleiche Folgen als keine. */
-    let themen = null, quelle = quelleHeute, thema = '', hintergrund = '';
-    try {
-      themen = await themenJeNiveau(db, datum, quelleHeute);
-    } catch (e) {
-      themen = null;
+    /* Julia, 9.11.2026: „nicht dasselbe Thema zu jedem Niveau, das ist
+       quatsch." Vorher stand hier ein Notnagel, der bei einem Fehlschlag
+       allen vier Niveaus dasselbe Thema gab — genau das, was sie nicht
+       will. Jetzt: zwei Versuche, und wenn beide scheitern, wird HEUTE
+       nichts geschrieben. Ein fehlender Tag ist besser als vier gleiche
+       Folgen; nachholen geht jederzeit über den Knopf im Admin.
+       Zusätzlich wird geprüft, dass die vier Themen wirklich verschieden
+       sind — ein Modell, das viermal dasselbe zurückgibt, zählt als
+       Fehlschlag. */
+    let themen = null;
+    const quelle = quelleHeute;
+    let themenFehler = '';
+    for (let versuch = 1; versuch <= 2 && !themen; versuch++) {
+      try {
+        const vorschlag = await themenJeNiveau(db, datum, quelleHeute);
+        const namen = NIVEAUS.map(n => String((vorschlag[n] || {}).thema || '').trim().toLowerCase());
+        if (namen.some(t => !t)) throw new Error('ein Niveau ohne Thema');
+        if (new Set(namen).size < NIVEAUS.length) throw new Error('Themen doppelt: ' + namen.join(' | '));
+        themen = vorschlag;
+      } catch (e) {
+        themenFehler = String((e && e.message) || e).slice(0, 300);
+      }
     }
     if (!themen) {
-      const eins = await themaFinden(db, datum, quelleHeute);
-      quelle = eins.quelle; thema = eins.thema; hintergrund = eins.hintergrund;
-      themen = {};
-      NIVEAUS.forEach(n => { themen[n] = { thema: eins.thema, hintergrund: eins.hintergrund }; });
+      await weiterAnAudio();
+      return res.status(503).json({
+        ok: false, error: 'themen_nicht_gefunden', datum, quelle,
+        info: 'Für heute wurden keine vier verschiedenen Themen gefunden. '
+            + 'Es wurde bewusst nichts geschrieben — vier gleiche Folgen will niemand. '
+            + 'Im Admin auf „Folgen für heute erzeugen" drücken, dann wird es erneut versucht.',
+        letzter_befund: themenFehler
+      });
     }
 
     // Alle fehlenden Niveaus gleichzeitig schreiben lassen — das spart Zeit.
