@@ -43,7 +43,8 @@ async function agentDa() {
    im Server steht und die andere in der Seite; sie heissen absichtlich
    gleich, damit man beide findet.
    ------------------------------------------------------------ */
-const SPRECHEN_AUS = true;
+/* 9.11.2026: wieder an (Julia: "ich habe Elevenlabs upgegradet") */
+const SPRECHEN_AUS = false;
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=120');
