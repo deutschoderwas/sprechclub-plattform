@@ -120,7 +120,9 @@
       +   '<button class="as-zurueck" onclick="go(\'sprechen\')" aria-label="Zurück">←</button>'
       +   '<div><span class="as-eb">Live · sie hört dir zu</span>'
       +   '<h2>Mit Amanda sprechen</h2>'
-      +   '<p>Einfach reden. Sie antwortet sofort, und du darfst ihr ins Wort fallen.</p></div>'
+      +   (window.AM_THEMA
+             ? '<p class="as-thema"><span>Thema</span>' + E(window.AM_THEMA_ANZEIGE || window.AM_THEMA) + '</p>'
+             : '<p>Einfach reden. Sie antwortet sofort, und du darfst ihr ins Wort fallen.</p>') + '</div>'
       + '</div>'
       + '<div class="as-buehne aus" id="asBuehne">'
       +   '<div class="as-figur">'
@@ -134,6 +136,7 @@
       +   '<p class="as-uhr" id="asUhr"></p>'
       +   '<div class="as-knoepfe" id="asKnoepfe"></div>'
       + '</div>'
+      + '<div class="as-auswertung" id="asAuswertung"></div>'
       + '<div class="as-mit" id="asMit"></div>'
       + '<details class="as-archiv" id="asArchiv">'
       +   '<summary><b>Deine Mitschrift</b>'
@@ -345,7 +348,8 @@
 
     erst
       .then(function () {
-        return ruf({ quelle: 'sprechen', thema: '', anbieter: (anbieter || ANBIETER) });
+        /* Das Thema kommt aus der Sprech-Zentrale (Diskutieren, 9.11.2026) */
+        return ruf({ quelle: 'sprechen', thema: String(window.AM_THEMA || '').slice(0, 80), anbieter: (anbieter || ANBIETER) });
       })
       .then(function (a) {
         if (a.status === 503) throw new Error('nicht_eingerichtet');
@@ -489,10 +493,95 @@
       if (z) z.textContent = 'Deine Sprechminuten für diesen Monat sind aufgebraucht.';
     }
 
+    if (sek >= 20 && !sofortWeg) auswerten(G.mitschrift.slice());
+
     if (id) ruf({ aktion: 'ende', gespraech: id, sekunden: sek,
                   gespraech_id: gespraechId, grund: grund })
       .catch(function () {});
   }
+
+  /* ============================================================
+     Die Auswertung (9.11.2026, nach dem Blick auf Talkpal)
+     Nach dem Auflegen: was gut war, was man besser sagen kann, neue
+     Wörter. Korrekturen gehen mit einem Klick in den Fehler-Trainer,
+     Wörter in den Vokabeltrainer. Nichts wird ungefragt gespeichert.
+     ============================================================ */
+  var AW = null;
+  function auswerten(zeilen) {
+    var ziel = el('asAuswertung'); if (!ziel) return;
+    var eigene = zeilen.filter(function (z) { return z.wer === 'du'; });
+    if (eigene.length < 2) return;
+    ziel.innerHTML = '<div class="as-aw"><p class="as-aw-lädt">Amanda schaut sich dein Gespräch an …</p></div>';
+    var niveau = '';
+    try { niveau = window.ICH ? window.ICH.niveau() : ''; } catch (e) {}
+    token().then(function (t) {
+      return fetch('/api/sprech-auswertung', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t },
+        body: JSON.stringify({ zeilen: zeilen, niveau: niveau, thema: window.AM_THEMA || '' })
+      }).then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); });
+    }).then(function (a) {
+      if (!a.j || !a.j.ok) { ziel.innerHTML = ''; return; }
+      AW = a.j; awZeichnen();
+      try { ziel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+    }).catch(function () { ziel.innerHTML = ''; });
+  }
+  function awZeichnen() {
+    var ziel = el('asAuswertung'); if (!ziel || !AW) return;
+    var h = '<section class="as-aw"><p class="as-aw-kick">Deine Auswertung</p>';
+    if (AW.gut && AW.gut.length) {
+      h += '<h3>Das war gut</h3><ul class="as-aw-gut">'
+        + AW.gut.map(function (x) { return '<li>' + E(x) + '</li>'; }).join('') + '</ul>';
+    }
+    if (AW.korrekturen && AW.korrekturen.length) {
+      h += '<h3>So klingt es noch besser</h3><div class="as-aw-liste">'
+        + AW.korrekturen.map(function (k, i) {
+          return '<div class="as-aw-k">'
+            + '<p class="du">' + E(k.du) + '</p>'
+            + '<p class="besser">' + E(k.besser) + '</p>'
+            + (k.warum ? '<p class="warum">' + E(k.warum) + '</p>' : '')
+            + '<button type="button" class="as-aw-b" id="awK' + i + '" onclick="amAwFehler(' + i + ')">'
+            + (k._drin ? 'Im Fehler-Trainer' : 'In den Fehler-Trainer') + '</button></div>';
+        }).join('') + '</div>';
+    } else {
+      h += '<h3>So klingt es noch besser</h3><p class="as-aw-leer">Amanda hat keinen Fehler gefunden. Stark.</p>';
+    }
+    if (AW.woerter && AW.woerter.length) {
+      h += '<h3>Wörter aus dem Gespräch</h3><div class="as-aw-liste">'
+        + AW.woerter.map(function (w, i) {
+          return '<div class="as-aw-w"><div><b>' + E((w.artikel ? w.artikel + ' ' : '') + w.wort) + '</b>'
+            + (w.bedeutung ? '<span>' + E(w.bedeutung) + '</span>' : '')
+            + (w.bsp ? '<i>' + E(w.bsp) + '</i>' : '') + '</div>'
+            + '<button type="button" class="as-aw-b" id="awW' + i + '" onclick="amAwWort(' + i + ')">'
+            + (w._drin ? 'Gemerkt' : 'Merken') + '</button></div>';
+        }).join('') + '</div>';
+    }
+    if (AW.weiter) h += '<p class="as-aw-weiter"><b>Als Nächstes:</b> ' + E(AW.weiter) + '</p>';
+    h += '<div class="as-aw-fuss">'
+      + '<button type="button" class="as-aw-haupt" onclick="amStimmeStart()">Noch ein Gespräch</button>'
+      + '<button type="button" class="as-aw-neben" onclick="go(\'sprechen\')">Zur Sprech-Übersicht</button></div>'
+      + '</section>';
+    ziel.innerHTML = h;
+  }
+  /* Auch von aussen aufrufbar (App, Tests): Auswertung zu einer Mitschrift */
+  window.amAuswerten = auswerten;
+  window.amAwFehler = function (i) {
+    var k = AW && AW.korrekturen && AW.korrekturen[i]; if (!k || k._drin || !window.sb) return;
+    k._drin = true; awZeichnen();
+    window.sb.from('fehler_trainer').insert({
+      corrected: k.besser, topic: k.thema || null,
+      note: 'Du hast gesagt: „' + k.du + '“' + (k.warum ? ' — ' + k.warum : '')
+    }).then(function (r) { if (r && r.error) { k._drin = false; awZeichnen(); } }, function () { k._drin = false; awZeichnen(); });
+  };
+  window.amAwWort = function (i) {
+    var w = AW && AW.woerter && AW.woerter[i]; if (!w || w._drin) return;
+    if (typeof window.vokMerken !== 'function') return;
+    w._drin = true; awZeichnen();
+    var niveau = ''; try { niveau = window.ICH ? window.ICH.niveau() : ''; } catch (e) {}
+    Promise.resolve(window.vokMerken({ wort: w.wort, artikel: w.artikel, bedeutung: w.bedeutung, bsp: w.bsp,
+      niveau: niveau || 'B1', thema: 'Aus den Gesprächen mit Amanda' }))
+      .then(function (ok) { if (!ok) { w._drin = false; awZeichnen(); } });
+  };
 
   /* Wer den Tab zumacht, legt auch auf — sonst laeuft die Uhr weiter. */
   window.addEventListener('pagehide', function () {
@@ -536,6 +625,30 @@
       '.as-kopf h2{font-family:var(--schrift-titel,"Caveat Brush",cursive);font-weight:400;',
       '  font-size:clamp(27px,4.6vw,36px);margin:0 0 5px;line-height:1.05;color:var(--as-ink)}',
       '.as-kopf p{margin:0;color:var(--as-soft);font-size:14.5px;line-height:1.5;max-width:46ch}',
+      '.as-kopf .as-thema{color:var(--as-ink);font-weight:600;font-size:15px}',
+      '.as-thema span{display:inline-block;margin-right:8px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--as-teal-d)}',
+      '.as-aw{margin:18px 0 0;background:var(--as-paper);border:1px solid var(--as-line);border-radius:18px;padding:20px 20px 18px;box-shadow:var(--as-schatten)}',
+      '.as-aw-lädt{margin:0;color:var(--as-soft);font-size:14.5px}',
+      '.as-aw-kick{margin:0 0 4px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--as-teal-d)}',
+      '.as-aw h3{font-family:"Space Grotesk",Inter,sans-serif;font-size:17px;margin:16px 0 8px;color:var(--as-ink)}',
+      '.as-aw-gut{margin:0;padding-left:18px;color:var(--as-ink);font-size:14.5px;line-height:1.55}',
+      '.as-aw-liste{display:grid;gap:8px}',
+      '.as-aw-k,.as-aw-w{border:1px solid var(--as-line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}',
+      '.as-aw-k p{margin:0;font-size:14.5px;line-height:1.45}',
+      '.as-aw-k .du{color:var(--as-soft);text-decoration:line-through;text-decoration-color:rgba(212,42,33,.55)}',
+      '.as-aw-k .besser{color:var(--as-ink);font-weight:600}',
+      '.as-aw-k .warum{color:var(--as-soft);font-size:13.5px}',
+      '.as-aw-w{flex-direction:row;align-items:center;justify-content:space-between;gap:12px}',
+      '.as-aw-w b{display:block;font-size:15px;color:var(--as-ink)}',
+      '.as-aw-w span{display:block;font-size:13.5px;color:var(--as-soft)}',
+      '.as-aw-w i{display:block;font-size:13px;color:var(--as-soft);margin-top:2px}',
+      '.as-aw-b{align-self:flex-start;flex:none;border:1px solid var(--as-line);background:var(--as-creme);border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;font-weight:700;color:var(--as-teal-d);cursor:pointer}',
+      '.as-aw-b:hover{border-color:var(--as-teal-d)}',
+      '.as-aw-leer{margin:0;color:var(--as-soft);font-size:14.5px}',
+      '.as-aw-weiter{margin:16px 0 0;font-size:14.5px;color:var(--as-ink);line-height:1.5}',
+      '.as-aw-fuss{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}',
+      '.as-aw-haupt{border:0;background:#14708B;color:#fff;border-radius:999px;padding:11px 20px;font:inherit;font-weight:700;cursor:pointer}',
+      '.as-aw-neben{border:1px solid var(--as-line);background:var(--as-paper);border-radius:999px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;color:var(--as-ink)}',
       /* Die Buehne — hier steht Amanda */
       '.as-buehne{--laut:0;position:relative;overflow:hidden;',
       '  display:flex;flex-direction:column;align-items:center;gap:13px;text-align:center;',

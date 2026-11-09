@@ -258,16 +258,21 @@
         });
       }).join('');
 
-    v.innerHTML = kopf('Sprechen', 'Echte Situationen durchspielen — so oft du willst, ohne Zuschauer.')
+    v.innerHTML = kopf('Sprechen', 'Such dir aus, wie du heute sprechen willst. So oft du willst, ohne Zuschauer.')
+      /* 9.11.2026: die Sprechmodi aus sprech-zentrale.js stehen oben
+         (Telefonieren, Diskutieren, Rollenspiel, Nachsprechen, Aussprache).
+         Fehlt die Datei, bleibt das alte Band. */
+      + (window.sprechModiHtml ? window.sprechModiHtml() : '')
       /* Amanda steht oben, noch vor dem Sprechclub: sie ist rund um
          die Uhr da, der Club einmal am Abend. Wer sprechen will,
          soll nicht erst bis morgen warten muessen. */
       /* Nur, wenn Amanda auch wirklich sprechen kann. Der Schalter
          steht in konto.html (AMANDA_SPRECHEN_AUS) und in api/kann.js. */
-      + (window.AMANDA_SPRECHEN_AUS ? '' : band({ em: '🎙️', t: 'Mit Amanda sprechen',
+      + ((window.AMANDA_SPRECHEN_AUS || window.sprechModiHtml) ? '' : band({ em: '🎙️', t: 'Mit Amanda sprechen',
                u: 'Sie hört zu und antwortet sofort — in Julias Stimme',
                tun: "go('amandasprechen')" }))
       + '<div id="hbClub"></div>'
+      + '<h2 class="hb-rollen">Rollenspiele</h2>'
       + reiter('sprechen', SPRECHREITER)
       + '<p class="hb-hin">' + D.length + ' Gespräche in ' + Object.keys(nach).length + ' Bereichen. '
       + 'Amanda antwortet und verbessert dich, wenn etwas nicht stimmt.</p>'
@@ -613,6 +618,7 @@
       '  cursor:pointer;background:#fff;border:1.5px solid var(--hb-line);border-radius:14px;padding:13px 15px;margin-bottom:9px}',
       '.hb-d:hover{border-color:var(--hb-turq)}',
       '.hb-d-em{font-size:21px;flex:0 0 auto}',
+      '.hb-rollen{font-family:"Space Grotesk",Inter,sans-serif;font-size:20px;margin:26px 0 10px}',
       '.hb-d-lv.meins{background:var(--hb-turq-ink);color:#fff}',
       '.hb-d-bild{flex:0 0 auto;width:76px;height:52px;border-radius:10px;overflow:hidden;background:#EEF2F6}',
       '.hb-d-bild img{width:100%;height:100%;object-fit:cover;display:block}',
