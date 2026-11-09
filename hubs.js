@@ -350,22 +350,23 @@
   }
 
   /* ============================================================
-     MEDIEN — Reels · Podcast · Videos
-     ============================================================ */
-  var MEDIENREITER = [['reels', 'Reels'], ['podcast', 'Podcast'], ['videos', 'Videos']];
+     MEDIEN — der Podcast
 
+     Julia, 9.11.2026: "das wegmachen, nur die Podcasts lassen und in
+     einer schoenen form mit echten thumbnails nach Niveau sortiert
+     schoen visuell wie bei Spotify oder talkpal".
+
+     Die Reiter "Reels" und "Videos" sind weg. Beide waren leer und
+     sagten das auch ehrlich — aber zwei von drei Reitern, hinter denen
+     nichts liegt, lassen die Seite aermer aussehen, als sie ist.
+     Neunundvierzig Folgen stehen bereit; die gehoeren nach vorn.
+     ============================================================ */
   window.renderMedien = function () {
     var v = el('v-medien'); if (!v) return;
     stil();
-    var hin = {
-      reels:   'Kurz, lustig, ein Wort pro Clip — wie auf Instagram, nur sortiert.',
-      podcast: 'Julias Folgen zum Hören, jede mit Text zum Mitlesen.',
-      videos:  'Längere Erklärungen zum Ansehen.'
-    }[offen.medien];
+    offen.medien = 'podcast';
 
-    v.innerHTML = kopf('Medien', 'Hören und schauen, wann es dir passt.')
-      + reiter('medien', MEDIENREITER)
-      + '<p class="hb-hin">' + E(hin) + '</p>'
+    v.innerHTML = kopf('Podcast', 'Julias Folgen zum Hören — jede mit Text zum Mitlesen.')
       + '<div id="hbMedien">' + leer('Einen Moment …') + '</div>'
       + '<div class="hb-werkzeug">'
       +   band({ em: '📄', t: 'Material', u: 'Handouts zu deinen Stunden', tun: "go('materialien')", ruhig: true })
@@ -390,7 +391,6 @@
      ============================================================ */
   var STUFEN_ORD = ['A1', 'A2', 'B1', 'B2', 'C1'];
   var pcGehoert = {};        // id -> true
-  var pcOffeneStufe = null;  // welche Niveaugruppe ist aufgeklappt
 
   function meineStufe() {
     try {
@@ -441,37 +441,62 @@
     } catch (e) {}
   }
 
-  function folgeZeile(x) {
-    var marken = '';
-    if (pcGehoert[x.id])      marken += '<span class="pc-mark fertig">gehört</span>';
-    else if (pcNeu(x.datum))  marken += '<span class="pc-mark neu">neu</span>';
-    return '<button class="pc-zeile" onclick="hubPodcast(\'' + E(x.id) + '\')">'
-      + '<span class="pc-play" aria-hidden="true">▶</span>'
-      + '<span class="pc-txt">'
+  /* Eine Kachel. Das Bild traegt sie — der Text sitzt darunter, nicht
+     darauf: Die Titel sind lang, und ueber einem Bild ist langer Text
+     entweder zu klein oder deckt das Bild zu. */
+  var PC_FARBE = { A1:'#7FC97F', A2:'#5AC8E0', B1:'#F0C64A', B2:'#E8695A', C1:'#9B6BC9' };
+
+  function folgeKachel(x) {
+    var marke = '';
+    if (pcGehoert[x.id])     marke = '<span class="pk-marke fertig">✓ gehört</span>';
+    else if (pcNeu(x.datum)) marke = '<span class="pk-marke neu">neu</span>';
+    var farbe = PC_FARBE[(x.level || '').toUpperCase()] || '#8FA3AC';
+    /* Faellt das Bild aus, bleibt eine farbige Flaeche mit dem Niveau
+       stehen — besser als ein kaputtes Bildsymbol. */
+    var bild = x.bild
+      ? '<img src="' + E(x.bild) + '" alt="" loading="lazy" decoding="async"'
+        + ' onerror="this.style.display=\'none\'">'
+      : '';
+    return '<button class="pk" onclick="hubPodcast(\'' + E(x.id) + '\')" '
+      +   'style="--pk-f:' + farbe + '">'
+      /* Das Niveau steht schon auf dem Cover — ein zweites Schild
+         daneben waere nur Doppelung. Beim Nachsehen im Bild
+         aufgefallen: auf jeder Kachel stand "B1" zweimal. */
+      + '<span class="pk-bild">' + bild
+      +   (marke || '')
+      +   '<span class="pk-play" aria-hidden="true">▶</span></span>'
+      + '<span class="pk-tx">'
       +   '<b>' + E(x.titel || 'Folge') + '</b>'
-      +   (x.thema ? '<small>' + E(x.thema) + '</small>' : '')
-      + '</span>'
-      + '<span class="pc-meta">' + marken
-      +   (x.dauer ? '<span class="pc-dauer">' + E(x.dauer) + '</span>' : '')
-      +   '<span class="pc-tag">' + E(pcDatum(x.datum)) + '</span>'
+      +   '<small>' + (x.dauer ? E(x.dauer) + ' · ' : '') + E(pcDatum(x.datum)) + '</small>'
       + '</span></button>';
   }
 
-  function gruppeHtml(stufe, liste, auf, eigene) {
-    var kopfText = eigene ? 'Dein Niveau · ' + stufe : stufe;
-    return '<section class="pc-gruppe' + (auf ? ' auf' : '') + '">'
-      + '<button class="pc-gruppe-kopf" onclick="hubPodcastStufe(\'' + E(stufe) + '\')" '
-      +   'aria-expanded="' + (auf ? 'true' : 'false') + '">'
-      +   '<b>' + E(kopfText) + '</b>'
-      +   '<span class="pc-anzahl">' + liste.length + (liste.length === 1 ? ' Folge' : ' Folgen') + '</span>'
-      +   '<span class="pc-pfeil" aria-hidden="true">' + (auf ? '▾' : '▸') + '</span>'
-      + '</button>'
-      + (auf ? '<div class="pc-liste">' + liste.map(folgeZeile).join('') + '</div>' : '')
+  /* Wie viele Kacheln eine Reihe zeigt, bevor "alle zeigen" kommt.
+     Acht, weil das auf dem Rechner zwei volle Reihen sind und auf dem
+     Handy vier — genug, um das Niveau zu erfassen, wenig genug, dass
+     man die anderen Niveaus noch sieht, ohne ewig zu scrollen. */
+  var PK_VORSCHAU = 8;
+  var pcAlle = {};   // stufe -> true, wenn ganz ausgeklappt
+
+  function gruppeHtml(stufe, liste, eigene) {
+    var ganz = !!pcAlle[stufe];
+    var zeig = ganz ? liste : liste.slice(0, PK_VORSCHAU);
+    var rest = liste.length - zeig.length;
+    return '<section class="pk-gruppe">'
+      + '<div class="pk-kopf">'
+      +   '<h3>' + E(stufe) + (eigene ? '<span class="pk-dein">dein Niveau</span>' : '') + '</h3>'
+      +   '<span class="pk-anzahl">' + liste.length + (liste.length === 1 ? ' Folge' : ' Folgen') + '</span>'
+      + '</div>'
+      + '<div class="pk-raster">' + zeig.map(folgeKachel).join('') + '</div>'
+      + (rest > 0 || ganz
+          ? '<button class="pk-mehr" onclick="hubPodcastStufe(\'' + E(stufe) + '\')">'
+            + (ganz ? 'Weniger zeigen' : 'Alle ' + liste.length + ' Folgen zeigen') + '</button>'
+          : '')
       + '</section>';
   }
 
   window.hubPodcastStufe = function (stufe) {
-    pcOffeneStufe = (pcOffeneStufe === stufe) ? null : stufe;
+    pcAlle[stufe] = !pcAlle[stufe];
     podcastZeichnen();
   };
 
@@ -498,50 +523,34 @@
     if (meine && nach[meine]) {
       stufen = [meine].concat(stufen.filter(function (s) { return s !== meine; }));
     }
-    if (pcOffeneStufe === null) pcOffeneStufe = (meine && nach[meine]) ? meine : stufen[0];
 
     var offeneZahl = pcFolgen.length;
     var neueZahl = pcFolgen.filter(function (x) { return !pcGehoert[x.id] && pcNeu(x.datum); }).length;
 
     ziel.innerHTML =
+      /* "jede mit Text zum Mitlesen" stand hier und gleich darueber in
+         der Unterzeile - einmal reicht. */
       '<p class="pc-summe">' + offeneZahl + (offeneZahl === 1 ? ' Folge' : ' Folgen')
-        + ' · jede mit Text zum Mitlesen'
         + (neueZahl ? ' · <b>' + neueZahl + ' neu für dich</b>' : '') + '</p>'
-      + stufen.map(function (s) {
-          return gruppeHtml(s, nach[s], s === pcOffeneStufe, s === meine);
-        }).join('')
+      + stufen.map(function (s) { return gruppeHtml(s, nach[s], s === meine); }).join('')
       + (meine ? '' : '<p class="pc-fuss">Wenn du deine Stufe im Lernbereich festlegst, steht sie hier oben.</p>');
   }
 
   function medienLaden() {
     var ziel = el('hbMedien'); if (!ziel) return;
-
-    if (offen.medien === 'podcast') {
-      if (pcFolgen !== null || pcFehler) { podcastZeichnen(); return; }
-      var c = window.sb;
-      if (!c) { ziel.innerHTML = leer('Der Podcast lädt, sobald du angemeldet bist.'); return; }
-      ziel.innerHTML = leer('Einen Moment …');
-      /* Nur veroeffentlichte Folgen mit Tondatei — Entwuerfe und
-         Fehlschlaege haben im Schuelerbereich nichts verloren. */
-      c.from('podcasts').select('id,titel,level,dauer,thema,kurz,bild,datum')
-        .eq('status', 'live').not('datei', 'is', null)
-        .order('datum', { ascending: false }).limit(200)
-        .then(function (r) {
-          pcFolgen = ((r && r.data) || []).filter(function (x) { return x && x.id; });
-          gehoertHolen(podcastZeichnen);
-        }, function () { pcFehler = true; podcastZeichnen(); });
-      return;
-    }
-
-    /* Reels und Videos: noch nicht gefuellt — ehrlich sagen statt
-       leere Kacheln zeigen. */
-    var was = offen.medien === 'reels' ? 'Reels' : 'Videos';
-    ziel.innerHTML = '<div class="hb-bald">'
-      + '<span class="hb-bald-em">' + (offen.medien === 'reels' ? '🎬' : '📺') + '</span>'
-      + '<b>' + was + ' kommen als Nächstes</b>'
-      + '<small>Julia füllt diesen Bereich gerade. Bis dahin: schau in den Podcast oder in deinen Kurs.</small>'
-      + '<button class="hb-btn" onclick="hubReiter(\'medien\',\'podcast\')">Zum Podcast</button>'
-      + '</div>';
+    if (pcFolgen !== null || pcFehler) { podcastZeichnen(); return; }
+    var c = window.sb;
+    if (!c) { ziel.innerHTML = leer('Der Podcast lädt, sobald du angemeldet bist.'); return; }
+    ziel.innerHTML = leer('Einen Moment …');
+    /* Nur veroeffentlichte Folgen mit Tondatei — Entwuerfe und
+       Fehlschlaege haben im Schuelerbereich nichts verloren. */
+    c.from('podcasts').select('id,titel,level,dauer,thema,kurz,bild,datum')
+      .eq('status', 'live').not('datei', 'is', null)
+      .order('datum', { ascending: false }).limit(200)
+      .then(function (r) {
+        pcFolgen = ((r && r.data) || []).filter(function (x) { return x && x.id; });
+        gehoertHolen(podcastZeichnen);
+      }, function () { pcFehler = true; podcastZeichnen(); });
   }
   window.hubPodcast = function (id) {
     try { gehoertMerken(id); } catch (e) {}
@@ -655,35 +664,57 @@
       '.hb-bald .hb-btn{margin-top:8px}',
 
       /* ---- Podcast: nach Niveau geordnet ---- */
-      '.pc-summe{color:var(--hb-soft);font-size:14px;margin:0 0 14px}',
+      '.pc-summe{color:var(--hb-soft);font-size:14px;margin:0 0 18px}',
       '.pc-summe b{color:var(--hb-ink);font-weight:650}',
-      '.pc-gruppe{background:#fff;border:1.5px solid var(--hb-line);border-radius:16px;',
-      '  margin:0 0 10px;overflow:hidden}',
-      '.pc-gruppe.auf{border-color:#D7DEE2}',
-      '.pc-gruppe-kopf{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;',
-      '  font:inherit;text-align:left;padding:15px 17px;cursor:pointer;color:var(--hb-ink)}',
-      '.pc-gruppe-kopf:hover{background:#FAFBFC}',
-      '.pc-gruppe-kopf b{font-size:16px;flex:1;letter-spacing:-.01em}',
-      '.pc-anzahl{color:var(--hb-soft);font-size:13.5px}',
-      '.pc-pfeil{color:var(--hb-soft);font-size:13px;width:14px;text-align:center}',
-      '.pc-liste{border-top:1px solid var(--hb-line)}',
-      '.pc-zeile{display:flex;align-items:center;gap:13px;width:100%;background:none;border:none;',
-      '  font:inherit;text-align:left;padding:13px 17px;cursor:pointer;color:var(--hb-ink);',
-      '  border-bottom:1px solid #F1F4F6}',
-      '.pc-zeile:last-child{border-bottom:none}',
-      '.pc-zeile:hover{background:#FAFBFC}',
-      '.pc-play{flex:0 0 32px;height:32px;border-radius:50%;background:var(--hb-ink);color:#fff;',
-      '  display:flex;align-items:center;justify-content:center;font-size:11px;padding-left:2px}',
-      '.pc-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}',
-      '.pc-txt b{font-size:15px;font-weight:600;line-height:1.3}',
-      '.pc-txt small{color:var(--hb-soft);font-size:13px;line-height:1.35;',
-      '  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-      '.pc-meta{flex:0 0 auto;display:flex;align-items:center;gap:8px;color:var(--hb-soft);font-size:12.5px}',
-      '.pc-dauer{font-variant-numeric:tabular-nums}',
-      '.pc-tag{display:none}',
-      '.pc-mark{font-size:11.5px;font-weight:650;border-radius:999px;padding:3px 9px;letter-spacing:.01em}',
-      '.pc-mark.neu{background:#FDECEC;color:#B3261E}',
-      '.pc-mark.fertig{background:#EDF6F0;color:#1F7A47}',
+
+      /* ---- Der Podcast als Kacheln ----
+         Julia, 9.11.2026: "in einer schoenen form mit echten
+         thumbnails nach Niveau sortiert schoen visuell wie bei
+         Spotify oder talkpal".
+         Das Bild ist quadratisch wie ein Albumcover; der Titel steht
+         darunter, weil die Titel lang sind und ueber dem Bild
+         entweder zu klein waeren oder es zudecken wuerden. */
+      '.pk-gruppe{margin:0 0 30px}',
+      '.pk-kopf{display:flex;align-items:baseline;gap:12px;margin:0 0 12px}',
+      '.pk-kopf h3{font-size:19px;margin:0;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}',
+      '.pk-dein{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;',
+      '  background:var(--hb-turq);color:#fff;border-radius:999px;padding:3px 9px}',
+      '.pk-anzahl{color:var(--hb-soft);font-size:13.5px;margin-left:auto}',
+      '.pk-raster{display:grid;gap:16px 14px;grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}',
+      '.pk{display:flex;flex-direction:column;gap:9px;background:none;border:0;padding:0;',
+      '  text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%}',
+      '.pk-bild{position:relative;display:block;aspect-ratio:1/1;border-radius:14px;overflow:hidden;',
+      '  background:var(--pk-f);box-shadow:0 6px 18px -8px rgba(20,24,27,.45);',
+      '  transition:transform .18s ease,box-shadow .18s ease}',
+      '.pk-bild img{width:100%;height:100%;object-fit:cover;display:block}',
+      '.pk:hover .pk-bild{transform:translateY(-3px);box-shadow:0 14px 28px -10px rgba(20,24,27,.5)}',
+      '.pk-marke{position:absolute;top:8px;right:8px;font-size:11px;font-weight:700;',
+      '  padding:3px 8px;border-radius:999px}',
+      '.pk-marke.neu{background:#D83636;color:#fff}',
+      '.pk-marke.fertig{background:rgba(255,255,255,.92);color:#1F7A47}',
+      /* Der Knopf sitzt unten rechts wie bei Spotify und faehrt beim
+         Zeigen heraus. Auf dem Handy ist er immer da — dort gibt es
+         kein Zeigen. */
+      '.pk-play{position:absolute;right:9px;bottom:9px;width:38px;height:38px;border-radius:50%;',
+      '  background:#fff;color:#14181B;display:grid;place-items:center;font-size:13px;',
+      '  box-shadow:0 6px 16px rgba(20,24,27,.3);opacity:0;transform:translateY(6px);',
+      '  transition:opacity .18s ease,transform .18s ease}',
+      '.pk:hover .pk-play,.pk:focus-visible .pk-play{opacity:1;transform:none}',
+      '.pk-tx{display:block;min-width:0}',
+      '.pk-tx b{display:block;font-size:14.5px;font-weight:600;line-height:1.32;',
+      '  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '.pk-tx small{display:block;color:var(--hb-soft);font-size:12.5px;margin-top:3px;',
+      '  font-variant-numeric:tabular-nums}',
+      '.pk-mehr{margin:14px 0 0;background:none;border:1.5px solid var(--hb-line);border-radius:999px;',
+      '  padding:9px 18px;font:inherit;font-size:13.5px;font-weight:650;color:var(--hb-ink);cursor:pointer}',
+      '.pk-mehr:hover{border-color:#C9D3D8;background:#FAFBFC}',
+      '@media(hover:none){.pk-play{opacity:1;transform:none}}',
+      '@media(max-width:560px){',
+      '  .pk-raster{gap:14px 10px;grid-template-columns:repeat(2,1fr)}',
+      '  .pk-kopf h3{font-size:17px}',
+      '  .pk-tx b{font-size:13.5px}',
+      '  .pk-play{width:34px;height:34px;right:7px;bottom:7px}',
+      '}',
       '.pc-fuss{color:var(--hb-soft);font-size:13.5px;margin:14px 0 0;line-height:1.5}',
       '@media(min-width:560px){.pc-tag{display:inline}}',
       /* Handy: Kacheln zu zweit, wie im App-Entwurf */
