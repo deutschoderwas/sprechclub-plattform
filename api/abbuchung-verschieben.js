@@ -178,6 +178,15 @@ export default async function handler(req, res) {
               trial_end: ziel,
               proration_behavior: 'none',
             });
+            /* Julia, 9.11.2026: Stripe allein genuegt nicht. Unser eigenes
+               abo_ende blieb auf dem alten Datum stehen — die taegliche
+               Mitgliedschaftspruefung haette Svetlana am 1.12. archiviert,
+               obwohl Stripe erst am 31.12. abbucht. Also wandert das Datum
+               auf beiden Seiten. */
+            await sb.from('profiles')
+              .update({ abo_ende: new Date(ziel * 1000).toISOString(), abo_stripe_status: 'trialing' })
+              .eq('id', p.id)
+              .then(() => {}, () => {});
             await sb.from('zugang_log').insert({
               user_id: p.id, email: p.email, aktion: 'abbuchung_verschoben',
               grund: 'erste Abbuchung von ' + alsDatum(ende) + ' auf ' + alsDatum(ziel)
