@@ -2537,7 +2537,11 @@
     try{
       window._lessonCh = sb.channel('lesson-'+STUNDE)
         .on('broadcast', { event:'lesson' }, ({payload})=>{ if(payload && payload.url){ _lektion=payload.url; zeigeKopf(); } })
+        .on('broadcast', { event:'karte' }, ({payload})=>{ try{ var ifr=document.getElementById('lektion'); if(ifr && ifr.contentWindow && payload && typeof payload.pos==='number'){ ifr.contentWindow.postMessage({ type:'dow-karte-show', pos:payload.pos, bereich:payload.bereich, niveau:payload.niveau }, '*'); } }catch(e){} })
         .subscribe();
+      // Sprechkarten-Impuls aus der Lektion (iframe): wenn jemand eine Karte oeffnet,
+      // an ALLE weiterreichen, damit dieselbe Karte bei allen aufpoppt. (Schliessen bleibt lokal.)
+      if(!window._karteRelay){ window._karteRelay=true; window.addEventListener('message', function(ev){ var d=ev.data; if(!d || d.type!=='dow-karte-open' || typeof d.pos!=='number') return; try{ if(window._lessonCh) window._lessonCh.send({ type:'broadcast', event:'karte', payload:{ pos:d.pos, bereich:d.bereich, niveau:d.niveau } }); }catch(e){} }); }
     }catch(e){ console.warn('Lesson-Kanal', e); }
     // WICHTIG: Realtime mit dem Login-Token authentifizieren, sonst blockiert RLS
     // die Live-Updates für Schüler (sie würden die Tafel nicht sehen).

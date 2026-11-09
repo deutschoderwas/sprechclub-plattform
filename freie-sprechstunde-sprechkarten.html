@@ -190,7 +190,7 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
     <div class="tools">
       <span class="zaehler" id="dkZaehler"></span>
       <button class="knopf voll" id="btnZufall">Zuf&auml;llige Karte</button>
-      <button class="knopf" id="btnMischen">Neu mischen</button>
+      <button class="knopf" id="btnMischen">Zur&uuml;cksetzen</button>
     </div>
   </div>
 
@@ -816,7 +816,9 @@ function stapelHolen(neu){
   if (neu || !stapel[k]) {
     var n = karten().length, zahlen = [];
     for (var i = 0; i < n; i++) zahlen.push(i);
-    stapel[k] = { folge: mischen(zahlen), weg: {} };
+    /* FESTE Reihenfolge (nicht mischen!), damit ALLE bei derselben Zahl
+       exakt dieselbe Karte sehen und gemeinsam arbeiten koennen. */
+    stapel[k] = { folge: zahlen, weg: {} };
   }
   return stapel[k];
 }
@@ -864,7 +866,7 @@ function zeichnen(){
 }
 
 /* ---------- Die grosse Karte ---------- */
-function zeigen(pos){
+function zeigen(pos, remote){
   var s = stapelHolen(), idx = s.folge[pos], k = karten()[idx];
   if (!k) return;
   var b = bereichDaten();
@@ -893,6 +895,9 @@ function zeigen(pos){
   document.getElementById('buehne').classList.add('auf');
   document.getElementById('gkWeiter').focus();
   zeichnen();
+  /* Live teilen: wenn ICH die Karte oeffne, erscheint sie bei allen in der Stunde.
+     Bei fern-ausgeloestem Oeffnen (remote) NICHT erneut senden (keine Schleife). */
+  if (!remote) { try { if (window.parent && window.parent !== window) window.parent.postMessage({ type:'dow-karte-open', pos: pos, bereich: bereich, niveau: niveau }, '*'); } catch (e) {} }
 }
 
 function zumachen(){
@@ -961,6 +966,27 @@ try{
     });
   }
 }catch(e){}
+
+/* Live-Empfang: jemand anderes hat eine Karte geoeffnet -> dieselbe Karte hier zeigen.
+   Bereich + Niveau werden mitgeschaltet, damit ALLE exakt dieselbe Karte sehen.
+   Nur Oeffnen wird geteilt; Schliessen bleibt lokal (jede:r kann selbst wegmachen). */
+window.addEventListener('message', function(ev){
+  var d = ev.data; if (!d || d.type !== 'dow-karte-show') return;
+  try{
+    if (d.bereich && d.bereich !== bereich) {
+      for (var i = 0; i < BEREICHE.length; i++) if (BEREICHE[i].id === d.bereich) { bereich = d.bereich; break; }
+      tabsBauen();
+    }
+    if (d.niveau && (d.niveau==='einfach'||d.niveau==='komplexer'||d.niveau==='schwierig') && d.niveau !== niveau) {
+      niveau = d.niveau;
+      Array.prototype.forEach.call(document.querySelectorAll('#lvsw button'), function(x){
+        x.classList.toggle('on', x.getAttribute('data-l') === niveau);
+      });
+    }
+    zeichnen();
+    if (typeof d.pos === 'number') zeigen(d.pos, true);
+  }catch(e){}
+});
 
 tabsBauen();
 zeichnen();
