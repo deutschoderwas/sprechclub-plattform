@@ -66,8 +66,12 @@ const LAENGE = {
       + 'Lieber Punkt als Komma — jeder Punkt ist eine Atempause. Nach jedem neuen Gedanken ein neuer Absatz. '
       + 'Wichtige Wörter zweimal sagen („Der Termin. Der Termin beim Arzt.“). Keine Nebensätze, keine Klammern, '
       + 'keine Umgangssprache, keine Abkürzungen' },
-  B1: { woerter: 640, tempo: 0.94, satz: 'Haupt- und einfache Nebensätze' },
-  B2: { woerter: 700, tempo: 1.00, satz: 'natürliche, auch längere Sätze mit Konnektoren' },
+  B1: { woerter: 640, tempo: 0.96, satz: 'Haupt- und einfache Nebensätze, höchstens 15 Wörter. '
+      + 'Ein Nebensatz pro Satz, nicht zwei. Alle paar Sätze ein ganz kurzer dazwischen — das gibt den Takt. '
+      + 'Umgangssprache nur, wenn sie gleich erklärt wird' },
+  B2: { woerter: 700, tempo: 1.00, satz: 'natürliche, auch längere Sätze mit Konnektoren. '
+      + 'Wechsle bewusst zwischen langen und kurzen Sätzen, so entsteht Rhythmus. Feste Wendungen '
+      + 'und Redensarten sind willkommen' },
   C1: { woerter: 760, tempo: 1.00, satz: 'differenziert, mit Nebensatzketten und Nominalstil, wo es passt' }
 };
 
@@ -243,6 +247,81 @@ async function themaFinden(db, datum, quelle) {
   return { thema: j.thema, quelle: 'alltag', hintergrund: j.hintergrund || '' };
 }
 
+/* ---------------------------------------------------------------
+   Schritt 1b: Für jedes Niveau ein EIGENES Thema
+
+   Julia, 9.11.2026: "gerne andere Themen zu jedem Niveau, passend zum
+   Niveau und auch vom rhytmus und der schnelligkeit".
+
+   Bis hierher bekamen alle vier Folgen dasselbe Thema, nur in
+   unterschiedlich schwerer Sprache. Das hiess: Wer auf A2 anfaengt und
+   spaeter auf B1 wechselt, hoert dieselbe Geschichte noch einmal — und
+   wer aus Neugier in ein anderes Niveau hineinhoert, lernt nichts Neues.
+
+   Jetzt sucht EIN Aufruf vier Themen auf einmal. Einer statt vier, weil
+   vier Aufrufe nacheinander laenger dauern, als dieser Endpunkt laufen
+   darf — und weil nur so sicher ist, dass sich die vier nicht
+   ueberschneiden: das Modell sieht beim Waehlen alle vier zugleich.
+
+   Was zu welchem Niveau passt, steht in NIVEAU_WELT. A2 braucht Dinge
+   zum Anfassen, C1 darf abstrakt werden. Scheitert der Aufruf, faellt
+   alles auf das gemeinsame Thema zurueck — lieber vier gleiche Folgen
+   als keine.
+   --------------------------------------------------------------- */
+const NIVEAU_WELT = {
+  A2: 'Konkreter Alltag zum Anfassen: einkaufen, Bus und Bahn, Wohnung, Arzt, Wetter, Essen, '
+    + 'Uhrzeiten, Nachbarn. Etwas, das man anfassen oder zeigen kann.',
+  B1: 'Alltag mit einer kleinen Hürde: Ämter und Formulare, Arbeit suchen, Termine verschieben, '
+    + 'sich beschweren, Freunde finden, Feste und Bräuche.',
+  B2: 'Gesellschaft und Meinung: Arbeitswelt, Wohnungsmarkt, Umwelt, Medien, Bildung, '
+    + 'kulturelle Unterschiede. Etwas, worüber man verschiedener Meinung sein kann.',
+  C1: 'Hintergrund und feine Unterschiede: Sprache selbst, Geschichte im Alltag, Wirtschaft, '
+    + 'Werte, Humor und Ironie, Dinge, die man nur versteht, wenn man länger hier ist.'
+};
+
+async function themenJeNiveau(db, datum, quelle) {
+  const tag = wochentagName(datum);
+  const { data: alt } = await db.from('podcasts')
+    .select('titel,thema,level').order('datum', { ascending: false }).limit(80);
+  const bisher = {};
+  NIVEAUS.forEach(n => {
+    bisher[n] = [...new Set((alt || []).filter(a => a.level === n).map(a => a.thema || a.titel))]
+      .slice(0, 20).join(' | ') || '(noch nichts)';
+  });
+
+  const welt = NIVEAUS.map(n => `${n}: ${NIVEAU_WELT[n]}\n  Schon gehabt auf ${n}: ${bisher[n]}`).join('\n\n');
+  const was = quelle === 'grammatik'
+    ? 'Grammatik- oder Wortschatzthemen, erzählbar statt wie ein Regelbuch — '
+      + 'also lieber „Warum sagen Deutsche doch?" als „Modalpartikeln".'
+    : quelle === 'aktuelles'
+      ? 'Themen, über die in Deutschland gerade gesprochen wird. Kein Krieg, keine Katastrophen, '
+        + 'keine Gewalt, kein Parteienstreit — es soll ein freundliches Lernthema sein.'
+      : 'Themen aus dem deutschen Alltag und der Kultur, die Ausländer in Deutschland '
+        + 'wirklich betreffen oder wundern.';
+
+  const txt = await claude(
+    'Du planst Content für Deutschlernende. Antworte nur mit JSON.',
+    `Heute ist ${tag}, der ${datum}. Für „Julias 5-Minuten-Podcast" brauche ich VIER Themen — `
+    + `für jedes Niveau ein eigenes, inhaltlich deutlich verschieden.\n\n`
+    + `Art der Themen heute: ${was}\n\n`
+    + `Das passt zu welchem Niveau:\n${welt}\n\n`
+    + `Regeln: Die vier Themen dürfen einander nicht ähneln — nicht dasselbe in schwerer. `
+    + `Keines darf ein Thema wiederholen, das auf seinem Niveau schon dran war.\n\n`
+    + `Gib genau dieses JSON zurück:\n`
+    + `{"A2":{"thema":"kurz, 3-6 Wörter","hintergrund":"5-8 Sätze konkrete Inhalte, Zahlen, typische Situationen"},`
+    + `"B1":{...},"B2":{...},"C1":{...}}`,
+    { suche: quelle === 'aktuelles', maxTokens: 3000 }
+  );
+  const j = jsonAus(txt);
+  const aus = {};
+  NIVEAUS.forEach(n => {
+    const e = j && j[n];
+    if (e && e.thema) aus[n] = { thema: String(e.thema), hintergrund: String(e.hintergrund || '') };
+  });
+  if (Object.keys(aus).length !== NIVEAUS.length) throw new Error('nicht für jedes Niveau ein Thema');
+  return aus;
+}
+
 // ---------------------------------------------------------------
 //  Schritt 2: Das Skript für ein Niveau schreiben
 // ---------------------------------------------------------------
@@ -372,11 +451,24 @@ export default async function handler(req, res) {
       });
     }
 
-    const { thema, quelle, hintergrund } = await themaFinden(db, datum, quelleHeute);
+    /* Erst vier eigene Themen versuchen. Geht das schief, bekommen alle
+       dasselbe — so wie frueher. Lieber vier gleiche Folgen als keine. */
+    let themen = null, quelle = quelleHeute, thema = '', hintergrund = '';
+    try {
+      themen = await themenJeNiveau(db, datum, quelleHeute);
+    } catch (e) {
+      themen = null;
+    }
+    if (!themen) {
+      const eins = await themaFinden(db, datum, quelleHeute);
+      quelle = eins.quelle; thema = eins.thema; hintergrund = eins.hintergrund;
+      themen = {};
+      NIVEAUS.forEach(n => { themen[n] = { thema: eins.thema, hintergrund: eins.hintergrund }; });
+    }
 
     // Alle fehlenden Niveaus gleichzeitig schreiben lassen — das spart Zeit.
     const ergebnisse = await Promise.allSettled(
-      fehlen.map(level => skriptSchreiben(level, thema, hintergrund, datum))
+      fehlen.map(level => skriptSchreiben(level, themen[level].thema, themen[level].hintergrund, datum))
     );
 
     const zeilen = [];
@@ -385,7 +477,7 @@ export default async function handler(req, res) {
       if (e.status !== 'fulfilled') {
         zeilen.push({
           id: datum + '-' + level.toLowerCase(), datum, level,
-          titel: thema, kurz: '', thema, quelle, status: 'fehler',
+          titel: themen[level].thema, kurz: '', thema: themen[level].thema, quelle, status: 'fehler',
           fehler: String(e.reason && e.reason.message || e.reason).slice(0, 400)
         });
         return;
@@ -394,9 +486,9 @@ export default async function handler(req, res) {
       zeilen.push({
         id: datum + '-' + level.toLowerCase(),
         datum, level,
-        titel: String(s.titel || thema).slice(0, 80),
+        titel: String(s.titel || themen[level].thema).slice(0, 80),
         kurz: String(s.kurz || '').slice(0, 200),
-        thema, quelle,
+        thema: themen[level].thema, quelle,
         woerter: Array.isArray(s.woerter) ? s.woerter.slice(0, 10) : [],
         // Der reine Text wartet hier, bis podcast-audio ihn einspricht.
         transkript: [{ t: 0, e: 0, x: '', roh: s.text }],
@@ -410,7 +502,8 @@ export default async function handler(req, res) {
     await weiterAnAudio();
 
     return res.status(200).json({
-      ok: true, datum, thema, quelle,
+      ok: true, datum, quelle,
+      themen: NIVEAUS.reduce((a, n) => (a[n] = themen[n] && themen[n].thema, a), {}),
       geschrieben: zeilen.filter(z => z.status === 'entwurf').map(z => z.level),
       fehler: zeilen.filter(z => z.status === 'fehler').map(z => z.level + ': ' + z.fehler)
     });

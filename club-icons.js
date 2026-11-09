@@ -205,10 +205,27 @@
     try{ if(window.startseiteNeuZeichnen) window.startseiteNeuZeichnen(); }catch(e){}
   }
 
-  /* Für die Startseite: was sollte dort stehen? */
-  window.podcastStand = function(){
-    var liste = pcFolgen();
-    if(!liste.length) return null;
+  /* Für die Startseite: was sollte dort stehen?
+
+     Julia, 9.11.2026: "Denk daran auch auf der Startseite die Leute zu
+     informieren, dass neue Folgen gekommen sind" — und seit demselben
+     Tag hat jedes Niveau sein eigenes Thema.
+
+     Beides zusammen heisst: Die Karte zeigt die Folge auf DEM Niveau,
+     das im Profil steht. Vorher stand dort immer die juengste Folge
+     ueberhaupt — bei vier Folgen am Tag war das fuer drei von vier
+     Lernenden das falsche Niveau. Und sie zaehlt, wie viele Folgen seit
+     dem letzten Besuch dazugekommen sind, damit "neu" eine Zahl hat und
+     nicht nur ein Woertchen ist. */
+  window.podcastStand = function(stufe){
+    var alle = pcFolgen();
+    if(!alle.length) return null;
+    var S = String(stufe || '').toUpperCase().slice(0,2);
+    var liste = S ? alle.filter(function(f){ return String(f.level||'').toUpperCase() === S; }) : [];
+    /* Gibt es auf diesem Niveau noch nichts, lieber irgendeine Folge
+       als eine leere Karte. */
+    if(!liste.length) liste = alle;
+
     var pos = posLesen();
     /* Angefangen und nicht zu Ende gehört? Dann hat das Vorrang. */
     var offen = null, jung = 0;
@@ -219,10 +236,21 @@
     var neueste = liste[0];
     var f = offen || neueste;
     var p = pos[f.id];
+
+    /* Wie viele Folgen sind seit dem letzten Mal dazugekommen? Der
+       Merker ist dasselbe Datum, das den Punkt am Menue steuert. */
+    var gesehen = '';
+    try{ gesehen = localStorage.getItem(GESEHEN_KEY) || ''; }catch(e){}
+    var neuAnzahl = gesehen
+      ? liste.filter(function(x){ return String(x.datum||'') > gesehen; }).length
+      : 0;
+
     return {
       folge: f,
       weiterAb: (p && p.t > 15 && !p.fertig) ? p.t : 0,
       neu: pcIstNeu(neueste),
+      neuAnzahl: neuAnzahl,
+      stufe: S || null,
       neueste: neueste,
       anzahl: liste.length
     };

@@ -731,6 +731,12 @@
       + hsKopf(k, s)
       + hsWoche(k, s)
       + hsWeiter()
+      /* Julia, 9.11.2026: "Denk daran auch auf der Startseite die Leute
+         zu informieren, dass neue Folgen gekommen sind". Die Karte war
+         seit dem Umbau der Startseite zwar geschrieben, aber nirgends
+         eingehaengt — sie stand als toter Code da. Jetzt sitzt sie
+         gleich unter dem Weiterlernen. */
+      + podcastKarte(k)
       + hsBereiche()
       + hsChat()
       + hsAmanda()
@@ -921,9 +927,11 @@
   /* Julias Podcast. Zeigt die angefangene Folge zum Weiterhören,
      sonst die neueste. Ist die neueste noch ungehört, sagt die Karte das
      mit einem kleinen Schild — mehr Aufhebens braucht es nicht. */
-  function podcastKarte(){
+  function podcastKarte(k){
+    var stufe = '';
+    try{ stufe = String((k && k.profile && (k.profile.level || k.profile.stufe)) || '').toUpperCase().slice(0,2); }catch(e){}
     var st = null;
-    try{ if(window.podcastStand) st = window.podcastStand(); }catch(e){}
+    try{ if(window.podcastStand) st = window.podcastStand(stufe); }catch(e){}
     if(!st || !st.folge) return '';
     var f = st.folge;
     var weiter = st.weiterAb > 15;
@@ -935,7 +943,13 @@
       +   '<span class="st-pod-play">▶</span></span>'
       + '<span class="st-pod-tx">'
       +   '<span class="st-pod-kicker">' + T('sn_pod','Julias 5-Minuten-Podcast') + ''
-      +     (st.neu ? '<span class="st-pod-neu">' + T('sn_pod_neu','neue Folge') + '</span>' : '') + '</span>'
+      +     (st.neu
+              ? '<span class="st-pod-neu">'
+                + (st.neuAnzahl > 1
+                    ? st.neuAnzahl + ' ' + T('sn_pod_neu_n','neue Folgen')
+                    : T('sn_pod_neu','neue Folge'))
+                + '</span>'
+              : '') + '</span>'
       +   '<b>' + E(f.titel) + '</b>'
       +   '<span class="st-pod-u">' + E(f.level) + (f.dauer ? ' · ' + E(f.dauer) : '') + ' · '
       +     (weiter ? T('sn_pod_w','weiterhören ab') + ' ' + zeit

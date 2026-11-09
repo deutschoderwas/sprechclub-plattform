@@ -53,12 +53,17 @@ const MODELL  = process.env.ELEVEN_MODEL || 'eleven_multilingual_v2';
    Ausnahme A2 (Julia 23.10.: „A2 muss deutlicher und langsamer sein“):
    0.95 — leicht gebremst, aber nicht tiefer, sonst klingt es künstlich.
    Den Rest der Langsamkeit machen Satzbau und Pausen im Skript. */
-const TEMPO = { A2: 0.95, B1: 1.0, B2: 1.0, C1: 1.0 };
+/* Julia, 9.11.2026: "passend zum Niveau und auch vom rhytmus und der
+   schnelligkeit". Vorher war nur A2 leicht gebremst, B1 bis C1 liefen
+   alle gleich — man hoerte den Unterschied zwischen B1 und C1 nicht.
+   Jetzt vier Stufen. Unter 0.88 faengt die Stimme an zu schleppen und
+   klingt nicht mehr nach Julia; das ist die Grenze, nicht der Wunsch. */
+const TEMPO = { A2: 0.90, B1: 0.96, B2: 1.0, C1: 1.04 };
 
 /* Stabilität je Niveau: Höher = gleichmäßiger und deutlicher betont,
    weniger Schwankung. Für A2 genau richtig; ab B1 darf die Stimme
    lebendiger klingen. Über 0.65 würde es monoton. */
-const STABIL = { A2: 0.62, B1: 0.5, B2: 0.5, C1: 0.5 };
+const STABIL = { A2: 0.66, B1: 0.58, B2: 0.5, C1: 0.45 };
 
 // Die Farben der Niveau-Punkte auf der Podcast-Seite.
 const FARBE = {
