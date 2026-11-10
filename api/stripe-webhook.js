@@ -775,13 +775,57 @@ export default async function handler(req, res) {
      Vorsicht an zwei Stellen: das gerade bezahlte Premium-Abo selbst darf
      es nie treffen (deshalb ausserSub), und ein schon gekuendigtes Abo
      wird nicht noch einmal angefasst. */
+  /* Welche Stufe steckt in einem Stripe-Abo?
+
+     Julia, 10.11.2026: "immer wenn schueler von community auf premium
+     wechseln, dann verschwindet community automatisch und sie ist dann
+     premium ... fuer die Zukunft muss das automatisch laufen."
+
+     Das lief schon - aber nur fuer Abos, die ueber die Kasse der Webseite
+     entstanden sind. Die tragen `metadata.tier`. Legt jemand ein Abo von
+     Hand im Stripe-Dashboard an, hat es keine metadata, und dann war der
+     ganze Automatismus blind: die Stufe wurde nicht gesetzt, und das alte
+     Community-Abo lief weiter. Genau das ist bei Yulia Svechinskaya
+     passiert.
+
+     Darum wird die Stufe jetzt auch am Preis abgelesen: am Spitznamen des
+     Preises, an seiner eigenen metadata und am Namen des Produkts. Findet
+     sich nichts davon, wird NICHT geraten - dann bleibt die Stufe leer und
+     der Fall faellt im Tagesbericht auf. Raten waere hier teuer: aus 16
+     Euro versehentlich Premium zu machen kostet Julia Geld.
+
+     Damit das greift, muessen die Stripe-Produkte oder -Preise das Wort
+     "Premium" bzw. "Community" im Namen tragen. Das tun sie ohnehin. */
+  async function stufeVonAbo(sub) {
+    const ausMeta = String((sub && sub.metadata && sub.metadata.tier) || '').toLowerCase();
+    if (ausMeta) return ausMeta;
+    try {
+      const preis = sub && sub.items && sub.items.data && sub.items.data[0] && sub.items.data[0].price;
+      if (!preis) return '';
+      const texte = [preis.nickname, preis.metadata && preis.metadata.tier];
+      if (preis.product && typeof preis.product === 'string') {
+        try {
+          const prod = await stripe.products.retrieve(preis.product);
+          texte.push(prod && prod.name, prod && prod.metadata && prod.metadata.tier);
+        } catch (e) { /* ohne Produktnamen geht es auch */ }
+      } else if (preis.product && preis.product.name) {
+        texte.push(preis.product.name);
+      }
+      const alles = texte.filter(Boolean).join(' ').toLowerCase();
+      if (/premium\s*plus|premiumplus/.test(alles)) return 'premiumplus';
+      if (/premium/.test(alles))  return 'premium';
+      if (/community|basis/.test(alles)) return 'community';
+    } catch (e) { console.error('stufe-von-abo', e && e.message); }
+    return '';
+  }
+
   async function altesCommunityAboBeenden(kundeId, ausserSub){
     if (!kundeId) return;
     try {
       const liste = await stripe.subscriptions.list({ customer: kundeId, status: 'active', limit: 20 });
       for (const a of (liste.data || [])) {
         if (a.id === ausserSub) continue;
-        if ((a.metadata && a.metadata.tier) !== 'community') continue;
+        if ((await stufeVonAbo(a)) !== 'community') continue;
         if (a.cancel_at_period_end) continue;
         await stripe.subscriptions.update(a.id, { cancel_at_period_end: true });
         console.log('community-abo zum Periodenende gekuendigt:', a.id, 'wegen Premium', ausserSub);
@@ -921,7 +965,7 @@ export default async function handler(req, res) {
           else { await addPending(sb, invEmail, stunden, plan, 'aktiv', false, 'inv_' + inv.id); return res.status(200).json({ received: true, pending: invEmail }); }
         }
         await saveCustomer(userId, inv.customer);   // Kundennummer merken
-        const tier = sub.metadata?.tier || '';
+        const tier = await stufeVonAbo(sub);
         if (tier === 'community') {
           // Community: ganze Plattform frei (status=aktiv), ABER keine Live-Stunden & kein pass_until (kein Buchen).
           const dk = 'inv_' + inv.id;
