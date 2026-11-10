@@ -266,6 +266,48 @@ export default async function handler(req, res) {
         }
       }
 
+      /* Zweite Kundennummer, obwohl die erste noch laeuft.
+
+         Yulia Svechinskaya, 10.11.2026: Sie hatte seit September ein
+         Community-Abo. Am 12.10. kaufte sie Premium — und Stripe legte
+         dafuer einen ZWEITEN Kunden mit derselben E-Mail an. Im Profil
+         stand weiter der alte. Der Block darueber greift nur, wenn unter
+         der gespeicherten Nummer gar kein Abo mehr laeuft; hier lief das
+         Community-Abo aber weiter. Also blieb das bezahlte Premium einen
+         Monat lang unsichtbar: Julia sah "nur Community", und die
+         Schuelerin kam nicht an das heran, wofuer sie 49 Euro bezahlt
+         hatte.
+
+         Deshalb jetzt auch der umgekehrte Fall: Laeuft unter der
+         gespeicherten Nummer nur Community, wird unter derselben
+         E-Mail nach einer Nummer mit laufendem Premium gesucht. Das ist
+         bewusst nur die Richtung nach OBEN — es kann niemandem etwas
+         wegnehmen, nur eine bezahlte hoehere Stufe sichtbar machen. */
+      const hatPremium = (liste) => liste.some(x => /premium/.test(stufeVon(x)));
+      if (hatAbo && p.email && !hatPremium(laufend) && !hatPremium(ausklingend)) {
+        let weitere2 = { data: [] };
+        try { weitere2 = await stripe.customers.list({ email: p.email, limit: 10 }); } catch (e) {}
+        for (const k of (weitere2.data || [])) {
+          if (!k || !k.id || k.id === kunde) continue;
+          let zweit;
+          try { zweit = await stripe.subscriptions.list({ customer: k.id, status: 'all', limit: 10 }); }
+          catch (e) { continue; }
+          const alle2 = (zweit.data || []).filter(x => !NIE_ZUSTANDE.includes(x.status));
+          const laufend2 = alle2.filter(x => LAEUFT.includes(x.status));
+          if (!hatPremium(laufend2)) continue;
+
+          subs = zweit; alle = alle2; laufend = laufend2;
+          ausklingend = alle2.filter(x => !LAEUFT.includes(x.status) && nochBezahlt(x));
+          if (!trocken) await sb.from('profiles').update({ stripe_customer_id: k.id }).eq('id', p.id);
+          bericht.kundennummer_gewechselt.push({
+            name: p.name || p.email, email: p.email, von: kunde, nach: k.id,
+            abo: laufend2[0].status, grund: 'dort laeuft Premium, unter der alten Nummer nur Community',
+          });
+          kunde = k.id;
+          break;
+        }
+      }
+
       /* Probelauf: wenn trotzdem kein Abo da ist, zeigen was Stripe
          wirklich hat. Sonst steht im Bericht nur "wird zugemacht" und
          man muss sich bei Stripe durchklicken, um zu sehen, warum. */
