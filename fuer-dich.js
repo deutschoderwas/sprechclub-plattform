@@ -249,6 +249,8 @@
     var st = naechsteStunde();
     if (st) {
       dran.push(zeile({ t: 'Nächste Stunde vorbereiten', u: (st.title || 'Sprechclub') + ' · ' + wann(st.starts_at), tun: "go('stunden')" }));
+      var sw = stundenWoerter(st);
+      if (sw.length >= 4) dran.push(zeile({ t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + (st.title || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
     }
     var vs = null; try { vs = window.vokabelStand && window.vokabelStand(); } catch (e) {}
     if (vs && vs.faellig) {
@@ -318,6 +320,52 @@
     gehe('schreiben');
     setTimeout(function () { try { if (window.schreibTrainer) window.schreibTrainer(id); } catch (e) {} }, 150);
   };
+  /* ---------- Wörter der nächsten Stunde (10.11.2026) ----------
+     Die Vokabeln der gebuchten Stunde stehen in class_materials
+     (konto.html: materials[class_id].vocab, {de, hi, bsp}). Daraus
+     wird ein kurzes Quiz: wo es ein Bild gibt (wort-ki.js) "Was zeigt
+     das Bild?", sonst "Welches Wort passt: <Bedeutung>?". So kommt
+     man vorbereitet in den Sprechclub. */
+  function stundenWoerter(st) {
+    try {
+      var m = (typeof materials !== 'undefined' && materials) ? materials[st.class_id] : null;
+      var l = (m && Array.isArray(m.vocab)) ? m.vocab : [];
+      var seen = {};
+      return l.filter(function (v) { if (!v || !v.de || seen[v.de]) return false; seen[v.de] = 1; return true; });
+    } catch (e) { return []; }
+  }
+  function mische(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  window.fdStundenQuiz = function () {
+    var st = naechsteStunde(); if (!st) return;
+    var W = stundenWoerter(st); if (W.length < 4) return;
+    var los = function () {
+      var K = window.WORT_KI || {};
+      var items = mische(W).slice(0, 12).map(function (v) {
+        var andere = mische(W.filter(function (x) { return x !== v; })).slice(0, 3);
+        var opts = mische([v].concat(andere));
+        var bild = K[String(v.de).trim().toLowerCase().replace(/\s+/g, ' ')] || '';
+        var e = { type: 'choice', options: opts.map(function (o) { return o.de; }), answer: opts.indexOf(v),
+                  w: v.de, explain: v.de + (v.hi ? ' — ' + v.hi : '') + (v.bsp ? ' · ' + v.bsp : '') };
+        if (bild) { e.q = 'Was zeigt das Bild?'; e.img = bild; }
+        else { e.q = 'Welches Wort passt: „' + (v.hi || v.bsp || v.de) + '“?'; }
+        return e;
+      });
+      /* Eigene Wortkarten aus der Stunde zuerst: sonst holt die Runde
+         sich eine Karte aus einem anderen Thema, und "die Überweisung"
+         vom Arzt stünde mit dem Satz von der Bank da. */
+      var karten = items.map(function (e) {
+        var v = W.filter(function (x) { return x.de === e.w; })[0] || {};
+        var m = String(v.de).match(/^(der|die|das)\s+(.+)$/i);
+        return { type: 'karte', w: v.de, wort: m ? m[2] : v.de, art: m ? m[1].toLowerCase() : '',
+                 info: v.hi || '', satz: v.bsp ? String(v.bsp).replace(m ? m[2] : v.de, '§' + (m ? m[2] : v.de) + '§') : '',
+                 img: K[String(v.de).trim().toLowerCase().replace(/\s+/g, ' ')] || '' };
+      });
+      items = karten.concat(items);
+      if (window.ubStartListe) window.ubStartListe('Wörter für: ' + (st.title || 'die nächste Stunde'), items, items.length);
+    };
+    if (window.spaetLaden && !window.SPAET_DA) window.spaetLaden().then(los); else los();
+  };
+
   window.fdThema = function (sk, id) {
     gehe('ueben');
     setTimeout(function () { try { if (window.ubStart) window.ubStart(sk, id); } catch (e) {} }, 200);
