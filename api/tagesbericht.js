@@ -144,6 +144,61 @@ export default async function handler(req, res) {
   } catch (e) { /* ohne Protokoll geht der Bericht trotzdem raus */ }
   neu = leute.filter(p => p.created_at && p.created_at >= seit24h);
 
+  /* --- Der Podcast: laeuft er noch von allein?
+     Julia, 10.11.2026: "also der automatismus fuer den montag-mittwoch
+     freitag lauf sitzt, richtig?" Die ehrliche Antwort war: die Technik
+     steht, aber wenn sie einmal stehenbleibt, merkt es niemand. Genau so
+     sind zwischen dem 10.10. und dem 24.10. 112 Entwuerfe ohne Ton
+     liegengeblieben, ohne dass jemand etwas davon wusste.
+     Darum steht der Stand jetzt jeden Morgen in dieser Mail. */
+  let podcast = null;
+  try {
+    const heuteTag = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' }).format(new Date());
+    const kurzTag = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Berlin', weekday: 'short' }).format(new Date());
+    const schreibtag = ['Mon', 'Wed', 'Fri'].includes(kurzTag);
+    const { data: heutige } = await sb.from('podcasts')
+      .select('id,level,titel,status').eq('datum', heuteTag);
+    const { count: ohneTon } = await sb.from('podcasts')
+      .select('id', { count: 'exact', head: true }).eq('status', 'entwurf');
+    const { data: tot } = await sb.from('podcasts').select('id,fehler')
+      .eq('status', 'entwurf').like('fehler', 'STIMME_TOT%').limit(1);
+    podcast = {
+      schreibtag,
+      live: (heutige || []).filter(x => x.status === 'live'),
+      entwurf: (heutige || []).filter(x => x.status !== 'live'),
+      ohneTon: ohneTon || 0,
+      stimmeTot: !!(tot && tot.length)
+    };
+  } catch (e) { /* lieber Bericht ohne Podcast als gar kein Bericht */ }
+
+  const podcastBlock = !podcast ? '' : (() => {
+    const zeilen = [];
+    if (podcast.schreibtag) {
+      if (podcast.live.length === 4) {
+        zeilen.push('<li style="color:#2d7a4f">Heute ist Schreibtag — alle vier Folgen sind fertig und live.</li>');
+      } else if (podcast.live.length + podcast.entwurf.length === 0) {
+        zeilen.push('<li style="color:#B3241C"><b>Heute ist Schreibtag, aber es wurde keine Folge geschrieben.</b>'
+          + ' Im Admin auf „Folgen für heute erzeugen" drücken.</li>');
+      } else {
+        zeilen.push(`<li>Heute ist Schreibtag: ${podcast.live.length} von vier Folgen live`
+          + (podcast.entwurf.length ? `, ${podcast.entwurf.length} wartet noch auf die Stimme` : '') + '.</li>');
+      }
+    } else if (podcast.live.length || podcast.entwurf.length) {
+      zeilen.push(`<li>Heute ist kein Schreibtag, es liegen trotzdem ${podcast.live.length + podcast.entwurf.length} Folgen von heute vor.</li>`);
+    } else {
+      zeilen.push('<li style="color:#888">Heute ist kein Schreibtag — die nächsten Folgen kommen am nächsten Montag, Mittwoch oder Freitag.</li>');
+    }
+    if (podcast.stimmeTot) {
+      zeilen.push('<li style="color:#B3241C"><b>Die Vorlesestimme nimmt keine Aufträge an.</b>'
+        + ' Meistens ist das ElevenLabs-Guthaben leer. Solange das so ist, werden keine neuen Folgen geschrieben.</li>');
+    }
+    if (podcast.ohneTon > 8) {
+      zeilen.push(`<li>${podcast.ohneTon} ältere Entwürfe liegen ohne Ton.</li>`);
+    }
+    return `<h3 style="font-size:15px;margin:22px 0 6px">🎧 Podcast</h3>`
+      + `<ul style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.7">${zeilen.join('')}</ul>`;
+  })();
+
   const abschnitt = (titel, zeilen, farbe) => zeilen.length
     ? `<h3 style="font-size:15px;margin:22px 0 6px;color:${farbe || '#1A1A1A'}">${titel}</h3><ul style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.7">${zeilen.join('')}</ul>`
     : '';
@@ -164,6 +219,8 @@ export default async function handler(req, res) {
     <tr><td style="padding:7px 0;border-bottom:1px solid #eee">ohne Stufe, noch mit Guthaben</td><td align="right" style="padding:7px 0;border-bottom:1px solid #eee">${zaehl.ohne_stufe}</td></tr>
     <tr><td style="padding:9px 0"><b>Menschen mit Zugang</b></td><td align="right" style="padding:9px 0"><b style="font-size:18px">${drin.length}</b></td></tr>
   </table>
+
+  ${podcastBlock}
 
   ${abschnitt('⚠️ Zugang, aber keine erkennbare Zahlung', ohneZahlung.map(p =>
       `<li>${wer(p)} — ${E(p.tier || '—')}, Status ${E(p.status || '—')}${p.abo_ende ? ', Eintrag lief bis ' + deTag(p.abo_ende) : ''}</li>`), '#B3241C')}
