@@ -226,34 +226,43 @@ function flach(t) {
 function fotoFinden(folge, schon) {
   const woerter = Array.isArray(folge.woerter)
     ? folge.woerter.map(w => (w && (w.w || w.wort)) || '').join(' ') : '';
-  const text = flach([folge.titel, folge.thema, woerter].join(' '));
-  const teile = new Set(text.split(/[^a-z0-9]+/).filter(t => t.length >= 4));
-  if (!teile.size) return null;
+  const zerlegen = t => new Set(flach(t).split(/[^a-z0-9]+/).filter(x => x.length >= 4));
+  const kern = zerlegen([folge.titel, folge.thema].join(' '));      // worum es geht
+  const alle = zerlegen([folge.titel, folge.thema, woerter].join(' ')); // dazu die Woerter des Tages
+  if (!alle.size) return null;
 
   /* Zwei Durchgaenge, und der erste ist der wichtige.
 
-     1. Das Stichwort steht als eigenes Wort im Text. Das ist ein echter
-        Treffer: "Wohnung" findet wohnung.jpg.
+     1. Das Stichwort steht als eigenes Wort da — in Titel, Thema ODER in
+        den Woertern des Tages. "die Kasse" findet kasse.jpg.
      2. Nur wenn gar nichts passt: das Stichwort steckt vorn oder hinten in
-        einem zusammengesetzten Wort — "Krankmeldung" findet krank,
-        "Pfandflasche" findet flasche. Dafuer muss das Stichwort mindestens
-        fuenf Buchstaben haben, sonst findet "Automat" das Wort "Auto" und
-        auf der Kachel steht ein Auto, wo es um Pfand geht.
+        einem zusammengesetzten Wort — "Krankmeldung" findet krank. Dafuer
+        zaehlen aber NUR Titel und Thema, nicht die Woerter des Tages, und
+        das Stichwort braucht mindestens fuenf Buchstaben.
+
+        Beides ist mit Absicht so eng. Ohne die Laenge findet "Automat" das
+        Wort "Auto", und auf der Kachel steht ein Auto, wo es um Pfand geht.
+        Und ohne die Beschraenkung auf Titel und Thema haette die Folge zum
+        9. November ueber das Vokabel "Erinnerungskultur" ein jubelndes
+        Opernpublikum bekommen. Eine Vokabel am Rand darf nicht bestimmen,
+        was das Bild der Folge ist.
 
      Innerhalb eines Durchgangs gewinnt das laengste Stichwort, weil es das
-     genauere ist. Ueber die Durchgaenge hinweg gewinnt immer der erste. */
+     genauere ist. Ueber die Durchgaenge hinweg gewinnt immer der erste.
+     Passt nichts, bleibt die Textkarte: lieber keine Illustration als eine
+     falsche. */
   let genau = null, teil = null;
   for (const f of FOTOS) {
     const w = flach(f.w);
     if (w.length < 4) continue;
     if (schon && schon.has(f.p)) continue;
-    if (teile.has(w)) {
+    if (alle.has(w)) {
       if (!genau || w.length > flach(genau.w).length) genau = f;
       continue;
     }
     if (w.length < 5) continue;
     let steckt = false;
-    for (const t of teile) {
+    for (const t of kern) {
       if (t.length <= w.length) continue;
       if (t.startsWith(w) || t.endsWith(w)) { steckt = true; break; }
     }
