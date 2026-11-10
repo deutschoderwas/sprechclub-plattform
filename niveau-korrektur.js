@@ -129,6 +129,25 @@
       });
     });
   });
+  /* B1-Themen, in denen gut ein Drittel A1/A2-Grundwörter steckte
+     (Geld, Bus, Bett, Kopf …). Wörter, die schon in einem A1- oder
+     A2-Wortschatzthema geübt werden, fallen hier heraus; die B1-Wörter
+     bleiben. Mindestens 12 Wörter bleiben immer stehen. */
+  var leicht = {};
+  var ws = U.skills.filter(function (s) { return s.id === 'wortschatz'; })[0];
+  if (ws) {
+    ws.themes.forEach(function (t) {
+      if (t.level === 'A1' || t.level === 'A2') (t.exercises || []).forEach(function (e) { if (e.w) leicht[e.w] = 1; });
+    });
+    ['einkaufen', 'gesundheit', 'stadt', 'wohnen'].forEach(function (id) {
+      var t = ws.themes.filter(function (x) { return x.id === id; })[0];
+      if (!t || t.level !== 'B1') return;
+      var alle = {}, bleibt = {};
+      (t.exercises || []).forEach(function (e) { if (e.w) { alle[e.w] = 1; if (!leicht[e.w]) bleibt[e.w] = 1; } });
+      if (Object.keys(bleibt).length < 12) return;
+      t.exercises = t.exercises.filter(function (e) { return !(e.w && leicht[e.w]); });
+    });
+  }
   window.NIVEAU_KORREKTUR = { themen: geaendert };
   }
   lauf();
