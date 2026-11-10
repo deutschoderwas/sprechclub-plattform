@@ -1399,7 +1399,7 @@
   function ladePool() {
     if (window.VOK_POOL && window.VOK_POOL.length) return Promise.resolve(true);
     if (poolLauf) return poolLauf;
-    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js')]);
+    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js?v=2')]);
     return poolLauf;
   }
   /* ---------- Eigene Wörter ----------
