@@ -28,6 +28,7 @@
 //  nachgeholt.
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
+import FOTOS from './_fotos.js';
 
 /* 300 statt 60 Sekunden (24.10.2026): A2-Folgen (um 3:40) kamen durch,
    B1, B2 und C1 (5 bis 6 Minuten Ton) blieben jeden Tag ohne jede Spur
@@ -198,6 +199,70 @@ function transkriptBauen(text, alignment) {
 // ---------------------------------------------------------------
 //  Cover: schlicht, im Farbton des Niveaus, mit dem Titel
 // ---------------------------------------------------------------
+/* ------------------------------------------------------------------
+   Ein echtes Foto statt der Textkarte
+
+   Julia will echte Bilder auf den Kacheln, keine gezeichneten und keine
+   Schriftkarten. Die Plattform hat rund 280 echte Fotos (Unsplash, freie
+   Lizenz) unter bilder/wort, bilder/beruf und bilder/thema, und ihre
+   Dateinamen sind deutsche Stichwoerter. bau/foto-index.py schreibt diese
+   Namen nach api/_fotos.js, damit die Funktion auf Vercel sie kennt, ohne
+   im Dateisystem nachzusehen.
+
+   Gesucht wird in Titel, Thema und den Woertern des Tages. Zusammen-
+   setzungen zaehlen mit: "Pfandflasche" findet "flasche", "Krankmeldung"
+   findet "krank". Das laengste Stichwort gewinnt, weil es am genauesten
+   ist. Findet sich nichts, bleibt es bei der Textkarte — lieber keine
+   Illustration als eine falsche.
+
+   schon: die Fotos, die an diesem Tag schon vergeben sind. Vier Folgen am
+   selben Tag sollen nicht dasselbe Bild bekommen.
+   ------------------------------------------------------------------ */
+function flach(t) {
+  return String(t || '').toLowerCase()
+    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+}
+
+function fotoFinden(folge, schon) {
+  const woerter = Array.isArray(folge.woerter)
+    ? folge.woerter.map(w => (w && (w.w || w.wort)) || '').join(' ') : '';
+  const text = flach([folge.titel, folge.thema, woerter].join(' '));
+  const teile = new Set(text.split(/[^a-z0-9]+/).filter(t => t.length >= 4));
+  if (!teile.size) return null;
+
+  /* Zwei Durchgaenge, und der erste ist der wichtige.
+
+     1. Das Stichwort steht als eigenes Wort im Text. Das ist ein echter
+        Treffer: "Wohnung" findet wohnung.jpg.
+     2. Nur wenn gar nichts passt: das Stichwort steckt vorn oder hinten in
+        einem zusammengesetzten Wort — "Krankmeldung" findet krank,
+        "Pfandflasche" findet flasche. Dafuer muss das Stichwort mindestens
+        fuenf Buchstaben haben, sonst findet "Automat" das Wort "Auto" und
+        auf der Kachel steht ein Auto, wo es um Pfand geht.
+
+     Innerhalb eines Durchgangs gewinnt das laengste Stichwort, weil es das
+     genauere ist. Ueber die Durchgaenge hinweg gewinnt immer der erste. */
+  let genau = null, teil = null;
+  for (const f of FOTOS) {
+    const w = flach(f.w);
+    if (w.length < 4) continue;
+    if (schon && schon.has(f.p)) continue;
+    if (teile.has(w)) {
+      if (!genau || w.length > flach(genau.w).length) genau = f;
+      continue;
+    }
+    if (w.length < 5) continue;
+    let steckt = false;
+    for (const t of teile) {
+      if (t.length <= w.length) continue;
+      if (t.startsWith(w) || t.endsWith(w)) { steckt = true; break; }
+    }
+    if (steckt && (!teil || w.length > flach(teil.w).length)) teil = f;
+  }
+  const treffer = genau || teil;
+  return treffer ? treffer.p : null;
+}
+
 function coverSvg(level, titel, tag) {
   const [a, b] = FARBE[level] || FARBE.A2;
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -369,9 +434,18 @@ export default async function handler(req, res) {
 
     const url = p => `${SUPA}/storage/v1/object/public/${BUCKET}/${p}`;
 
+    /* Welche Fotos hat dieser Tag schon? Vier Folgen, vier Bilder. */
+    const schon = new Set();
+    try {
+      const { data: gleicherTag } = await db.from('podcasts')
+        .select('id,bild').eq('datum', folge.datum).neq('id', folge.id);
+      (gleicherTag || []).forEach(x => { if (x.bild && x.bild.startsWith('/')) schon.add(x.bild); });
+    } catch (e) { /* ohne diese Liste geht es auch, nur weniger schoen */ }
+    const foto = fotoFinden(folge, schon);
+
     const { error: uErr } = await db.from('podcasts').update({
       datei: url(pfad),
-      bild: url(cPfad),
+      bild: foto || url(cPfad),
       transkript,
       dauer_sek: sek,
       dauer: Math.floor(sek / 60) + ':' + String(Math.round(sek % 60)).padStart(2, '0'),
