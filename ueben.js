@@ -746,12 +746,68 @@
      nur eine zufällige), und jedes neue Wort wird erst gezeigt, bevor
      danach gefragt wird. Vorher kam es vor, dass „die Hausordnung“
      eingetippt werden sollte, ohne dass das Wort je zu sehen war. */
+  /* ---------- Bilder zu jedem Wort (10.11.2026) ----------
+     1.547 Wörter hatten nur ein Emoji. Julia: "benutze higgsfeld, um
+     alle Übungen so visuell wie möglich zu gestalten". Die Bilder
+     liegen in bilder/wort-ki/, die Zuordnung in wort-ki.js
+     (window.WORT_KI, Schlüssel = Wort mit Artikel, klein). */
+  function wortSchluessel(w){ return String(w||'').trim().toLowerCase().replace(/\s+/g,' '); }
+  function kiBild(e){
+    var K=window.WORT_KI; if(!K||!e) return '';
+    var w=e.w||e.word||'';
+    if(!w && e.type==='choice' && /Welches Wort passt|gesucht:/.test(String(e.q||'')) && e.options) w=e.options[e.answer];
+    return K[wortSchluessel(w)]||'';
+  }
+  function mitBild(e){ if(e && !e.img && !e.optImgs){ var b=kiBild(e); if(b) e.img=b; } return e; }
+
+  /* Bilder-Quiz: aus den Wörtern eines Themas, die ein Bild haben.
+     Abwechselnd "Was zeigt das Bild?" (Bild, vier Wörter) und
+     "Welches Bild passt?" (Wort hören und lesen, vier Bilder). */
+  function themenWoerter(th){
+    var seen={}, l=[];
+    (th.exercises||[]).forEach(function(e){
+      var w=e.w; if(!w || seen[w]) return;
+      var b=e.img||kiBild(e); if(!b) return;
+      seen[w]=1; l.push({w:w, img:b, info:e.info||''});
+    });
+    return l;
+  }
+  function bildAufgaben(th, anzahl){
+    var W=shuf(themenWoerter(th)); if(W.length<4) return [];
+    var raus=[];
+    for(var i=0;i<Math.min(anzahl,W.length);i++){
+      var ziel=W[i], andere=shuf(W.filter(function(x){return x!==ziel;})).slice(0,3);
+      var opts=shuf([ziel].concat(andere)), k=opts.indexOf(ziel);
+      if(i%2===0){
+        raus.push({type:'choice', q:'Was zeigt das Bild?', img:ziel.img, options:opts.map(function(o){return o.w;}),
+                   answer:k, w:ziel.w, explain:ziel.w+(ziel.info?' — '+ziel.info:''), __bild:1});
+      } else {
+        raus.push({type:'choice', q:'Welches Bild passt zu „'+ziel.w+'“?', audio:ziel.w,
+                   options:opts.map(function(o){return o.w;}), optImgs:opts.map(function(o){return o.img;}),
+                   answer:k, w:ziel.w, explain:ziel.w+(ziel.info?' — '+ziel.info:''), __bild:1});
+      }
+    }
+    return raus;
+  }
+  /* Bilder-Quiz in eine Runde mischen: nicht an den Anfang, verteilt */
+  function bilderEinmischen(runde, th){
+    var b=bildAufgaben(th, runde.length>=10?3:2); if(!b.length) return runde;
+    var r=runde.slice(), schritt=Math.max(2,Math.floor(r.length/(b.length+1)));
+    b.forEach(function(x,i){ r.splice(Math.min(r.length,(i+1)*schritt+i),0,x); });
+    return r;
+  }
+  window.ubBilderQuiz=function(skId,thId){ var sk=skillById(skId); if(!sk)return; var th=sk.themes.filter(function(t){return t.id===thId;})[0]; if(!th)return;
+    var items=bildAufgaben(th,10); if(items.length<4) return;
+    S={skId:skId,thId:thId+'#bilder',items:items,idx:0,correct:0,hearts:META().maxHearts||5,answered:false,sel:null,title:'Bilder-Quiz: '+th.title,gewertet:[]};
+    openSession(); };
+  window.ubHatBilderQuiz=function(skId,thId){ var sk=skillById(skId); if(!sk)return false; var th=sk.themes.filter(function(t){return t.id===thId;})[0]; return !!th && themenWoerter(th).length>=4; };
+
   function baueRunde(sk,th,n){
     var regeln=(th.exercises||[]).filter(function(e){ return e.type==='karte' && e.regel; }).slice(0,3);
     var ohne=th;
     if(regeln.length){ ohne={}; for(var f in th) if(th.hasOwnProperty(f)) ohne[f]=th[f];
       ohne.exercises=(th.exercises||[]).filter(function(e){ return !(e.type==='karte' && e.regel); }); }
-    return regeln.concat(hoerBloecke(einfuehren(baueRundeKern(sk,ohne,n), th)));
+    return regeln.concat(bilderEinmischen(hoerBloecke(einfuehren(baueRundeKern(sk,ohne,n), th)), th));
   }
 
   /* Alle Fragen zu einer Aufnahme stehen direkt hintereinander, die
@@ -1117,7 +1173,7 @@
     var art=String(e.art||'').toLowerCase();
     return '<div class="ub-karte">'+
       (e.img?'<img class="kimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'')+
-      (e.emoji?'<span class="em">'+E(e.emoji)+'</span>':'')+
+      ((e.emoji && !e.img)?'<span class="em">'+E(e.emoji)+'</span>':'')+
       '<div class="wort">'+(ART_FARBE[art]?'<span class="ub-art" style="--af:'+ART_FARBE[art]+'">'+art+'</span>':'')+E(wort)+'</div>'+
       (e.info?'<div class="bed">'+E(e.info)+'</div>':'')+
       uebersetzungHtml(e.w || e.wort)+
@@ -1146,7 +1202,7 @@
     if(zr){ zr.disabled = S.idx<=0;
             zr.style.opacity = S.idx>0 ? '1' : '.3';
             zr.style.pointerEvents = S.idx>0 ? '' : 'none'; }
-    var e=S.items[S.idx]; var body=document.getElementById('ubBody'); var btn=document.getElementById('ubBtn');
+    var e=mitBild(S.items[S.idx]); var body=document.getElementById('ubBody'); var btn=document.getElementById('ubBtn');
     btn.className='ub-btn'; btn.textContent='Prüfen'; btn.disabled=true;
     var h=(S.idx===0?themenBild():'');
     if(e.type==='choice'){
@@ -1159,7 +1215,9 @@
       h+='<div class="ub-q">'+E(e.q||'Wähle die richtige Antwort:')+'</div>'+
          (e.audio?'':tonKnoepfe(e.q))+
          '<div class="ub-opts" id="ubOpts">'+
-         shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join('')+'</div>';
+         (e.optImgs
+           ? shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt ub-optbild" data-k="'+k+'" onclick="ubChoose('+k+')" aria-label="Bild '+(k+1)+'"><img src="'+E(e.optImgs[k])+'" alt="" onerror="this.style.visibility=\'hidden\'"><span class="cap">'+E(e.options[k])+'</span></button>'; }).join('')
+           : shuf(e.options.map(function(o,k){return k;})).map(function(k){ return '<button class="ub-opt" data-k="'+k+'" onclick="ubChoose('+k+')">'+E(e.options[k])+'</button>'; }).join(''))+'</div>';
       if(e.audio) setTimeout(function(){ speak(e.audio); },200);
     } else if(e.type==='gap'){
       h+=(e.img?'<img class="ub-qimg" src="'+E(e.img)+'" alt="" onerror="this.remove()">':'');
@@ -1505,11 +1563,25 @@
     document.getElementById('ubProg').style.width='100%';
     var foot=document.querySelector('#ubOv .ub-foot');
     var lu=lessonUrl(S.skId,S.thId);
-    foot.innerHTML='<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
+    var bq = (S.thId && String(S.thId).indexOf('#')<0 && window.ubHatBilderQuiz && window.ubHatBilderQuiz(S.skId,S.thId));
+    foot.innerHTML=(bq?'<button class="ub-btn" style="margin-bottom:10px" onclick="ubBilderQuiz(\''+S.skId+'\',\''+S.thId+'\')">Bilder-Quiz zu diesem Thema</button>':'')+
+                   '<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
                    (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#D42A21),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
                    '<button class="ub-btn" style="background:#fff;color:var(--ink,#1A1A1A);border:2px solid var(--border,#ECECEC);box-shadow:none;margin-top:10px" onclick="ubClose()">Fertig</button>';
   }
   window.ubAgain=function(){ var foot=document.querySelector('#ubOv .ub-foot'); foot.innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
-    if(S.thId==='mix') ubStartMix(); else ubStart(S.skId,S.thId); };
+    if(S.thId==='mix') ubStartMix();
+    else if(String(S.thId).indexOf('#bilder')>0) ubBilderQuiz(S.skId,String(S.thId).replace('#bilder',''));
+    else ubStart(S.skId,S.thId); };
+  /* Bilder-Quiz: Fuss nach dem Start wiederherstellen und Stil */
+  (function(){
+    var st=document.createElement('style');
+    st.textContent='#ubOpts .ub-optbild{padding:6px;display:flex;flex-direction:column;gap:6px;align-items:stretch}'
+      +'#ubOpts .ub-optbild img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block}'
+      +'#ubOpts .ub-optbild .cap{display:none;font-size:13px;font-weight:700}'
+      +'#ubOpts:has(.ub-optbild){display:grid;grid-template-columns:1fr 1fr;gap:10px}'
+      +'#ubOpts .ub-optbild.right .cap,#ubOpts .ub-optbild.wrong .cap{display:block}';
+    document.head.appendChild(st);
+  })();
 
 })();
