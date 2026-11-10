@@ -1191,7 +1191,7 @@ const RANKS = [
 ];
 
 let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
-let materials={}, progress={}, postNotes={}, myGroupClasses=new Set();   // materials[class_id]=content ; progress[class_id+'|'+phase]=row ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden, in denen ICH in einer Kleingruppe war
+let materials={}, progress={}, postNotes={}, myGroupClasses=new Set(), studentNachb={};   // materials[class_id]=content ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden mit eigener Kleingruppe ; studentNachb[class_id]=persoenliche Nachbereitung (inkl. Gruppen-Vokabeln)
 let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
@@ -1637,7 +1637,7 @@ async function load(){
   window.bookings = bookings;
   // KI-Material für gebuchte Stunden
   const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
-  materials = {}; postNotes = {};
+  materials = {}; postNotes = {}; studentNachb = {}; myGroupClasses = new Set();
   if (ids.length){
     const { data:mats } = await sb.from('class_materials').select('class_id,content').in('class_id', ids);
     (mats||[]).forEach(m=>materials[m.class_id]=m.content);
@@ -1645,6 +1645,8 @@ async function load(){
     (cnotes||[]).forEach(n=>postNotes[n.class_id]=n);
     // Stunden merken, in denen ICH in einer Kleingruppe war (für die Gruppen-Mitschrift in der Nachbereitung)
     try{ const { data:gms } = await sb.from('class_group_members').select('class_id').eq('user_id', user.id).in('class_id', ids); myGroupClasses = new Set((gms||[]).map(g=>g.class_id)); }catch(e){ myGroupClasses = new Set(); }
+    // Persönliche Nachbereitung laden (enthält die individuellen Gruppen-Vokabeln → fürs Vokabeltrainer-Füttern)
+    try{ const { data:sns } = await sb.from('student_nachbereitung').select('class_id,post_content').eq('user_id', user.id).in('class_id', ids); studentNachb={}; (sns||[]).forEach(s=>{ studentNachb[s.class_id]=s.post_content; }); }catch(e){ studentNachb={}; }
   }
   // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
   try{
@@ -1738,6 +1740,9 @@ function collectVocab(){
     (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
     const m=materials[b.class_id];
     if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    // individuelle Vokabeln aus der eigenen Gruppen-Nachbereitung mitnehmen
+    const sn=studentNachb[b.class_id];
+    if(sn&&Array.isArray(sn.vocab)) sn.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.title||'')});} });
   });
   return out;
 }

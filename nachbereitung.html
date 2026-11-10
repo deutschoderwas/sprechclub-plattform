@@ -157,7 +157,7 @@ function render(id, c, pc, extra){
 
   // 0a · Deine LIVE-Mitschrift aus der Kleingruppe (roh, genau wie in der Stunde geschrieben)
   if(extra.gnRaw && sanitizeNotes(extra.gnRaw).replace(/<[^>]+>/g,'').trim().length){
-    const gh = `<div class="kern"><h2>📝 Deine Gruppen-Mitschrift${extra.grp?` (Gruppe ${esc(String(extra.grp))})`:''}</h2><p style="color:var(--muted);font-size:.86rem;margin:0">Das habt ihr in eurer Kleingruppe live mitgeschrieben.</p></div><div class="card a-teal"><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(extra.gnRaw)}</div></div>`;
+    const gh = `<div class="kern"><h2>📝 Deine Gruppen-Mitschrift${extra.grp?` (Gruppe ${esc(String(extra.grp))})`:''}</h2><p style="color:var(--muted);font-size:.86rem;margin:0">Das habt ihr in eurer Kleingruppe live mitgeschrieben.</p></div><div class="card a-teal"><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(extra.gnRaw)}</div></div><div class="card a-gold"><h2>✏️ Deine eigenen Notizen</h2><p style="color:var(--muted);font-size:.84rem;margin:0 0 8px">Nur für dich — ergänze oder fasse in eigenen Worten zusammen. Wird in deinem Browser gespeichert. <span class="notiz-ok" style="color:#127a44;font-weight:700"></span></p><textarea data-nk="dow-mynotiz-${esc(id)}" oninput="dowSaveNotiz(this)" style="width:100%;min-height:110px;font:inherit;line-height:1.6;border:1.5px dashed #cfc5af;border-radius:12px;padding:10px 12px;background:#fffdf8;box-sizing:border-box">${esc(dowLoadNotiz(id))}</textarea></div>`;
     tabs.push({ label:'📝 Deine Mitschrift', html:gh });
   }
 
@@ -267,6 +267,8 @@ function switchTab(i){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function checkSelect(el, correct){ el.className = el.value===correct ? 'correct' : (el.value!=='' ? 'wrong' : ''); }
+function dowSaveNotiz(el){ try{ localStorage.setItem(el.getAttribute('data-nk'), el.value); var s=el.parentElement.querySelector('.notiz-ok'); if(s){ s.textContent='✓ gespeichert'; clearTimeout(window._nzT); window._nzT=setTimeout(()=>{s.textContent='';},1500);} }catch(e){} }
+function dowLoadNotiz(id){ try{ return localStorage.getItem('dow-mynotiz-'+id)||''; }catch(e){ return ''; } }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
 init();

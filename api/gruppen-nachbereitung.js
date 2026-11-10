@@ -68,7 +68,25 @@ async function runGruppenNachbereitung(sb, classId) {
   for (const m of members) {
     if (!booked.has(m.user_id)) continue;            // nur gebuchte Schüler:innen
     const gruppe = (m.grp != null) ? grpSummary[m.grp] : null;
-    const post_content = Object.assign({}, base, { gruppe: gruppe ? Object.assign({ nr: m.grp }, gruppe) : null, generated_at: nowISO });
+    let post_content;
+    if (gruppe) {
+      // Vokabeln der Gruppe in den Gesamt-Wortschatz mischen (fuer Vokabeltrainer + Vokabeln-Tab),
+      // Gruppen-Uebungen VORN (die Nachbereitung zeigt sie im Uebungen-Tab).
+      const gv = Array.isArray(gruppe.vocab) ? gruppe.vocab : [];
+      const ge = Array.isArray(gruppe.exercises) ? gruppe.exercises : [];
+      const baseVocab = Array.isArray(base.vocab) ? base.vocab : [];
+      const seen = new Set(baseVocab.map(v => String((v && v.de) || '').toLowerCase()));
+      const mergedVocab = baseVocab.concat(gv.filter(v => v.de && !seen.has(v.de.toLowerCase())));
+      const baseEx = Array.isArray(base.exercises) ? base.exercises : [];
+      post_content = Object.assign({}, base, {
+        gruppe: Object.assign({ nr: m.grp }, gruppe),
+        vocab: mergedVocab,
+        exercises: ge.concat(baseEx),
+        generated_at: nowISO,
+      });
+    } else {
+      post_content = Object.assign({}, base, { gruppe: null, generated_at: nowISO });
+    }
     rows.push({ class_id: classId, user_id: m.user_id, grp: m.grp, post_content, generated_at: nowISO });
   }
   for (let i = 0; i < rows.length; i += 50) {
@@ -91,7 +109,8 @@ ${notesText.slice(0, 4000)}
 """
 
 Gib NUR gültiges JSON zurück, ohne Erklärtext, in genau diesem Format:
-{"text":"2-3 Sätze: was ihr in eurer Gruppe geübt/besprochen habt","punkte":["kurze Merk-/Korrektur-Punkte aus euren Notizen, je 1 Zeile, max 6"]}`;
+{"text":"2-3 Sätze: was ihr in eurer Gruppe geübt/besprochen habt","punkte":["kurze Merk-/Korrektur-Punkte aus euren Notizen, je 1 Zeile, max 6"],"vocab":[{"de":"Wort oder Wendung aus euren Notizen","info":"kurze Bedeutung","example":"kurzer Beispielsatz"}],"exercises":[{"type":"gap","text":"Ein Satz mit einer ___ Luecke zu eurem Inhalt","answer":"Loesung","hint":"kurzer Tipp"},{"type":"choice","q":"Kurze Frage zu eurem Inhalt?","options":["richtige Antwort","falsch","falsch"],"answer":0}]}
+Regeln: "vocab" = 4-8 wichtige Woerter/Wendungen GENAU aus euren Notizen (nichts erfinden). "exercises" = 3-5 kleine Uebungen NUR zu euren Notizen; bei "choice" ist "answer" der 0-basierte Index der richtigen Option; bei "gap" steht die Luecke als ___ im Satz. Umlaute als echte Zeichen, ß bleibt ß.`;
 
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -109,8 +128,19 @@ Gib NUR gültiges JSON zurück, ohne Erklärtext, in genau diesem Format:
     if (!parsed) return null;
     const text = typeof parsed.text === 'string' ? parsed.text.slice(0, 700) : '';
     const punkte = Array.isArray(parsed.punkte) ? parsed.punkte.filter(x => typeof x === 'string').map(x => x.slice(0, 200)).slice(0, 6) : [];
-    if (!text && !punkte.length) return null;
-    return { text, punkte };
+    const vocab = Array.isArray(parsed.vocab) ? parsed.vocab
+      .filter(v => v && typeof v.de === 'string' && v.de.trim())
+      .map(v => ({ de: String(v.de).slice(0, 80), info: String(v.info || v.en || '').slice(0, 160), example: String(v.example || '').slice(0, 200) }))
+      .slice(0, 10) : [];
+    const exercises = Array.isArray(parsed.exercises) ? parsed.exercises
+      .filter(e => e && (e.type === 'gap' || e.type === 'choice'))
+      .map(e => e.type === 'gap'
+        ? { type: 'gap', text: String(e.text || '').slice(0, 240), answer: String(e.answer || '').slice(0, 80), hint: String(e.hint || '').slice(0, 120) }
+        : { type: 'choice', q: String(e.q || '').slice(0, 240), options: (Array.isArray(e.options) ? e.options : []).map(o => String(o).slice(0, 120)).slice(0, 4), answer: Number.isInteger(e.answer) ? e.answer : 0 })
+      .filter(e => e.type === 'gap' ? (e.text && e.answer) : (e.q && e.options.length >= 2))
+      .slice(0, 6) : [];
+    if (!text && !punkte.length && !vocab.length && !exercises.length) return null;
+    return { text, punkte, vocab, exercises };
   } catch (e) { return null; }
 }
 
