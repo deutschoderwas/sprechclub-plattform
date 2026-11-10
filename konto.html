@@ -1191,7 +1191,7 @@ const RANKS = [
 ];
 
 let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
-let materials={}, progress={}, postNotes={};   // materials[class_id]=content ; progress[class_id+'|'+phase]=row ; postNotes[class_id]={notes,post_content}
+let materials={}, progress={}, postNotes={}, myGroupClasses=new Set();   // materials[class_id]=content ; progress[class_id+'|'+phase]=row ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden, in denen ICH in einer Kleingruppe war
 let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
@@ -1643,6 +1643,8 @@ async function load(){
     (mats||[]).forEach(m=>materials[m.class_id]=m.content);
     const { data:cnotes } = await sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids);
     (cnotes||[]).forEach(n=>postNotes[n.class_id]=n);
+    // Stunden merken, in denen ICH in einer Kleingruppe war (für die Gruppen-Mitschrift in der Nachbereitung)
+    try{ const { data:gms } = await sb.from('class_group_members').select('class_id').eq('user_id', user.id).in('class_id', ids); myGroupClasses = new Set((gms||[]).map(g=>g.class_id)); }catch(e){ myGroupClasses = new Set(); }
   }
   // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
   try{
@@ -2582,10 +2584,11 @@ function phaseHtml(b, phase){
     const pn = postNotes[b.class_id];
     const pc = pn && pn.post_content;
     const hasPost = pc && ((Array.isArray(pc.exercises) && pc.exercises.length) || (Array.isArray(pc.vocab) && pc.vocab.length) || pc.thema);
+    const hadGroup = myGroupClasses.has(b.class_id);   // ich war in einer Kleingruppe → eigene Gruppen-Mitschrift vorhanden
     const pr = progress[b.class_id+'|post'];
     let inner;
     if(!ended){ inner='<span class="nope">folgt nach dem Unterricht</span>'; }
-    else if(hasPost){
+    else if(hasPost || hadGroup){
       const handout = `<a class="btn btn-turq btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`;
       inner = (pr&&pr.completed)
         ? `<span class="doneflag">✓ angesehen</span><br>${handout}`

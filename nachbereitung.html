@@ -101,6 +101,14 @@
 const CFG = window.SPRECHCLUB_CONFIG;
 let sb;
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+// Rohe Gruppen-Mitschrift (contenteditable-HTML) sicher anzeigen: Skripte/Handler raus, Formatierung bleibt.
+function sanitizeNotes(html){
+  var s=String(html||'');
+  s=s.replace(/<\s*(script|style|iframe|object|embed)[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi,'');
+  s=s.replace(/\son[a-z]+\s*=\s*"[^"]*"/gi,'').replace(/\son[a-z]+\s*=\s*'[^']*'/gi,'').replace(/\son[a-z]+\s*=\s*[^\s>]+/gi,'');
+  s=s.replace(/javascript:/gi,'');
+  return s;
+}
 // Kernwörter (Vokabeln) im Text gold markieren – wie in den Präsentationen.
 function hlText(text, words){
   var s = String(text==null?'':text);
@@ -123,24 +131,35 @@ async function init(){
   sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
   const { data:{ session } } = await sb.auth.getSession();
   if(!session){ app.innerHTML='<div class="center">Bitte zuerst einloggen, um deine Nachbereitung zu sehen.<br><br><a href="index.html?login=1">Zum Login →</a></div>'; return; }
-  const [{ data:c }, { data:cn }, { data:sn }] = await Promise.all([
+  const [{ data:c }, { data:cn }, { data:sn }, { data:gm }] = await Promise.all([
     sb.from('classes').select('title,level,topic,starts_at').eq('id',id).maybeSingle(),
     sb.from('class_notes').select('post_content').eq('class_id',id).maybeSingle(),
-    sb.from('student_nachbereitung').select('post_content').eq('class_id',id).eq('user_id',session.user.id).maybeSingle()
+    sb.from('student_nachbereitung').select('post_content').eq('class_id',id).eq('user_id',session.user.id).maybeSingle(),
+    sb.from('class_group_members').select('grp').eq('class_id',id).eq('user_id',session.user.id).maybeSingle()
   ]);
   if(!c){ app.innerHTML='<div class="center">Stunde nicht gefunden.</div>'; return; }
+  // Rohe Live-Mitschrift der EIGENEN Kleingruppe laden (liegt in group_notes)
+  let gnRaw='', grp=(gm && gm.grp) || null;
+  if(grp){ try{ const { data:gnRow } = await sb.from('group_notes').select('notes').eq('class_id',id).eq('grp',grp).maybeSingle(); gnRaw=(gnRow && gnRow.notes) || ''; }catch(e){} }
   // Eigene (pro Gruppe personalisierte) Version bevorzugen, sonst die gemeinsame
   const pc = (sn && sn.post_content) ? sn.post_content : (cn && cn.post_content);
-  if(!pc){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
-  render(id, c, pc);
+  if(!pc && !gnRaw){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
+  render(id, c, pc || {}, { gnRaw, grp });
 }
 
-function render(id, c, pc){
+function render(id, c, pc, extra){
+  extra = extra || {};
   const when = c.starts_at ? new Date(c.starts_at).toLocaleString('de-DE',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+' Uhr' : '';
   const tabs = [];
 
   // Kernwörter für die Markierungen
   const vocabWords = (pc.vocab||[]).map(v=>v.de).filter(Boolean);
+
+  // 0a · Deine LIVE-Mitschrift aus der Kleingruppe (roh, genau wie in der Stunde geschrieben)
+  if(extra.gnRaw && sanitizeNotes(extra.gnRaw).replace(/<[^>]+>/g,'').trim().length){
+    const gh = `<div class="kern"><h2>📝 Deine Gruppen-Mitschrift${extra.grp?` (Gruppe ${esc(String(extra.grp))})`:''}</h2><p style="color:var(--muted);font-size:.86rem;margin:0">Das habt ihr in eurer Kleingruppe live mitgeschrieben.</p></div><div class="card a-teal"><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(extra.gnRaw)}</div></div>`;
+    tabs.push({ label:'📝 Deine Mitschrift', html:gh });
+  }
 
   // 0 · Deine Gruppe (nur in der persönlichen Version vorhanden)
   if(pc.gruppe && (pc.gruppe.text || (pc.gruppe.punkte && pc.gruppe.punkte.length))){
