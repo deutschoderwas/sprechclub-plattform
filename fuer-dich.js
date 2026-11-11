@@ -338,7 +338,15 @@
       var m = (typeof materials !== 'undefined' && materials) ? materials[st.class_id] : null;
       var l = (m && Array.isArray(m.vocab)) ? m.vocab : [];
       var seen = {};
-      return l.filter(function (v) { if (!v || !v.de || seen[v.de]) return false; seen[v.de] = 1; return true; });
+      /* Feldnamen vereinheitlichen: Nachbereitung und stunden-woerter
+         schreiben info/example, aeltere Listen hi/bsp. Und nur Woerter
+         bis eine Stufe ueber der eigenen. */
+      var STU = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'], meinI = STU.indexOf(ICH.niveau());
+      return l.filter(function (v) {
+        if (!v || !v.de || seen[v.de]) return false; seen[v.de] = 1;
+        if (v.niveau && meinI >= 0 && STU.indexOf(v.niveau) > meinI + 1) return false;
+        return true;
+      }).map(function (v) { return { de: v.de, hi: v.hi || v.info || '', bsp: v.bsp || v.example || '', niveau: v.niveau || '' }; });
     } catch (e) { return []; }
   }
   function mische(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }

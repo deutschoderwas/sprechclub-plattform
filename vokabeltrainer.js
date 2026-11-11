@@ -213,8 +213,13 @@
     var out = [], idx = poolIndex();
     try {
       if (typeof collectVocab !== 'function') return out;
+      /* 11.11.2026: auf die Schuelerin zugeschnitten. Woerter aus der
+         Stunde tragen seit stunden-woerter.js eine Stufe; mehr als eine
+         Stufe ueber der eigenen kommt nicht in den Trainer. */
+      var meinI = STUFEN.indexOf(meinNiveau());
       collectVocab().forEach(function (v) {
         if (!v || !v.de) return;
+        if (v.niveau && meinI >= 0 && STUFEN.indexOf(v.niveau) > meinI + 1) return;
         var a = (/^(der|die|das)\s/i.exec(v.de) || [])[1];
         var zwilling = idx[kernWort(v.de)] || null;   // gibt es das Wort auch im Kurs?
         out.push({
@@ -223,8 +228,9 @@
           artikel: (a ? a.toLowerCase() : null) || (zwilling && zwilling.artikel) || null,
           art: a ? 'nomen' : (zwilling ? zwilling.art : 'wort'),
           em: v.em || (zwilling && zwilling.em) || '',
-          bsp: v.bsp || v.beispiel || (zwilling && zwilling.bsp) || '',
-          niveau: (zwilling && zwilling.niveau) || meinNiveau(),
+          bsp: v.bsp || v.beispiel || v.example || (zwilling && zwilling.bsp) || '',
+          bedeutung: v.info || v.hi || (zwilling && zwilling.bedeutung) || '',
+          niveau: v.niveau || (zwilling && zwilling.niveau) || meinNiveau(),
           kurs: 'Live-Unterricht', thema: v.from || 'Deine Stunde',
           quelle: 'live',
           zwilling: zwilling ? zwilling.id : null,       // fuer Bild und Uebersetzung

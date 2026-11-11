@@ -31,7 +31,10 @@ export default async function handler(req, res) {
      nur, wenn etwas passiert ist — an einem ruhigen Tag weiss man dann
      nicht, ob nichts war oder ob der Lauf ausgefallen ist. Dieser
      Bericht kommt jeden Morgen, auch wenn nichts war. */
-  const intern = ['pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben', 'tagesbericht'];
+  /* 'stunden-woerter' (11.11.2026): fuellt die Wortliste jeder Stunde
+     aus ihrer Unterrichtsseite, damit der Vokabeltrainer fuer jede
+     gebuchte Stunde Woerter hat, auch ohne Tafel-Nachbereitung. */
+  const intern = ['stunden-woerter', 'pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben', 'tagesbericht'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }
