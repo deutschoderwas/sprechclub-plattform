@@ -420,6 +420,9 @@ async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {})
   content.vocab = vocab;
   await sb.from('class_materials').upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO }, { onConflict: 'class_id' });
 
+  // Kleine Hausaufgabe zum Einreichen – aus der Nachbereitung abgeleitet, vom Lehrer bearbeitbar.
+  await hausaufgabeSpeichern(sb, classId, cls, post_content);
+
   // Erst wenn fertig: Schüler der Stunde per E-Mail benachrichtigen (einmal pro Schüler/Stunde).
   let mailed = 0;
   try {
@@ -490,6 +493,43 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
     </table>
   </td></tr></table>
 </body></html>`;
+}
+
+/* ---------- Kleine Hausaufgabe pro Stunde (zum Einreichen) ----------
+   Abgeleitet aus der frisch erstellten Nachbereitung – kein zusaetzlicher
+   Modell-Aufruf, damit der Cron-Lauf nie daran haengenbleibt. Nimmt bevorzugt
+   eine Sprech-/Schreibaufgabe aus der Stunde; sonst eine Schreibaufgabe zum
+   Thema mit den neuen Vokabeln. Ueberschreibt NIE eine vom Lehrer bearbeitete. */
+function hausaufgabeAus(cls, pc) {
+  const thema = String(cls.topic || cls.title || 'das Thema der Stunde').replace(/"/g, '').replace(/\s+/g, ' ').trim().slice(0, 90);
+  const vocab = (Array.isArray(pc.vocab) ? pc.vocab : [])
+    .map(v => String((v && v.de) || '').replace(/^(der|die|das)\s+/i, '').trim())
+    .filter(Boolean).slice(0, 6);
+  const sp = (Array.isArray(pc.speaking) ? pc.speaking : []).find(s => s && s.task);
+  let aufgabe;
+  if (sp) {
+    aufgabe = String(sp.task).replace(/\s+/g, ' ').trim();
+    if (vocab.length) aufgabe += ' Verwende dabei mindestens ' + Math.min(5, vocab.length) + ' neue Wörter aus dieser Stunde (z. B. ' + vocab.slice(0, 4).join(', ') + ').';
+    aufgabe += ' Schreib deine Antwort unten auf und reiche sie ein.';
+  } else {
+    aufgabe = 'Schreib 4–6 Sätze zum Thema „' + thema + '".';
+    if (vocab.length) aufgabe += ' Benutze dabei mindestens ' + Math.min(5, vocab.length) + ' der neuen Vokabeln: ' + vocab.slice(0, 6).join(', ') + '.';
+    aufgabe += ' Reiche deinen kurzen Text unten ein.';
+  }
+  const hinweis = 'Schau dir die Beispielsätze und Vokabeln in der Nachbereitung an – die helfen dir beim Schreiben.';
+  return { aufgabe: aufgabe.slice(0, 600), hinweis };
+}
+async function hausaufgabeSpeichern(sb, classId, cls, pc) {
+  try {
+    const { data: ex } = await sb.from('hausaufgaben').select('class_id,auto').eq('class_id', classId).maybeSingle();
+    if (ex && ex.auto === false) return;   // Lehrer hat selbst bearbeitet → nicht überschreiben
+    const h = hausaufgabeAus(cls, pc);
+    if (!h.aufgabe) return;
+    await sb.from('hausaufgaben').upsert(
+      { class_id: classId, aufgabe: h.aufgabe, hinweis: h.hinweis, auto: true, updated_at: new Date().toISOString() },
+      { onConflict: 'class_id' }
+    );
+  } catch (e) { /* Hausaufgabe darf die Nachbereitung nie aufhalten */ }
 }
 
 function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }

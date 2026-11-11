@@ -1207,7 +1207,7 @@ const RANKS = [
 ];
 
 let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
-let materials={}, progress={}, postNotes={}, myGroupClasses=new Set(), studentNachb={};   // materials[class_id]=content ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden mit eigener Kleingruppe ; studentNachb[class_id]=persoenliche Nachbereitung (inkl. Gruppen-Vokabeln)
+let materials={}, progress={}, postNotes={}, myGroupClasses=new Set(), studentNachb={}, haClasses=new Set(), haDone=new Set();   // materials[class_id]=content ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden mit eigener Kleingruppe ; studentNachb[class_id]=persoenliche Nachbereitung (inkl. Gruppen-Vokabeln)
 let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
@@ -1653,7 +1653,7 @@ async function load(){
   window.bookings = bookings;
   // KI-Material für gebuchte Stunden
   const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
-  materials = {}; postNotes = {}; studentNachb = {}; myGroupClasses = new Set();
+  materials = {}; postNotes = {}; studentNachb = {}; myGroupClasses = new Set(); haClasses = new Set(); haDone = new Set();
   if (ids.length){
     const { data:mats } = await sb.from('class_materials').select('class_id,content').in('class_id', ids);
     (mats||[]).forEach(m=>materials[m.class_id]=m.content);
@@ -1663,6 +1663,9 @@ async function load(){
     try{ const { data:gms } = await sb.from('class_group_members').select('class_id').eq('user_id', user.id).in('class_id', ids); myGroupClasses = new Set((gms||[]).map(g=>g.class_id)); }catch(e){ myGroupClasses = new Set(); }
     // Persönliche Nachbereitung laden (enthält die individuellen Gruppen-Vokabeln → fürs Vokabeltrainer-Füttern)
     try{ const { data:sns } = await sb.from('student_nachbereitung').select('class_id,post_content').eq('user_id', user.id).in('class_id', ids); studentNachb={}; (sns||[]).forEach(s=>{ studentNachb[s.class_id]=s.post_content; }); }catch(e){ studentNachb={}; }
+    // Hausaufgaben: welche Stunden haben eine, und welche habe ICH schon abgegeben
+    try{ const { data:has } = await sb.from('hausaufgaben').select('class_id').in('class_id', ids); haClasses = new Set((has||[]).map(h=>h.class_id)); }catch(e){ haClasses = new Set(); }
+    try{ const { data:habs } = await sb.from('hausaufgaben_abgaben').select('class_id').eq('user_id', user.id).in('class_id', ids); haDone = new Set((habs||[]).map(h=>h.class_id)); }catch(e){ haDone = new Set(); }
   }
   // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
   try{
@@ -3358,6 +3361,8 @@ function meineStundenHtml(){
     if(diff>1&&diff<7) return dd.toLocaleDateString('de-DE',{weekday:'long'});
     return dd.toLocaleDateString('de-DE',{day:'2-digit',month:'short'});
   }
+  // Hausaufgabe abgeben: öffnet die Nachbereitung – dort ist der Hausaufgaben-Tab (mit Textfeld) ganz vorn.
+  window.hausaufgabeAbgeben = function(classId){ window.open('nachbereitung.html?id='+encodeURIComponent(classId), '_blank', 'noopener'); };
   function card(b,isPast){
     const m=materials[b.class_id];
     const start=new Date(b.starts_at);
@@ -3376,9 +3381,10 @@ function meineStundenHtml(){
     const mainBtns=isPast
       ? `${nbReady?`<a class="btn btn-primary btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`:`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.7">📖 Nachbereitung folgt in Kürze</span>`}${rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`}`
       : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
+    const haBtn=haClasses.has(b.class_id)?`<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}')">${haDone.has(b.class_id)?'✓ Hausaufgabe abgegeben':'📎 Hausaufgabe abgeben'}</button>`:'';
     const secBtns=isPast
-      ? `<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>`
-      : `<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button><button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">Stornieren</button>`;
+      ? `${haBtn}<button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>`
+      : `<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button><button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">Stornieren</button>`;
     return `<div class="ms-card ${isPast?'is-past':'is-up'}" data-mstext="${esc(txt)}">
       <div class="ms-top">${chip}<span class="ms-date">${fmt(start)}</span>${lvlBadge(b.level)}</div>
       <div class="ms-title">${esc(b.topic||b.title||'')}</div>
