@@ -3363,15 +3363,19 @@ function meineStundenHtml(){
     const start=new Date(b.starts_at);
     const cancellable=(start-s.now)>0;
     const rated=isPast?ratings.find(r=>r.class_id===b.class_id):null;
+    // Ist die Nachbereitung schon da? (gemeinsame ODER eigene Gruppen-Mitschrift)
+    const pcPost=(postNotes[b.class_id]||{}).post_content;
+    const nbReady=(pcPost && ((Array.isArray(pcPost.exercises)&&pcPost.exercises.length)||(Array.isArray(pcPost.vocab)&&pcPost.vocab.length)||pcPost.thema)) || myGroupClasses.has(b.class_id);
     const txt=((b.topic||'')+' '+(b.title||'')).toLowerCase();
     const chip=isPast?'<span class="ms-chip past">✓ Vorbei</span>'
       :`<span class="ms-chip up"><span class="dot"></span>${esc(relDay(start))}</span>`;
+    // Lern-Zeile: KEIN separater „Material"-Knopf mehr (ist in der Präsentation im Unterricht zu sehen)
     const phasen=isPast
-      ? `${phaseHtml(b,'post')}<div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false">wiederholen →</a></div>${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener">ansehen →</a></div>`:''}`
-      : `${phaseHtml(b,'pre')}${phaseHtml(b,'live')}${phaseHtml(b,'post')}<div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false">üben →</a>`:'<span class="nope">folgt</span>'}</div>`;
+      ? `${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener">ansehen →</a></div>`:''}<div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false">wiederholen →</a></div>`
+      : `${phaseHtml(b,'pre')}${phaseHtml(b,'live')}<div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false">üben →</a>`:'<span class="nope">folgt</span>'}</div>`;
     const mainBtns=isPast
-      ? (rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`)
-      : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
+      ? `${nbReady?`<a class="btn btn-primary btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`:`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.7">📖 Nachbereitung folgt in Kürze</span>`}${rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`}`
+      : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
     const secBtns=isPast
       ? `<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>`
       : `<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button><button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">Stornieren</button>`;
