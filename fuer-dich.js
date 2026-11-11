@@ -252,6 +252,13 @@
       var sw = stundenWoerter(st);
       if (sw.length >= 4) dran.push(zeile({ t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + (st.title || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
     }
+    /* Ein bis sieben Tage nach einer Stunde: ihre Wörter noch einmal.
+       Dann bleiben sie am ehesten hängen. */
+    var lz = letzteStunde();
+    if (lz) {
+      var lw = stundenWoerter(lz);
+      if (lw.length >= 4) dran.push(zeile({ t: 'Wörter aus deiner letzten Stunde', u: '„' + (lz.title || 'Sprechclub') + '“ · jetzt wiederholen, damit sie bleiben', zahl: lw.length, tun: "fdStundenQuiz('letzte')" }));
+    }
     var vs = null; try { vs = window.vokabelStand && window.vokabelStand(); } catch (e) {}
     if (vs && vs.faellig) {
       dran.push(zeile({ t: 'Wörter wiederholen', u: 'Zehn Minuten reichen, damit sie bleiben.', zahl: vs.faellig, tun: "fdWoerter()" }));
@@ -335,8 +342,17 @@
     } catch (e) { return []; }
   }
   function mische(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  window.fdStundenQuiz = function () {
-    var st = naechsteStunde(); if (!st) return;
+  function letzteStunde() {
+    try {
+      var jetzt = Date.now(), tag = 86400000;
+      var l = ((window.stats && stats.past) || []).filter(function (b) {
+        var t = new Date(b.starts_at).getTime(); return jetzt - t >= tag * 0.5 && jetzt - t <= tag * 7;
+      }).sort(function (a, b) { return new Date(b.starts_at) - new Date(a.starts_at); });
+      return l[0] || null;
+    } catch (e) { return null; }
+  }
+  window.fdStundenQuiz = function (welche) {
+    var st = welche === 'letzte' ? letzteStunde() : naechsteStunde(); if (!st) return;
     var W = stundenWoerter(st); if (W.length < 4) return;
     var los = function () {
       var K = window.WORT_KI || {};
@@ -361,7 +377,7 @@
                  img: K[String(v.de).trim().toLowerCase().replace(/\s+/g, ' ')] || '' };
       });
       items = karten.concat(items);
-      if (window.ubStartListe) window.ubStartListe('Wörter für: ' + (st.title || 'die nächste Stunde'), items, items.length);
+      if (window.ubStartListe) window.ubStartListe((welche === 'letzte' ? 'Wiederholen: ' : 'Wörter für: ') + (st.title || 'die Stunde'), items, items.length);
     };
     if (window.spaetLaden && !window.SPAET_DA) window.spaetLaden().then(los); else los();
   };
