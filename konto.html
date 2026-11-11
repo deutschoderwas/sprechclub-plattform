@@ -2594,7 +2594,7 @@ function dowJoinUrl(b){ return `klassenraum.html?stunde=${b.class_id||b.id}&tite
 function dowJoinBtn(b, cls){
   const st=new Date(b.starts_at).getTime(), now=Date.now();
   if(now>=st-10*60000 && now<=st+90*60000){
-    return `<a class="${cls||'btn btn-primary'}" href="${dowJoinUrl(b)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>🔴 Beitreten</a>`;
+    return `<a class="${cls||'btn btn-primary'}" href="${dowJoinUrl(b)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="live-dot"></span>Zum Klassenzimmer</a>`;
   }
   return '';
 }
@@ -3347,7 +3347,7 @@ const MS_STYLE = `<style>
 
 function meineStundenHtml(){
   const s=stats;
-  const up=(s.upcoming||[]), past=(s.past||[]).slice().reverse();
+  const up=(s.upcoming||[]), past=(s.past||[]).slice().sort((a,b)=>new Date(b.starts_at)-new Date(a.starts_at)); // vergangene: aktuellste zuerst
   function relDay(start){
     const dd=new Date(start), now=new Date(s.now);
     const a=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate());
