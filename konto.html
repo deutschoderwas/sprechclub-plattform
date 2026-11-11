@@ -1753,12 +1753,12 @@ function computeStats(){
 function collectVocab(){
   const seen=new Set(), out=[];
   bookings.filter(b=>b.status==='booked').forEach(b=>{
-    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    (Array.isArray(b.vocab)?b.vocab:[]).forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title)});} });
     const m=materials[b.class_id];
-    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:b.title});} });
+    if(m&&Array.isArray(m.vocab)) m.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title)});} });
     // individuelle Vokabeln aus der eigenen Gruppen-Nachbereitung mitnehmen
     const sn=studentNachb[b.class_id];
-    if(sn&&Array.isArray(sn.vocab)) sn.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.title||'')});} });
+    if(sn&&Array.isArray(sn.vocab)) sn.vocab.forEach(v=>{ const k=v.de; if(v.de&&!seen.has(k)){seen.add(k);out.push({...v,from:(b.topic||b.title||'')});} });
   });
   return out;
 }
@@ -3307,60 +3307,121 @@ const m={class_full:'Diese Stunde ist leider voll.',already_booked:'Du hast dies
 
 /* Der Block „Meine Stunden" — kommende und vergangene Stunden.
    Steht seit dem Zusammenlegen oben auf der Seite Live Unterricht. */
+const MS_STYLE = `<style>
+.ms-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:4px 0 18px}
+.ms-seg{display:inline-flex;gap:4px;background:#EEF1F0;border:1px solid var(--rahmen,#e3e7e6);border-radius:999px;padding:4px}
+.ms-seg-b{font:inherit;font-weight:800;font-size:14px;color:#5A6B68;background:transparent;border:none;border-radius:999px;padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s;white-space:nowrap}
+.ms-seg-b .n{font-size:12px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#fff;color:#5A6B68;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+.ms-seg-b.active{background:#fff;color:var(--primary,#0E7C8C);box-shadow:0 2px 8px rgba(0,0,0,.10)}
+.ms-seg-b.active .n{background:var(--primary,#0E7C8C);color:#fff}
+.ms-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--rahmen,#e3e7e6);border-radius:999px;padding:8px 14px;min-width:200px;flex:1;max-width:320px}
+.ms-search input{border:none;outline:none;font:inherit;font-size:14px;width:100%;background:transparent}
+.ms-list{display:grid;gap:14px}
+.ms-card{background:var(--card,#fff);border:1px solid var(--rahmen,#e3e7e6);border-left:4px solid var(--primary,#0E7C8C);border-radius:16px;padding:16px 18px;box-shadow:0 4px 16px rgba(30,40,38,.05)}
+.ms-card.is-past{border-left-color:#B9C2C0;background:#FBFCFC}
+.ms-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.ms-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px}
+.ms-chip.up{background:#E4F6EC;color:#0f7a44}
+.ms-chip.up .dot{width:8px;height:8px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)}
+.ms-chip.past{background:#EEF1F0;color:#5A6B68}
+.ms-date{font-size:13px;font-weight:700;color:#5A6B68}
+.ms-title{font-size:1.06rem;font-weight:800;line-height:1.3;margin:2px 0 10px;color:var(--ink,#1A1A1A)}
+.ms-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.ms-mat{display:flex;flex-wrap:wrap;gap:8px}
+.ms-mat .phase{background:#F6F9F9;border:1px solid var(--rahmen,#eef1f0);border-radius:12px;padding:8px 12px;font-size:13px;display:flex;align-items:center;gap:8px}
+.ms-mat .phase a{color:var(--primary,#0E7C8C);font-weight:800;text-decoration:none}
+.ms-mat .phase .nope{color:#9aa5a3}
+.ms-more{margin-top:12px}
+.ms-more summary{list-style:none;cursor:pointer;font-size:13px;font-weight:700;color:#7a8785;display:inline-flex;align-items:center;gap:6px}
+.ms-more summary::-webkit-details-marker{display:none}
+.ms-more summary::after{content:'▾';font-size:12px}
+.ms-more[open] summary::after{content:'▴'}
+.ms-sec{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ms-sec .danger{color:#D42A21}
+.ms-stars{color:#E8A400;font-size:16px;letter-spacing:1px}
+.ms-empty{background:#F6F9F9;border:1px dashed var(--rahmen,#dbe3e1);border-radius:14px;padding:22px;text-align:center;color:#5A6B68}
+.ms-empty a{color:var(--primary,#0E7C8C);font-weight:800;text-decoration:none}
+.ms-tip{margin-top:10px;color:#9a6b00;font-weight:600;font-size:12.5px;background:#FFF8E6;border:1px solid #f3e4b0;border-radius:10px;padding:8px 11px}
+@media(max-width:560px){.ms-search{max-width:none}.ms-card{padding:14px}}
+</style>`;
+
 function meineStundenHtml(){
   const s=stats;
-  let html='';
-  html+='<h2 class="sec"><span data-i18n="st_upc">Kommende Stunden</span></h2>';
-  html += s.upcoming.length ? s.upcoming.map(b=>{
-    const start=new Date(b.starts_at); /* Julia, 1.11.2026: "sie koennen auch 5 Minuten vorher stornieren,
-     das ist jetzt alles egal" — die Sechs-Stunden-Frist stammt aus der
-     Guthabenzeit. Jetzt zaehlt nur, dass abgesagt wird; nach dem
-     Beginn geht es nicht mehr (dasselbe sagt cancel_booking). */
-  const cancellable=(start-s.now)>0;
-    const m=materials[b.class_id];
-    return `<div class="card">
-      <div class="head">
-        <div class="when">${fmt(start)}</div>${lvlBadge(b.level)}
-        <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
-        ${dowJoinBtn(b,'btn btn-primary btn-sm')}
-        ${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}
-        ${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}
-        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis 6 h vorher"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button>
-        <button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>
-        <button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button>
-        <button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Storno nur bis 6 h vorher"'} onclick="cancelB('${b.class_id}')">Stornieren</button>
-      </div>
-      <p style="margin-top:10px;color:#D42A21;font-weight:700;font-size:13px;background:#F6F9FA;border:1px solid #ffd0d0;border-radius:10px;padding:8px 11px">⚠️ Tipp: Logge dich für den Live-Unterricht am besten am <u>Computer/Laptop</u> ein und mach die Stunde dort – Video, Präsentation &amp; Live-Tafel laufen am Computer am stabilsten.</p>
-      ${m&&m.intro?`<p class="muted" style="margin-top:10px">💡 ${esc(m.intro)}</p>`:''}
-      <div class="phasen">
-        ${phaseHtml(b,'pre')}${phaseHtml(b,'live')}${phaseHtml(b,'post')}
-        <div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">üben →</a>`:'<span class="nope">folgt</span>'}</div>
-      </div>
-    </div>`;
-  }).join('') : '<div class="empty"><span data-i18n="st_leer">Noch nichts gebucht.</span> <a href="#" onclick="go(\'kalender\');return false" style="color:#0E7C8C;font-weight:700"><span data-i18n="st_leer3">Such dir im Kalender eine Stunde aus →</span></a></div>';
-
-  const past=s.past.slice().reverse().slice(0,10);
-  if(past.length){
-    html+='<h2 class="sec">Vergangene Stunden</h2>';
-    html+=past.map(b=>{
-      const rated=ratings.find(r=>r.class_id===b.class_id);
-      return `<div class="card" style="opacity:.92">
-        <div class="head"><div class="when">${fmt(new Date(b.starts_at))}</div>${lvlBadge(b.level)}
-          <div class="what"><b>${esc(b.title)}</b><span>${esc(b.topic||'')}</span></div>
-          ${rated?`<span class="muted">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">Bewerten</button>`}
-          <button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button>
-          <button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>
-        </div>
-        <div class="phasen">${phaseHtml(b,'post')}
-          <div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false" style="color:var(--primary);font-weight:700">wiederholen →</a></div>
-          ${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:700">ansehen →</a></div>`:''}
-        </div>
-        ${typeof nachKarte==='function'?nachKarte(b,((materials[b.class_id]||{}).vocab)||b.vocab||[]):''}
-        </div>`;
-    }).join('');
+  const up=(s.upcoming||[]), past=(s.past||[]).slice().reverse();
+  function relDay(start){
+    const dd=new Date(start), now=new Date(s.now);
+    const a=new Date(dd.getFullYear(),dd.getMonth(),dd.getDate());
+    const b0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    const diff=Math.round((a-b0)/86400000);
+    if(diff===0) return 'Heute · '+dd.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    if(diff===1) return 'Morgen';
+    if(diff>1&&diff<7) return dd.toLocaleDateString('de-DE',{weekday:'long'});
+    return dd.toLocaleDateString('de-DE',{day:'2-digit',month:'short'});
   }
-  return html;
+  function card(b,isPast){
+    const m=materials[b.class_id];
+    const start=new Date(b.starts_at);
+    const cancellable=(start-s.now)>0;
+    const rated=isPast?ratings.find(r=>r.class_id===b.class_id):null;
+    const txt=((b.topic||'')+' '+(b.title||'')).toLowerCase();
+    const chip=isPast?'<span class="ms-chip past">✓ Vorbei</span>'
+      :`<span class="ms-chip up"><span class="dot"></span>${esc(relDay(start))}</span>`;
+    const phasen=isPast
+      ? `${phaseHtml(b,'post')}<div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false">wiederholen →</a></div>${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener">ansehen →</a></div>`:''}`
+      : `${phaseHtml(b,'pre')}${phaseHtml(b,'live')}${phaseHtml(b,'post')}<div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false">üben →</a>`:'<span class="nope">folgt</span>'}</div>`;
+    const mainBtns=isPast
+      ? (rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`)
+      : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${(m&&(m.lesson_url||m.intro||m.pre||(m.vocab&&m.vocab.length)))?`<button class="btn btn-ghost btn-sm" onclick="openClassMaterial('${b.class_id}',1)">📚 Material</button>`:''}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
+    const secBtns=isPast
+      ? `<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>`
+      : `<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button><button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Hausaufgabe abgeben</button><button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">Stornieren</button>`;
+    return `<div class="ms-card ${isPast?'is-past':'is-up'}" data-mstext="${esc(txt)}">
+      <div class="ms-top">${chip}<span class="ms-date">${fmt(start)}</span>${lvlBadge(b.level)}</div>
+      <div class="ms-title">${esc(b.topic||b.title||'')}</div>
+      <div class="ms-actions">${mainBtns}</div>
+      <div class="ms-mat">${phasen}</div>
+      ${!isPast?`<div class="ms-tip">💻 Tipp: Live-Unterricht am besten am Computer/Laptop – Video, Präsentation & Live-Tafel laufen dort am stabilsten.</div>`:''}
+      <details class="ms-more"><summary>Weitere Optionen</summary><div class="ms-sec">${secBtns}</div></details>
+      ${isPast && typeof nachKarte==='function'?nachKarte(b,((materials[b.class_id]||{}).vocab)||b.vocab||[]):''}
+    </div>`;
+  }
+  const upHtml=up.length?up.map(b=>card(b,false)).join(''):'<div class="ms-empty">Noch nichts gebucht. <a href="#" onclick="go(\'kalender\');return false">Such dir im Kalender eine Stunde aus →</a></div>';
+  const pastHtml=past.length?past.map(b=>card(b,true)).join(''):'<div class="ms-empty">Noch keine vergangenen Stunden.</div>';
+  return MS_STYLE+`
+    <div class="ms-bar">
+      <div class="ms-seg">
+        <button class="ms-seg-b active" data-ms="up" onclick="msFilter('up')">📅 Kommende <span class="n">${up.length}</span></button>
+        <button class="ms-seg-b" data-ms="past" onclick="msFilter('past')">✓ Vergangene <span class="n">${past.length}</span></button>
+      </div>
+      <label class="ms-search"><span>🔎</span><input type="search" placeholder="Thema suchen …" oninput="msSearch(this.value)" aria-label="Stunden durchsuchen"></label>
+    </div>
+    <div id="ms-list-up" class="ms-list">${upHtml}</div>
+    <div id="ms-list-past" class="ms-list" hidden>${pastHtml}</div>
+    <div id="ms-noresult" class="ms-empty" hidden>Keine Stunde zu deiner Suche gefunden.</div>`;
 }
+
+// Umschalten Kommende / Vergangene
+window.msFilter=function(which){
+  document.querySelectorAll('.ms-seg-b').forEach(b=>b.classList.toggle('active', b.getAttribute('data-ms')===which));
+  var up=document.getElementById('ms-list-up'), pa=document.getElementById('ms-list-past');
+  if(up) up.hidden = which!=='up';
+  if(pa) pa.hidden = which!=='past';
+  var inp=document.querySelector('.ms-search input'); msSearch(inp?inp.value:'');
+};
+// Live-Suche über das aktuell sichtbare Set
+window.msSearch=function(v){
+  var q=(v||'').trim().toLowerCase();
+  var listUp=document.getElementById('ms-list-up'), listPa=document.getElementById('ms-list-past');
+  var active = (listPa && !listPa.hidden) ? listPa : listUp;
+  if(!active) return;
+  var treffer=0;
+  active.querySelectorAll('.ms-card').forEach(function(c){
+    var hit = !q || (c.getAttribute('data-mstext')||'').indexOf(q)>-1;
+    c.style.display = hit?'':'none'; if(hit) treffer++;
+  });
+  var nr=document.getElementById('ms-noresult');
+  if(nr) nr.hidden = !(q && treffer===0);
+};
 
 /* Die eigene Seite „Meine Stunden" — erreichbar über die Karte
    oben im Live Unterricht, nicht mehr über einen eigenen Knopf in der Leiste. */

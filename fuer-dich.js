@@ -248,16 +248,16 @@
     var dran = [];
     var st = naechsteStunde();
     if (st) {
-      dran.push(zeile({ t: 'Nächste Stunde vorbereiten', u: (st.title || 'Sprechclub') + ' · ' + wann(st.starts_at), tun: "go('stunden')" }));
+      dran.push(zeile({ t: 'Nächste Stunde vorbereiten', u: ((st.topic || st.title) || 'Sprechclub') + ' · ' + wann(st.starts_at), tun: "go('stunden')" }));
       var sw = stundenWoerter(st);
-      if (sw.length >= 4) dran.push(zeile({ t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + (st.title || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
+      if (sw.length >= 4) dran.push(zeile({ t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + ((st.topic || st.title) || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
     }
     /* Ein bis sieben Tage nach einer Stunde: ihre Wörter noch einmal.
        Dann bleiben sie am ehesten hängen. */
     var lz = letzteStunde();
     if (lz) {
       var lw = stundenWoerter(lz);
-      if (lw.length >= 4) dran.push(zeile({ t: 'Wörter aus deiner letzten Stunde', u: '„' + (lz.title || 'Sprechclub') + '“ · jetzt wiederholen, damit sie bleiben', zahl: lw.length, tun: "fdStundenQuiz('letzte')" }));
+      if (lw.length >= 4) dran.push(zeile({ t: 'Wörter aus deiner letzten Stunde', u: '„' + ((lz.topic || lz.title) || 'Sprechclub') + '“ · jetzt wiederholen, damit sie bleiben', zahl: lw.length, tun: "fdStundenQuiz('letzte')" }));
     }
     var vs = null; try { vs = window.vokabelStand && window.vokabelStand(); } catch (e) {}
     if (vs && vs.faellig) {
@@ -385,7 +385,7 @@
                  img: K[String(v.de).trim().toLowerCase().replace(/\s+/g, ' ')] || '' };
       });
       items = karten.concat(items);
-      if (window.ubStartListe) window.ubStartListe((welche === 'letzte' ? 'Wiederholen: ' : 'Wörter für: ') + (st.title || 'die Stunde'), items, items.length);
+      if (window.ubStartListe) window.ubStartListe((welche === 'letzte' ? 'Wiederholen: ' : 'Wörter für: ') + ((st.topic || st.title) || 'die Stunde'), items, items.length);
     };
     if (window.spaetLaden && !window.SPAET_DA) window.spaetLaden().then(los); else los();
   };
