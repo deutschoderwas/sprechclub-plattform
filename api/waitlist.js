@@ -38,9 +38,11 @@ export default async function handler(req, res) {
 
   // 1) In die Lead-Liste schreiben (erscheint im Admin-Bereich unter Leads)
   let gespeichert = false, willkommen = false;
+  let sbGlobal = null;
   if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
       const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+      sbGlobal = sb;
       const { error } = await sb.from('leads').insert({
         name, email, whatsapp: whatsapp || null, tarif: tarif || null, niveau: niveau || null,
         schwierigkeiten: schwierigkeiten || null, mehr: mehr || null, quelle,
@@ -86,6 +88,18 @@ export default async function handler(req, res) {
     });
     inBrevo = r.ok || r.status === 204;
   } catch (e) { inBrevo = false; }
+
+  /* Festhalten, ob Brevo die Adresse wirklich hat. Ohne diese Zeile wusste
+     niemand, ob der Versuch oben geklappt hat — und eine Adresse, die Brevo
+     gerade nicht annahm, lag fuer immer nur bei uns. Bleibt brevo_at leer,
+     holt api/leads-nach-brevo.js sie taeglich nach. */
+  if (inBrevo && sbGlobal) {
+    try {
+      await sbGlobal.from('leads')
+        .update({ brevo_at: new Date().toISOString() })
+        .ilike('email', email).is('brevo_at', null);
+    } catch (e) { /* nicht schlimm, der Nachholer findet sie wieder */ }
+  }
 
   const istPlus = /plus/i.test(tarif);
   const betreff = istPlus

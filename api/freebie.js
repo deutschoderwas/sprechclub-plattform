@@ -21,6 +21,7 @@
 // ============================================================
 
 import { createClient } from '@supabase/supabase-js';
+import { LISTE_WEBSEITE } from './_brevo.js';
 import { FREEBIES, UNBEKANNT, freebieVon } from './_freebies.js';
 
 const MAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -122,7 +123,10 @@ export default async function handler(req, res) {
   /* 2) Kontakt in Brevo. Die Liste kommt aus der Umgebung
         (BREVO_FREEBIE_LIST_ID) oder steht am Freebie selbst. */
   let inBrevo = false;
-  const listenId = Number(f.liste || process.env.BREVO_FREEBIE_LIST_ID || 0);
+  /* Ohne gesetzte Einstellung landete der Kontakt frueher in Brevo ohne
+     Liste - vorhanden, aber von keiner Kampagne erreichbar. Darum faellt
+     es jetzt auf die Webseiten-Liste zurueck statt auf gar keine. */
+  const listenId = Number(f.liste || process.env.BREVO_FREEBIE_LIST_ID || 0) || LISTE_WEBSEITE;
   if (process.env.BREVO_API_KEY) {
     try {
       const r = await fetch('https://api.brevo.com/v3/contacts', {
@@ -135,6 +139,14 @@ export default async function handler(req, res) {
         }, listenId ? { listIds: [listenId] } : {})),
       });
       inBrevo = r.ok;
+      /* Festhalten, dass Brevo die Adresse hat. Bleibt brevo_at leer,
+         holt api/leads-nach-brevo.js sie taeglich nach. */
+      if (inBrevo && sb) {
+        try {
+          await sb.from('leads').update({ brevo_at: new Date().toISOString() })
+            .ilike('email', email).is('brevo_at', null);
+        } catch (e) { /* der Nachholer findet sie wieder */ }
+      }
     } catch (e) { inBrevo = false; }
   }
 

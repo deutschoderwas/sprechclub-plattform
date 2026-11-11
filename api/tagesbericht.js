@@ -199,6 +199,32 @@ export default async function handler(req, res) {
       + `<ul style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.7">${zeilen.join('')}</ul>`;
   })();
 
+  /* --- Adressen: hat Brevo wirklich alle?
+     Julia, 11.11.2026: "damit keine adresse verloren geht". Eine Adresse
+     liegt immer bei uns in leads - aber nur wer auch in Brevo steht,
+     bekommt je einen Newsletter. Diese Zeile macht die Luecke sichtbar. */
+  let adressen = null;
+  try {
+    const { count: gesamt } = await sb.from('leads').select('id', { count: 'exact', head: true });
+    const { count: offen }  = await sb.from('leads').select('id', { count: 'exact', head: true }).is('brevo_at', null);
+    const { count: neu24 }  = await sb.from('leads').select('id', { count: 'exact', head: true }).gte('created_at', seit24h);
+    adressen = { gesamt: gesamt || 0, offen: offen || 0, neu: neu24 || 0 };
+  } catch (e) { /* lieber Bericht ohne diesen Block als gar keinen */ }
+
+  const adressBlock = !adressen ? '' : (() => {
+    const zeilen = [];
+    if (adressen.neu) zeilen.push(`<li>${adressen.neu} neue Adresse(n) seit gestern.</li>`);
+    if (adressen.offen) {
+      zeilen.push(`<li style="color:#B3241C"><b>${adressen.offen} Adresse(n) sind noch nicht in Brevo.</b>`
+        + ' Sie liegen bei uns, bekommen aber keinen Newsletter. Der tägliche Lauf holt sie nach;'
+        + ' was mehrfach hängen bleibt, hat meist einen Tippfehler in der Adresse.</li>');
+    } else {
+      zeilen.push(`<li style="color:#2d7a4f">Alle ${adressen.gesamt} Adressen sind in Brevo.</li>`);
+    }
+    return `<h3 style="font-size:15px;margin:22px 0 6px">✉️ Adressen</h3>`
+      + `<ul style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.7">${zeilen.join('')}</ul>`;
+  })();
+
   const abschnitt = (titel, zeilen, farbe) => zeilen.length
     ? `<h3 style="font-size:15px;margin:22px 0 6px;color:${farbe || '#1A1A1A'}">${titel}</h3><ul style="margin:0;padding-left:20px;font-size:14.5px;line-height:1.7">${zeilen.join('')}</ul>`
     : '';
@@ -219,6 +245,8 @@ export default async function handler(req, res) {
     <tr><td style="padding:7px 0;border-bottom:1px solid #eee">ohne Stufe, noch mit Guthaben</td><td align="right" style="padding:7px 0;border-bottom:1px solid #eee">${zaehl.ohne_stufe}</td></tr>
     <tr><td style="padding:9px 0"><b>Menschen mit Zugang</b></td><td align="right" style="padding:9px 0"><b style="font-size:18px">${drin.length}</b></td></tr>
   </table>
+
+  ${adressBlock}
 
   ${podcastBlock}
 

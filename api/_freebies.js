@@ -37,7 +37,7 @@ export const FREEBIES = {
     ],
     datei:  '/freebies/sos-alltag.pdf',
     knopf:  'Schick mir die 50 Sätze',
-    liste:  0,        // 0 = die Liste aus BREVO_FREEBIE_LIST_ID nehmen
+    liste:  0,        // 0 = BREVO_FREEBIE_LIST_ID, sonst Liste 14 (Sprechclub Interessenten)
   },
 
 };

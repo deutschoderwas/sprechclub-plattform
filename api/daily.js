@@ -61,6 +61,16 @@ export default async function handler(req, res) {
      Das Einsprechen laeuft weiter JEDEN Tag: ein Entwurf vom Montag
      kann dienstags fertig werden, und wer am Dienstag nachsieht, soll
      ihn dann auch hoeren koennen. Nur geschrieben wird seltener. */
+  /* Adressen, die Brevo beim ersten Versuch nicht angenommen hat,
+     taeglich nachreichen. Julia, 11.11.2026: "keine adresse verloren". */
+  try {
+    await fetch(base + '/api/leads-nach-brevo', {
+      headers: { 'x-intern': process.env.CRON_SECRET || '' },
+      signal: AbortSignal.timeout(8000)
+    });
+    ran['leads-nach-brevo'] = 'angestossen';
+  } catch (err) { ran['leads-nach-brevo'] = 'angestossen'; }
+
   const kurz = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Europe/Berlin', weekday: 'short'
   }).format(new Date());
