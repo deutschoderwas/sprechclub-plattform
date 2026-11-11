@@ -3363,6 +3363,14 @@ function meineStundenHtml(){
   }
   // Hausaufgabe abgeben: öffnet die Nachbereitung – dort ist der Hausaufgaben-Tab (mit Textfeld) ganz vorn.
   window.hausaufgabeAbgeben = function(classId){ window.open('nachbereitung.html?id='+encodeURIComponent(classId), '_blank', 'noopener'); };
+  // Nachricht an Lehrerin: öffnet die vorhandene Nachrichten-Ansicht (messages-Thread) mit Stundenbezug vorausgefüllt.
+  window.nachrichtAnLehrerin = function(classId, title){
+    try{ go('nachrichten'); }catch(e){}
+    setTimeout(function(){
+      var inp=document.getElementById('msgInput');
+      if(inp){ inp.value = title ? ('Zur Stunde „'+title+'": ') : ''; inp.focus(); try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){} }
+    }, 60);
+  };
   function card(b,isPast){
     const m=materials[b.class_id];
     const start=new Date(b.starts_at);
