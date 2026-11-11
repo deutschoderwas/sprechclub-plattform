@@ -41,6 +41,34 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, grund: 'brevo-schluessel fehlt' });
   }
 
+  /* ?probe=1 — fragt Brevo nur nach dem eigenen Konto und gibt zurueck,
+     was Brevo antwortet. Nichts wird geschrieben, keine Mail geht raus.
+
+     Gebaut am 11.11.2026, als an einem Abend zwei Dinge gleichzeitig
+     kaputt waren: Ein neuer Kaeufer kam nicht durch die Registrierung
+     (Supabase meldete beim Bestaetigungsmail 525 "5.7.1 Unauthorized IP
+     address"), und die Stunden-Erinnerungen kamen nicht an. Von aussen
+     sah man nur "fehler: 20" und musste raten. Mit dieser Zeile sagt
+     Brevo selbst, was los ist. */
+  if (req.query && req.query.probe) {
+    try {
+      const r = await fetch('https://api.brevo.com/v3/account', {
+        headers: { 'api-key': process.env.BREVO_API_KEY, 'accept': 'application/json' },
+      });
+      const txt = (await r.text()).slice(0, 500);
+      return res.status(200).json({
+        ok: r.ok, status: r.status,
+        antwort: txt,
+        deutung: r.ok ? 'Brevo nimmt uns an.'
+          : r.status === 401 ? 'Brevo weist uns ab: Schluessel ungueltig ODER IP-Beschraenkung aktiv (Brevo: SMTP & API → Authorised IPs).'
+          : r.status === 403 ? 'Brevo verweigert: meist IP-Beschraenkung oder gesperrtes Konto.'
+          : 'Unerwartete Antwort - der Text oben ist Brevos eigene Begruendung.',
+      });
+    } catch (e) {
+      return res.status(200).json({ ok: false, fehler: String((e && e.message) || e) });
+    }
+  }
+
   const trocken = String((req.query && req.query.trocken) || '') === '1';
   const grenze = Math.max(1, Math.min(500, Number((req.query && req.query.limit) || 50)));
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
