@@ -669,7 +669,7 @@ html[data-ph="3"] .zu-weg{display:none !important}</style>
    setzen (im Dezember), dann springt die Seite von selbst auf
    Phase 2 — Anmeldung offen zum regulaeren Preis. Dasselbe Datum
    steht in sparPhase() weiter unten; beide lesen window.TUEREN_AUF. */
-window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 (function(){var n=Date.now(), auf=window.TUEREN_AUF;
 var ph = n<Date.parse('2026-10-01T00:00:00+02:00') ? '0'
        : n<Date.parse('2026-11-01T00:00:00+01:00') ? '1'
@@ -691,7 +691,7 @@ document.documentElement.setAttribute('data-ph', ph);})();</script>
 <div class="langpick"><button type="button" class="langbtn" id="langBtn" aria-label="Webseiten Sprache" aria-haspopup="true" aria-expanded="false" onclick="toggleLangMenu(event)">🌐</button><div class="langmenu" id="langMenu" role="menu"><div class="langmenu-h">Webseiten Sprache:</div><button type="button" role="menuitem" data-lang="de" onclick="pickLang('de')">Deutsch</button><button type="button" role="menuitem" data-lang="en" onclick="pickLang('en')">English</button><button type="button" role="menuitem" data-lang="es" onclick="pickLang('es')">Español</button><button type="button" role="menuitem" data-lang="ru" onclick="pickLang('ru')">Русский</button><button type="button" role="menuitem" data-lang="tr" onclick="pickLang('tr')">Türkçe</button><button type="button" role="menuitem" data-lang="ar" onclick="pickLang('ar')">العربية</button><button type="button" role="menuitem" data-lang="fr" onclick="pickLang('fr')">Français</button><button type="button" role="menuitem" data-lang="it" onclick="pickLang('it')">Italiano</button><button type="button" role="menuitem" data-lang="uk" onclick="pickLang('uk')">Українська</button><button type="button" role="menuitem" data-lang="zh" onclick="pickLang('zh')">中文</button><button type="button" role="menuitem" data-lang="fa" onclick="pickLang('fa')">فارسی</button></div></div><button type="button" class="btn btn-kauf" data-i18n="nb01" onclick="zuPreisen()" style="padding:11px 18px;font-size:14px;white-space:nowrap">Mitglied werden</button><button class="navburger" aria-label="Menü öffnen" onclick="toggleMenu()">☰</button>
 </div>
 </div>
-</nav><div class="kaufbar" id="kaufbar" hidden><div class="kbx-t"><b>👑 Sprechclub · Warteliste</b><span>139 € im Monat · die Anmeldung ist gerade geschlossen</span></div><button type="button" class="btn btn-kauf" onclick="zurWarteliste('Premium')">🔔 Auf die Warteliste</button><button type="button" class="kbx-zu" aria-label="Leiste schließen" onclick="kaufbarZu()">✕</button></div><div class="mobmenu-bg" id="mobmenuBg" onclick="closeMenu()"></div><nav class="mobmenu" id="mobmenu" aria-label="Menü"><button class="mm-x" aria-label="Schließen" onclick="closeMenu()">✕</button><a class="mm-l" href="#ablauf" data-i18n="t003" onclick="closeMenu()">So läuft's</a><a class="mm-l" href="#stimmen" data-i18n="t005" onclick="closeMenu()">Feedback</a><a class="mm-l" href="lehrkraft-werden.html" onclick="closeMenu()">Lehrkraft werden</a><a class="mm-l" data-i18n="y03" href="#preise" onclick="closeMenu();if(window.openPreise){openPreise();return false}">Preise</a><a class="mm-l" href="konto.html" id="navAuthM" data-i18n="t007" onclick="closeMenu();goBereich(event)">🔒 Schülerbereich</a><div class="mm-lang"><span aria-hidden="true">🌐</span><span class="mm-lang-l">Webseiten Sprache:</span><select aria-label="Sprache" id="langSelM" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="es">Español</option><option value="ru">Русский</option><option value="tr">Türkçe</option><option value="ar">العربية</option><option value="fr">Français</option><option value="it">Italiano</option><option value="uk">Українська</option><option value="zh">中文</option><option value="fa">فارسی</option></select></div><button type="button" class="btn btn-kauf mm-cta" data-i18n="nb01" onclick="closeMenu();zuPreisen()">Mitglied werden</button></nav>
+</nav><div class="kaufbar" id="kaufbar" hidden><div class="kbx-t"><b id="kbxTitel">👑 Sprechclub · Warteliste</b><span id="kbxText">139 € im Monat · die Anmeldung ist gerade geschlossen</span></div><button type="button" class="btn btn-kauf" id="kbxKnopf" onclick="zurWarteliste('Premium')">🔔 Auf die Warteliste</button><button type="button" class="kbx-zu" aria-label="Leiste schließen" onclick="kaufbarZu()">✕</button></div><div class="mobmenu-bg" id="mobmenuBg" onclick="closeMenu()"></div><nav class="mobmenu" id="mobmenu" aria-label="Menü"><button class="mm-x" aria-label="Schließen" onclick="closeMenu()">✕</button><a class="mm-l" href="#ablauf" data-i18n="t003" onclick="closeMenu()">So läuft's</a><a class="mm-l" href="#stimmen" data-i18n="t005" onclick="closeMenu()">Feedback</a><a class="mm-l" href="lehrkraft-werden.html" onclick="closeMenu()">Lehrkraft werden</a><a class="mm-l" data-i18n="y03" href="#preise" onclick="closeMenu();if(window.openPreise){openPreise();return false}">Preise</a><a class="mm-l" href="konto.html" id="navAuthM" data-i18n="t007" onclick="closeMenu();goBereich(event)">🔒 Schülerbereich</a><div class="mm-lang"><span aria-hidden="true">🌐</span><span class="mm-lang-l">Webseiten Sprache:</span><select aria-label="Sprache" id="langSelM" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="es">Español</option><option value="ru">Русский</option><option value="tr">Türkçe</option><option value="ar">العربية</option><option value="fr">Français</option><option value="it">Italiano</option><option value="uk">Українська</option><option value="zh">中文</option><option value="fa">فارسی</option></select></div><button type="button" class="btn btn-kauf mm-cta" data-i18n="nb01" onclick="closeMenu();zuPreisen()">Mitglied werden</button></nav>
 <!-- HERO -->
 <style id="cafeStil">
 /* Julia, 20.10.: "hier noch dazuschreiben: wie ein Sprachcafe",
@@ -717,7 +717,7 @@ document.documentElement.setAttribute('data-ph', ph);})();</script>
 <h1 data-i18n="x02">Deutsch <span class="markde">sprechen</span> lernt man nur durch Sprechen.</h1>
 <div class="rangebot zu-weg">
 <span class="ra-l" data-i18n="kb1">👑 Sprechclub · Frühbucher</span>
-<div class="ra-p"><b>139 €</b><i>/ Monat</i></div>
+<div class="ra-p"><b id="raPreis">139 €</b><i>/ Monat</i></div>
 </div>
 <p class="rsub" data-i18n="nb102">Kurse hast du genug gemacht — gesprochen hast du zu wenig. Im <b>Sprechclub</b> kannst du regelmäßig und flexibel mit echten Menschen Deutsch sprechen.</p>
 <p class="rcafe">Wie ein <b>Sprachcafé</b> — nur im geschlossenen digitalen Raum.</p>
@@ -1328,9 +1328,11 @@ function ekFuellen(){
   if(!$('ekNeu')) return;
   /* Nur noch ein Preis: 139 Euro im Monat. Den Streichpreis zeigen
      wir erst wieder, wenn es einen echten Rabatt gibt. */
-  $('ekNeu').textContent='139 \u20ac';
+  $('ekNeu').textContent=((window.AKTION && window.AKTION.preisJetzt()) || 139)+' \u20ac';
   var zeig=function(id,an){var e=$(id); if(e) e.style.display=an?'':'none';};
-  zeig('ekAlt', false);
+  var _akt = !!(window.AKTION && window.AKTION.laeuft());
+  if (_akt) { var _ea=$('ekAlt'); if(_ea) _ea.textContent='139 \u20ac'; }
+  zeig('ekAlt', _akt);
   var zu=(ph===3);
   zeig('ekB0', ph===0); zeig('ekB1', ph===1); zeig('ekB2', ph===2); zeig('ekB3', zu);
   zeig('ekEwig', false); zeig('ekSicher', !zuPruefen(ph));
@@ -2592,7 +2594,7 @@ function premiumAnzeigen(){
      Behauptung, keine Information. Kommt der Dezember-Rabatt, steht
      hier wieder ein Paar: RABATT auf den Aktionspreis, PREIS als
      Streichpreis. */
-  var PREIS=139, RABATT=0;
+  var PREIS=139, RABATT=(window.AKTION && window.AKTION.rabatt()) || 0;   /* Black Week: aktion.js liefert 97, sonst 0 */
   var zeig = RABATT || PREIS;
   $('preisP').textContent=zeig+' \u20ac';
   var w=$('altWrapP');

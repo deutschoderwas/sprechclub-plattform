@@ -717,7 +717,7 @@ var START = new Date('2026-11-01T00:00:00+01:00');
    Zum Wiederaufmachen hier UND in index.html und preise.html
    TUEREN_AUF auf dasselbe Datum setzen. Der eigentliche Riegel liegt
    im Server (api/_tueren.js), damit keine Seite ihn umgehen kann. */
-window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function tuerenZu(){ var n = Date.now();
   return n >= START.getTime() && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
 function zurWarteliste(){

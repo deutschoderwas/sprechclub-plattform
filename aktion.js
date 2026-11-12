@@ -46,7 +46,98 @@
   };
   window.AKTION = A;
 
+  /* Der Rabatt in der Form, die die Seiten schon kennen: dort steht
+     ueberall "var PREIS = 139, RABATT = 0" - RABATT ist der
+     Aktionspreis oder 0. */
+  A.rabatt = function () { return A.laeuft() ? A.preis : 0; };
+  A.preisJetzt = function () { return A.laeuft() ? A.preis : A.alt; };
+
   if (!A.laeuft()) return;
+
+  /* ---------- Die Preise auf den Seiten ----------
+
+     Auf index.html, club.html, preise.html und sprechclub.html steht
+     139 € an insgesamt einem knappen Dutzend Stellen, jede von einer
+     anderen Funktion gezeichnet. Sie alle einzeln umzubauen hiesse,
+     vier gewachsene Seiten anzufassen und am 1. Dezember wieder
+     zurueck - und genau dabei wird eine vergessen. Dann wirbt die
+     Leiste mit 97 € und drei Zeilen tiefer steht 139 €.
+
+     Darum hier: eine Stelle, die die bekannten Preisfelder nachtraegt,
+     wenn es sie auf dieser Seite gibt. Was es nicht gibt, wird
+     uebersprungen. Am 1. Dezember laeuft diese Funktion gar nicht erst,
+     und jede Seite zeigt wieder ihren eigenen Preis. */
+  function setzeText(el, text) {
+    if (!el) return;
+    /* Manche Preisfelder haben ein Kind (z. B. "<small>/ Monat</small>").
+       Dann nur den Text davor ersetzen, sonst faellt das Kind weg. */
+    var kind = el.firstChild;
+    if (kind && kind.nodeType === 3) kind.nodeValue = text;
+    else el.textContent = text;
+  }
+  function zeig(el, an) { if (el) el.style.display = an ? '' : 'none'; }
+  function $(id) { return document.getElementById(id); }
+
+  function preiseSetzen() {
+    if (!A.laeuft()) return;
+    var p = A.preis + ' \u20ac', alt = A.alt + ' \u20ac';
+
+    setzeText($('pZahl'), p);          // preise.html, club.html, sprechclub.html
+    setzeText($('ekNeu'), p);          // index.html, Mitgliedschaftskarte
+    setzeText($('hKnopfPreis'), p + ' im Monat');   // club.html, Hero-Knopf
+    setzeText($('hChip'), A.prozent + ' % Black Week \u00b7 ' + p + ' im Monat');
+    zeig($('hChip'), true);
+
+    /* Streichpreis und Ersparnis */
+    var ekAlt = $('ekAlt');
+    if (ekAlt) { ekAlt.textContent = alt; zeig(ekAlt, true); }
+    var pAlt = $('pAlt');
+    if (pAlt) {
+      /* sprechclub.html schreibt hier HTML, preise.html nur den Preis.
+         Beides vertraegt denselben Satz. */
+      pAlt.innerHTML = 'statt <s>' + alt + '</s> im Monat';
+      zeig(pAlt, true);
+    }
+    setzeText($('pSpar'), '\u2212' + A.prozent + ' %');
+    zeig($('pAltWrap'), true);
+    var fahne = $('pFahne');
+    if (fahne) { fahne.textContent = A.name + ' \u00b7 \u2212' + A.prozent + ' %'; zeig(fahne, true); }
+    setzeText($('pHinweis'), 'monatlich k\u00fcndbar \u00b7 der Preis bleibt dir');
+
+    /* Die Klebeleiste unten auf der Startseite. Sie sagt sonst
+       "die Anmeldung ist gerade geschlossen" - waehrend der Aktion ist
+       das schlicht falsch, und zwar an der Stelle, die beim Scrollen
+       immer mitlaeuft. */
+    setzeText($('kbxTitel'), '\uD83D\uDC51 Sprechclub \u00b7 ' + A.name);
+    setzeText($('kbxText'), A.prozent + ' % Rabatt \u00b7 ' + p + ' statt ' + alt + ' im Monat');
+    setzeText($('raPreis'), p);
+
+    /* Und der Knopf daneben. Eine Leiste, die "30 % Rabatt" sagt und
+       dann auf die Warteliste fuehrt, waere die teuerste Art, eine
+       Aktion zu verschenken. */
+    var kn = $('kbxKnopf');
+    if (kn && !kn.dataset.aktion) {
+      kn.dataset.aktion = '1';
+      kn.textContent = 'F\u00fcr ' + p + ' dabei sein';
+      kn.setAttribute('onclick', '');
+      kn.onclick = function () {
+        try {
+          if (typeof window.premiumKaufen === 'function') return window.premiumKaufen();
+          if (typeof window.buyPass === 'function') return window.buyPass('premium_month');
+        } catch (e) {}
+        location.href = '/preise';
+      };
+    }
+  }
+
+  /* Die Seiten zeichnen ihre Preise selbst, teils erst spaet. Darum
+     mehrmals nachsetzen statt einmal zu hoffen. */
+  function nachsetzen() {
+    preiseSetzen();
+    setTimeout(preiseSetzen, 300);
+    setTimeout(preiseSetzen, 1500);
+  }
+  A.preiseSetzen = preiseSetzen;
 
   /* ---------- Die laufende Leiste ---------- */
   var CSS = ''
@@ -118,9 +209,10 @@
     }, 3600000);
   }
 
+  function start() { leisteBauen(); nachsetzen(); }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', leisteBauen);
+    document.addEventListener('DOMContentLoaded', start);
   } else {
-    leisteBauen();
+    start();
   }
 })();

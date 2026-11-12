@@ -549,7 +549,7 @@ function premiumGesperrt(id){
   return !!window.PREMIUM_PAUSIERT && /premium/i.test(String(id || ''));
 }
 var PREMIUM = 'monat';
-var PREIS = 139, RABATT = 0;
+var PREIS = 139, RABATT = (window.AKTION && window.AKTION.rabatt()) || 0;   /* Black Week: aktion.js liefert 97, sonst 0 */
 
 function setzePremium(){
   var $ = function(i){ return document.getElementById(i); };
@@ -731,7 +731,7 @@ async function bezahlen(passId, knopf, alterText){
    TUEREN_AUF setzen — wie in index.html, preise.html und club.html.
    Der Server sperrt ohnehin (api/_tueren.js); hier geht es darum,
    dass der Knopf nicht in eine Fehlermeldung laeuft. */
-window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function tuerenZu(){ var n = Date.now(), zu = Date.parse('2026-11-01T00:00:00+01:00');
   return n >= zu && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
 document.addEventListener('DOMContentLoaded', function(){

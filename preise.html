@@ -327,7 +327,7 @@ var SPAR = { auf: Date.parse('2026-10-01T00:00:00+02:00'), ende: Date.parse('202
    verlinkt. Der Riegel liegt zusaetzlich im Server
    (api/_tueren.js, api/create-checkout.js); das hier ist die
    Oberflaeche dazu. */
-window.TUEREN_AUF = null;   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function sparPhase(){ var n = Date.now(), auf = window.TUEREN_AUF;
   return n < SPAR.auf ? 0 : (n < SPAR.ende ? 1 : ((auf && n >= auf) ? 2 : 3)); }
 function setzePremium(){
@@ -336,7 +336,7 @@ function setzePremium(){
      nicht mehr. Der Streichpreis bleibt leer, solange kein echter
      Rabatt l\u00e4uft \u2014 Anfang Dezember kommt einer, dann steht hier
      wieder ein Paar aus Aktionspreis und regul\u00e4rem Preis. */
-  var PREIS = 139, RABATT = 0, zeig = RABATT || PREIS;
+  var PREIS = 139, RABATT = (window.AKTION && window.AKTION.rabatt()) || 0, zeig = RABATT || PREIS;   /* Black Week: aktion.js liefert 97, sonst 0 */
   $('pZahl').textContent = zeig + ' \u20ac';
   var w = $('pAltWrap');
   if (RABATT) {
