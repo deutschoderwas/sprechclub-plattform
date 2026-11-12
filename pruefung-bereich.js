@@ -54,23 +54,82 @@
      stufe = der Stufenkurs aus a1.js / a2.js (über kursOeffnen)
      muster= Schlüssel in pruefung.js für die Musterprüfung          */
   var PRUEFUNGEN = [
-    { id:'sd1', name:'Start Deutsch 1', anbieter:'Goethe · telc', niveau:'A1',
-      bild:'menschen', stufe:'A1',
+    /* ---------- Goethe-Institut, A1 bis C2 ----------
+       12.11.2026: Julia: „bei den Prüfungen muss das zum Goethe und telc
+       passen, alles nach der Reihenfolge A1–C1". Vorher hieß A2 hier
+       „Start Deutsch 2 · Goethe · telc" — Goethe nennt die Prüfung seit
+       Jahren „Goethe-Zertifikat A2", und telc A2 ist anders aufgebaut
+       (eigene Seite unten). Die Goethe-Seiten hatten außerdem keine
+       Punkte, keine Bewertung und keinen offiziellen Übungssatz.
+       Geprüft am 12.11.2026 an den Übungs- und Modellsätzen auf
+       goethe.de (A1 Start Deutsch 1, A2, B1, B2, C1 modular, C2). */
+    { id:'sd1', name:'Goethe-Zertifikat A1', anbieter:'Goethe-Institut · Start Deutsch 1', niveau:'A1',
+      bild:'menschen', stufe:'A1', geprueft:true, gruppe:'goethe',
       fuer:'Ehegattennachzug und der erste Nachweis, dass du Deutsch kannst.',
-      module:[ {id:'hoeren',n:'Hören',m:'ca. 20'}, {id:'lesen',n:'Lesen',m:'25'},
-               {id:'schreiben',n:'Schreiben',m:'20'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
-      geprueft:true,
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 20', t:'Drei Teile, 15 Aufgaben: kurze Gespräche, Ansagen am Telefon und Durchsagen. Manche Texte hörst du zweimal, manche nur einmal.'},
+               {id:'lesen',n:'Lesen',m:'25', t:'Drei Teile, 15 Aufgaben: kurze Nachrichten, Anzeigen im Internet, Schilder und Aushänge.'},
+               {id:'schreiben',n:'Schreiben',m:'20', t:'Ein Formular mit fünf Angaben und eine kurze Mitteilung von etwa 30 Wörtern zu drei Punkten.'},
+               {id:'sprechen',n:'Sprechen',m:'15', t:'In der Gruppe: sich vorstellen, mit Themenkarten fragen und antworten, mit Bildkarten um etwas bitten.'} ],
       hinweis:'Schriftlich zusammen 65 Minuten. Gesprochen wird in der Gruppe mit bis zu vier '
-             +'Teilnehmenden, 15 Minuten für alle drei Teile.' },
+             +'Teilnehmenden, 15 Minuten für alle drei Teile, ohne Vorbereitungszeit.',
+      punkte:'Insgesamt 100 Punkte, je 25 für Hören, Lesen, Schreiben und Sprechen. Bestanden ab 60 Punkten.',
+      prognose:{ teile:[ { name:'Gesamtergebnis', max:100, grenze:60, anteile:{ hoeren:25, lesen:25, schreiben:25, sprechen:25 } } ] },
+      mat:{
+        wortschatz:['Sich vorstellen','Familie','Wohnen','Essen und Trinken','Einkaufen','Uhrzeit und Termine',
+                    'Freizeit','Reisen und Verkehr','Arbeit','Körper und Gesundheit'],
+        grammatik:['Verben im Präsens, auch sein und haben','W-Fragen und Ja/Nein-Fragen','Artikel: der, die, das, ein, kein',
+                   'Akkusativ','Modalverben: können, möchten, müssen','Trennbare Verben','Possessivartikel: mein, dein, Ihr',
+                   'Zeitangaben: am, um, im'],
+        redemittel:[
+          ['Sich vorstellen','Ich heiße … · Ich komme aus … · Ich wohne in … · Ich spreche …'],
+          ['Fragen und antworten','Was machst du am Wochenende? · Am Wochenende … · Wie viel kostet …?'],
+          ['Um etwas bitten','Können Sie bitte …? · Ich möchte …, bitte. · Haben Sie …?'],
+          ['Mitteilung','Liebe …, / Lieber …, · Ich kann leider nicht kommen, weil … · Viele Grüße'] ],
+        bewertung:[
+          ['Hören (25)','15 Aufgaben, umgerechnet auf 25 Punkte.'],
+          ['Lesen (25)','15 Aufgaben, umgerechnet auf 25 Punkte.'],
+          ['Schreiben (25)','Formular und Mitteilung. Bei der Mitteilung zählt, ob alle drei Punkte drin sind und man dich versteht.'],
+          ['Sprechen (25)','Drei Teile in der Gruppe: sich vorstellen, fragen und antworten, um etwas bitten.'],
+          ['Bestanden','Mindestens 60 von 100 Punkten. Die Prüfung legst du als Ganzes ab.'] ],
+        ablauf:[
+          'Schriftlich zuerst: Hören (ca. 20 Minuten), Lesen (25), Schreiben (20).',
+          'Mündlich in der Gruppe mit bis zu vier Personen, etwa 15 Minuten.',
+          'Es gibt keine Vorbereitungszeit für das Sprechen. Die Karten bekommst du in der Prüfung.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/A1_sd1/sd_1_uebungssatz01.pdf' },
 
-    { id:'sd2', name:'Start Deutsch 2', anbieter:'Goethe · telc', niveau:'A2',
-      bild:'wohnen', stufe:'A2', muster:'A2',
+    { id:'sd2', name:'Goethe-Zertifikat A2', anbieter:'Goethe-Institut', niveau:'A2',
+      bild:'wohnen', stufe:'A2', muster:'A2', geprueft:true, gruppe:'goethe',
       fuer:'Aufenthaltstitel, erste Arbeit, der Schritt nach dem Anfang.',
-      module:[ {id:'hoeren',n:'Hören',m:'ca. 30'}, {id:'lesen',n:'Lesen',m:'30'},
-               {id:'schreiben',n:'Schreiben',m:'30'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
-      geprueft:true,
-      hinweis:'Schriftlich zusammen 90 Minuten. Sprechen 15 Minuten zu zweit, 10 Minuten allein — '
-             +'ohne Vorbereitungszeit, die Aufgabe kommt erst in der Prüfung.' },
+      module:[ {id:'lesen',n:'Lesen',m:'30', t:'Vier Teile, 20 Aufgaben: ein Zeitungsartikel, ein Wegweiser, eine E-Mail und Anzeigen zum Zuordnen.'},
+               {id:'hoeren',n:'Hören',m:'ca. 30', t:'Vier Teile, 20 Aufgaben: Ansagen und Durchsagen, ein Gespräch, kurze Alltagsgespräche und ein Interview.'},
+               {id:'schreiben',n:'Schreiben',m:'30', t:'Eine kurze Nachricht von 20 bis 30 Wörtern und eine E-Mail von 30 bis 40 Wörtern, jeweils zu drei Punkten.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'Zu zweit: Fragen zur Person stellen und beantworten, von dir erzählen, gemeinsam einen Termin finden.'} ],
+      hinweis:'Schriftlich zusammen 90 Minuten. Sprechen 15 Minuten zu zweit, 10 Minuten allein, '
+             +'ohne Vorbereitungszeit: Die Aufgabe kommt erst in der Prüfung.',
+      punkte:'Insgesamt 100 Punkte, je 25 für Lesen, Hören, Schreiben und Sprechen. Bestanden ab 60 Punkten.',
+      prognose:{ teile:[ { name:'Gesamtergebnis', max:100, grenze:60, anteile:{ lesen:25, hoeren:25, schreiben:25, sprechen:25 } } ] },
+      mat:{
+        wortschatz:['Tagesablauf','Wohnen','Einkaufen und Kleidung','Essen und Restaurant','Arbeit und Beruf',
+                    'Freizeit und Hobbys','Reisen und Verkehr','Gesundheit','Feste und Einladungen','Wetter'],
+        grammatik:['Perfekt mit haben und sein','Modalverben, auch im Präteritum (konnte, musste)','Nebensätze mit weil, dass, wenn',
+                   'Präpositionen mit Dativ und Akkusativ','Komparativ und Superlativ','Reflexive Verben',
+                   'Adjektive vor dem Nomen','Zeitangaben: seit, vor, ab'],
+        redemittel:[
+          ['Über dich erzählen','Ich wohne seit … in … · Am Wochenende … · Am liebsten …'],
+          ['Fragen zur Person','Woher kommst du? · Was machst du beruflich? · Was isst du gern?'],
+          ['Einen Termin finden','Hast du am … Zeit? · Da kann ich leider nicht, da … · Wie wäre es mit …? · Okay, dann treffen wir uns …'],
+          ['Nachricht und E-Mail','Liebe …, / Sehr geehrte Frau …, · Leider kann ich … · Können Sie mir bitte sagen, …? · Viele Grüße / Mit freundlichen Grüßen'] ],
+        bewertung:[
+          ['Lesen (25)','20 Aufgaben, umgerechnet auf 25 Punkte.'],
+          ['Hören (25)','20 Aufgaben, umgerechnet auf 25 Punkte.'],
+          ['Schreiben (25)','Zwei Texte. Bewertet wird, ob alle Punkte drin sind und ob der Text als Nachricht funktioniert.'],
+          ['Sprechen (25)','Drei Teile zu zweit, dazu Aussprache.'],
+          ['Bestanden','Mindestens 60 von 100 Punkten. Die Prüfung legst du als Ganzes ab.'] ],
+        ablauf:[
+          'Schriftlich zuerst: Lesen (30 Minuten), Hören (ca. 30), Schreiben (30).',
+          'Beim Hören: manche Texte zweimal, manche nur einmal. Die Anleitung sagt es dir.',
+          'Mündlich zu zweit, etwa 15 Minuten, ohne Vorbereitungszeit.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf' },
 
     /* 03.11.2026: Sprechen-Grenze korrigiert (B1 ab 75, nicht ab 40) und volles
        Training ergänzt — geprüft an den g.a.s.t.-Übungssätzen 1 und 2. */
@@ -109,40 +168,243 @@
           'Mündlich zu zweit, etwa 16 Minuten.'] },
       uebungstest:'https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf' },
 
-    { id:'b1', name:'Goethe-Zertifikat B1', anbieter:'Goethe · ÖSD', niveau:'B1',
-      bild:'buero', kurs:'goethetelc', muster:'B1',
+    { id:'b1', name:'Goethe-Zertifikat B1', anbieter:'Goethe-Institut', niveau:'B1',
+      bild:'buero', kurs:'goethetelc', muster:'B1', gruppe:'goethe',
       fuer:'Einbürgerung, Ausbildung, viele Arbeitgeber. Die wichtigste Hürde.',
-      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'ca. 40'},
-               {id:'schreiben',n:'Schreiben',m:'60'}, {id:'sprechen',n:'Sprechen',m:'ca. 15'} ],
+      module:[ {id:'lesen',n:'Lesen',m:'65', t:'Fünf Teile, 30 Aufgaben: ein Blog, Zeitungsartikel, Anzeigen, Meinungen zu einer Frage und Regeln wie eine Hausordnung.'},
+               {id:'hoeren',n:'Hören',m:'ca. 40', t:'Vier Teile, 30 Aufgaben: Durchsagen und kurze Texte, ein Vortrag, ein Gespräch, eine Radiodiskussion.'},
+               {id:'schreiben',n:'Schreiben',m:'60', t:'Drei Texte: eine private E-Mail (ca. 80 Wörter), ein Meinungsbeitrag (ca. 80 Wörter) und eine formelle E-Mail (ca. 40 Wörter).'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'Zu zweit: gemeinsam etwas planen, ein Thema präsentieren, über das Thema sprechen und Fragen beantworten.'} ],
       modular:true, geprueft:true,
-      hinweis:'Sprechen ca. 15 Minuten zu zweit, ca. 10 Minuten allein — dazu 15 Minuten Vorbereitung. '
-             +'Die schriftlichen Module dauern zusammen etwa 165 Minuten.' },
+      hinweis:'Sprechen ca. 15 Minuten zu zweit, ca. 10 Minuten allein, dazu 15 Minuten Vorbereitung. '
+             +'Die schriftlichen Module dauern zusammen etwa 165 Minuten.',
+      punkte:'Jedes Modul hat 100 Punkte und ist ab 60 Punkten bestanden. Du kannst die Module einzeln oder zusammen ablegen '
+            +'und ein nicht bestandenes Modul allein wiederholen.',
+      prognose:{ teile:[ { name:'Lesen', max:100, grenze:60, anteile:{ lesen:100 } },
+                         { name:'Hören', max:100, grenze:60, anteile:{ hoeren:100 } },
+                         { name:'Schreiben', max:100, grenze:60, anteile:{ schreiben:100 } },
+                         { name:'Sprechen', max:100, grenze:60, anteile:{ sprechen:100 } } ] },
+      mat:{
+        wortschatz:['Arbeit und Beruf','Wohnen und Nachbarschaft','Gesundheit','Ämter und Behörden','Freizeit und Vereine',
+                    'Reisen und Verkehr','Einkaufen und Konsum','Medien','Schule und Weiterbildung','Umwelt'],
+        grammatik:['Konnektoren: weil, obwohl, deshalb, trotzdem, damit','Nebensätze mit als, wenn, während, bevor, nachdem',
+                   'Relativsätze','Adjektivendungen','Perfekt und Präteritum','Passiv im Präsens und Präteritum',
+                   'Konjunktiv II für Wünsche, Vorschläge und höfliche Bitten','Verben mit Präpositionen: sich freuen auf/über, warten auf',
+                   'zu + Infinitiv, um … zu'],
+        redemittel:[
+          ['Schreiben: private E-Mail','Liebe …, vielen Dank für deine Nachricht. · Stell dir vor, … · Ich freue mich schon auf … · Viele Grüße'],
+          ['Schreiben: Meinung','Ich finde, dass … · Ein Vorteil ist … · Andererseits … · Für mich ist wichtig, dass …'],
+          ['Schreiben: formelle E-Mail','Sehr geehrte Frau …, · leider kann ich am … nicht … · Ich bitte um Verständnis. · Mit freundlichen Grüßen'],
+          ['Sprechen: gemeinsam planen','Was hältst du davon, wenn …? · Gute Idee, und dann … · Das passt mir leider nicht. · Also machen wir es so: …'],
+          ['Sprechen: präsentieren','Mein Thema ist … · In meinem Heimatland … · Ein Vorteil ist …, ein Nachteil … · Zum Schluss …'] ],
+        bewertung:[
+          ['Lesen (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Hören (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Schreiben (100)','Drei Texte, bewertet nach Erfüllung der Aufgabe, Zusammenhang, Wortschatz und Strukturen.'],
+          ['Sprechen (100)','Drei Teile, bewertet nach Erfüllung der Aufgabe, Zusammenhang, Wortschatz, Strukturen und Aussprache.'],
+          ['Bestanden','Jedes Modul einzeln ab 60 von 100 Punkten.'] ],
+        ablauf:[
+          'Lesen 65 Minuten, Hören ca. 40, Schreiben 60. Die Reihenfolge legt das Prüfungszentrum fest.',
+          'Beim Hören: manche Teile hörst du einmal, manche zweimal.',
+          'Sprechen zu zweit, etwa 15 Minuten, vorher 15 Minuten Vorbereitung allein.',
+          'In der Vorbereitung bekommst du die Aufgaben für alle drei Teile. Mach dir Stichpunkte, keine ganzen Sätze.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/B1/B1_Uebungssatz_Erwachsene.pdf' },
 
     { id:'b2', name:'Goethe-Zertifikat B2', anbieter:'Goethe-Institut', niveau:'B2',
-      bild:'bewerbung', kurs:'goethetelc', muster:'B2', geprueft:true,
+      bild:'bewerbung', kurs:'goethetelc', muster:'B2', geprueft:true, gruppe:'goethe',
       fuer:'Studium, Anerkennung im Beruf, qualifizierte Arbeit.',
-      module:[ {id:'lesen',n:'Lesen',m:'65'}, {id:'hoeren',n:'Hören',m:'40'},
-               {id:'schreiben',n:'Schreiben',m:'75'}, {id:'sprechen',n:'Sprechen',m:'15'} ],
-      modular:true },
+      module:[ {id:'lesen',n:'Lesen',m:'65', t:'Fünf Teile, 30 Aufgaben: Forumsbeiträge, Zeitungs- und Zeitschriftenartikel, Kommentare und Regeln.'},
+               {id:'hoeren',n:'Hören',m:'ca. 40', t:'Vier Teile, 30 Aufgaben: kurze Alltagsäußerungen, Interviews, Gespräche, Radiobeiträge und ein Vortrag.'},
+               {id:'schreiben',n:'Schreiben',m:'75', t:'Ein Forumsbeitrag mit deiner Meinung (ca. 150 Wörter) und eine formelle Nachricht im Beruf (ca. 100 Wörter).'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'Zu zweit: ein Vortrag von etwa 4 Minuten mit Rückfragen, dann eine Diskussion, in der ihr Argumente austauscht.'} ],
+      modular:true,
+      hinweis:'Sprechen ca. 15 Minuten zu zweit, dazu 15 Minuten Vorbereitung. '
+             +'Die schriftlichen Module dauern zusammen etwa 180 Minuten.',
+      punkte:'Jedes Modul hat 100 Punkte und ist ab 60 Punkten bestanden. Du kannst die Module einzeln oder zusammen ablegen '
+            +'und ein nicht bestandenes Modul allein wiederholen.',
+      prognose:{ teile:[ { name:'Lesen', max:100, grenze:60, anteile:{ lesen:100 } },
+                         { name:'Hören', max:100, grenze:60, anteile:{ hoeren:100 } },
+                         { name:'Schreiben', max:100, grenze:60, anteile:{ schreiben:100 } },
+                         { name:'Sprechen', max:100, grenze:60, anteile:{ sprechen:100 } } ] },
+      mat:{
+        wortschatz:['Arbeitswelt und Karriere','Bildung und Studium','Gesellschaft und Zusammenleben','Medien und Digitalisierung',
+                    'Umwelt und Klima','Gesundheit und Ernährung','Wohnen und Stadt','Konsum und Werbung','Kultur und Freizeit'],
+        grammatik:['Konnektoren: zwar … aber, einerseits … andererseits, je … desto','Passiv mit Modalverben','Nominalisierung',
+                   'Relativsätze mit Präpositionen','Konjunktiv II der Vergangenheit','Partizipien als Adjektive',
+                   'Verben, Nomen und Adjektive mit festen Präpositionen','Indirekte Rede im Konjunktiv I erkennen'],
+        redemittel:[
+          ['Forumsbeitrag','Zu der Frage, ob …, möchte ich Folgendes sagen: · Meiner Meinung nach … · Dafür spricht … · Ein Gegenargument ist … · Abschließend …'],
+          ['Formelle Nachricht','Sehr geehrte Frau …, · leider muss ich Ihnen mitteilen, dass … · Ich schlage vor, … · Für Rückfragen stehe ich gern zur Verfügung.'],
+          ['Vortrag','Ich spreche heute über … · Zunächst … · Ein Beispiel dafür ist … · Zusammenfassend lässt sich sagen …'],
+          ['Diskutieren','Da stimme ich dir teilweise zu, aber … · Das sehe ich anders, denn … · Was meinst du dazu?'] ],
+        bewertung:[
+          ['Lesen (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Hören (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Schreiben (100)','Zwei Texte, bewertet nach Erfüllung der Aufgabe, Zusammenhang, Wortschatz und Strukturen. Auch der passende Ton zählt.'],
+          ['Sprechen (100)','Vortrag und Diskussion, bewertet nach Erfüllung der Aufgabe, Zusammenhang, Wortschatz, Strukturen und Aussprache.'],
+          ['Bestanden','Jedes Modul einzeln ab 60 von 100 Punkten.'] ],
+        ablauf:[
+          'Lesen 65 Minuten, Hören ca. 40, Schreiben 75.',
+          'Beim Schreiben brauchst du für den Forumsbeitrag etwa 50 Minuten, für die Nachricht etwa 25.',
+          'Sprechen zu zweit, etwa 15 Minuten, vorher 15 Minuten Vorbereitung allein.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/B2/b2_modellsatz_erwachsene.pdf' },
 
     { id:'c1', name:'Goethe-Zertifikat C1', anbieter:'Goethe-Institut', niveau:'C1',
-      bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1',
+      bild:'typisch-deutsch', kurs:'goethetelc', muster:'C1', gruppe:'goethe',
       fuer:'Universität, Führungsposition, anspruchsvolle Fachberufe.',
       /* Die allgemeinen Modultexte sind fuer A1/A2 geschrieben ("Anzeigen,
          Schilder, Texte"). Auf C1 lasen sie sich wie aus einer anderen
-         Pruefung — deshalb hier eigene. */
+         Pruefung, deshalb hier eigene. 12.11.2026 gegen den Modellsatz
+         C1 modular geprueft: die E-Mail ist halbformell, nicht formell. */
       module:[ {id:'lesen',n:'Lesen',m:'65',
-                 t:'Vier Teile, 30 Aufgaben: Lückentext, Sachartikel, Sätze einsetzen, Fachleute zuordnen.'},
+                 t:'Vier Teile, 30 Aufgaben: Lückentext, Zeitschriftenartikel, Sätze einsetzen, Aussagen Texten zuordnen.'},
                {id:'hoeren',n:'Hören',m:'ca. 40',
-                 t:'Vortrag, Gespräch unter Fachleuten, Radiobeitrag — vieles hörst du nur einmal.'},
+                 t:'Vier Teile, 30 Aufgaben: ein Podcast, ein Radiointerview, eine Diskussion und ein Vortrag. Vieles hörst du nur einmal.'},
                {id:'schreiben',n:'Schreiben',m:'75',
-                 t:'Ein Diskussionsbeitrag im Forum und eine formelle E-Mail — gewertet wird auch der Ton.'},
+                 t:'Ein Diskussionsbeitrag im Forum (ca. 230 Wörter) und eine halbformelle E-Mail (ca. 120 Wörter). Gewertet wird auch der Ton.'},
                {id:'sprechen',n:'Sprechen',m:'ca. 20',
-                 t:'Ein Kurzvortrag mit Nachfragen und eine Diskussion, in der du deine Position halten musst.'} ],
+                 t:'Ein Vortrag von etwa 5 Minuten mit Nachfragen und eine Diskussion, in der du deine Position vertrittst.'} ],
       modular:true, geprueft:true,
-      hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein — dazu 20 Minuten Vorbereitung. '
-             +'Lesen: 65 Minuten für 30 Aufgaben, davon 5 für den Antwortbogen; bestanden ab 18 richtigen. '
-             +'Schreiben: 75 Minuten für zwei Texte, bewertet von zwei Prüfenden unabhängig voneinander.' },
+      hinweis:'Sprechen ca. 20 Minuten zu zweit, 15 Minuten allein, dazu 20 Minuten Vorbereitung. '
+             +'Lesen: 65 Minuten für 30 Aufgaben. '
+             +'Schreiben: 75 Minuten für zwei Texte, bewertet von zwei Prüfenden unabhängig voneinander.',
+      punkte:'Jedes Modul hat 100 Punkte und ist ab 60 Punkten bestanden. Du kannst die Module einzeln oder zusammen ablegen '
+            +'und ein nicht bestandenes Modul allein wiederholen.',
+      prognose:{ teile:[ { name:'Lesen', max:100, grenze:60, anteile:{ lesen:100 } },
+                         { name:'Hören', max:100, grenze:60, anteile:{ hoeren:100 } },
+                         { name:'Schreiben', max:100, grenze:60, anteile:{ schreiben:100 } },
+                         { name:'Sprechen', max:100, grenze:60, anteile:{ sprechen:100 } } ] },
+      mat:{
+        wortschatz:['Wissenschaft und Forschung','Arbeitswelt im Wandel','Bildung und Lernen','Gesellschaft und Politik',
+                    'Medien und Kommunikation','Umwelt und Nachhaltigkeit','Psychologie und Verhalten','Wirtschaft und Konsum'],
+        grammatik:['Nominalstil und seine Auflösung','Passiv und Passiversatzformen','Konnektoren: sofern, zumal, wohingegen, indem',
+                   'Partizipialattribute','Konjunktiv I in der indirekten Rede','Modalpartikeln und Abtönung',
+                   'Feste Verb-Nomen-Verbindungen: in Frage stellen, zur Verfügung stehen'],
+        redemittel:[
+          ['Forumsbeitrag','Die Frage, ob …, wird kontrovers diskutiert. · Befürworter argumentieren, dass … · Dem ist entgegenzuhalten, dass … · Ich vertrete die Auffassung, dass …'],
+          ['Halbformelle E-Mail','Liebe Frau …, · vielen Dank für Ihre Nachricht. · Ich möchte kurz auf … eingehen. · Wäre es möglich, dass …? · Herzliche Grüße'],
+          ['Vortrag','In meinem Vortrag geht es um … · Ich gliedere meinen Vortrag in drei Punkte. · Daraus ergibt sich … · Abschließend möchte ich betonen …'],
+          ['Diskussion','Ich verstehe Ihren Punkt, gebe aber zu bedenken, dass … · Darf ich kurz einhaken? · Wir sind uns zumindest darin einig, dass …'] ],
+        bewertung:[
+          ['Lesen (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Hören (100)','30 Aufgaben. Bestanden ab 60 Punkten.'],
+          ['Schreiben (100)','Zwei Texte, von zwei Prüfenden unabhängig bewertet: Erfüllung der Aufgabe, Zusammenhang, Wortschatz, Strukturen.'],
+          ['Sprechen (100)','Vortrag und Diskussion: Erfüllung der Aufgabe, Zusammenhang, Wortschatz, Strukturen, Aussprache.'],
+          ['Bestanden','Jedes Modul einzeln ab 60 von 100 Punkten.'] ],
+        ablauf:[
+          'Lesen 65 Minuten, Hören ca. 40, Schreiben 75.',
+          'Beim Schreiben etwa 50 Minuten für den Forumsbeitrag, etwa 25 für die E-Mail.',
+          'Sprechen zu zweit, etwa 20 Minuten, vorher 20 Minuten Vorbereitung. Du wählst dein Vortragsthema aus zwei Themen.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/C1_modular/c1-modular_modellsatz.pdf' },
+
+    { id:'goethec2', name:'Goethe-Zertifikat C2', anbieter:'Goethe-Institut · Großes Deutsches Sprachdiplom', niveau:'C2',
+      bild:'bildung', modular:true, geprueft:true, gruppe:'goethe',
+      training:{ lesen:'telcC2', hoeren:'telcC2', schreiben:'telcC2', sprechen:'telcC2' },
+      fuer:'Das höchste Goethe-Zertifikat: Lehramt, Hochschule, Übersetzen und Dolmetschen.',
+      module:[ {id:'lesen',n:'Lesen',m:'80', t:'Mehrere anspruchsvolle Texte mit unterschiedlichen Aufgaben.'},
+               {id:'hoeren',n:'Hören',m:'ca. 35', t:'Mehrere Hörtexte mit unterschiedlichen Aufgaben.'},
+               {id:'schreiben',n:'Schreiben',m:'80', t:'Ein Text: Du wählst eines von vier Themen.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'Ein Vortrag über ein komplexes Thema mit Rückfragen, dann eine Diskussion mit Argumenten dafür und dagegen.'} ],
+      hinweis:'Lesen 80 Minuten, Hören ca. 35, Schreiben 80, Sprechen ca. 15 Minuten zu zweit. '
+             +'Jedes Modul ist ab 60 Prozent bestanden und lässt sich einzeln ablegen.',
+      formatHinweis:'Ein Training im Format von Goethe C2 gibt es hier noch nicht. Bis dahin übst du mit dem telc-C2-Training: '
+             +'dasselbe Niveau, aber andere Aufgabenformen. Den offiziellen Goethe-Modellsatz findest du unter „Musterprüfung“.',
+      mat:{
+        wortschatz:['Wissenschaft und Bildung','Gesellschaft und Politik','Kultur und Literatur','Sprache und Kommunikation',
+                    'Arbeit und Wirtschaft','Umwelt und Technik','Psychologie und Ethik'],
+        grammatik:['Nominal- und Verbalstil sicher wechseln','Komplexe Satzgefüge und Satzverbindungen',
+                   'Konjunktiv I und II in allen Formen','Passiversatzformen','Feste Wendungen und Redewendungen',
+                   'Stilebenen: neutral, gehoben, umgangssprachlich'],
+        redemittel:[
+          ['Vortrag','Im Folgenden möchte ich … beleuchten. · Hierbei ist zu unterscheiden zwischen … · Daraus lässt sich ableiten, dass …'],
+          ['Diskussion','Dieses Argument greift meines Erachtens zu kurz, weil … · Ich räume ein, dass …, halte aber dagegen, dass …'],
+          ['Schreiben','Vor diesem Hintergrund … · Nicht zuletzt … · Es bleibt festzuhalten, dass …'] ],
+        bewertung:[
+          ['Jedes Modul','Bestanden ab 60 Prozent der Punkte.'],
+          ['Schreiben und Sprechen','Bewertet werden Inhalt, Aufbau, Wortschatz, Strukturen und beim Sprechen auch die Aussprache.'],
+          ['Modular','Du kannst die Module einzeln oder zusammen ablegen und einzeln wiederholen.'] ],
+        ablauf:[
+          'Lesen 80 Minuten, Hören ca. 35, Schreiben 80.',
+          'Beim Schreiben wählst du eines von vier Themen.',
+          'Sprechen zu zweit, etwa 15 Minuten: Vortrag mit Rückfragen, dann eine Diskussion.'] },
+      uebungstest:'https://www.goethe.de/pro/relaunch/prf/materialien/C2/c2_modellsatz.pdf' },
+
+
+    /* ---------- telc A1 und A2 ----------
+       12.11.2026: Bisher gab es telc A1 und A2 nur als Untertitel der
+       Goethe-Seiten. telc A2 ist aber anders aufgebaut: Hören ca. 20,
+       Lesen und Schreiben zusammen 50 Minuten, 60 Punkte, bestanden ab 36
+       (geprüft am telc-Übungstest Deutsch A2, Stand 12/2024).
+       telc A1 (Start Deutsch 1) hat dieselben Teile wie Goethe A1, nur
+       Lesen und Schreiben liegen in einem Block von 45 Minuten. */
+    { id:'telca1', name:'telc Deutsch A1', anbieter:'telc · Start Deutsch 1', niveau:'A1',
+      bild:'familie', stufe:'A1', telc:true, geprueft:true, gruppe:'telc', dauer:'ca. 1 Std 20 Min',
+      training:{ hoeren:'A1', lesen:'A1', schreiben:'A1', sprechen:'A1' },
+      fuer:'Ehegattennachzug und der erste Nachweis, dass du Deutsch kannst.',
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 20', t:'Drei Teile: kurze Gespräche, Ansagen am Telefon und Durchsagen.'},
+               {id:'lesen',n:'Lesen',m:'ca. 25', t:'Drei Teile: kurze Texte, Anzeigen und Schilder. Lesen und Schreiben bearbeitest du zusammen in 45 Minuten.'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 20', t:'Zwei Teile: ein Formular ausfüllen und eine kurze Mitteilung schreiben.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'In der Gruppe mit bis zu vier Personen: sich vorstellen, fragen und antworten, um etwas bitten. Ohne Vorbereitungszeit.'} ],
+      hinweis:'Schriftlich: Hören ca. 20 Minuten, danach Lesen und Schreiben zusammen 45 Minuten. '
+             +'Mündlich ca. 15 Minuten in der Gruppe. Die Prüfung kann man nicht in Teilen ablegen.',
+      formatHinweis:'Start Deutsch 1 ist bei telc und beim Goethe-Institut gleich aufgebaut: drei Teile Hören, drei Teile Lesen, '
+             +'zwei Teile Schreiben, drei Teile Sprechen in der Gruppe. Deshalb übst du hier mit demselben Training. '
+             +'Der Unterschied: Bei telc teilst du dir die 45 Minuten für Lesen und Schreiben selbst ein.',
+      mat:{
+        wortschatz:['Sich vorstellen','Familie','Wohnen','Essen und Trinken','Einkaufen','Uhrzeit und Termine',
+                    'Freizeit','Reisen und Verkehr','Arbeit','Körper und Gesundheit'],
+        grammatik:['Verben im Präsens, auch sein und haben','W-Fragen und Ja/Nein-Fragen','Artikel: der, die, das, ein, kein',
+                   'Akkusativ','Modalverben: können, möchten, müssen','Trennbare Verben','Possessivartikel: mein, dein, Ihr',
+                   'Zeitangaben: am, um, im'],
+        redemittel:[
+          ['Sich vorstellen','Ich heiße … · Ich komme aus … · Ich wohne in … · Ich spreche …'],
+          ['Fragen und antworten','Was machst du am Wochenende? · Am Wochenende … · Wie viel kostet …?'],
+          ['Um etwas bitten','Können Sie bitte …? · Ich möchte …, bitte. · Haben Sie …?'],
+          ['Mitteilung','Liebe …, / Lieber …, · Ich kann leider nicht kommen, weil … · Viele Grüße'] ],
+        bewertung:[
+          ['Schriftlich','Hören, Lesen und Schreiben. Jede richtige Lösung bringt Punkte, beim Schreiben zählt, ob alle Punkte drin sind.'],
+          ['Mündlich','Drei Teile in der Gruppe: sich vorstellen, fragen und antworten, um etwas bitten.'],
+          ['Bestanden','Die Prüfung legst du als Ganzes ab. Die genauen Punkte nennt telc im Übungstest.'] ],
+        ablauf:[
+          'Erst Hören (ca. 20 Minuten), dann Lesen und Schreiben zusammen (45 Minuten).',
+          'Mündlich in der Gruppe mit bis zu vier Personen, etwa 15 Minuten.',
+          'Für das Sprechen gibt es keine Vorbereitungszeit. Die Karten bekommst du in der Prüfung.'] } },
+
+    { id:'telca2', name:'telc Deutsch A2', anbieter:'telc · Start Deutsch 2', niveau:'A2',
+      bild:'wohnen', stufe:'A2', telc:true, geprueft:true, gruppe:'telc', dauer:'ca. 1 Std 25 Min',
+      fuer:'Aufenthaltstitel, erste Arbeit, der Schritt nach dem Anfang.',
+      module:[ {id:'hoeren',n:'Hören',m:'ca. 20', t:'Drei Teile, 15 Aufgaben: Telefonnotizen ergänzen, Radiodurchsagen (nur einmal), ein Gespräch, in dem du Personen Orten zuordnest.'},
+               {id:'lesen',n:'Lesen',m:'ca. 30', t:'Drei Teile, 15 Aufgaben: ein Wegweiser oder Kaufhausplan, ein Zeitungsartikel, Anzeigen zuordnen. Lesen und Schreiben zusammen 50 Minuten.'},
+               {id:'schreiben',n:'Schreiben',m:'ca. 20', t:'Ein Formular mit fünf Angaben und ein kurzer Brief von etwa 40 Wörtern zu drei von vier Punkten.'},
+               {id:'sprechen',n:'Sprechen',m:'ca. 15', t:'Zu zweit, ohne Vorbereitung: sich vorstellen, mit Fragekarten über den Alltag sprechen, gemeinsam etwas aushandeln.'} ],
+      hinweis:'Schriftlich 70 Minuten: Hören ca. 20, danach Lesen und Schreiben zusammen 50. '
+             +'Mündlich ca. 15 Minuten zu zweit, ohne Vorbereitungszeit.',
+      punkte:'Insgesamt 60 Punkte, je 15 für Hören, Lesen, Schreiben und Sprechen. Bestanden ab 36 Punkten (60 Prozent).',
+      prognose:{ teile:[ { name:'Gesamtergebnis', max:60, grenze:36, anteile:{ hoeren:15, lesen:15, schreiben:15, sprechen:15 } } ] },
+      formatHinweis:'Hier übst du noch mit dem Training für Goethe A2: dasselbe Niveau, aber die Aufgaben sehen bei telc etwas anders aus. '
+             +'Bei telc hat Hören und Lesen je drei Teile statt vier, beim Schreiben füllst du ein Formular aus und schreibst einen Brief. '
+             +'Das telc-eigene Training bauen wir gerade. Den offiziellen telc-Übungstest findest du unter „Musterprüfung“.',
+      mat:{
+        wortschatz:['Tagesablauf','Wohnen','Einkaufen und Kaufhaus','Arbeit und Beruf','Freizeit und Hobbys',
+                    'Reisen und Verkehr','Feste und Einladungen','Gesundheit','Dienstleistungen und Ämter'],
+        grammatik:['Perfekt mit haben und sein','Modalverben','Nebensätze mit weil, dass, wenn','Präpositionen mit Dativ und Akkusativ',
+                   'Komparativ und Superlativ','Possessivartikel','Fragen mit Wann, Wie oft, Wie lange'],
+        redemittel:[
+          ['Sich vorstellen','Ich heiße … · Ich komme aus … und wohne seit … in … · Ich arbeite als …'],
+          ['Fragen zum Alltag','Wann stehst du auf? · Wie oft machst du Sport? · Wie lange arbeitest du?'],
+          ['Aushandeln','Wollen wir …? · Was hältst du von …? · Das finde ich gut, weil … · Okay, dann machen wir …'],
+          ['Brief','Liebe …, / Lieber …, · vielen Dank für die Einladung. · Leider … · Viele Grüße'] ],
+        bewertung:[
+          ['Hören (15)','15 Aufgaben, jede richtige Lösung ein Punkt.'],
+          ['Lesen (15)','15 Aufgaben, jede richtige Lösung ein Punkt.'],
+          ['Schreiben (15)','Formular 5 Punkte, eine Angabe ein Punkt. Brief 10 Punkte: je Inhaltspunkt bis 3, dazu 1 Punkt für Anrede und Gruß.'],
+          ['Sprechen (15)','Teil 1 bis 3 Punkte, Teil 2 und Teil 3 je bis 6 Punkte.'],
+          ['Bestanden','Mindestens 36 von 60 Punkten.'] ],
+        ablauf:[
+          'Erst Hören (ca. 20 Minuten), dann Lesen und Schreiben zusammen (50 Minuten). Die Zeit teilst du selbst ein.',
+          'Telefonnotizen und das Gespräch hörst du zweimal, die Radiodurchsagen nur einmal.',
+          'Mündlich zu zweit, etwa 15 Minuten, ohne Vorbereitungszeit.'] },
+      uebungstest:'https://shop.telc.net/media/catalog/product/file/t/e/telc_deutsch_a2_uebungstest_1-1_20241212_5090-b00-010107.pdf' },
 
 
     /* ---------- Die telc-Prüfungen, jede mit eigener Seite ----------
@@ -749,6 +1011,11 @@
       [5,'Telefonat mit der Kollegin'], [6,'Das schwierige Gespräch'] ] }
   };
 
+  var PF_REIHE = {
+    goethe:['sd1','sd2','b1','b2','c1','goethec2'],
+    telc:  ['telca1','telca2','telca2b1','telcb1','telcb2','telcc1allg','telcc1','telcc2'],
+    beruf: ['dtz','telcb1beruf','telcb1b2beruf','pflege','telcb2beruf','telcb2c1beruf','telcmed','telcc1beruf']
+  };
   function pruefungVon(id){ for(var i=0;i<PRUEFUNGEN.length;i++) if(PRUEFUNGEN[i].id===id) return PRUEFUNGEN[i]; return null; }
 
   /* ---------- Meine Prüfung (aus dem Lernziel) ----------
@@ -759,7 +1026,7 @@
      und der Termin zeigt die echten Tage bis zur Prüfung.
      Lernziel-ID -> [Prüfungsseite hier, Name wie sie ihn gewählt hat] */
   var LZ_ZU_PF = {
-    goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a2:['sd2','telc A2'],
+    goethe_a1:['sd1','Goethe A1'], goethe_a2:['sd2','Goethe A2'], telc_a1:['telca1','telc A1'], telc_a2:['telca2','telc A2'], goethe_c2:['goethec2','Goethe C2'],
     telc_a2b1:['telca2b1','telc A2·B1'],
     goethe_b1:['b1','Goethe B1'], telc_b1:['telcb1','telc B1'], telc_b1_beruf:['telcb1beruf','telc B1+ Beruf'],
     goethe_b2:['b2','Goethe B2'], telc_b2:['telcb2','telc B2'], telc_b2_beruf:['telcb2beruf','telc B2+ Beruf'], telc_b1b2_beruf:['telcb1b2beruf','telc B1·B2 Beruf'], telc_b2c1_beruf:['telcb2c1beruf','telc B2·C1 Beruf'], telc_c1_beruf:['telcc1beruf','telc C1 Beruf'], telc_c2:['telcc2','telc C2'],
@@ -967,12 +1234,21 @@
       window.LZ.laden().then(function(d){ if(d && document.getElementById('v-pruefung')===v && v.querySelector('.pf-kopf')) window.renderPruefungen(); });
     }
     var mein = meinePruefung();
+    /* 12.11.2026: Julia: „alles nach der Reihenfolge A1–C1“. Vorher
+       standen Goethe und telc durcheinander (Start Deutsch, DTZ, Goethe
+       B1, telc B1, telc A2·B1 …). Jetzt nach Anbieter, darin aufsteigend. */
     var gruppen = function(ohne){
       var nicht = function(p){ return !ohne || p.id!==ohne; };
-      return '<div class="pf-gruppe"><span class="pf-gr-t">Die Sprachprüfungen</span></div>'
-        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return !p.fach && nicht(p); }).map(kachel).join('') + '</div>'
-        + '<div class="pf-gruppe"><span class="pf-gr-t">Für deinen Beruf</span></div>'
-        + '<div class="pf-liste">' + PRUEFUNGEN.filter(function(p){ return p.fach && !p.ohnePruefung && nicht(p); }).map(kachel).join('') + '</div>';
+      var reihe = function(titel, unter, ids){
+        var l = ids.map(pruefungVon).filter(function(p){ return p && nicht(p); });
+        if(!l.length) return '';
+        return '<div class="pf-gruppe"><span class="pf-gr-t">'+titel+'</span>'
+          + (unter ? '<span class="pf-gr-u" style="margin-left:10px;font-size:13px;font-weight:600;color:#6B7280">'+unter+'</span>' : '') + '</div>'
+          + '<div class="pf-liste">' + l.map(kachel).join('') + '</div>';
+      };
+      return reihe('Goethe-Institut', 'A1 bis C2', PF_REIHE.goethe)
+        + reihe('telc', 'A1 bis C2', PF_REIHE.telc)
+        + reihe('Integration und Beruf', 'DTZ und Berufsprüfungen, nach Niveau', PF_REIHE.beruf);
     };
     var unten;
     if(mein){
@@ -1038,7 +1314,7 @@
 
   var NIVEAUFARBE = {
     'A1':'a', 'A2':'a', 'A2–B1':'b1', 'B1':'b1', 'A2–B2':'b1',
-    'B1–B2':'b2', 'B2':'b2', 'B2–C1':'c1', 'C1':'c1'
+    'B1–B2':'b2', 'B2':'b2', 'B2–C1':'c1', 'C1':'c1', 'C2':'c1'
   };
   function farbwelt(p){ return NIVEAUFARBE[p.niveau] || 'a'; }
 
@@ -1097,7 +1373,7 @@
     material:['Wortschatz & Grammatik','Der Wortschatz, der im Büroalltag wirklich vorkommt.'],
     bereit:  ['Wo stehst du?','Eine ehrliche Einschätzung, Bereich für Bereich.']
   };
-  function uebungVon(p){ return /gast\.de/.test(p.uebungstest||'') ? 'g.a.s.t.' : 'telc'; }
+  function uebungVon(p){ var u=p.uebungstest||''; return /gast\.de/.test(u) ? 'g.a.s.t.' : /goethe\.de/.test(u) ? 'Goethe-Institut' : 'telc'; }
   function bereicheVon(p){
     var muster = (p.muster && window.PRUEFUNG && window.PRUEFUNG[p.muster]) || p.uebungstest;
     return bereicheRoh(p).filter(function(b){
@@ -1348,7 +1624,9 @@
        und unsichtbar. Genau das will jemand wissen, der sich vorbereitet. */
     if(p.hinweis) hinweis += '<p class="pf-hinw">'+E(p.hinweis)+'</p>';
     if(p.punkte)  hinweis += '<p class="pf-hinw">'+E(p.punkte)+'</p>';
-    if(p.telc){
+    if(p.formatHinweis){
+      hinweis += '<p class="pf-hinw pf-telc-hinw">ℹ️ '+E(p.formatHinweis)+'</p>';
+    } else if(p.telc){
       var NAMEN = { lesen:'Lesen und Sprachbausteine', hoeren:'Hören', schreiben:'Schreiben', sprechen:'Sprechen' };
       var echt = [], noch = [];
       p.module.forEach(function(m){ ((p.training && p.training[m.id]) ? echt : noch).push(NAMEN[m.id] || m.n); });
@@ -1429,7 +1707,7 @@
         + '<div class="pf-mat-k"><h4>🗂️ Typische Themen</h4><div class="pf-mat-tags">'
         +   M.wortschatz.map(function(w){ return '<span>'+E(w)+'</span>'; }).join('')+'</div>'
         +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'vokabeln\')">Wortschatz üben →</button></div></div>'
-        + '<div class="pf-mat-k"><h4>🧩 Grammatik, die in den Sprachbausteinen oft drankommt</h4>'+liste(M.grammatik)
+        + '<div class="pf-mat-k"><h4>🧩 '+(/Sprachbausteine/.test((p.module[0]||{}).n||'')?'Grammatik, die in den Sprachbausteinen oft drankommt':'Grammatik, die du sicher können solltest')+'</h4>'+liste(M.grammatik)
         +   '<div class="pf-mat-knoepfe"><button class="pf-b2 pf-b-s" onclick="go(\'ueben\')">Grammatik üben →</button></div></div>'
         + '<div class="pf-mat-k"><h4>💬 Sätze, die du sicher können solltest</h4>'+paare(M.redemittel)+'</div>'
         + '</div>';

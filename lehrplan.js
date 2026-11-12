@@ -16,7 +16,7 @@ window.LEHRPLAN = {
    "id": "A1",
    "t": "A1 — die ersten Schritte",
    "u": "Du sagst, wer du bist, was du brauchst und was du möchtest. Ganz von vorn.",
-   "pruefung": "Start Deutsch 1",
+   "pruefung": "Goethe A1 · telc A1",
    "lektionen": [
     {
      "nr": 1,
@@ -456,7 +456,7 @@ window.LEHRPLAN = {
    "id": "A2",
    "t": "A2 — der Alltag läuft",
    "u": "Termine, Ämter, Arzt, Wohnung. Du regelst deine Sachen selbst.",
-   "pruefung": "Start Deutsch 2 · DTZ A2",
+   "pruefung": "Goethe A2 · telc A2 · DTZ A2",
    "lektionen": [
     {
      "nr": 1,
@@ -982,7 +982,7 @@ window.LEHRPLAN = {
    "id": "B1",
    "t": "B1 — du kommst überall durch",
    "u": "Arbeit, Behörden, Konflikte. Du erklärst dich und begründest deine Meinung.",
-   "pruefung": "DTZ B1 · Zertifikat B1",
+   "pruefung": "Goethe B1 · telc B1 · DTZ B1",
    "lektionen": [
     {
      "nr": 1,
@@ -2040,7 +2040,7 @@ window.LEHRPLAN = {
    "id": "C1",
    "t": "C1 — du bestimmst den Ton",
    "u": "Register, Ironie, Rhetorik. Du sagst dasselbe auf fünf Arten — und wählst die richtige.",
-   "pruefung": "Goethe C1",
+   "pruefung": "Goethe C1 · telc C1",
    "lektionen": [
     {
      "nr": 1,

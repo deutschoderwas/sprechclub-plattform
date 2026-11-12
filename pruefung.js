@@ -1,6 +1,6 @@
 window.PRUEFUNG = {
   A2: {
-    niveau:'A2', titel:'A2 — Start Deutsch 2 / telc A2', minuten:20,
+    niveau:'A2', titel:'A2 — Goethe-Zertifikat A2 / telc A2', minuten:20,
     teile:[
       { art:'lesen', name:'Leseverstehen', text:'Aushang im Treppenhaus: Liebe Nachbarinnen und Nachbarn, am Samstag, dem 12. April, machen wir von 10 bis 14 Uhr einen Hof-Flohmarkt. Jede Familie bekommt einen Tisch. Bitte meldet euch bis Mittwoch bei Frau Özdemir in Wohnung 4 an. Wer keinen Tisch braucht, kann eine Decke auf den Boden legen. Für Kaffee und Kuchen sorgt Familie Weber. Kinder dürfen ihre Spielsachen selbst verkaufen. Bei Regen fällt der Flohmarkt aus, dann treffen wir uns am Sonntag zur gleichen Zeit. Bitte stellt eure Autos an diesem Tag auf die Straße, damit wir Platz haben. Vielen Dank und bis Samstag!',
         aufgaben:[
@@ -44,7 +44,7 @@ window.PRUEFUNG = {
     ]
   },
   B1: {
-    niveau:'B1', titel:'B1 — Zertifikat Deutsch / telc B1', minuten:25,
+    niveau:'B1', titel:'B1 — Goethe-Zertifikat B1 / telc B1', minuten:25,
     teile:[
       { art:'lesen', name:'Leseverstehen', text:'E-Mail an die Belegschaft: Liebe Kolleginnen und Kollegen, ab dem 1. Juni ändert sich unsere Arbeitszeitregelung. Wer möchte, kann künftig zwei Tage pro Woche im Homeoffice arbeiten, muss diese Tage aber bis Freitag der Vorwoche im Kalender eintragen. Die Kernarbeitszeit von 10 bis 15 Uhr bleibt bestehen, weil wir in dieser Zeit Besprechungen ansetzen. Wer regelmäßig zu Hause arbeitet, erhält auf Antrag einen Bildschirm und einen Bürostuhl für den Arbeitsplatz zu Hause. Die Anträge nimmt Herr Neumann aus der Personalabteilung entgegen, allerdings erst ab Mitte Mai. Wichtig ist außerdem: Wer neu im Betrieb ist, arbeitet in den ersten drei Monaten weiterhin vollständig im Büro, damit die Einarbeitung gut gelingt. Bei Fragen wenden Sie sich bitte an Ihre Teamleitung.',
         aufgaben:[

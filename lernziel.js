@@ -19,11 +19,14 @@ var ZIELE=[
 var PRUEFUNGEN=[
  {id:'goethe_a1',t:'Goethe A1',n:'A1'},{id:'goethe_a2',t:'Goethe A2',n:'A2'},
  {id:'goethe_b1',t:'Goethe B1',n:'B1'},{id:'goethe_b2',t:'Goethe B2',n:'B2'},
- {id:'goethe_c1',t:'Goethe C1',n:'C1'},{id:'goethe_c2',t:'Goethe C2',n:'C2'},{id:'telc_c2',t:'telc C2',n:'C2'},
- {id:'telc_a2',t:'telc A2',n:'A2'},{id:'telc_b1',t:'telc B1',n:'B1'},
- {id:'telc_b2',t:'telc B2',n:'B2'},{id:'telc_c1',t:'telc C1 Hochschule',n:'C1'},{id:'telc_c1_allg',t:'telc C1',n:'C1'},
- {id:'telc_b1b2_pflege',t:'telc B1·B2 Pflege',n:'B2'},{id:'telc_b2c1_medizin',t:'telc B2·C1 Medizin',n:'C1'},
- {id:'telc_b1_beruf',t:'telc B1+ Beruf',n:'B1'},{id:'telc_b2_beruf',t:'telc B2+ Beruf',n:'B2'},{id:'telc_b1b2_beruf',t:'telc B1·B2 Beruf',n:'B2'},{id:'telc_b2c1_beruf',t:'telc B2·C1 Beruf',n:'C1'},{id:'telc_c1_beruf',t:'telc C1 Beruf',n:'C1'},{id:'telc_a2b1',t:'telc A2·B1',n:'B1'},{id:'dtz',t:'DTZ (Deutsch-Test für Zuwanderer)',n:'B1'}
+ {id:'goethe_c1',t:'Goethe C1',n:'C1'},{id:'goethe_c2',t:'Goethe C2',n:'C2'},
+ {id:'telc_a1',t:'telc A1',n:'A1'},{id:'telc_a2',t:'telc A2',n:'A2'},{id:'telc_a2b1',t:'telc A2·B1',n:'B1'},
+ {id:'telc_b1',t:'telc B1',n:'B1'},{id:'telc_b2',t:'telc B2',n:'B2'},
+ {id:'telc_c1_allg',t:'telc C1',n:'C1'},{id:'telc_c1',t:'telc C1 Hochschule',n:'C1'},{id:'telc_c2',t:'telc C2',n:'C2'},
+ {id:'dtz',t:'DTZ (Deutsch-Test für Zuwanderer)',n:'B1'},
+ {id:'telc_b1_beruf',t:'telc B1+ Beruf',n:'B1'},{id:'telc_b1b2_beruf',t:'telc B1·B2 Beruf',n:'B2'},{id:'telc_b1b2_pflege',t:'telc B1·B2 Pflege',n:'B2'},
+ {id:'telc_b2_beruf',t:'telc B2+ Beruf',n:'B2'},{id:'telc_b2c1_beruf',t:'telc B2·C1 Beruf',n:'C1'},{id:'telc_b2c1_medizin',t:'telc B2·C1 Medizin',n:'C1'},
+ {id:'telc_c1_beruf',t:'telc C1 Beruf',n:'C1'}
 ];
 var NIVEAUS=['A1','A2','B1','B2','C1','C2'];
 var TEMPO=[
