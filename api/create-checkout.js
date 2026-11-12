@@ -4,7 +4,7 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { tuerenZu, istSprechclubPlan, PREMIUM_PAUSIERT } from './_tueren.js';
+import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -118,6 +118,15 @@ const PREMIUM_REGULAER_AB = Date.parse('2026-11-01T00:00:00+01:00');
 const PREMIUM_REGULAER = { premium_month: { preis: 139 }, premium_year: { preis: 999, proMonat: 83 } };
 function aktuellerPlan(id){
   const p = PLANS[id];
+  /* Black Week: Premium im Monat kostet 99 statt 139. Der Preis haengt
+     hier und nicht im Browser, sonst koennte ihn jeder selbst setzen.
+     Weil jedes Abo bei Stripe seinen eigenen Preis mitbekommt
+     (price_data), behaelt ihn danach jeder dauerhaft - genau wie beim
+     Startrabatt im Oktober. Julia, 12.11.2026: der Rabatt gilt
+     dauerhaft fuer alle, die in der Aktionswoche kaufen. */
+  if (p && id === 'premium_month' && aktionLaeuft()) {
+    return Object.assign({}, p, { preis: AKTION_PREIS });
+  }
   const r = PREMIUM_REGULAER[id];
   if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;
   /* Im Text steht "39 € pro Monat" mit Eurozeichen — gesucht wurde
@@ -272,7 +281,7 @@ export default async function handler(req, res) {
        abonnieren." Der Riegel gilt also nur noch fuer Premium. Dort
        kommt gar keine Kasse zustande, auch nicht ueber einen alten
        Link oder einen Knopf, der irgendwo stehen geblieben ist. */
-    if (PREMIUM_PAUSIERT && istSprechclubPlan(id)) {
+    if (premiumPausiert() && istSprechclubPlan(id)) {
       return res.status(403).json({ error: 'verkauf_pausiert',
         hinweis: 'Gerade kann man noch nicht buchen. Trag dich auf die Warteliste ein, '
           + 'dann melden wir uns bei dir, sobald es losgeht: '

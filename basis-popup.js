@@ -19,6 +19,10 @@
 (function () {
   'use strict';
   if (window.BASISPOPUP) return;
+  /* Waehrend der Black Week tritt dieses Fenster zurueck: Zwei Pop-ups
+     hintereinander sind keine Werbung mehr, sondern eine Zumutung -
+     und die Aktion ist in der Woche das wichtigere Angebot. */
+  if (window.AKTION && window.AKTION.laeuft && window.AKTION.laeuft()) return;
   window.BASISPOPUP = true;
 
   var SCHUBLADE = 'dow_basis_popup';
