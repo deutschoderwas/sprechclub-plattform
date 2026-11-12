@@ -88,21 +88,27 @@
     setzeText($('hChip'), A.prozent + ' % Black Week \u00b7 ' + p + ' im Monat');
     zeig($('hChip'), true);
 
-    /* Streichpreis und Ersparnis */
+    /* Streichpreis NUR dort, wo die Seite ihn nicht selbst zeichnet.
+
+       Hier stand erst ein eigener Satz fuer #pAlt. Das war falsch:
+       preise.html und sprechclub.html fuellen pAlt selbst, sobald
+       RABATT gesetzt ist, und ihr CSS streicht das ganze Element durch.
+       Mein Satz "statt 139 € im Monat" bekam dadurch einen roten Strich
+       quer ueber alle Woerter. Gesehen habe ich das erst auf dem
+       eigenen Bildschirmfoto - im Code sah es richtig aus.
+
+       Also: pAlt, pSpar, pFahne und pHinweis gehoeren den Seiten. Hier
+       bleibt nur, was keine Seite selbst rechnet. */
     var ekAlt = $('ekAlt');
     if (ekAlt) { ekAlt.textContent = alt; zeig(ekAlt, true); }
-    var pAlt = $('pAlt');
-    if (pAlt) {
-      /* sprechclub.html schreibt hier HTML, preise.html nur den Preis.
-         Beides vertraegt denselben Satz. */
-      pAlt.innerHTML = 'statt <s>' + alt + '</s> im Monat';
-      zeig(pAlt, true);
-    }
-    setzeText($('pSpar'), '\u2212' + A.prozent + ' %');
-    zeig($('pAltWrap'), true);
+
+    /* Das Abzeichen oben auf der Preiskarte. Die Seite schreibt dort
+       "Sprechclub laeuft" - richtig, aber in der Aktionswoche steht an
+       der auffaelligsten Stelle der Karte dann nichts vom Rabatt.
+       Nur der Text, nicht die Sichtbarkeit: ob die Fahne gezeigt wird,
+       entscheidet weiter die Seite. */
     var fahne = $('pFahne');
-    if (fahne) { fahne.textContent = A.name + ' \u00b7 \u2212' + A.prozent + ' %'; zeig(fahne, true); }
-    setzeText($('pHinweis'), 'monatlich k\u00fcndbar \u00b7 der Preis bleibt dir');
+    if (fahne) fahne.textContent = A.name + ' \u00b7 \u2212' + A.prozent + ' %';
 
     /* Die Klebeleiste unten auf der Startseite. Sie sagt sonst
        "die Anmeldung ist gerade geschlossen" - waehrend der Aktion ist
@@ -111,6 +117,18 @@
     setzeText($('kbxTitel'), '\uD83D\uDC51 Sprechclub \u00b7 ' + A.name);
     setzeText($('kbxText'), A.prozent + ' % Rabatt \u00b7 ' + p + ' statt ' + alt + ' im Monat');
     setzeText($('raPreis'), p);
+
+    /* Das Etikett daneben sagt sonst "Sprechclub · Fruehbucher" - das
+       war die Oktober-Aktion und steht sonst mitten im Hero ueber dem
+       Black-Week-Preis. Das data-i18n muss weg, sonst schreibt die
+       Uebersetzung beim Sprachwechsel den alten Text zurueck.
+       "Black Week" braucht keine Uebersetzung. */
+    var lbl = $('raLabel');
+    if (lbl && !lbl.dataset.aktion) {
+      lbl.dataset.aktion = '1';
+      lbl.removeAttribute('data-i18n');
+      lbl.textContent = '\uD83D\uDC51 ' + A.name + ' \u00b7 \u2212' + A.prozent + ' %';
+    }
 
     /* Und der Knopf daneben. Eine Leiste, die "30 % Rabatt" sagt und
        dann auf die Warteliste fuehrt, waere die teuerste Art, eine
