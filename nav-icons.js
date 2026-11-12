@@ -163,12 +163,12 @@
     + '.sidebar .navlink:hover .ic{transform:translateY(-2px) rotate(-4deg);'
     +   'box-shadow:0 6px 14px -6px rgba(40,53,59,.5)}'
     /* Der aktive Eintrag: das Plättchen wird kräftig und bekommt einen Ring */
-    + '.sidebar .navlink.active .ic{color:#fff;box-shadow:0 4px 12px -4px rgba(40,53,59,.55)}'
-    + '.sidebar .navlink.active .ic.f-turq{background:#1B9BC0}'
-    + '.sidebar .navlink.active .ic.f-rot {background:#D83636}'
-    + '.sidebar .navlink.active .ic.f-gold{background:#E39A00}'
-    + '.sidebar .navlink.active .ic.f-grau{background:#28353B}'
-    + '.sidebar .navlink.active .ic.f-mint{background:#0E9E86}'
+    + '.sidebar .navlink.active .ic{color:#fff !important;box-shadow:0 4px 12px -4px rgba(40,53,59,.55)}'
+    + '.sidebar .navlink.active .ic.f-turq{background:#1B9BC0 !important}'
+    + '.sidebar .navlink.active .ic.f-rot {background:#D83636 !important}'
+    + '.sidebar .navlink.active .ic.f-gold{background:#E39A00 !important}'
+    + '.sidebar .navlink.active .ic.f-grau{background:#28353B !important}'
+    + '.sidebar .navlink.active .ic.f-mint{background:#0E9E86 !important}'
     + '.sidebar .navlink{gap:11px}'
     /* In der Fußzeile etwas kleiner, damit sie nicht laut wird */
     + '.sidebar .side-foot .navlink .ic{width:29px;height:29px;border-radius:10px}'

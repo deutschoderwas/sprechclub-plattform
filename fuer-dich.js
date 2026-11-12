@@ -141,8 +141,17 @@
       + '<span class="fd-kl">' + E(o.los || 'Starten') + ' <span aria-hidden="true">→</span></span>'
       + '</span></button>';
   }
+
+  /* Zeichen für die Zeilen (Lucide, MIT) — Emoji sehen auf jedem Gerät anders aus. */
+  var IC = {
+    kalender: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+    karten: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M8 2h12a2 2 0 0 1 2 2v12"/></svg>',
+    wiederholen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></svg>',
+    fehler: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
+  };
   function zeile(o) {
     return '<button class="fd-z" onclick="' + o.tun + '">'
+      + (o.ic && IC[o.ic] ? '<span class="fd-zi">' + IC[o.ic] + '</span>' : '')
       + '<span class="fd-zt"><b>' + E(o.t) + '</b><span>' + E(o.u || '') + '</span></span>'
       + (o.zahl != null ? '<span class="fd-zn">' + E(o.zahl) + '</span>' : '')
       + '<span class="fd-zp" aria-hidden="true">→</span></button>';
@@ -214,15 +223,18 @@
       var t = Math.ceil((new Date(lz.termin) - new Date()) / 86400000);
       if (t >= 0) chips += '<span class="fd-chip"><i>Prüfung</i>in ' + t + (t === 1 ? ' Tag' : ' Tagen') + '</span>';
     }
-    var h = '<header class="fd-kopf">'
-      + '<p class="fd-zuruf">Dein Lernbereich</p>'
-      + '<h1>' + E(gruss()) + '</h1>'
-      + '<div class="fd-chips">' + chips
-      + '<button class="fd-aendern" onclick="fdZielAendern()">' + (lz ? 'Ziel ändern' : 'Ziel festlegen') + '</button></div>'
-      + '</header>';
-
+    /* 12.11.2026: Kopf als Bühne wie „Meine Stunden“ — Petrol, Foto rechts. */
     var ws = wochenSatz();
-    if (ws) h += '<p class="fd-woche">' + ws + '</p>';
+    var h = '<header class="fd-held">'
+      + '<div class="fd-held-tx">'
+      +   '<p class="fd-zuruf">Dein Lernbereich</p>'
+      +   '<h1>' + E(gruss()) + '</h1>'
+      +   (ws ? '<p class="fd-woche">' + ws + '</p>' : '')
+      +   '<div class="fd-chips">' + chips
+      +   '<button class="fd-aendern" onclick="fdZielAendern()">' + (lz ? 'Ziel ändern' : 'Ziel festlegen') + '</button></div>'
+      + '</div>'
+      + '<span class="fd-held-bild"><img src="bilder/bereich/fd-hero.webp" alt="" onerror="this.parentNode.remove()"></span>'
+      + '</header>';
 
     if (!lz) {
       h += '<div class="fd-hinweis"><div><b>Wofür lernst du Deutsch?</b>'
@@ -248,23 +260,23 @@
     var dran = [];
     var st = naechsteStunde();
     if (st) {
-      dran.push(zeile({ t: 'Nächste Stunde vorbereiten', u: ((st.topic || st.title) || 'Sprechclub') + ' · ' + wann(st.starts_at), tun: "go('stunden')" }));
+      dran.push(zeile({ ic: 'kalender', t: 'Nächste Stunde vorbereiten', u: ((st.topic || st.title) || 'Sprechclub') + ' · ' + wann(st.starts_at), tun: "go('stunden')" }));
       var sw = stundenWoerter(st);
-      if (sw.length >= 4) dran.push(zeile({ t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + ((st.topic || st.title) || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
+      if (sw.length >= 4) dran.push(zeile({ ic: 'karten', t: 'Wörter für die nächste Stunde', u: sw.length + ' Wörter aus „' + ((st.topic || st.title) || 'Sprechclub') + '“, mit Bildern üben', zahl: sw.length, tun: "fdStundenQuiz()" }));
     }
     /* Ein bis sieben Tage nach einer Stunde: ihre Wörter noch einmal.
        Dann bleiben sie am ehesten hängen. */
     var lz = letzteStunde();
     if (lz) {
       var lw = stundenWoerter(lz);
-      if (lw.length >= 4) dran.push(zeile({ t: 'Wörter aus deiner letzten Stunde', u: '„' + ((lz.topic || lz.title) || 'Sprechclub') + '“ · jetzt wiederholen, damit sie bleiben', zahl: lw.length, tun: "fdStundenQuiz('letzte')" }));
+      if (lw.length >= 4) dran.push(zeile({ ic: 'karten', t: 'Wörter aus deiner letzten Stunde', u: '„' + ((lz.topic || lz.title) || 'Sprechclub') + '“ · jetzt wiederholen, damit sie bleiben', zahl: lw.length, tun: "fdStundenQuiz('letzte')" }));
     }
     var vs = null; try { vs = window.vokabelStand && window.vokabelStand(); } catch (e) {}
     if (vs && vs.faellig) {
-      dran.push(zeile({ t: 'Wörter wiederholen', u: 'Zehn Minuten reichen, damit sie bleiben.', zahl: vs.faellig, tun: "fdWoerter()" }));
+      dran.push(zeile({ ic: 'wiederholen', t: 'Wörter wiederholen', u: 'Zehn Minuten reichen, damit sie bleiben.', zahl: vs.faellig, tun: "fdWoerter()" }));
     }
     var fz = 0; try { fz = (window.fehlerZahl && window.fehlerZahl()) || 0; } catch (e) {}
-    if (fz) dran.push(zeile({ t: 'Deine Fehler üben', u: 'Was im Chat und im Unterricht korrigiert wurde.', zahl: fz, tun: "go('fehler')" }));
+    if (fz) dran.push(zeile({ ic: 'fehler', t: 'Deine Fehler üben', u: 'Was im Chat und im Unterricht korrigiert wurde.', zahl: fz, tun: "go('fehler')" }));
     if (dran.length) {
       h += '<h2 class="fd-h2">Heute dran</h2><div class="fd-liste">' + dran.join('') + '</div>';
     }
@@ -297,14 +309,15 @@
     }
 
     /* 4. Zum Ziel */
+    /* 12.11.2026: als Bildkarten statt Textzeilen */
     var ziel = ICH.ziel(), zz = [];
-    if (ziel === 'pruefung') zz.push(zeile({ t: 'Prüfungstraining', u: 'Lesen, Hören, Schreiben und Sprechen wie in der Prüfung.', tun: "go('pruefung')" }));
-    if (ICH.beruflich() || ziel === 'studium') zz.push(zeile({ t: 'Kurs für ' + ICH.zielName(), u: 'Fachwortschatz, Gespräche und Texte aus deinem Beruf.', tun: "go('kurse')" }));
+    if (ziel === 'pruefung') zz.push(karte({ kick: 'Prüfung', t: 'Prüfungstraining', u: 'Lesen, Hören, Schreiben und Sprechen wie in der Prüfung.', los: 'Zum Training', bild: 'bilder/thema/redemittel.jpg', tun: "go('pruefung')" }));
+    if (ICH.beruflich() || ziel === 'studium') zz.push(karte({ kick: 'Kurs', t: 'Kurs für ' + ICH.zielName(), u: 'Fachwortschatz, Gespräche und Texte aus deinem Beruf.', los: 'Kurs öffnen', bild: 'bilder/bereich/fd-kurs.webp', tun: "go('kurse')" }));
     /* Amanda spricht nur, wenn der Schalter in konto.html es erlaubt */
-    if (window.AMANDA_SPRECHEN_AUS) zz.push(zeile({ t: 'Amanda fragen', u: 'Schreib ihr deine Frage, sie antwortet sofort.', tun: "go('amanda')" }));
-    else zz.push(zeile({ t: 'Mit Amanda sprechen', u: 'Einfach reden, sie antwortet sofort.', tun: "go('amandasprechen')" }));
-    zz.push(zeile({ t: 'Alle Übungen nach Fertigkeit', u: 'Hören, Lesen, Schreiben, Sprechen, Wortschatz, Grammatik.', tun: "go('fertigkeit')" }));
-    h += '<h2 class="fd-h2">Mehr für dich</h2><div class="fd-liste">' + zz.join('') + '</div>';
+    if (window.AMANDA_SPRECHEN_AUS) zz.push(karte({ kick: 'Amanda', t: 'Amanda fragen', u: 'Schreib ihr deine Frage, sie antwortet sofort.', los: 'Frage stellen', bild: 'bilder/bereich/fd-amanda.webp', tun: "go('amanda')" }));
+    else zz.push(karte({ kick: 'Sprechen', t: 'Mit Amanda sprechen', u: 'Einfach reden, sie antwortet sofort und korrigiert freundlich.', los: 'Gespräch starten', bild: 'bilder/bereich/fd-amanda.webp', tun: "go('amandasprechen')" }));
+    zz.push(karte({ kick: 'Alle Fertigkeiten', t: 'Alle Übungen nach Fertigkeit', u: 'Hören, Lesen, Schreiben, Sprechen, Wortschatz, Grammatik.', los: 'Zur Übersicht', bild: 'bilder/bereich/fd-uebungen.webp', tun: "go('fertigkeit')" }));
+    h += '<h2 class="fd-h2">Mehr für dich</h2><div class="fd-raster">' + zz.join('') + '</div>';
 
     v.innerHTML = h;
     try { if (window.uebersetzen) window.uebersetzen(); } catch (e) {}
@@ -503,7 +516,7 @@
       '.fd-zt span{font-size:13.5px;color:var(--fd-soft)}',
       '.fd-zn{flex:none;min-width:30px;text-align:center;font-weight:800;font-size:14px;color:var(--fd-petrol);background:#EAF6FA;border-radius:999px;padding:4px 10px}',
       '.fd-zp{flex:none;color:var(--fd-soft);font-weight:700}',
-      '.fd-raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin:0 0 30px}',
+      '.fd-raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:0 0 30px}',
       '.fd-k{display:flex;flex-direction:column;text-align:left;background:#fff;border:1px solid var(--fd-line);border-radius:18px;overflow:hidden;padding:0;font:inherit;color:inherit;cursor:pointer;transition:box-shadow .2s,transform .2s}',
       '.fd-k:hover{box-shadow:0 12px 28px -16px rgba(18,24,31,.35);transform:translateY(-2px)}',
       '.fd-kb{display:block;aspect-ratio:16/10;background:var(--fd-bg);overflow:hidden}',
@@ -514,7 +527,23 @@
       '.fd-kl{margin-top:auto;padding-top:8px;font-size:14px;font-weight:700;color:var(--fd-petrol)}',
       '@media(max-width:720px){.fd-weiter{grid-template-columns:1fr}.fd-wb{min-height:0;aspect-ratio:16/9}.fd-wt{padding:18px 18px 20px}',
       '  .fd-raster{grid-template-columns:1fr 1fr;gap:10px}.fd-kt{padding:11px 12px 13px}.fd-kt b{font-size:14.5px}.fd-kt .fd-ku{display:none}}',
-      '@media(max-width:360px){.fd-raster{grid-template-columns:1fr}}'
+      '@media(max-width:360px){.fd-raster{grid-template-columns:1fr}}',
+      '.fd-zi{flex:none;width:40px;height:40px;border-radius:12px;background:#EAF6FA;color:var(--fd-petrol);display:grid;place-items:center}',
+      '.fd-zi svg{width:20px;height:20px;display:block}',
+      '.fd-held{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#0E6D85,#0A4E62);color:#fff;margin:0 0 30px;box-shadow:0 22px 44px -26px rgba(10,78,98,.65)}',
+      '.fd-held-tx{padding:32px 34px;display:flex;flex-direction:column;gap:12px;justify-content:center;min-width:0}',
+      '.fd-held .fd-zuruf{color:#A9DEEE;margin:0}',
+      '.fd-held h1{font-family:"Space Grotesk",Inter,sans-serif;font-size:clamp(28px,3.6vw,40px);letter-spacing:-.025em;line-height:1.1;margin:0;color:#fff}',
+      '.fd-held .fd-woche{margin:0;color:#D6EEF5;font-size:15px}',
+      '.fd-held .fd-woche b{color:#fff}',
+      '.fd-held .fd-chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);color:#fff}',
+      '.fd-held .fd-chip i{color:#A9DEEE}',
+      '.fd-held .fd-aendern{color:#fff}',
+      '.fd-held-bild{display:block;position:relative;min-height:250px;background:#0B5A70}',
+      '.fd-held-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+      '.fd-held-bild::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0C5D74 0%,rgba(12,93,116,0) 38%)}',
+      '@media(max-width:720px){.fd-held{grid-template-columns:1fr;border-radius:20px;margin-bottom:24px}.fd-held-bild{order:-1;min-height:0;aspect-ratio:16/8}',
+      '  .fd-held-bild::before{background:linear-gradient(0deg,#0D6680 0%,rgba(13,102,128,0) 50%)}.fd-held-tx{padding:16px 18px 20px;gap:10px}}'
     ].join('\n');
     document.head.appendChild(s);
   }

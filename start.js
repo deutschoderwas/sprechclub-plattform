@@ -473,7 +473,7 @@
 
   function stil(){
     if(document.getElementById('startStil')) return;
-    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED+CSS_KARTE+CSS_HANDY;
+    var s=document.createElement('style'); s.id='startStil'; s.textContent=CSS+CSS_POD+CSS_FEED+CSS_KARTE+CSS_HANDY+CSS_PC;
     document.head.appendChild(s);
   }
 
@@ -761,6 +761,57 @@
     try{ stromLaden(); }catch(e){ console.error('Chat:', e); }
   }
 
+
+  /* ---------- Startseite am Rechner (12.11.2026) ----------
+     Julia: „professioneller und robuster … Lingoda- und Kajabi-Stil,
+     wir haben unter Meine Stunden schon etwas perfektioniert.“
+     Am Handy gab es seit Oktober die ruhige Startseite mit klarer
+     Rangfolge, am Rechner noch die alte mit Feed, Ticker und vier
+     Zahlenkästen. Jetzt dieselben Bausteine auch am Rechner, in zwei
+     Spalten: links das Lernen, rechts Unterricht, Podcast, Amanda, Chat. */
+  function pcStart(ziel, k, s){
+    zeichenEinhaengen();
+    try{ document.body.classList.add('hs-an'); }catch(e){}
+    ziel.innerHTML = '<div class="hs hs-pc">'
+      + '<div class="hs-pc-kopf">' + hsKopf(k, s)
+      +   (k.abo ? '<div class="hs-pc-abo">' + k.abo + '</div>' : '') + '</div>'
+      + '<div id="lzSlot"></div>'
+      + '<div class="hs-pc-raster">'
+      +   '<div class="hs-pc-links">' + hsWoche(k, s) + hsWeiter() + hsBereiche() + hsChat() + '</div>'
+      +   '<aside class="hs-pc-rechts">' + hsUnterricht(k, s) + podcastKarte(k) + hsAmanda() + hsFertigkeiten() + '</aside>'
+      + '</div></div>';
+    /* Am Handy steht der Name in einer eigenen Zeile; hier in einer. */
+    try{ var br = ziel.querySelector('.hs-kopf h1 br'); if(br) br.parentNode.replaceChild(document.createTextNode(' '), br); }catch(e){}
+    try{
+      var block = ziel.querySelector('.hs');
+      if(block && !block.__klick){
+        block.__klick = true;
+        block.addEventListener('click', function(ev){
+          var t = ev.target;
+          var chip = t.closest ? t.closest('[data-frage]') : null;
+          if(chip){ ev.preventDefault(); hsFragen(chip.getAttribute('data-frage')); }
+        });
+      }
+    }catch(e){ console.error('Klicks:', e); }
+    try{ hsRingeFuellen(); }catch(e){ console.error('Fertigkeiten:', e); }
+    try{ stromLaden(); }catch(e){ console.error('Chat:', e); }
+  }
+  var CSS_PC = ''
+    + '.hs-pc{max-width:1180px;margin:0 auto}'
+    + '.hs-pc-kopf{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:4px}'
+    + '.hs-pc .hs-kopf h1{font-size:34px}'
+    + '.hs-pc-abo{font-size:13px;color:#5B6A70;max-width:440px;line-height:1.5;padding:9px 13px;background:#fff;border:1px solid #E8E2D4;border-radius:12px}'
+    + '.hs-pc-abo *{font-size:inherit !important;margin:0 !important;padding:0 !important;border:0 !important;background:none !important;box-shadow:none !important}'
+    + '.hs-pc-raster{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:22px;align-items:start}'
+    + '.hs-pc-links,.hs-pc-rechts{display:flex;flex-direction:column;gap:14px;min-width:0}'
+    + '.hs-pc .hs-weiter{aspect-ratio:21/9}'
+    + '.hs-pc .hs-bereiche{grid-template-columns:repeat(4,minmax(0,1fr))}'
+    + '.hs-pc .hs-bk{aspect-ratio:4/5}'
+    + '.hs-pc .hs-chatkopf{margin:10px 0 0}'
+    + '.hs-pc .hs-woche .gross{font-size:32px}'
+    + '@media(max-width:1180px){.hs-pc-raster{grid-template-columns:minmax(0,1fr) 320px}}'
+    + '@media(max-width:1000px){.hs-pc-raster{grid-template-columns:1fr}.hs-pc .hs-bereiche{grid-template-columns:repeat(2,minmax(0,1fr))}}';
+
   /* Weiterlernen: ein Foto, die Lektion, der Balken, ein Knopf.
      Dieselben Daten wie die Karte am Rechner (weiterKarte). */
   function hsWeiter(){
@@ -865,6 +916,16 @@
     /* Am Handy die vier Bloecke, am Rechner die gewohnte Seite.
        Julia, 28.10.2026: "NICHT ZU VIEL ... aber klar und strukturiert
        und professionell und robust." */
+    if (!istHandy()) {
+      try {
+        pcStart(ziel, k, s);
+        try{
+          var gk = document.querySelector('.sidebar .navlink[data-view="guthaben"]');
+          if(gk){ if(guthabenZeigen(k)) gk.style.removeProperty('display'); else gk.style.setProperty('display','none','important'); }
+        }catch(e){}
+        return;
+      } catch (e) { console.error('Rechner-Start:', e); }   // im Zweifel die alte Seite
+    }
     if (istHandy()) {
       try { handyStart(ziel, k, s); return; }
       catch (e) { console.error('Handy-Start:', e); }   // im Zweifel die alte Seite
