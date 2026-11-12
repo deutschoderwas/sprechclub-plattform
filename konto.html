@@ -2515,10 +2515,36 @@ function challengerBalken(){
   }catch(e){ return ''; }
 }
 
+// Wiederverwendbarer „Nächste Stunde"-Hero (Start-Seite + Meine Stunden): direkt ins Klassenzimmer + Vorbereitung
+window._msHero=function(){
+  try{
+    const s=stats, up=(s.upcoming||[]);
+    const next=up.slice().sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];
+    if(!next) return '';
+    const raumUrl=(b)=>`klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`;
+    const st=new Date(next.starts_at).getTime(), now=Date.now();
+    const live=now>=st-10*60000 && now<=st+90*60000;
+    let when;
+    if(live){ when=`<span class="ms-when live"><span class="wd"></span>Jetzt live</span>`; }
+    else { const min=Math.round((st-now)/60000); let txt;
+      if(min<60) txt='Beginnt in '+Math.max(1,min)+' Min';
+      else if(min<600) txt='Beginnt in '+Math.floor(min/60)+' Std '+(min%60)+' Min';
+      else txt=fmt(new Date(next.starts_at));
+      when=`<span class="ms-when"><span class="wd"></span>${esc(txt)}</span>`; }
+    const prep=next.material_pre?`<a class="ms-prep" href="${esc(next.material_pre)}" target="_blank" rel="noopener">📖 Vorbereitung</a>`:'';
+    return MS_STYLE+`<div class="ms-hero"><div class="ms-hero-glow"></div>`
+      +`<div class="ms-hero-top">${when}${next.level?`<span class="lvl">${esc(next.level)}</span>`:''}</div>`
+      +`<div class="ms-hero-eyebrow">Deine nächste Stunde</div>`
+      +`<div class="ms-hero-title">${esc(next.topic||next.title||'')}</div>`
+      +`<div class="ms-hero-date">${esc(fmt(new Date(next.starts_at)))} Uhr</div>`
+      +`<div class="ms-hero-actions"><a class="ms-join" href="${raumUrl(next)}" target="_blank" rel="noopener">${live?'<span class="ld"></span>':''}🎥 Zum Klassenzimmer</a>${prep}<a class="ms-prep" href="#" onclick="go('stunden');return false">🎟️ Alle Stunden</a></div></div>`;
+  }catch(e){ return ''; }
+};
 function renderDashboard(){
   const s=stats;
   document.getElementById('v-dashboard').innerHTML =
-    `${vorverkaufKarte()}
+    `${(window._msHero&&_msHero())||''}
+     ${vorverkaufKarte()}
      ${isActive()?'':lockBanner()}
      <div id="startNeu"></div>`;
   let abo='';
