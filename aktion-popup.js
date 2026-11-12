@@ -134,7 +134,7 @@
     hg.innerHTML =
       '<div class="ap-karte" role="dialog" aria-modal="true" aria-labelledby="apTitel">'
       + '<button class="ap-zu" type="button" aria-label="Schließen">✕</button>'
-      + '<span class="ap-fahne">' + A.name + '</span>'
+      + '<span class="ap-fahne">' + A.name + ' · ' + A.prozent + ' % Rabatt</span>'
       + '<h3 id="apTitel">Diese Woche sprichst du für <b style="color:#FFCE00">' + A.preis + ' €</b> im Monat.</h3>'
       + '<p>Der Sprechclub ist sonst geschlossen. Für die ' + A.name + ' machen wir auf — und du zahlst dauerhaft weniger.</p>'
       + '<div class="ap-preis"><span class="ap-neu">' + A.preis + ' €</span>'

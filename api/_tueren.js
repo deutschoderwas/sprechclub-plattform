@@ -74,7 +74,7 @@ export const istSprechclubPlan = (id) => /^premium_/.test(String(id || ''));
    ------------------------------------------------------------ */
 export const AKTION_VON = Date.parse('2026-11-24T00:00:00+01:00');
 export const AKTION_BIS = Date.parse('2026-12-01T00:00:00+01:00');
-export const AKTION_PREIS = 99;    // Premium im Monat waehrend der Aktion
+export const AKTION_PREIS = 97;    // Premium im Monat waehrend der Aktion (= 30 % unter 139)
 export const AKTION_ALT   = 139;   // regulaer
 
 export const aktionLaeuft = (jetzt = Date.now()) =>

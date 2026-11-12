@@ -31,12 +31,15 @@
        also die ganze Black Week inklusive Cyber Monday. */
     von:   Date.parse('2026-11-24T00:00:00+01:00'),
     bis:   Date.parse('2026-12-01T00:00:00+01:00'),
-    preis: 99,      // Aktionspreis Premium im Monat
+    preis: 97,      // Aktionspreis Premium im Monat
     alt:   139,     // regulaerer Preis seit 3.11.2026
     name:  'Black Week'
   };
-  A.spart = A.alt - A.preis;                                   // 40 €
-  A.prozent = Math.round((A.spart / A.alt) * 100);             // 29
+  A.spart = A.alt - A.preis;                                   // 42 €
+  /* Julia wollte zuerst 99 €. Das waeren 28,8 % gewesen - mit "30 %"
+     zu werben, waere dann falsch und angreifbar. Bei 97 € sind es
+     30,2 %: Die Aussage stimmt und ist sogar leicht untertrieben. */
+  A.prozent = Math.floor((A.spart / A.alt) * 100);             // 30
   A.laeuft = function (jetzt) {
     var t = jetzt || Date.now();
     return t >= A.von && t < A.bis;
@@ -73,7 +76,8 @@
   function teil() {
     var p = [
       '🖤 <b>' + A.name + '</b> im Sprechclub',
-      'Premium <b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
+      '<b>' + A.prozent + ' % Rabatt</b> auf Premium',
+      'nur <b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
       'du sparst <b>' + A.spart + ' € jeden Monat</b>',
       'der Preis bleibt dir <b>dauerhaft</b>',
       rest()
