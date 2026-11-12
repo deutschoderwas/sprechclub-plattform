@@ -44,6 +44,9 @@
       bild: 'bilder/dialog/telefon-melden-s.jpg', amanda: true },
     { id: 'diskussion', t: 'Diskutieren', u: 'Vertritt deine Meinung. Amanda hält dagegen.',
       bild: 'bilder/dialog/feedback-s.jpg', amanda: true },
+    /* 12.11.2026: die Timer-Übung aus den Grammatikfokus-Stunden (sprech-minute.js) */
+    { id: 'minute', t: 'Eine Minute frei sprechen', u: 'Thema ziehen, Timer starten, losreden. So übst du freies Sprechen.',
+      bild: 'bilder/thema/redemittel-s.jpg' },
     { id: 'rollenspiel', t: 'Rollenspiel', u: 'Arzt, Amt, Bewerbung: echte Situationen Schritt für Schritt.',
       bild: 'bilder/dialog/restaurant-s.jpg' },
     { id: 'nachsprechen', t: 'Sätze nachsprechen', u: 'Hören, nachsprechen, vergleichen. Für Melodie und Tempo.',
@@ -68,6 +71,7 @@
   window.spModus = function (id) {
     if (id === 'anruf') { window.AM_THEMA = ''; window.AM_THEMA_ANZEIGE = ''; return gehe('amandasprechen'); }
     if (id === 'diskussion') return diskussionZeigen();
+    if (id === 'minute') { if (window.spMinute) window.spMinute(); return; }
     if (id === 'rollenspiel') {
       var g = document.querySelector('#v-sprechen .hb-git');
       if (g) { try { g.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} }
@@ -81,7 +85,9 @@
 
   function diskussionZeigen() {
     var z = el('spDisk'); if (!z) return;
-    if (z.innerHTML) { z.innerHTML = ''; return; }
+    if (z.innerHTML && z.getAttribute('data-was') !== 'minute') { z.innerHTML = ''; z.removeAttribute('data-was'); return; }
+    try { if (window.spmStopp) window.spmStopp(); } catch (e) {}
+    z.setAttribute('data-was', 'disk');
     z.innerHTML = '<div class="sp-disk"><p class="sp-kick">Diskutieren · ' + E(niveau()) + '</p>'
       + '<h3>Worüber willst du streiten?</h3>'
       + '<div class="sp-fragen">' + fragen().map(function (f, i) {
