@@ -3345,7 +3345,29 @@ const MS_STYLE = `<style>
 .ms-empty{background:#F6F9F9;border:1px dashed var(--rahmen,#dbe3e1);border-radius:14px;padding:22px;text-align:center;color:#5A6B68}
 .ms-empty a{color:var(--primary,#0E7C8C);font-weight:800;text-decoration:none}
 .ms-tip{margin-top:10px;color:#9a6b00;font-weight:600;font-size:12.5px;background:#FFF8E6;border:1px solid #f3e4b0;border-radius:10px;padding:8px 11px}
-@media(max-width:560px){.ms-search{max-width:none}.ms-card{padding:14px}}
+.ms-mat .phase.ready{background:#FFF8E6;border-color:#f3e4b0}
+/* Hero: naechste Stunde ganz vorn */
+.ms-hero{position:relative;overflow:hidden;border-radius:22px;padding:22px 24px;margin:2px 0 20px;background:linear-gradient(135deg,#0E7C8C 0%,#0b5f6d 60%,#09505c 100%);color:#fff;box-shadow:0 14px 34px rgba(14,124,140,.28)}
+.ms-hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(#DD0000,#FFCE00 50%,#35AFD0)}
+.ms-hero-glow{position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%)}
+.ms-hero-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;position:relative}
+.ms-when{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:900;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 13px}
+.ms-when.live{background:#DD0000;border-color:#DD0000;box-shadow:0 0 0 4px rgba(221,0,0,.25)}
+.ms-when .wd{width:8px;height:8px;border-radius:50%;background:#7CF4B0}
+.ms-when.live .wd{background:#fff;animation:mspz 1.1s infinite}
+@keyframes mspz{0%,100%{opacity:1}50%{opacity:.3}}
+.ms-hero .lvl{background:rgba(255,255,255,.18);color:#fff}
+.ms-hero-eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.82;position:relative}
+.ms-hero-title{font-size:1.5rem;font-weight:900;line-height:1.2;margin:4px 0 2px;position:relative}
+.ms-hero-date{font-size:14px;opacity:.9;margin-bottom:16px;position:relative;font-weight:600}
+.ms-hero-actions{display:flex;flex-wrap:wrap;gap:10px;position:relative}
+.ms-join{background:#fff;color:#0b5f6d;font-weight:900;font-size:15px;border-radius:13px;padding:13px 22px;text-decoration:none;display:inline-flex;align-items:center;gap:9px;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.ms-join .ld{width:9px;height:9px;border-radius:50%;background:#DD0000;box-shadow:0 0 0 4px rgba(221,0,0,.25);animation:mspz 1.1s infinite}
+.ms-prep{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3);font-weight:800;font-size:14px;border-radius:13px;padding:13px 18px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.ms-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.ms-chip-f{font:inherit;font-weight:800;font-size:13px;color:#5A6B68;background:#fff;border:1px solid var(--rahmen,#e3e7e6);border-radius:999px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.12s}
+.ms-chip-f.active{background:var(--primary,#0E7C8C);color:#fff;border-color:var(--primary,#0E7C8C);box-shadow:0 3px 10px rgba(14,124,140,.25)}
+@media(max-width:560px){.ms-search{max-width:none}.ms-card{padding:14px}.ms-hero{padding:18px}.ms-hero-title{font-size:1.28rem}}
 </style>`;
 
 function meineStundenHtml(){
@@ -3371,6 +3393,45 @@ function meineStundenHtml(){
       if(inp){ inp.value = title ? ('Zur Stunde „'+title+'": ') : ''; inp.focus(); try{ inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){} }
     }, 60);
   };
+  // Kategorie einer Stunde (fuer die Filter-Chips)
+  function catOf(b){
+    const t=((b.topic||'')+' '+(b.title||'')).toLowerCase();
+    if(/sprechkarten/.test(t)) return 'karten';
+    if(/grammatik/.test(t)) return 'gram';
+    if(/wortschatz|tabu|verben|adjektive/.test(t)) return 'wort';
+    return 'sprechen';
+  }
+  // Klassenzimmer-Link (jederzeit betretbar – wie „Im Unterricht")
+  function raumUrl(b){ return `klassenraum.html?stunde=${b.class_id}&titel=${encodeURIComponent(b.title||'')}&niveau=${encodeURIComponent(b.level||'')}`; }
+  // Hero: die naechste Stunde ganz vorn, direkt ins Klassenzimmer + Vorbereitung
+  function heroHtml(){
+    const next=(up.slice().sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at)))[0];
+    if(!next){
+      return `<div class="ms-hero"><div class="ms-hero-glow"></div><div class="ms-hero-eyebrow">Deine nächste Stunde</div>`
+        +`<div class="ms-hero-title">Noch keine Stunde gebucht</div>`
+        +`<div class="ms-hero-date">Such dir im Kalender eine Stunde aus – dann geht's hier direkt ins Klassenzimmer.</div>`
+        +`<div class="ms-hero-actions"><a class="ms-join" href="#" onclick="go('kalender');return false">🗓️ Zum Wochenplan</a></div></div>`;
+    }
+    const st=new Date(next.starts_at).getTime(), now=s.now;
+    const live = now>=st-10*60000 && now<=st+90*60000;
+    let when;
+    if(live){ when=`<span class="ms-when live"><span class="wd"></span>Jetzt live</span>`; }
+    else {
+      const min=Math.round((st-now)/60000);
+      let txt;
+      if(min<60) txt='Beginnt in '+Math.max(1,min)+' Min';
+      else if(min<600) txt='Beginnt in '+Math.floor(min/60)+' Std '+(min%60)+' Min';
+      else txt=relDay(new Date(next.starts_at));
+      when=`<span class="ms-when"><span class="wd"></span>${esc(txt)}</span>`;
+    }
+    const prep = next.material_pre ? `<a class="ms-prep" href="${esc(next.material_pre)}" target="_blank" rel="noopener">📖 Vorbereitung öffnen</a>` : '';
+    return `<div class="ms-hero"><div class="ms-hero-glow"></div>`
+      +`<div class="ms-hero-top">${when}${lvlBadge(next.level)||(next.level?`<span class="lvl">${esc(next.level)}</span>`:'')}</div>`
+      +`<div class="ms-hero-eyebrow">Deine nächste Stunde</div>`
+      +`<div class="ms-hero-title">${esc(next.topic||next.title||'')}</div>`
+      +`<div class="ms-hero-date">${esc(fmt(new Date(next.starts_at)))} Uhr</div>`
+      +`<div class="ms-hero-actions"><a class="ms-join" href="${raumUrl(next)}" target="_blank" rel="noopener">${live?'<span class="ld"></span>':''}🎥 Zum Klassenzimmer</a>${prep}</div></div>`;
+  }
   function card(b,isPast){
     const m=materials[b.class_id];
     const start=new Date(b.starts_at);
@@ -3393,7 +3454,7 @@ function meineStundenHtml(){
     const secBtns=isPast
       ? `${haBtn}<button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button>`
       : `<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Umbuchen</button><button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">Nachricht an Lehrer</button><button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">Stornieren</button>`;
-    return `<div class="ms-card ${isPast?'is-past':'is-up'}" data-mstext="${esc(txt)}">
+    return `<div class="ms-card ${isPast?'is-past':'is-up'}" data-mstext="${esc(txt)}" data-cat="${catOf(b)}">
       <div class="ms-top">${chip}<span class="ms-date">${fmt(start)}</span>${lvlBadge(b.level)}</div>
       <div class="ms-title">${esc(b.topic||b.title||'')}</div>
       <div class="ms-actions">${mainBtns}</div>
@@ -3405,7 +3466,7 @@ function meineStundenHtml(){
   }
   const upHtml=up.length?up.map(b=>card(b,false)).join(''):'<div class="ms-empty">Noch nichts gebucht. <a href="#" onclick="go(\'kalender\');return false">Such dir im Kalender eine Stunde aus →</a></div>';
   const pastHtml=past.length?past.map(b=>card(b,true)).join(''):'<div class="ms-empty">Noch keine vergangenen Stunden.</div>';
-  return MS_STYLE+`
+  return MS_STYLE+heroHtml()+`
     <div class="ms-bar">
       <div class="ms-seg">
         <button class="ms-seg-b active" data-ms="up" onclick="msFilter('up')">📅 Kommende <span class="n">${up.length}</span></button>
@@ -3413,33 +3474,50 @@ function meineStundenHtml(){
       </div>
       <label class="ms-search"><span>🔎</span><input type="search" placeholder="Thema suchen …" oninput="msSearch(this.value)" aria-label="Stunden durchsuchen"></label>
     </div>
+    <div class="ms-chips">
+      <button class="ms-chip-f active" data-cat="all" onclick="msCat('all')">Alle</button>
+      <button class="ms-chip-f" data-cat="sprechen" onclick="msCat('sprechen')">💬 Freies Sprechen</button>
+      <button class="ms-chip-f" data-cat="gram" onclick="msCat('gram')">✏️ Grammatik</button>
+      <button class="ms-chip-f" data-cat="wort" onclick="msCat('wort')">🧩 Wortschatz</button>
+      <button class="ms-chip-f" data-cat="karten" onclick="msCat('karten')">🃏 Sprechkarten</button>
+    </div>
     <div id="ms-list-up" class="ms-list">${upHtml}</div>
     <div id="ms-list-past" class="ms-list" hidden>${pastHtml}</div>
     <div id="ms-noresult" class="ms-empty" hidden>Keine Stunde zu deiner Suche gefunden.</div>`;
 }
 
+// Filter-Status: Segment (Kommende/Vergangene) + Kategorie-Chip + Suche kombiniert
+window._msCat='all'; window._msQ='';
+function msApply(){
+  var listUp=document.getElementById('ms-list-up'), listPa=document.getElementById('ms-list-past');
+  var active = (listPa && !listPa.hidden) ? listPa : listUp;
+  if(!active) return;
+  var q=window._msQ, cat=window._msCat, treffer=0;
+  active.querySelectorAll('.ms-card').forEach(function(c){
+    var okCat = cat==='all' || (c.getAttribute('data-cat')||'')===cat;
+    var okQ = !q || (c.getAttribute('data-mstext')||'').indexOf(q)>-1;
+    var hit = okCat && okQ;
+    c.style.display = hit?'':'none'; if(hit) treffer++;
+  });
+  var nr=document.getElementById('ms-noresult');
+  if(nr) nr.hidden = !((q||cat!=='all') && treffer===0);
+}
 // Umschalten Kommende / Vergangene
 window.msFilter=function(which){
   document.querySelectorAll('.ms-seg-b').forEach(b=>b.classList.toggle('active', b.getAttribute('data-ms')===which));
   var up=document.getElementById('ms-list-up'), pa=document.getElementById('ms-list-past');
   if(up) up.hidden = which!=='up';
   if(pa) pa.hidden = which!=='past';
-  var inp=document.querySelector('.ms-search input'); msSearch(inp?inp.value:'');
+  msApply();
 };
-// Live-Suche über das aktuell sichtbare Set
-window.msSearch=function(v){
-  var q=(v||'').trim().toLowerCase();
-  var listUp=document.getElementById('ms-list-up'), listPa=document.getElementById('ms-list-past');
-  var active = (listPa && !listPa.hidden) ? listPa : listUp;
-  if(!active) return;
-  var treffer=0;
-  active.querySelectorAll('.ms-card').forEach(function(c){
-    var hit = !q || (c.getAttribute('data-mstext')||'').indexOf(q)>-1;
-    c.style.display = hit?'':'none'; if(hit) treffer++;
-  });
-  var nr=document.getElementById('ms-noresult');
-  if(nr) nr.hidden = !(q && treffer===0);
+// Kategorie-Chip
+window.msCat=function(cat){
+  window._msCat=cat||'all';
+  document.querySelectorAll('.ms-chip-f').forEach(b=>b.classList.toggle('active', b.getAttribute('data-cat')===window._msCat));
+  msApply();
 };
+// Live-Suche
+window.msSearch=function(v){ window._msQ=(v||'').trim().toLowerCase(); msApply(); };
 
 /* Die eigene Seite „Meine Stunden" — erreichbar über die Karte
    oben im Live Unterricht, nicht mehr über einen eigenen Knopf in der Leiste. */
@@ -4696,7 +4774,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
      Notausgang: ?voll=1 an die Adresse haengen laedt alles sofort wie
      frueher.
      ============================================================ -->
-<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "niveau-korrektur.js?v=2", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "wort-ki.js?v=1", "ueben.js?v=8", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=5", "pruefung.js?v=2", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=17", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=16", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=15", "pruefung-schreiben.js?v=15", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=20"]</script>
+<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "niveau-korrektur.js?v=2", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "wort-ki.js?v=1", "ueben.js?v=8", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=5", "pruefung.js?v=2", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "lesen-telc-a2.js", "hoeren-telc-a2.js", "schreiben-telc-a2.js", "sprechen-telc-a2.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=18", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=17", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=16", "pruefung-schreiben.js?v=16", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=21"]</script>
 <script>
 (function(){
   var liste = [];

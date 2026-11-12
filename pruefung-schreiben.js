@@ -62,7 +62,7 @@
   var AMANDA = 'immer';
 
   var QUELLEN = { 'A1':'SCHREIBEN_A1', 'A2':'SCHREIBEN_A2', 'B1':'SCHREIBEN_B1', 'B2':'SCHREIBEN_B2', 'C1':'SCHREIBEN_C1',
-                  'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B', 'telcB1B2':'SCHREIBEN_TELC_B1B2', 'telcB2C1':'SCHREIBEN_TELC_B2C1', 'telcC1B':'SCHREIBEN_TELC_C1B', 'telcC2':'SCHREIBEN_TELC_C2', 'telcDTZ':'SCHREIBEN_TELC_DTZ', 'telcPfl':'SCHREIBEN_TELC_PFL' };
+                  'telcA2':'SCHREIBEN_TELC_A2', 'telcB1':'SCHREIBEN_TELC_B1', 'telcB2':'SCHREIBEN_TELC_B2', 'telcA2B1':'SCHREIBEN_TELC_A2B1', 'telcC1H':'SCHREIBEN_TELC_C1H', 'telcC1':'SCHREIBEN_TELC_C1', 'telcB1B':'SCHREIBEN_TELC_B1B', 'telcB2B':'SCHREIBEN_TELC_B2B', 'telcB1B2':'SCHREIBEN_TELC_B1B2', 'telcB2C1':'SCHREIBEN_TELC_B2C1', 'telcC1B':'SCHREIBEN_TELC_C1B', 'telcC2':'SCHREIBEN_TELC_C2', 'telcDTZ':'SCHREIBEN_TELC_DTZ', 'telcPfl':'SCHREIBEN_TELC_PFL' };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
   window.schreibenVorhanden = function(n){ return !!datenVon(n); };
   window.schreibenDaten = function(n){ return datenVon(n); };
@@ -523,6 +523,13 @@
       return (telcKrit1(s,k,a.noetig) + (s[k]||0) + (s[k+1]||0)) * 3;
     }
     var n = gestaltungWert(text);
+    /* telc A2 (12.11.2026): drei von vier Punkten — es zählen die drei besten. */
+    if(a.noetig && a.noetig < a.punkte.length){
+      var w = []; for(var j=0;j<a.punkte.length;j++) w.push(s[j]||0);
+      w.sort(function(x,y){ return y-x; });
+      for(var q=0;q<a.noetig;q++) n += w[q];
+      return n;
+    }
     for(var i=0;i<a.punkte.length;i++) if(s[i]!=null) n += s[i];
     return n;
   }
@@ -636,6 +643,11 @@
   /* Ein Satz zum Schluss — der sagt, was beim nächsten Mal dran ist. */
   function fazit(a, s, an, gr){
     var fehlt = [];
+    if(a.noetig && a.noetig < a.punkte.length){
+      var voll = 0; for(var v=0;v<a.punkte.length;v++) if(s[v]>=3) voll++;
+      if(voll < a.noetig) for(var u=0;u<a.punkte.length;u++) if(s[u]>0 && s[u]<3) fehlt.push(a.punkte[u].was);
+      if(voll < a.noetig && !fehlt.length) fehlt.push((a.noetig-voll)+' weitere'+(a.noetig-voll===1?'n Punkt':' Punkte')+' deiner Wahl');
+    } else
     for(var i=0;i<a.punkte.length;i++) if(s[i]<3) fehlt.push(a.punkte[i].was);
     if(!fehlt.length && an && gr)
       return 'Alle drei Punkte drin, Anrede und Gruß auch — genau so wird in der Prüfung '

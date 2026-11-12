@@ -40,7 +40,7 @@
     localStorage.setItem('ub_'+k, JSON.stringify(v)); }catch(e){} }
 
   var QUELLEN = { 'A1':'SPRECHEN_A1', 'A2':'SPRECHEN_A2', 'B1':'SPRECHEN_B1', 'B2':'SPRECHEN_B2', 'C1':'SPRECHEN_C1',
-                  'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B', 'telcB1B2':'SPRECHEN_TELC_B1B2', 'telcB2C1':'SPRECHEN_TELC_B2C1', 'telcC1B':'SPRECHEN_TELC_C1B', 'telcC2':'SPRECHEN_TELC_C2', 'telcDTZ':'SPRECHEN_TELC_DTZ', 'telcPfl':'SPRECHEN_TELC_PFL' };
+                  'telcA2':'SPRECHEN_TELC_A2', 'telcB1':'SPRECHEN_TELC_B1', 'telcB2':'SPRECHEN_TELC_B2', 'telcA2B1':'SPRECHEN_TELC_A2B1', 'telcC1H':'SPRECHEN_TELC_C1H', 'telcC1':'SPRECHEN_TELC_C1', 'telcB1B':'SPRECHEN_TELC_B1B', 'telcB2B':'SPRECHEN_TELC_B2B', 'telcB1B2':'SPRECHEN_TELC_B1B2', 'telcB2C1':'SPRECHEN_TELC_B2C1', 'telcC1B':'SPRECHEN_TELC_C1B', 'telcC2':'SPRECHEN_TELC_C2', 'telcDTZ':'SPRECHEN_TELC_DTZ', 'telcPfl':'SPRECHEN_TELC_PFL' };
   /* Alle Aufgabenarten, bei denen wirklich gesprochen wird. */
   var SPRECHARTEN = { vorstellen:1, fragen:1, bitten:1, erzaehlen:1, planen:1, rueckmeldung:1 };
   function datenVon(n){ var k=QUELLEN[n]; return k ? (window[k]||null) : null; }
@@ -259,15 +259,21 @@
       + '<div class="sp-karte-kopf"><span>'+E((W.daten&&W.daten.pruefung)||'Start Deutsch 1')+'</span><b>Teil 1 · Sich vorstellen</b></div>'
       + '<div class="sp-stich">' + a.stichwoerter.map(function(w){
           return '<span class="sp-stich-w">'+E(w)+'</span>'; }).join('') + '</div>'
-      + '<div class="sp-extra">'
-      +   '<div class="sp-extra-z"><b>Buchstabieren</b><span>'+E(a.buchstabieren)+'</span></div>'
-      +   '<div class="sp-extra-z"><b>Nummer nennen</b><span>'+E(a.nummer)+'</span></div>'
-      + '</div></div>';
+      /* telc A2 (12.11.2026): statt Buchstabieren und Nummer zwei
+         Zusatzfragen der Prüfenden zur Vorstellung. */
+      + (a.zusatzfragen
+        ? '<div class="sp-extra">' + a.zusatzfragen.map(function(z,i){
+            return '<div class="sp-extra-z"><b>Zusatzfrage '+(i+1)+'</b><span>'+E(z.frage)+'</span></div>'; }).join('') + '</div>'
+        : '<div class="sp-extra">'
+          + '<div class="sp-extra-z"><b>Buchstabieren</b><span>'+E(a.buchstabieren)+'</span></div>'
+          + '<div class="sp-extra-z"><b>Nummer nennen</b><span>'+E(a.nummer)+'</span></div>'
+          + '</div>')
+      + '</div>';
   }
 
   function karteFragenHTML(k, thema){
     return '<div class="sp-karte sp-k-frage">'
-      + '<div class="sp-karte-kopf"><span>Teil 2 · Um Informationen bitten</span><b>Handlungskarte</b></div>'
+      + '<div class="sp-karte-kopf"><span>'+E(k.kopf||'Teil 2 · Um Informationen bitten')+'</span><b>'+(k.kopf?'Fragekarte':'Handlungskarte')+'</b></div>'
       + '<div class="sp-thema">'+E(thema)+'</div>'
       + '<div class="sp-stichwort">'+E(k.stichwort)+'</div>'
       + '</div>';
@@ -336,6 +342,11 @@
 
   /* Was bei dieser Karte bewertet wird — Text und Höchstpunktzahl. */
   function schritte(art){
+    var jetzt = W && W.folge && W.folge[W.i] && W.folge[W.i].a;
+    if(art==='vorstellen' && jetzt && jetzt.zusatzfragen) return [
+      { t:'Vorstellung', max:1, muster:function(a){ return a.muster; } },
+      { t:'Zusatzfrage 1', max:1, muster:function(a){ return a.zusatzfragen[0].antwort; } },
+      { t:'Zusatzfrage 2', max:1, muster:function(a){ return a.zusatzfragen[1].antwort; } } ];
     if(art==='vorstellen') return [
       { t:'Vorstellung', max:1, muster:function(a){ return a.muster; } },
       { t:'Buchstabieren', max:1, muster:function(a){ return a.muster_buchstabieren; } },

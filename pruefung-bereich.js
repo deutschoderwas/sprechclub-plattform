@@ -372,6 +372,7 @@
 
     { id:'telca2', name:'telc Deutsch A2', anbieter:'telc · Start Deutsch 2', niveau:'A2',
       bild:'wohnen', stufe:'A2', telc:true, geprueft:true, gruppe:'telc', dauer:'ca. 1 Std 25 Min',
+      training:{ lesen:'telcA2', hoeren:'telcA2', schreiben:'telcA2', sprechen:'telcA2' },
       fuer:'Aufenthaltstitel, erste Arbeit, der Schritt nach dem Anfang.',
       module:[ {id:'hoeren',n:'Hören',m:'ca. 20', t:'Drei Teile, 15 Aufgaben: Telefonnotizen ergänzen, Radiodurchsagen (nur einmal), ein Gespräch, in dem du Personen Orten zuordnest.'},
                {id:'lesen',n:'Lesen',m:'ca. 30', t:'Drei Teile, 15 Aufgaben: ein Wegweiser oder Kaufhausplan, ein Zeitungsartikel, Anzeigen zuordnen. Lesen und Schreiben zusammen 50 Minuten.'},
@@ -381,9 +382,9 @@
              +'Mündlich ca. 15 Minuten zu zweit, ohne Vorbereitungszeit.',
       punkte:'Insgesamt 60 Punkte, je 15 für Hören, Lesen, Schreiben und Sprechen. Bestanden ab 36 Punkten (60 Prozent).',
       prognose:{ teile:[ { name:'Gesamtergebnis', max:60, grenze:36, anteile:{ hoeren:15, lesen:15, schreiben:15, sprechen:15 } } ] },
-      formatHinweis:'Hier übst du noch mit dem Training für Goethe A2: dasselbe Niveau, aber die Aufgaben sehen bei telc etwas anders aus. '
-             +'Bei telc hat Hören und Lesen je drei Teile statt vier, beim Schreiben füllst du ein Formular aus und schreibst einen Brief. '
-             +'Das telc-eigene Training bauen wir gerade. Den offiziellen telc-Übungstest findest du unter „Musterprüfung“.',
+      formatHinweis:'Alle vier Teile übst du hier im echten telc-Format: Telefonnotizen, Radiodurchsagen und ein Gespräch beim Hören, '
+             +'Wegweiser, Zeitungsartikel und Anzeigen beim Lesen, Formular und Brief beim Schreiben, Fragekarten und Mindmaps beim Sprechen. '
+             +'Den offiziellen telc-Übungstest findest du unter „Musterprüfung“.',
       mat:{
         wortschatz:['Tagesablauf','Wohnen','Einkaufen und Kaufhaus','Arbeit und Beruf','Freizeit und Hobbys',
                     'Reisen und Verkehr','Feste und Einladungen','Gesundheit','Dienstleistungen und Ämter'],
