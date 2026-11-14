@@ -55,13 +55,13 @@ function huelle({ eyebrow, h1, absaetze, knopf, link, ps }) {
 
 function mailCommunity(hallo) {
   return {
-    subject: 'Es ist so weit \u{1F49B} die Community ist offen',
+    subject: 'Es ist so weit \u{1F49B} der Lernclub ist offen',
     html: huelle({
       eyebrow: 'Die Warteliste ist vorbei',
-      h1: 'Die Community ist offen &#128155;',
+      h1: 'Der Lernclub ist offen &#128155;',
       absaetze: [
         hallo,
-        'du stehst seit ein paar Tagen auf der Warteliste &ndash; und jetzt kann ich dir endlich schreiben: <b>die Community ist offen.</b> Ab sofort, ohne Wartezeit.',
+        'du stehst seit ein paar Tagen auf der Warteliste &ndash; und jetzt kann ich dir endlich schreiben: <b>der Lernclub ist offen.</b> Ab sofort, ohne Wartezeit.',
         KASTEN('Die ganze Kursbibliothek <b>A1 bis C1</b><br>Vokabeltrainer, regelm&auml;&szlig;iger Podcast und &Uuml;bungen<br><b>Community-Chat</b> mit den anderen Lernenden<br><b>Amanda</b> beantwortet dir rund um die Uhr jede Frage'),
         '<b>12 &euro; im Monat</b> bei j&auml;hrlicher Zahlung, 16 &euro; wenn du monatlich zahlst. K&uuml;ndbar, wann du willst.',
       ],
@@ -74,18 +74,18 @@ function mailCommunity(hallo) {
 
 function mailPremium(hallo) {
   return {
-    subject: 'Premium startet am 1. November – aber du musst nicht warten',
+    subject: 'Der Sprechclub startet am 1. November – aber du musst nicht warten',
     html: huelle({
       eyebrow: 'Dein Platz ist sicher',
-      h1: 'Premium startet am 1. November',
+      h1: 'Der Sprechclub startet am 1. November',
       absaetze: [
         hallo,
-        'kurze Nachricht zu deinem Platz auf der Warteliste: <b>Premium startet am 1. November.</b> Du stehst drauf, ich melde mich rechtzeitig bei dir &ndash; du musst nichts tun.',
-        'Eins wollte ich dir aber schon jetzt sagen: alles, was in Premium drin ist &ndash; au&szlig;er dem Sprechen am Abend &ndash; gibt es <b>ab sofort</b> in der Community.',
+        'kurze Nachricht zu deinem Platz auf der Warteliste: <b>der Sprechclub startet am 1. November.</b> Du stehst drauf, ich melde mich rechtzeitig bei dir &ndash; du musst nichts tun.',
+        'Eins wollte ich dir aber schon jetzt sagen: alles, was im Sprechclub drin ist &ndash; au&szlig;er dem Sprechen am Abend &ndash; gibt es <b>ab sofort</b> im Lernclub.',
         KASTEN('Kursbibliothek <b>A1 bis C1</b>, Vokabeltrainer, Podcast<br>Community-Chat und <b>Amanda</b> rund um die Uhr<br><b>12 &euro; im Monat</b> &middot; jederzeit k&uuml;ndbar'),
-        'Im November wechselst du mit einem Klick zu Premium &ndash; und alles, was du bis dahin gelernt hast, bleibt.',
+        'Im November wechselst du mit einem Klick zum Sprechclub &ndash; und alles, was du bis dahin gelernt hast, bleibt.',
       ],
-      knopf: '&#128155; Jetzt in der Community anfangen',
+      knopf: '&#128155; Jetzt im Lernclub anfangen',
       link: SITE + '/#preise',
       ps: 'Wenn du lieber bis November wartest, ist das auch v&ouml;llig in Ordnung &ndash; dein Platz bleibt.',
     }),

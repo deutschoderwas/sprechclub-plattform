@@ -54,9 +54,9 @@ const PLANS = {
      Jahresabos laufen bei Stripe unberührt weiter.
      Der interne Wert bleibt 'community' — er steht so in tausenden
      Zeilen der Datenbank; umbenannt wird, was Menschen lesen. */
-  community_year:  { alt: true, abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Basis-Community',
+  community_year:  { alt: true, abo: true, interval:'year',  stunden: 0, preis: 144, tier:'community', label: 'Lernclub',
     desc: 'Die ganze Lernplattform: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community-Chat. Jahresmitgliedschaft (12 Monate).' },
-  community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Basis-Community',
+  community_month: { abo: true, interval:'month', stunden: 0, preis: 16,  tier:'community', label: 'Lernclub',
     desc: 'Die ganze Lernplattform ohne Sprechclub: Kursbibliothek A1–C1, Vokabeltrainer, regelmäßiger Podcast und Community-Chat. Monatlich kündbar.' },
   // --- NEU ab 08/2026: Premium zum Seitenpreis (49 € / 37 € im Jahresabo). Das alte 149-€-Premium bleibt fuer Bestandskunden. ---
   /* ACHTUNG, stunden: 8 ist hier KEINE Stundenzahl fuers Buchen —
@@ -72,12 +72,12 @@ const PLANS = {
      ist am 13.10.2026 passiert: 27 Kaufbestaetigungen sprachen von
      "8 LIVE-Stunden", weil die Mail stunden aus der Metadaten las.
      Die Richtigstellung liegt in api/korrektur-premium-mail.js. */
-  premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Premium-Community',
-    desc: 'Alles aus der Basis-Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, unbegrenzt. Monatlich kündbar.' },
-  premium_year:    { alt: true, abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Premium-Community',
-    desc: 'Alles aus der Basis-Community + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
-  premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Premium-Community',
-    desc: 'Alles aus der Basis-Community + Sprechclub: unbegrenzt LIVE-Stunden, sprechen mit echten Menschen.' },
+  premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Sprechclub',
+    desc: 'Alles aus dem Lernclub + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, unbegrenzt. Monatlich kündbar.' },
+  premium_year:    { alt: true, abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Sprechclub',
+    desc: 'Alles aus dem Lernclub + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
+  premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Sprechclub',
+    desc: 'Alles aus dem Lernclub + Sprechclub: unbegrenzt LIVE-Stunden, sprechen mit echten Menschen.' },
 
   /* --- Premium Plus: der geschlossene Sprechclub bei Julia persoenlich ---
      8 Stunden im Monat. Drei Laufzeiten, und zu jeder zwei Zahlweisen:

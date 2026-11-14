@@ -129,7 +129,7 @@
       + '<button class="bp-zu" type="button" aria-label="Schließen">✕</button>'
       + '<span class="bp-fahne">Ohne Warten</span>'
       + '<h3 id="bpTitel">Du musst nicht bis zum <b>Dezember</b> warten.</h3>'
-      + '<p>Der Sprechclub öffnet erst wieder im Dezember. Die <b>Basis-Community</b> ist ab sofort offen — die ganze Lernplattform, sofort freigeschaltet.</p>'
+      + '<p>Der Sprechclub öffnet erst wieder im Dezember. Der <b>Lernclub</b> ist ab sofort offen — die ganze Lernplattform, sofort freigeschaltet.</p>'
       + '<ul class="bp-liste">'
       +   '<li><span class="h">✓</span><span>Die ganze Kursbibliothek — <b>A1 bis C1</b></span></li>'
       +   '<li><span class="h">✓</span><span>Vokabeltrainer, Podcast und Übungen</span></li>'
@@ -137,7 +137,7 @@
       +   '<li><span class="h">✓</span><span>Community-Chat mit anderen Lernenden</span></li>'
       + '</ul>'
       + '<p class="bp-preis"><b>16 €</b> im Monat · monatlich kündbar</p>'
-      + '<button class="bp-kauf" id="bpKauf" type="button">Basis-Community starten</button>'
+      + '<button class="bp-kauf" id="bpKauf" type="button">Lernclub starten</button>'
       + '<button class="bp-spaeter" type="button">Später vielleicht</button>'
       + '</div>';
     document.body.appendChild(hg);
