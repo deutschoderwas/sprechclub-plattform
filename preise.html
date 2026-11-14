@@ -19,83 +19,107 @@
   --creme:#FBF7EE; --karte:#FFFFFF; --tinte:#1D1B18; --tinte-2:#5C5346; --tinte-3:#8B8271;
   --linie:#E7DFCD; --linie-hell:#EFE9DC;
   --tuerkis:#0E7C7B; --tuerkis-hell:#4FB3AE; --tuerkis-hauch:#DCEFEC;
-  --gelb:#FFC94A; --gelb-hauch:#FFF3D6; --rot:#E8302A;
-  --wolke:0 8px 24px rgba(29,27,24,.07);
+  --gelb:#FFC94A; --gelb-tief:#8A5A00; --gelb-hauch:#FFF3D6; --rot:#E8302A;
+  --koralle:#EF6A3D; --koralle-hauch:#FCE9E0;
+  --wolke:0 10px 30px rgba(29,27,24,.08);
+  --wolke-stark:0 18px 46px rgba(29,27,24,.14);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--creme);color:var(--tinte);font-family:'Inter',system-ui,sans-serif;
-  line-height:1.6;-webkit-font-smoothing:antialiased}
-.huelle{max-width:940px;margin:0 auto;padding:26px 18px 70px}
+body{min-height:100vh;color:var(--tinte);font-family:'Inter',system-ui,sans-serif;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background:radial-gradient(1100px 460px at 50% -160px,var(--tuerkis-hauch),transparent 62%),var(--creme)}
+.huelle{max-width:1000px;margin:0 auto;padding:22px 18px 84px}
 
 .zurueck{display:inline-flex;align-items:center;gap:7px;background:var(--karte);
   border:1.5px solid var(--linie);border-radius:999px;padding:8px 16px;font-size:14px;
   font-weight:600;color:var(--tinte-2);text-decoration:none;transition:border-color .15s}
 .zurueck:hover{border-color:var(--tuerkis)}
 
-.kopf{text-align:center;margin:26px 0 6px}
-.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--tuerkis);margin-bottom:9px}
-h1{font-family:'Space Grotesk',Georgia,serif;font-weight:600;font-size:clamp(1.9rem,4.6vw,2.8rem);
-  line-height:1.1;text-wrap:balance}
+.kopf{text-align:center;margin:28px 0 4px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--tuerkis);margin-bottom:10px}
+h1{font-family:'Space Grotesk',Georgia,serif;font-weight:600;font-size:clamp(2rem,4.8vw,3rem);line-height:1.08;text-wrap:balance}
 h1 .hl{position:relative;display:inline-block;font-style:italic;padding:.04em .26em}
-h1 .hl::before{content:'';position:absolute;inset:0;background:var(--gelb);border-radius:11px;
-  transform:rotate(-1.6deg);z-index:-1}
-.unter{max-width:52ch;margin:12px auto 0;color:var(--tinte-2);font-size:1.03rem}
+h1 .hl::before{content:'';position:absolute;inset:0;background:var(--gelb);border-radius:11px;transform:rotate(-1.6deg);z-index:-1}
+.unter{max-width:56ch;margin:14px auto 0;color:var(--tinte-2);font-size:1.05rem}
+.helfer{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;
+  margin:16px auto 0;background:var(--karte);border:1.5px solid var(--linie);border-radius:999px;
+  padding:9px 18px;font-size:.9rem;color:var(--tinte-2);box-shadow:var(--wolke)}
+.helfer b{color:var(--tinte)}
+.helfer .punkt{width:5px;height:5px;border-radius:50%;background:var(--tinte-3)}
 
-.karten{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:32px;align-items:start}
-@media(max-width:760px){.karten{grid-template-columns:1fr}}
+.karten{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px;align-items:stretch}
+@media(max-width:780px){.karten{grid-template-columns:1fr}}
 
-.k{background:var(--karte);border:1.5px solid var(--linie);border-radius:20px;padding:24px 22px;
-  box-shadow:var(--wolke);position:relative}
-.k.jetzt{border-color:var(--tuerkis);border-width:2px}
-.fahne{position:absolute;top:-11px;left:22px;background:var(--tuerkis);color:#fff;
-  font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-  padding:4px 11px;border-radius:999px}
-.fahne.warte{background:var(--gelb);color:var(--tinte)}
+.k{display:flex;flex-direction:column;background:var(--karte);border:1.5px solid var(--linie);
+  border-radius:22px;overflow:hidden;box-shadow:var(--wolke);position:relative;
+  transition:transform .14s,box-shadow .18s}
+.k:hover{transform:translateY(-3px);box-shadow:var(--wolke-stark)}
+.k-top{height:6px}
+.k--club .k-top{background:linear-gradient(90deg,var(--tuerkis),var(--tuerkis-hell))}
+.k--sprech .k-top{background:linear-gradient(90deg,var(--koralle),var(--gelb))}
+.k-foto{height:170px;position:relative;overflow:hidden;background:var(--linie-hell)}
+.k-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.k-foto.sprech{display:grid;place-items:center;background:linear-gradient(135deg,var(--koralle),var(--gelb))}
+.k-foto.sprech .motiv{font-size:66px;filter:drop-shadow(0 5px 12px rgba(0,0,0,.2))}
+.k-foto .bild-text{position:absolute;left:0;right:0;bottom:11px;text-align:center;color:#fff;font-weight:800;font-size:.92rem;letter-spacing:.02em;text-shadow:0 2px 9px rgba(0,0,0,.3)}
+.upg{margin-top:20px;display:flex;align-items:center;gap:15px;background:linear-gradient(135deg,#fff,var(--gelb-hauch));
+  border:1.5px solid var(--gelb);border-radius:16px;padding:16px 20px;box-shadow:var(--wolke)}
+.upg .ic{flex:none;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--gelb);font-size:23px}
+.upg div{min-width:0}
+.upg b{color:var(--tinte)}
+.upg p{margin:2px 0 0;font-size:.94rem;color:var(--tinte-2)}
+@media(max-width:560px){.upg{flex-direction:column;text-align:center}}
+.k-in{display:flex;flex-direction:column;flex:1;padding:22px 24px 26px}
 
-.k h2{font-family:'Space Grotesk',Georgia,serif;font-weight:600;font-size:1.6rem;margin:6px 0 3px}
-.k .satz{color:var(--tinte-2);font-size:.96rem;margin-bottom:16px}
+.fahne{align-self:flex-start;font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;margin-bottom:12px}
+.k--club .fahne{background:var(--tuerkis-hauch);color:var(--tuerkis)}
+.fahne.spar{background:var(--koralle-hauch);color:var(--koralle)}
 
-.wahl{display:flex;gap:6px;background:var(--linie-hell);border-radius:999px;padding:4px;margin-bottom:14px}
-.wahl button{flex:1;border:0;background:transparent;font-family:inherit;font-size:13.5px;
-  font-weight:700;color:var(--tinte-2);padding:8px 10px;border-radius:999px;cursor:pointer;
-  transition:background .15s,color .15s}
-.wahl button.an{background:var(--karte);color:var(--tinte);box-shadow:0 2px 7px rgba(29,27,24,.09)}
+.kicker{font-size:12.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
+.kicker.club{color:var(--tuerkis)}
+.kicker.sprech{color:var(--koralle)}
+.k h2{font-family:'Space Grotesk',Georgia,serif;font-weight:600;font-size:1.7rem;margin:0 0 4px}
+.satz{color:var(--tinte-2);font-size:.97rem;margin-bottom:16px}
 
 .preis{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
-.preis .zahl{font-family:'Space Grotesk',Georgia,serif;font-weight:700;font-size:2.5rem;line-height:1}
+.preis .zahl{font-family:'Space Grotesk',Georgia,serif;font-weight:700;font-size:2.6rem;line-height:1}
+.preis .zahl.gross{font-size:2.9rem}
 .preis .je{color:var(--tinte-3);font-size:.95rem}
 .hinweis{color:var(--tinte-3);font-size:.87rem;min-height:1.3em;margin-bottom:16px}
-
-ul.liste{list-style:none;display:grid;gap:9px;margin:0 0 20px}
-ul.liste li{display:flex;gap:9px;font-size:.95rem;line-height:1.5}
-ul.liste li::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;
-  background:var(--tuerkis-hell);margin-top:.5em}
-/* Der Text muss EIN Flex-Kind sein — sonst wird jedes <b> zum eigenen
-   Element und der gap reisst die Zeile auseinander. */
-ul.liste li > span{flex:1;min-width:0}
-.k.bald ul.liste li::before{background:var(--gelb)}
-
-.knopf{display:block;width:100%;text-align:center;border:0;border-radius:999px;
-  font-family:inherit;font-size:16px;font-weight:700;padding:14px 20px;cursor:pointer;
-  text-decoration:none;transition:transform .12s,box-shadow .15s}
-.knopf:hover{transform:translateY(-1px)}
-.knopf.voll{background:var(--tuerkis);color:#fff;box-shadow:0 6px 16px rgba(14,124,123,.28)}
-.knopf.rand{background:var(--gelb-hauch);color:var(--gelb-tief,#8a5a00);border:1.6px solid var(--gelb)}
-.knopf[disabled]{opacity:.6;cursor:default;transform:none}
-.klein{text-align:center;font-size:.83rem;color:var(--tinte-3);margin-top:10px}
-
-.fuss{margin-top:34px;background:var(--tuerkis-hauch);border:1.5px solid var(--tuerkis-hell);
-  border-radius:18px;padding:18px 22px;font-size:.95rem;color:var(--tinte-2)}
-.fuss b{color:var(--tinte)}
-.meldung{margin-top:14px;text-align:center;font-size:.92rem;color:var(--rot);min-height:1.2em}
-.fahne.spar{background:var(--rot);color:#fff}
-.k.bald{border-color:var(--rot);border-width:2px}
 .alt{display:flex;align-items:center;gap:8px;margin-bottom:2px}
 .alt s{font-family:'Space Grotesk',Georgia,serif;font-weight:700;font-size:1.3rem;color:var(--tinte-3);text-decoration-color:var(--rot);text-decoration-thickness:2.5px}
 .alt .chip{background:var(--gelb);color:var(--tinte);font-weight:800;font-size:12px;padding:3px 9px;border-radius:999px}
-.preis .zahl.gross{font-size:3.2rem}
-.knopf.rot{background:var(--rot);color:#fff;box-shadow:0 6px 16px rgba(232,48,42,.28)}
+
+.enthaelt{display:flex;align-items:center;gap:8px;background:var(--tuerkis-hauch);
+  border:1px solid #CDE7E2;border-radius:12px;padding:9px 13px;font-size:.92rem;color:var(--tinte);margin-bottom:14px}
+.enthaelt .plus{margin-left:auto;font-weight:800;color:var(--tuerkis);font-size:1.15rem}
+
+ul.liste{list-style:none;display:grid;gap:10px;margin:0 0 20px}
+ul.liste li{display:flex;gap:10px;font-size:.95rem;line-height:1.45;align-items:flex-start}
+ul.liste li::before{content:'\2713';flex:none;display:grid;place-items:center;width:19px;height:19px;
+  border-radius:50%;background:var(--tuerkis-hauch);color:var(--tuerkis);font-size:12px;font-weight:800;margin-top:.1em}
+ul.liste.plus li::before{background:var(--koralle-hauch);color:var(--koralle)}
+ul.liste li>span{flex:1;min-width:0}
+
+.cta{margin-top:auto}
+.knopf{display:block;width:100%;text-align:center;border:0;border-radius:999px;font-family:inherit;
+  font-size:16px;font-weight:700;padding:15px 20px;cursor:pointer;text-decoration:none;transition:transform .12s,box-shadow .15s}
+.knopf:hover{transform:translateY(-1px)}
+.knopf.voll{background:var(--tuerkis);color:#fff;box-shadow:0 8px 20px rgba(14,124,123,.30)}
+.knopf.rot{background:var(--koralle);color:#fff;box-shadow:0 8px 20px rgba(239,106,61,.30)}
+.knopf.rand{background:var(--koralle-hauch);color:var(--koralle);border:1.6px solid var(--koralle)}
+.knopf[disabled]{opacity:.6;cursor:default;transform:none}
+.klein{text-align:center;font-size:.83rem;color:var(--tinte-3);margin-top:10px}
+
+.meldung{margin-top:16px;text-align:center;font-size:.92rem;color:var(--rot);min-height:1.2em}
+
+.fuss{margin-top:30px;background:var(--karte);border:1.5px solid var(--linie);border-radius:18px;
+  padding:18px 22px;font-size:.95rem;color:var(--tinte-2);box-shadow:var(--wolke)}
+.fuss b{color:var(--tinte)}
+.fuss-reihe{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center;margin-bottom:12px;font-size:.88rem;font-weight:600;color:var(--tinte-2)}
+.fuss-reihe span{display:inline-flex;align-items:center;gap:6px}
+.fuss p{text-align:center}
 
 /* ---- Bezahlfenster: Stripe eingebettet, damit niemand die Seite verlaesst ---- */
 .bz-hg{position:fixed;inset:0;background:rgba(29,27,24,.55);backdrop-filter:blur(3px);
@@ -119,68 +143,99 @@ ul.liste li > span{flex:1;min-width:0}
 <body>
 <div class="huelle">
 
-  <a class="zurueck" href="/schuelerbereich">&larr; Zurück in deinen Bereich</a>
+  <a class="zurueck" href="/schuelerbereich">← Zurück in deinen Bereich</a>
 
   <div class="kopf">
     <div class="eyebrow">Deine Mitgliedschaft</div>
-    <h1>Zwei Wege, <span class="hl">mitzumachen</span></h1>
+    <h1>Wähle, wie du <span class="hl">Deutsch lernst</span></h1>
     <p class="unter"><b>Lernclub</b> ist die Lernplattform zum Selbstlernen — ab sofort.
       <span id="pUnterClub"><b>Sprechclub</b> ist alles aus dem Lernclub plus unbegrenztes Live-Sprechen.</span></p>
+    <div class="helfer">
+      <span>✓ Beide <b>monatlich kündbar</b></span>
+      <span class="punkt"></span>
+      <span>Der Unterschied: im <b>Sprechclub</b> sprichst du täglich live</span>
+    </div>
   </div>
 
   <div class="karten">
 
-    <!-- Lernclub (Plattform, selbst lernen) -->
-    <div class="k jetzt">
-      <span class="fahne">Ab sofort</span>
-      <h2>Lernclub</h2>
-      <p class="satz">Selbst lernen, wann du willst — die ganze Plattform ohne Wartezeit.</p>
+    <!-- Lernclub -->
+    <div class="k k--club">
+      <div class="k-top"></div>
+      <div class="k-foto"><img src="bilder/lernclub.webp" alt="Frau lernt entspannt am Laptop zu Hause" loading="lazy"></div>
+      <div class="k-in">
+        <span class="fahne">Ab sofort buchbar</span>
+        <div class="kicker club">Zum Selbstlernen</div>
+        <h2>Lernclub</h2>
+        <p class="satz">Die ganze Plattform, in deinem Tempo — ohne Termin, ohne Wartezeit.</p>
 
-      <div class="preis"><span class="zahl" id="preisZahl">16 €</span><span class="je" id="preisJe">im Monat</span></div>
-      <p class="hinweis" id="preisHinweis">Monatlich kündbar.</p>
+        <div class="preis"><span class="zahl" id="preisZahl">16 €</span><span class="je" id="preisJe">im Monat</span></div>
+        <p class="hinweis" id="preisHinweis">Monatlich kündbar.</p>
 
-      <ul class="liste">
-        <li><span>Die ganze Kursbibliothek — <b>A1 bis C1</b></span></li>
-        <li><span><b>Podcast-Folgen</b> zum Hören &amp; nebenbei lernen</span></li>
-        <li><span>Vokabeltrainer, Grammatik &amp; viele <b>interaktive Übungen</b></span></li>
-        <li><span>Dein <b>Lernbereich</b> mit persönlichem Lernpfad</span></li>
-        <li><span>Community-Chat mit anderen Lernenden</span></li>
-        <li><span>Amanda beantwortet dir <b>jede</b> Frage</span></li>
-      </ul>
+        <ul class="liste">
+          <li><span>Die ganze Kursbibliothek — <b>A1 bis C1</b></span></li>
+          <li><span><b>Podcast-Folgen</b> zum Hören &amp; nebenbei lernen</span></li>
+          <li><span>Vokabeltrainer, Grammatik &amp; viele <b>interaktive Übungen</b></span></li>
+          <li><span>Dein <b>Lernbereich</b> mit persönlichem Lernpfad</span></li>
+          <li><span>Community-Chat mit anderen Lernenden</span></li>
+          <li><span><b>Amanda</b> beantwortet dir jede Frage, rund um die Uhr</span></li>
+        </ul>
 
-      <button class="knopf voll" id="kaufKnopf" onclick="jetztMitgliedWerden(this)">💛 Jetzt Mitglied werden</button>
-      <p class="klein">Sofort freigeschaltet · monatlich kündbar</p>
+        <div class="cta">
+          <button class="knopf voll" id="kaufKnopf" onclick="jetztMitgliedWerden(this)">💛 Lernclub starten</button>
+          <p class="klein">Sofort freigeschaltet · monatlich kündbar</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Sprechclub (+ live sprechen) -->
-    <div class="k bald">
-      <span class="fahne spar" id="pFahne">Willkommenspreis · Anmeldung ab 1. Oktober</span>
-      <h2>Sprechclub</h2>
-      <p class="satz">Endlich sprechen — mit echten Menschen, nicht mit einer App.</p>
+    <!-- Sprechclub -->
+    <div class="k k--sprech">
+      <div class="k-top"></div>
+      <div class="k-foto sprech"><span class="motiv">🗣️</span><span class="bild-text">Täglich live sprechen</span></div>
+      <div class="k-in">
+        <span class="fahne spar" id="pFahne">Willkommenspreis · Anmeldung ab 1. Oktober</span>
+        <div class="kicker sprech">Zum Sprechen</div>
+        <h2>Sprechclub</h2>
+        <p class="satz">Endlich reden — mit echten Menschen, jeden Tag, nicht mit einer App.</p>
 
-      <div class="alt" id="pAltWrap" style="display:none"><s id="pAlt"></s><span class="chip" id="pSpar"></span></div>
-      <div class="preis"><span class="zahl gross" id="pZahl">139 €</span><span class="je">im Monat</span></div>
-      <p class="hinweis" id="pHinweis">monatlich kündbar</p>
+        <div class="alt" id="pAltWrap" style="display:none"><s id="pAlt"></s><span class="chip" id="pSpar"></span></div>
+        <div class="preis"><span class="zahl gross" id="pZahl">139 €</span><span class="je">im Monat</span></div>
+        <p class="hinweis" id="pHinweis">monatlich kündbar</p>
 
-      <ul class="liste">
-        <li><span><b>Alles aus dem Lernclub</b> ist dabei</span></li>
-        <li><span>Sprechclub: <b>täglich von Montag bis Sonntag</b></span></li>
-        <li><span>Endlich mit echten Menschen sprechen — über Themen, die wirklich interessieren</span></li>
-        <li><span><b>Unbegrenzter Zugang</b> — so oft du willst, ohne Stundenpaket</span></li>
-      </ul>
+        <div class="enthaelt"><b>Die ganze Kursbibliothek &amp; alles aus dem Lernclub</b> ist dabei <span class="plus">+</span></div>
+        <ul class="liste plus">
+          <li><span><b>Täglich live sprechen</b> — Montag bis Sonntag</span></li>
+          <li><span>Echte Gespräche über Themen, die wirklich interessieren</span></li>
+          <li><span><b>Unbegrenzt</b> — so oft du willst, kein Stundenpaket</span></li>
+          <li><span><b>Kleine Gruppen</b> — und ein Lehrer kommt dazu</span></li>
+        </ul>
 
-      <button class="knopf rand" id="pKnopf" onclick="premiumKnopf(this)">🔔 Auf die Warteliste</button>
-      <p class="klein" id="pKlein">Dein Willkommenspreis bleibt für immer.</p>
+        <div class="cta">
+          <button class="knopf rand" id="pKnopf" onclick="premiumKnopf(this)">🔔 Auf die Warteliste</button>
+          <p class="klein" id="pKlein">Dein Willkommenspreis bleibt für immer.</p>
+        </div>
+      </div>
     </div>
 
+  </div>
+
+  <div class="upg">
+    <div class="ic">⬆️</div>
+    <div>
+      <b>Später upgraden ist ganz einfach.</b>
+      <p>Starte im Lernclub und wechsle jederzeit in den Sprechclub — du zahlst nur die <b>Differenz</b>, und dein Abo stellt sich <b>automatisch</b> auf den neuen Preis um. Alles, was du gelernt hast, bleibt.</p>
+    </div>
   </div>
 
   <p class="meldung" id="meldung"></p>
 
   <div class="fuss">
-    <b>Du bist dir nicht sicher?</b> Trag dich ein, dann melden wir uns, sobald die Anmeldung
-    wieder offen ist — für den Lernclub wie für den Sprechclub. Die Preise stehen oben, damit du weißt,
-    worauf du dich einstellst.
+    <div class="fuss-reihe">
+      <span>🔒 Sichere Zahlung über Stripe</span>
+      <span>↩︎ Monatlich kündbar</span>
+      <span>⇄ Jederzeit upgraden – nur die Differenz</span>
+    </div>
+    <p><b>Noch unsicher?</b> Fang mit dem Lernclub an und schau dich in Ruhe um. Sobald du täglich sprechen willst, bist du mit einem Klick im Sprechclub.</p>
   </div>
 
 </div>
