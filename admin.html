@@ -122,7 +122,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
        Bestaetigungsmail stehen hatten. Verschwindet von allein, sobald
        alle sie haben. Siehe api/korrektur-premium-mail.js. -->
   <div class="card" id="korrKarte" style="display:none;border:2px solid #FFCE00;background:#FFFCF5;margin-bottom:14px;padding:16px 18px">
-    <b>✉️ Korrektur-Mail an Premium-Mitglieder</b>
+    <b>✉️ Korrektur-Mail an Sprechclub-Mitglieder</b>
     <p class="muted" id="korrText" style="margin:6px 0 12px">Wird geprüft …</p>
     <button class="btn btn-ghost" onclick="korrPruefen()">Wer bekäme sie?</button>
     <button class="btn btn-primary" id="korrSenden" onclick="korrSenden()" style="display:none">Jetzt verschicken</button>
@@ -521,7 +521,7 @@ const KONTAKT_TEXT = (v) =>
   'https://www.deutschoderwas-club.de/index.html#warteliste\n\n' +
   'Bis dahin kannst du in Ruhe die Lernplattform nutzen: Kurse von A1 bis C1, Übungen, ' +
   'Podcast und Amanda zum Sprechen — 16 € im Monat, jederzeit kündbar. Wenn die Türen ' +
-  'aufgehen, wechselst du mit einem Klick auf Premium.\n\n' +
+  'aufgehen, wechselst du mit einem Klick zum Sprechclub.\n\n' +
   'Fragen? Schreib mir einfach hier \u{1F499}\nJulia';
 
 /* Nummern stehen im Formular in jeder denkbaren Schreibweise.
@@ -1014,7 +1014,7 @@ function renderLeads(){
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
       <button class="btn btn-ghost" onclick="loadLeads()">🔄 Neu laden</button>
-      <button class="btn" style="background:#10627A;color:#fff;font-weight:800" onclick="erinnerungFenster()">✉️ Erinnerung an alle ohne Premium</button>
+      <button class="btn" style="background:#10627A;color:#fff;font-weight:800" onclick="erinnerungFenster()">✉️ Erinnerung an alle ohne Sprechclub</button>
       <button class="btn" style="background:#DD0000;color:#fff;font-weight:800" onclick="rundmailLeadsFenster()">✉️ Eigene Mail an alle Leads</button>
     </div>
   </div>
@@ -1126,12 +1126,12 @@ function leadKonto(l){
 }
 /* Und was daraus auf der Karte steht. Drei Zustaende, drei Farben:
    hat bezahlt, hat ein Konto aber kein Abo, hat noch gar nichts. */
-/* community -> Community, premium -> Premium, premiumplus -> Premium Plus */
+/* community -> Lernclub, premium/premiumplus -> Sprechclub */
 function stufenWort(tier){
   const t=String(tier||'').toLowerCase();
-  if(t==='community') return 'Basis-Community';
-  if(t==='premiumplus'||t==='premium_plus') return 'Premium Plus';
-  if(t==='premium') return 'Premium';
+  if(t==='community') return 'Lernclub';
+  if(t==='premiumplus'||t==='premium_plus') return 'Sprechclub Plus';
+  if(t==='premium') return 'Sprechclub';
   return '';
 }
 function leadKontoPille(l){
@@ -1139,7 +1139,7 @@ function leadKontoPille(l){
   if(!k) return '<span class="pill" style="background:#F1F1F1;color:#6B7280;font-weight:700" title="Noch kein Konto auf der Plattform">🕗 kein Konto</span>';
   if(k.is_admin || k.is_teacher) return '<span class="pill" style="background:#EDE9FE;color:#5B21B6;font-weight:700">Team</span>';
   if(k.tier){
-    const name = k.tier==='community' ? 'Basis-Community' : 'Premium-Community';
+    const name = k.tier==='community' ? 'Lernclub' : 'Sprechclub';
     const wann = k.created_at ? (' · seit '+LEAD_FMT.format(new Date(k.created_at))) : '';
     return '<span class="pill" style="background:#DCFCE7;color:#15803D;font-weight:800" title="Hat ein Abo'+esc(wann)+'">🎉 '+esc(name)+'</span>';
   }
@@ -1479,7 +1479,7 @@ window.erinnerungFenster = async function(){
   k.style.cssText='position:fixed;inset:0;z-index:999;background:rgba(26,26,26,.45);display:flex;align-items:center;justify-content:center;padding:18px';
   k.innerHTML = `<div style="background:#fff;border-radius:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)">
     <div style="padding:18px 22px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:10px">
-      <b style="font-size:17px;flex:1">✉️ Erinnerung an alle ohne Premium</b>
+      <b style="font-size:17px;flex:1">✉️ Erinnerung an alle ohne Sprechclub</b>
       <button onclick="document.getElementById('er-fenster').remove()" style="border:1px solid #ddd;background:#fff;border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:16px">✕</button>
     </div>
     <div style="padding:18px 22px" id="er-inhalt">
@@ -1555,7 +1555,7 @@ async function auftraegeZeigen(){
       }).join('');
 }
 window.erinnerungSenden = async function(btn){
-  if(!confirm('Die Erinnerung jetzt verschicken? Wer Premium hat, bekommt nichts.')) return;
+  if(!confirm('Die Erinnerung jetzt verschicken? Wer den Sprechclub hat, bekommt nichts.')) return;
   const info=document.getElementById('er-info');
   if(btn){ btn.disabled=true; btn.textContent='schickt …'; }
   if(info){ info.textContent='Das dauert einen Moment — bitte das Fenster offen lassen.'; info.style.color='#6B7280'; }
@@ -1822,7 +1822,7 @@ async function loadPlan(){
     /* Julia, 31.10.2026: "ausgebucht" war irrefuehrend — Premium bucht
        laut Regel immer rein, auch ueber die 20. Also echte Zahl zeigen
        und klarstellen, dass Premium weiter reinkommt. */
-    const freeHtml = free>0 ? `· <b style="color:#13A89A">${free} frei</b>` : `· <b style="color:#E8820C">voll · Premium kommt rein (${p.length})</b>`;
+    const freeHtml = free>0 ? `· <b style="color:#13A89A">${free} frei</b>` : `· <b style="color:#E8820C">voll · Sprechclub kommt rein (${p.length})</b>`;
     /* Julia, 31.10.2026: zwei Lehrer-Plätze pro Stunde — Haupt- + Assistenzlehrer,
        damit bei vollen Stunden beide eingeteilt sind. Zugang zum Klassenraum haben
        beide ohnehin (hängt am is_teacher-Profil); das hier macht es im Plan sichtbar. */
@@ -2004,7 +2004,7 @@ function renderKlassen(){
           </div>
           ${c.topic?`<div class="muted" style="margin-top:5px">📖 ${esc(c.topic)}</div>`:''}
         </div>
-        ${full?`<span class="pill" style="background:#E8820C;color:#fff;white-space:nowrap">👥 ${p.length} · Premium kommt rein</span>`:`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
+        ${full?`<span class="pill" style="background:#E8820C;color:#fff;white-space:nowrap">👥 ${p.length} · Sprechclub kommt rein</span>`:`<span class="muted" style="white-space:nowrap">👥 ${p.length} gebucht</span>`}
       </div>
 
       <div style="margin-top:12px">
@@ -2197,7 +2197,7 @@ async function rebookStudent(userId, fromClassId){
 
 // Fehlermeldungen für Admin-Buchung
 function bookErr(e){
-  const m={ no_credits:'Diese Buchung geht nur mit aktiver Premium-Mitgliedschaft.', mitgliedschaft_startet_spaeter:'Die Mitgliedschaft beginnt erst später als diese Stunde.', class_full:'Diese Stunde ist bereits voll.', already_booked:'Schüler ist schon gebucht.', class_in_past:'Diese Stunde liegt in der Vergangenheit.', class_not_found:'Stunde nicht gefunden.', not_admin:'Keine Admin-Rechte.', no_booking:'Keine aktive Buchung gefunden.' };
+  const m={ no_credits:'Diese Buchung geht nur mit aktiver Sprechclub-Mitgliedschaft.', mitgliedschaft_startet_spaeter:'Die Mitgliedschaft beginnt erst später als diese Stunde.', class_full:'Diese Stunde ist bereits voll.', already_booked:'Schüler ist schon gebucht.', class_in_past:'Diese Stunde liegt in der Vergangenheit.', class_not_found:'Stunde nicht gefunden.', not_admin:'Keine Admin-Rechte.', no_booking:'Keine aktive Buchung gefunden.' };
   return m[e] || ('Fehler: '+e);
 }
 
@@ -2733,8 +2733,8 @@ async function loadSchueler(){
              da wird es entweder community oder Premium geben". -->
         <div class="field" style="margin:0"><label>Mitgliedschaft *</label>
           <select id="newArt" onchange="newArtWechsel()">
-            <option value="premium">👑 Premium-Community</option>
-            <option value="community">💬 Basis-Community</option>
+            <option value="premium">👑 Sprechclub</option>
+            <option value="community">💬 Lernclub</option>
             
           </select>
         </div>
@@ -2934,8 +2934,8 @@ function aboBlock(p){
   var vonHand = p.abo_stripe_status === 'von_hand' || !!p.bezahlt_von || !!p.bezahlt_email;
 
   var z = [];
-  var name = p.tier==='community' ? 'Basis-Community'
-           : (p.tier ? 'Premium'
+  var name = p.tier==='community' ? 'Lernclub'
+           : (p.tier ? 'Sprechclub'
            : (p.status==='gekuendigt' ? 'abgelaufen' : '—'));
   z.push(['Mitgliedschaft', name + (p.abo_plan ? ' <span class="muted">('+esc(p.abo_plan)+')</span>' : '')]);
 
@@ -3699,8 +3699,8 @@ window.newArtWechsel = function(){
   var art=sel.value;
   var h=document.getElementById('newArtHinweis');
   if(h) h.innerHTML = art==='premium'
-    ? '👑 <b>Premium</b> — voller Zugang, unbegrenzt buchen. Kein Stripe-Abo: bei Überweisung richtig, es wird nie automatisch abgebucht und der nächtliche Abgleich fasst das Konto nicht an.'
-    : '💬 <b>Basis-Community</b> — die ganze Lernplattform, aber <b>kein</b> LIVE-Unterricht.';
+    ? '👑 <b>Sprechclub</b> — voller Zugang, unbegrenzt buchen. Kein Stripe-Abo: bei Überweisung richtig, es wird nie automatisch abgebucht und der nächtliche Abgleich fasst das Konto nicht an.'
+    : '💬 <b>Lernclub</b> — die ganze Lernplattform, aber <b>kein</b> LIVE-Unterricht.';
 };
 async function createStudent(){
   const name=(document.getElementById('newName').value||'').trim();
@@ -3770,7 +3770,7 @@ function realStudents(){return getList().filter(function(s){return !s.is_admin&&
 var QF='alle',NF='';var LEV=['A1','A2','B1','B2','C1'];
 function niv(s){return (s.level||s.target_level||'').toString().toUpperCase();}
 function matchFilter(s){if(NF&&niv(s).indexOf(NF)!==0)return false;var st=(s.status||'').toLowerCase();if(QF==='archiv')return st==='archiv';if(st==='archiv')return false;if(QF==='aktiv')return st==='aktiv';if(QF==='urlaub')return st==='urlaub';if(QF==='beendet')return st==='beendet';if(QF==='kein')return ['aktiv','urlaub','pause','beendet'].indexOf(st)<0;if(QF==='alt')return !!s.alt_schueler;if(QF==='community')return s.tier==='community';if(QF==='premium')return s.tier==='premium'||s.tier==='premium_plus';return true;}
-function badgeFor(s){var st=(s.status||'').toLowerCase();if(st!=='archiv'&&st!=='beendet'){if(s.tier==='community')return['#DFF6F8','#0F766E','\uD83D\uDCAC Basis-Community'];if(s.tier==='premium'||s.tier==='premium_plus')return['#FFF0CC','#8A6608','\u2B50 Premium'];}if(st==='aktiv')return['#e6f7ec','#128a3e','\uD83D\uDFE2 Aktiv'];if(st==='urlaub')return['#fff6e0','#a9760a','\uD83C\uDF34 Urlaub'];if(st==='pause')return['#eeeeee','#555555','\u23F8\uFE0F Pause'];if(st==='beendet')return['#fdeaea','#c0341d','\uD83D\uDD34 Paket beendet'];if(st==='archiv')return['#EFE9E1','#6B5B45','\uD83D\uDDC4\uFE0F Archiviert'];return['#eeeeee','#555555','\u26AA Kein Paket'];}
+function badgeFor(s){var st=(s.status||'').toLowerCase();if(st!=='archiv'&&st!=='beendet'){if(s.tier==='community')return['#DFF6F8','#0F766E','\uD83D\uDCAC Lernclub'];if(s.tier==='premium'||s.tier==='premium_plus')return['#FFF0CC','#8A6608','\u2B50 Sprechclub'];}if(st==='aktiv')return['#e6f7ec','#128a3e','\uD83D\uDFE2 Aktiv'];if(st==='urlaub')return['#fff6e0','#a9760a','\uD83C\uDF34 Urlaub'];if(st==='pause')return['#eeeeee','#555555','\u23F8\uFE0F Pause'];if(st==='beendet')return['#fdeaea','#c0341d','\uD83D\uDD34 Paket beendet'];if(st==='archiv')return['#EFE9E1','#6B5B45','\uD83D\uDDC4\uFE0F Archiviert'];return['#eeeeee','#555555','\u26AA Kein Paket'];}
 function rowsOf(tbl){var r=tbl.querySelectorAll('tr');if(!r.length)r=tbl.children;return r;}
 function decorate(){var tbl=document.getElementById('schuelerTable');if(!tbl)return;var by={};realStudents().forEach(function(s){if(s.email)by[s.email.toLowerCase()]=s;});Array.prototype.forEach.call(rowsOf(tbl),function(row){if(row.getAttribute&&row.getAttribute('data-jkbadge'))return;var t=row.innerText||'';var m=t.match(/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i);if(!m)return;var s=by[m[0].toLowerCase()];if(!s)return;var b=badgeFor(s);var cell=row.querySelector('td,div,span')||row;var badge=document.createElement('span');badge.textContent=b[2];badge.style.cssText='display:inline-block;margin-right:6px;background:'+b[0]+';color:'+b[1]+';border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700;white-space:nowrap';if(cell.firstChild)cell.insertBefore(badge,cell.firstChild);else cell.appendChild(badge);if(row.setAttribute)row.setAttribute('data-jkbadge','1');});}
 function showAll(){var tbl=document.getElementById('schuelerTable');if(tbl)tbl.style.display='';var host=document.getElementById('jkList');if(host){host.innerHTML='';host.style.display='none';}decorate();var info=document.getElementById('jkFilterCount');if(info)info.textContent=realStudents().length+' Schueler';}
