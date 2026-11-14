@@ -442,6 +442,14 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
   const { data: profs } = await sb.from('profiles').select('id,name,email,email_optout').in('id', ids);
   const thema = cls.topic || cls.title || 'deine Stunde';
   const nVok = (pc.vocab || []).length, nUb = (pc.exercises || []).length, nErr = (pc.errors || []).length;
+  // Live-Mitschriften der Stunde: alle Gruppen + Hauptraum (grp 0), und wer in welcher Gruppe war.
+  const _grpNotes = {};
+  try { const { data: gnRows } = await sb.from('group_notes').select('grp,notes').eq('class_id', classId);
+    (gnRows || []).forEach(r => { _grpNotes[String(r.grp)] = r.notes || ''; }); } catch (_) {}
+  const _memberGrp = {};
+  try { const { data: gmRows } = await sb.from('class_group_members').select('user_id,grp').eq('class_id', classId);
+    (gmRows || []).forEach(r => { _memberGrp[r.user_id] = r.grp; }); } catch (_) {}
+  const _hauptraum = _grpNotes['0'] || '';
   let sent = 0;
   for (const p of (profs || [])) {
     if (!p.email || p.email_optout) continue;
@@ -449,7 +457,15 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
     const { error: logErr } = await sb.from('email_log').insert({ kind: 'nachbereitung', ref, user_id: p.id });
     if (logErr) continue; // schon verschickt
     const vorname = (p.name || '').split(' ')[0] || 'du';
-    const html = nachbereitungEmail({ vorname, thema, level: cls.level || '', nVok, nUb, nErr, link: `${site}/nachbereitung.html?id=${classId}` });
+    let _mitschrift = '';
+    const _eigen = _memberGrp[p.id];
+    if (_eigen != null && String(_eigen) !== '0' && msHatText(_grpNotes[String(_eigen)])) {
+      _mitschrift += msBlock('#138a8a', '\u{1F465} Eure Kleingruppe' + (_eigen ? ' (Gruppe ' + msEsc(_eigen) + ')' : ''), _grpNotes[String(_eigen)]);
+    }
+    if (msHatText(_hauptraum)) {
+      _mitschrift += msBlock('#DD0000', '\u{1F3DB}\uFE0F Aus dem Hauptraum (alle zusammen)', _hauptraum);
+    }
+    const html = nachbereitungEmail({ vorname, thema, level: cls.level || '', nVok, nUb, nErr, link: `${site}/nachbereitung.html?id=${classId}`, mitschrift: _mitschrift });
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
@@ -465,7 +481,11 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
   return sent;
 }
 
-function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
+function msEsc(x){ return String(x==null?'':x).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+function msSauber(html){ return String(html||'').replace(/<script[\s\S]*?<\/script>/gi,'').replace(/ on[a-z]+\s*=\s*"[^"]*"/gi,'').replace(/ on[a-z]+\s*=\s*'[^']*'/gi,'').replace(/javascript:/gi,''); }
+function msHatText(html){ return msSauber(html).replace(/<[^>]+>/g,'').trim().length > 0; }
+function msBlock(farbe, titel, notes){ return `<div style="margin:12px 0;border:1px solid #eee;border-left:4px solid ${farbe};border-radius:10px;padding:12px 14px;background:#FCFBF8"><div style="font-weight:800;font-size:13.5px;color:${farbe};margin-bottom:6px">${titel}</div><div style="font-size:14.5px;line-height:1.7;color:#1a1a1a">${msSauber(notes)}</div></div>`; }
+function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link, mitschrift }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
   const bits = [];
@@ -486,8 +506,13 @@ function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
         Hallo ${esc(vorname)},<br><br>
         deine Nachbereitung zu <b>${esc(thema)}</b>${level ? ` (${esc(level)})` : ''} ist fertig.${list ? `<br><span style="color:#6f6a62;font-size:14px">${esc(list)}</span>` : ''}
       </td></tr>
+      ${mitschrift ? `<tr><td style="padding:14px 28px 0">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.03em;color:#9CA3AF;text-transform:uppercase;margin-bottom:2px">📝 Eure Live-Mitschrift</div>
+        <div style="font-size:12.5px;color:#9CA3AF;margin-bottom:6px">Genau das, was im Unterricht live mitgeschrieben wurde — damit nichts verloren geht.</div>
+        ${mitschrift}
+      </td></tr>` : ''}
       <tr><td align="center" style="padding:22px 28px 6px">
-        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
+        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur vollen Nachbereitung</a>
       </td></tr>
       <tr><td style="padding:18px 28px 26px;font-size:12px;color:#9CA3AF;text-align:center">Üb die neuen Vokabeln gleich im Trainer · deutschoderwas-club.de</td></tr>
     </table>

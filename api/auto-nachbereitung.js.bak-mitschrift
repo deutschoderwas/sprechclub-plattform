@@ -1,0 +1,813 @@
+// Automatische Nachbereitung nach Unterrichtsende (Cron, alle 15 Minuten).
+// Findet beendete Stunden mit gespeicherter Live-Tafel (Jitsi ODER eigenständige tafel.html –
+// beide schreiben class_notes.notes) und noch KEINER Nachbereitung, und erstellt sie.
+// Eigenständig (keine externen lib-Imports), damit Vercel sicher bündelt.
+import { createClient } from '@supabase/supabase-js';
+
+export const maxDuration = 60;
+/* Julia, 14.10.2026: "Bis zum 01.11 laeuft alles normal mit der
+   Nachbereitung, sowohl in der Hauptgruppe als auch alles von den
+   Kleingruppen werden in EINER Nachbereitung erstellt und an die
+   Schueler verschickt."
+   Die gemeinsame Nachbereitung nimmt die Kleingruppen-Tafeln schon mit
+   (siehe buildPrompt: "GRUPPENCHATS AUS DEN KLEINGRUPPEN ... UNBEDINGT
+   mit uebernehmen"). Die zusaetzliche individuelle Nachbereitung pro
+   Kleingruppe wuerde daraus zwei machen — die ruht deshalb bis zum
+   1. November. */
+const EINZELN_AB = Date.parse('2026-11-01T00:00:00+01:00');
+const einzelnJetzt = () => Date.now() >= EINZELN_AB;
+// Schnelles Modell, damit die Generierung sicher im Zeitlimit bleibt (Sonnet war zu langsam -> Abbruch).
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001';
+
+export default async function handler(req, res) {
+  if (!process.env.ANTHROPIC_API_KEY) return res.status(200).json({ ok: false, skipped: 'ANTHROPIC_API_KEY fehlt' });
+  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+  const now = Date.now();
+  // Rueckblick: frueher 14 Stunden. Das war die Falle — faellt der Generator
+  // einmal laenger aus (Schluessel weg, Guthaben leer), sind die Stunden nach
+  // 14 Stunden fuer immer aus dem Fenster und bekommen NIE eine Nachbereitung.
+  // Jetzt: 21 Tage. Der Lauf holt pro Durchgang zwei Stunden nach, neueste
+  // zuerst, und arbeitet einen Rueckstand so von allein wieder ab.
+  const TAGE = Math.min(60, Math.max(1, Number(req.query && req.query.tage) || Number(process.env.NACHB_TAGE) || 21));
+  const windowStart = new Date(now - TAGE * 24 * 3600 * 1000).toISOString();
+  const nowISO = new Date(now).toISOString();
+
+  const base = process.env.SITE_URL || process.env.PUBLIC_BASE_URL || ('https://' + ((req.headers && (req.headers['x-forwarded-host'] || req.headers.host)) || 'www.deutschoderwas-club.de'));
+
+  /* ---------- Huckepack: die Willkommensmail fuer neue Leads ----------
+     Julia, 14.10.2026: "Es ist sehr sehr wichtig immer unser docs
+     dokument und die webseiten eintraege zu kontrollieren und eine
+     Willkommensmail zu schicken."
+
+     Nachgesehen am 14.10.2026: Die Leads aus dem Google-Formular landen
+     sofort in der Tabelle (Eintrag 13.10. 20:21 -> Lead 20:21), die
+     Willkommensmail ging aber erst am naechsten Morgen um 06:00 raus —
+     bei allen fuenf zuletzt geprueften Leads auf die Sekunde. Wer sich
+     abends eintraegt, wartet also bis zu zwoelf Stunden auf das erste
+     Wort von uns.
+
+     Grund: /api/lead-willkommen haengt am taeglichen Lauf. Vercel laesst
+     auf diesem Tarif nur EINEN Cron-Eintrag zu, und der ist vergeben.
+     Dieser Endpunkt hier wird aber alle 15 Minuten angestossen — also
+     faehrt die Lead-Mail ab jetzt huckepack mit. Sie braucht keinen
+     Schluessel, verschickt nur an Leads ohne mail_at und ist damit von
+     sich aus doppelsicher. Angestossen, nicht abgewartet: sie darf die
+     Nachbereitung nie aufhalten. */
+  try {
+    fetch(base + '/api/lead-willkommen', { signal: AbortSignal.timeout(4000) }).catch(() => {});
+  } catch (e) { /* nie der Grund, dass eine Nachbereitung ausfaellt */ }
+
+  /* Genauso huckepack: die Auftragstabelle. Julia sagt ein Wort, in
+     mail_auftraege landet eine Zeile, und beim naechsten Viertelstunden-
+     Lauf ist sie abgearbeitet — ohne Knopf, ohne Schluessel in fremder
+     Hand. Liegt kein Auftrag an, kostet der Aufruf nichts. */
+  try {
+    fetch(base + '/api/mail-auftraege', { signal: AbortSignal.timeout(4000) }).catch(() => {});
+  } catch (e) { /* nie der Grund, dass eine Nachbereitung ausfaellt */ }
+  const { data: cls } = await sb.from('classes')
+    .select('id,title,starts_at,duration_min,is_cancelled,material_live')
+    .gte('starts_at', windowStart).lte('starts_at', nowISO)
+    .eq('is_cancelled', false);
+
+  // Zehn Minuten Luft nach dem Stundenende. Der Lauf um Punkt kam
+  // bisher in derselben Sekunde, in der die Stunde endete — die Tafel
+  // war teils noch nicht fertig gespeichert, und die Lehrkraft schreibt
+  // nach dem Verabschieden oft noch zwei Zeilen nach.
+  const PUFFER = 10 * 60 * 1000;
+  const ended = (cls || []).filter(c => {
+    const end = new Date(c.starts_at).getTime() + (c.duration_min || 60) * 60000;
+    return end + PUFFER <= now;
+  }).sort((a, b) => new Date(b.starts_at) - new Date(a.starts_at));   // neueste zuerst
+  if (!ended.length) return res.status(200).json({ ok: true, processed: 0, reason: 'keine beendeten Stunden' });
+
+  /* ---------- Erst den Rueckstand bei der individuellen Nachbereitung ----------
+     student_nachbereitung war am 14.10.2026 vollstaendig leer — kein
+     einziger Datensatz, obwohl es 40 Gruppen-Zuordnungen und 48
+     Gruppennotizen gab. Der Grund liegt in der Reihenfolge: angestossen
+     wurde die individuelle Nachbereitung NUR in derselben Sekunde, in
+     der die gemeinsame frisch entstanden ist. Schlug dieser eine Anstoss
+     fehl — Zeitlimit des Elternlaufs, fehlendes CRON_SECRET, was auch
+     immer —, bekam die Stunde nie wieder eine Chance: beim naechsten
+     Lauf galt sie als fertig und fiel aus der Auswahl.
+     Deshalb jetzt ein eigener Nachholer, der vor der teuren Arbeit
+     laeuft: eine Stunde pro Durchgang, aelteste zuerst. */
+  if (einzelnJetzt()) await rueckstandGruppen(sb, base, ended);
+
+  const ids = ended.map(c => c.id);
+  const [{ data: notes }, { data: gnotes }, { data: mats }] = await Promise.all([
+    sb.from('class_notes').select('class_id,notes,post_content').in('class_id', ids),
+    sb.from('group_notes').select('class_id,notes').in('class_id', ids),
+    sb.from('class_materials').select('class_id,content').in('class_id', ids),
+  ]);
+  const byId = {};
+  (notes || []).forEach(n => { byId[n.class_id] = n; });
+  const matUrl = {};
+  (mats || []).forEach(m => { const u = m && m.content && m.content.lesson_url; if (u) matUrl[m.class_id] = String(u); });
+  const grpLen = {};
+  (gnotes || []).forEach(g => {
+    const plain = String(g.notes || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+    grpLen[g.class_id] = (grpLen[g.class_id] || 0) + plain.length;
+  });
+
+  // Auslöser: Live-Tafel-Mitschrift ODER Gruppenchats (mind. 20 Zeichen) ODER eine verlinkte Lektion/Präsentation
+  // (dann wird die Nachbereitung aus dem Lektionsinhalt erstellt – wichtig für Spiel-/Sprech-Stunden ohne Tafeltext) –
+  // und noch keine Nachbereitung.
+  const eligible = ended.filter(c => {
+    const n = byId[c.id];
+    if (n && n.post_content) return false;
+    const tafelLen = String((n && n.notes) || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim().length;
+    const gLen = grpLen[c.id] || 0;
+    const hasPres = !!((c.material_live && String(c.material_live).trim()) || matUrl[c.id]);
+    return tafelLen >= 20 || gLen >= 20 || hasPres;
+  });
+  if (!eligible.length) return res.status(200).json({ ok: true, processed: 0, reason: 'nichts Offenes' });
+
+  // Bis zu 2 Stunden pro Lauf (Anthropic dauert ~15-25 s) mit Zeitbudget – Rest holt der nächste Lauf (alle 15 Min).
+  const results = [];
+  const t0 = Date.now();
+  for (const c of eligible.slice(0, 2)) {
+    if (results.length && Date.now() - t0 > 40000) break;
+    try {
+      const r = await runNachbereitung(sb, { classId: c.id, source: 'tafel' });
+      results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: r.ok, error: r.error, detail: r.detail, counts: r.counts, source: r.source });
+      // Additiv: individuelle Nachbereitung pro Kleingruppe anstoßen (schreibt student_nachbereitung;
+      // ändert NICHT die gemeinsame Nachbereitung). Nur wenn es Gruppen-Zuordnungen gibt, passiert etwas.
+      if (r.ok && einzelnJetzt()) await gruppenAnstossen(sb, base, c);
+    } catch (e) {
+      results.push({ classId: c.id, title: c.title, beginn: c.starts_at, ok: false, error: e.message });
+    }
+  }
+
+  const geschafft = results.filter(r => r.ok).length;
+
+  // Jeder Versuch wird mitgeschrieben — und zwar hier, nicht nur in der
+  // Antwort. Genau daran ist die Fehlersuche bisher gescheitert: der Lauf
+  // antwortet IMMER mit HTTP 200 und traegt den Fehler nur in den
+  // Antworttext. Den loescht Supabase nach ein paar Stunden, und in den
+  // Vercel-Logs taucht er nie auf, weil 200 kein Fehler ist. Hinterher war
+  // deshalb nicht mehr zu sagen, woran ein Lauf gescheitert war.
+  await laufMerken(sb, results, eligible.length, Date.now() - t0, 'auto');
+
+  // Stiller Ausfall war das eigentliche Problem: zwei Wochen lang hat niemand
+  // gemerkt, dass keine Nachbereitung mehr entsteht. Wenn ein Lauf nur noch
+  // Fehler liefert, geht deshalb einmal taeglich eine Warnung an Julia raus.
+  // Der Fehlalarm war das zweite Problem: ein einzelner Aussetzer — Claude
+  // ueberlastet, Zeitlimit — hat sofort die Warnmail ausgeloest, obwohl der
+  // naechste Lauf 15 Minuten spaeter laengst durchlief. Die Mail nimmt sich
+  // aber nicht zurueck, und Julia steht da mit "geht nicht", waehrend es
+  // laengst geht. Jetzt wird erst gewarnt, wenn dieselbe Stunde ein zweites
+  // Mal gescheitert ist.
+  if (!geschafft && results.length && await zweiterFehlschlag(sb, results)) {
+    try { await alarmAnJulia(sb, results, eligible.length); } catch (e) {}
+  }
+
+  return res.status(200).json({ ok: true, processed: geschafft, eligible: eligible.length, results });
+}
+
+/* Stoesst die individuelle Nachbereitung an UND schaut, was dabei
+   herauskam. Vorher stand hier ein fetch ohne Blick auf die Antwort,
+   in try{}catch{} — ein 401 oder 500 war damit unsichtbar. Genau so
+   bleibt ein Fehler jahrelang unentdeckt. */
+async function gruppenAnstossen(sb, base, c) {
+  let stand = '?', text = '';
+  try {
+    const r = await fetch(base + '/api/gruppen-nachbereitung', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET || '' },
+      body: JSON.stringify({ classId: c.id }),
+      signal: AbortSignal.timeout(45000),
+    });
+    stand = String(r.status);
+    text = (await r.text()).slice(0, 300);
+    if (r.ok) {
+      const j = JSON.parse(text || '{}');
+      /* 'no_group_members' ist kein Fehler: viele Stunden haben keine
+         Kleingruppen. Nur echte Fehlschlaege werden vermerkt. */
+      if (j && j.ok === false && j.error === 'no_group_members') return;
+      if (j && j.ok) {
+        try {
+          await sb.from('nachb_laeufe').insert({
+            class_id: c.id, titel: c.title, beginn: c.starts_at,
+            ergebnis: 'ok', quelle: 'gruppen', ausloeser: 'gruppen',
+            detail: text,
+          });
+        } catch (e) {}
+        return;
+      }
+    }
+  } catch (e) {
+    text = String((e && e.message) || e).slice(0, 300);
+  }
+  try {
+    await sb.from('nachb_laeufe').insert({
+      class_id: c.id, titel: c.title, beginn: c.starts_at,
+      ergebnis: 'fehler', fehler: ('gruppen_' + stand).slice(0, 200),
+      detail: text, quelle: 'gruppen', ausloeser: 'gruppen',
+    });
+  } catch (e) {}
+}
+
+/* Holt den Rueckstand bei der individuellen Nachbereitung nach: Stunden
+   mit Kleingruppen und fertiger gemeinsamer Nachbereitung, fuer die
+   noch keine einzige Zeile in student_nachbereitung steht. Eine pro
+   Lauf — damit der Rueckstand abgearbeitet wird, ohne je einen frischen
+   Lauf zu verdraengen. */
+async function rueckstandGruppen(sb, base, ended) {
+  try {
+    const ids = ended.map(c => c.id);
+    if (!ids.length) return;
+    const [{ data: mit }, { data: fertig }, { data: schon }] = await Promise.all([
+      sb.from('class_group_members').select('class_id').in('class_id', ids),
+      sb.from('class_notes').select('class_id,post_content').in('class_id', ids),
+      sb.from('student_nachbereitung').select('class_id').in('class_id', ids),
+    ]);
+    const hatGruppen = new Set((mit || []).map(m => m.class_id));
+    const hatGemeinsame = new Set((fertig || []).filter(n => n.post_content).map(n => n.class_id));
+    const hatEigene = new Set((schon || []).map(z => z.class_id));
+    const offen = ended
+      .filter(c => hatGruppen.has(c.id) && hatGemeinsame.has(c.id) && !hatEigene.has(c.id))
+      .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));   /* aelteste zuerst */
+    if (!offen.length) return;
+    await gruppenAnstossen(sb, base, offen[0]);
+  } catch (e) { /* Nachholen darf den Lauf nie aufhalten */ }
+}
+
+// Ein Satz pro Versuch, mehr nicht. Laeufe ohne offene Stunde schreiben
+// nichts — sonst stuenden hier 96 leere Zeilen am Tag.
+async function laufMerken(sb, results, offen, dauer, ausloeser) {
+  if (!results || !results.length) return;
+  try {
+    await sb.from('nachb_laeufe').insert(results.map(r => ({
+      class_id: r.classId || null,
+      titel: r.title || null,
+      beginn: r.beginn || null,
+      ergebnis: r.ok ? 'ok' : 'fehler',
+      fehler: r.ok ? null : String(r.error || 'unbekannt').slice(0, 200),
+      detail: r.detail ? String(r.detail).slice(0, 2000) : null,
+      quelle: r.source || null,
+      offen: offen,
+      dauer_ms: dauer,
+      ausloeser: ausloeser,
+    })));
+  } catch (e) { /* Mitschreiben darf den Lauf nie aufhalten */ }
+}
+
+// Zaehlt im Protokoll nach, ob dieselbe Stunde heute schon einmal
+// gescheitert ist. Der eigene Fehlversuch steht dort bereits — zwei
+// Eintraege heissen also: zweimal hintereinander nicht geschafft.
+async function zweiterFehlschlag(sb, results) {
+  try {
+    const ids = results.filter(r => !r.ok && r.classId).map(r => r.classId);
+    if (!ids.length) return true;          // ohne Stunde lieber einmal zu viel warnen
+    const seit = new Date(Date.now() - 6 * 3600 * 1000).toISOString();
+    const { data } = await sb.from('nachb_laeufe')
+      .select('class_id').in('class_id', ids)
+      .eq('ergebnis', 'fehler').gte('gestartet', seit);
+    const zahl = {};
+    (data || []).forEach(z => { zahl[z.class_id] = (zahl[z.class_id] || 0) + 1; });
+    return Object.keys(zahl).some(k => zahl[k] >= 2);
+  } catch (e) { return true; }             // im Zweifel warnen
+}
+
+// Hoechstens eine Warnmail pro Tag — der Lauf kommt alle 15 Minuten wieder.
+async function alarmAnJulia(sb, results, offen) {
+  if (!process.env.BREVO_API_KEY) return;
+  const tag = new Date().toISOString().slice(0, 10);
+  const { error } = await sb.from('email_log').insert({ kind: 'nachb_alarm', ref: tag });
+  if (error) return;   // heute schon gewarnt
+  const grund = results.map(r => r.error + (r.detail ? ' (' + r.detail + ')' : '')).filter(Boolean)[0] || 'unbekannt';
+  const hinweis = /anthropic/i.test(grund)
+    ? 'Die Anfrage an Claude wird abgelehnt. Bitte in console.anthropic.com das Guthaben und den API-Schluessel pruefen.'
+    : 'Bitte den Lauf /api/auto-nachbereitung von Hand aufrufen, dort steht der genaue Fehler.';
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+      to: [{ email: process.env.ADMIN_EMAIL || 'deutschoderwas@gmail.com', name: 'Julia' }],
+      subject: '\u26a0\ufe0f Die Nachbereitung wird gerade nicht erstellt',
+      htmlContent: '<p>Hallo Julia,</p><p>der automatische Lauf konnte f\u00fcr <b>' + offen
+        + '</b> Stunde(n) keine Nachbereitung erstellen.</p><p>Fehler: <code>' + String(grund).slice(0, 300)
+        + '</code></p><p>' + hinweis + '</p><p>Solange das so bleibt, sehen die Sch\u00fcler im Konto nur \u201efolgt in K\u00fcrze\u201c.</p>',
+    }),
+  });
+}
+
+// ===== gemeinsame Logik (identisch in api/generate-nachbereitung.js) =====
+async function runNachbereitung(sb, { classId, source = 'tafel', pdfText } = {}) {
+  if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
+  if (!classId) return { ok: false, error: 'bad_request' };
+
+  const { data: cls } = await sb.from('classes').select('id,title,level,topic,vocab,material_live').eq('id', classId).maybeSingle();
+  if (!cls) return { ok: false, error: 'class_not_found' };
+
+  const [{ data: mat }, { data: note }] = await Promise.all([
+    sb.from('class_materials').select('content').eq('class_id', classId).maybeSingle(),
+    sb.from('class_notes').select('notes,post_content').eq('class_id', classId).maybeSingle(),
+  ]);
+
+  const tafelText = htmlToText(String((note && note.notes) || ''));
+  const gruppenText = await fetchGruppenChats(sb, classId);
+  const presUrl = (cls.material_live && String(cls.material_live).trim()) || (mat && mat.content && mat.content.lesson_url) || '';
+  let srcText = '', mode = source;
+  if (source === 'pdf') {
+    srcText = String(pdfText || '').trim();
+    if (srcText.length < 20) return { ok: false, error: 'no_pdf_text' };
+    mode = 'pdf';
+  } else {
+    const presText = await fetchPresentation(presUrl);
+    const hasTafel = tafelText.length >= 20;
+    const hasGruppen = gruppenText.length >= 20;
+    if (hasTafel || hasGruppen) {
+      // IMMER übertragen: Live-Tafel-Mitschrift + Gruppenchats sind die Hauptquelle; Präsentation nur zur Ergänzung.
+      const parts = [];
+      if (hasTafel) parts.push('LIVE-MITSCHRIFT VON DER TAFEL (Hauptquelle – das hat die Lehrerin während der Stunde live aufgeschrieben):\n' + tafelText);
+      if (hasGruppen) parts.push('GRUPPENCHATS AUS DEN KLEINGRUPPEN (das haben die Schüler in ihren Gruppen aufgeschrieben – UNBEDINGT mit übernehmen):\n' + gruppenText);
+      if (presText) parts.push('=== WICHTIGE INHALTE AUS DER PRÄSENTATION (nur zur Ergänzung) ===\n' + presText.slice(0, 6000));
+      srcText = parts.join('\n\n');
+      mode = (hasTafel ? 'tafel' : '') + (hasGruppen ? (hasTafel ? '+gruppen' : 'gruppen') : '') + (presText ? '+praesi' : '');
+    } else if (presText.length >= 40) {
+      // keine Mitschrift und keine Gruppenchats -> komplett aus der Präsentation
+      mode = 'praesi';
+      srcText = 'PRÄSENTATION / LEKTION AUS DEM UNTERRICHT (es gibt KEINE Live-Mitschrift):\n' + presText;
+    } else {
+      return { ok: false, error: 'no_source' };
+    }
+  }
+  if (srcText.length > 14000) srcText = srcText.slice(0, 14000);
+
+  // bestehende Vokabeln sammeln (de -> {de, info, example})
+  const vmap = new Map();
+  const addV = (v) => {
+    const de = (v && v.de || '').trim(); if (!de) return;
+    const k = de.toLowerCase();
+    const info = (v.info || v.meaning || v.en || '').trim();
+    const ex = (v.example || '').trim();
+    const cur = vmap.get(k) || { de, info: '', example: '', related: [] };
+    if (info && !cur.info) cur.info = info;
+    if (ex && !cur.example) cur.example = ex;
+    if (v.img && !cur.img) cur.img = v.img;
+    if (Array.isArray(v.related) && v.related.length && !(cur.related && cur.related.length)) cur.related = v.related.map(String).slice(0, 5);
+    cur.de = de; vmap.set(k, cur);
+  };
+  if (mat && mat.content && Array.isArray(mat.content.vocab)) mat.content.vocab.forEach(addV);
+  if (Array.isArray(cls.vocab)) cls.vocab.forEach(addV);
+
+  const prompt = buildPrompt(cls, srcText, [...vmap.values()], mode);
+  let aiText = '';
+  let abbruch = '';
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+      /* 8000 war zu knapp. Die Nachbereitung soll 10-20 Vokabeln mit
+         Beispielsatz, bis zu drei Dialoge, 8-12 Uebungen, Sprechaufgaben
+         und Fehlerkorrekturen enthalten — deutscher JSON-Text dafuer
+         sprengt 8000 Tokens je nach Stunde knapp. Dann bricht die Antwort
+         mitten im Satz ab und kein Parser dieser Welt kann sie lesen. */
+      body: JSON.stringify({ model: MODEL, max_tokens: 16000, messages: [{ role: 'user', content: prompt }] }),
+    });
+    const j = await r.json();
+    if (!r.ok) return { ok: false, error: 'anthropic_error', detail: (j && j.error && j.error.message) || ('HTTP ' + r.status) };
+    aiText = (j.content || []).map(b => b.text || '').join('').trim();
+    abbruch = (j && j.stop_reason) || '';
+  } catch (e) {
+    return { ok: false, error: 'anthropic_fetch', detail: e.message };
+  }
+
+  const parsed = jsonAus(aiText);
+  if (!parsed) {
+    /* Hier stand bisher nur der ANFANG der Antwort. Genau das hat die
+       Fehlersuche blockiert: der Anfang sieht immer gesund aus
+       (```json, "thema": "In dieser Stunde ..."), der Fehler liegt am
+       ENDE. Deshalb jetzt: Abbruchgrund, Laenge und der Schluss. */
+    return { ok: false, error: 'parse_failed', detail:
+      '[' + (abbruch || 'kein_grund') + ' · ' + aiText.length + ' Zeichen] ANFANG: '
+      + aiText.slice(0, 180) + ' … SCHLUSS: ' + aiText.slice(-260) };
+  }
+
+  (Array.isArray(parsed.vocab) ? parsed.vocab : []).forEach(addV);
+  const vocab = [...vmap.values()];
+  await addVocabImages(vocab); // echte Fotos pro Wort (Unsplash), gecacht in der Vokabel
+  const exercises = normExercises(parsed.exercises || []);
+
+  const post_content = {
+    thema: clip(parsed.thema, 700),
+    saetze: strList(parsed.saetze, 12),
+    vocab,
+    grammar: normGrammar(parsed.grammar),
+    exercises,
+    dialoge: normDialoge(parsed.dialoge),
+    speaking: normSpeaking(parsed.speaking),
+    errors: normErrors(parsed.errors),
+    source: mode,
+    generated_at: new Date().toISOString(),
+  };
+  if (!vocab.length && !exercises.length && !post_content.thema) return { ok: false, error: 'empty_result' };
+
+  const nowISO = post_content.generated_at;
+  const { error: nErr } = await sb.from('class_notes').upsert({ class_id: classId, post_content, generated_at: nowISO }, { onConflict: 'class_id' });
+  if (nErr) return { ok: false, error: 'save_notes_failed', detail: nErr.message };
+
+  // Nachbereitungs-Link automatisch auf der Stunde setzen (= „Material nach dem Unterricht").
+  try {
+    const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+    await sb.from('classes').update({ material_post: `${site}/nachbereitung.html?id=${classId}` }).eq('id', classId);
+  } catch (e) {}
+
+  const content = (mat && mat.content && typeof mat.content === 'object') ? mat.content : {};
+  content.vocab = vocab;
+  await sb.from('class_materials').upsert({ class_id: classId, content, model: MODEL, generated_at: nowISO }, { onConflict: 'class_id' });
+
+  // Kleine Hausaufgabe zum Einreichen – aus der Nachbereitung abgeleitet, vom Lehrer bearbeitbar.
+  await hausaufgabeSpeichern(sb, classId, cls, post_content);
+
+  // Erst wenn fertig: Schüler der Stunde per E-Mail benachrichtigen (einmal pro Schüler/Stunde).
+  let mailed = 0;
+  try {
+    mailed = await sendNachbereitungMails(sb, classId, cls, post_content);
+    if (mailed > 0) await sb.from('classes').update({ nachb_sent_at: new Date().toISOString(), nachb_sent_count: mailed }).eq('id', classId);
+  } catch (e) {}
+
+  return { ok: true, content: post_content, counts: { vocab: vocab.length, exercises: exercises.length, errors: post_content.errors.length }, mailed, source };
+}
+
+async function sendNachbereitungMails(sb, classId, cls, pc) {
+  if (!process.env.BREVO_API_KEY) return 0;
+  const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';
+  const { data: bks } = await sb.from('bookings').select('user_id').eq('class_id', classId).eq('status', 'booked');
+  if (!bks || !bks.length) return 0;
+  const ids = [...new Set(bks.map(b => b.user_id))];
+  const { data: profs } = await sb.from('profiles').select('id,name,email,email_optout').in('id', ids);
+  const thema = cls.topic || cls.title || 'deine Stunde';
+  const nVok = (pc.vocab || []).length, nUb = (pc.exercises || []).length, nErr = (pc.errors || []).length;
+  let sent = 0;
+  for (const p of (profs || [])) {
+    if (!p.email || p.email_optout) continue;
+    const ref = `${classId}:${p.id}`;
+    const { error: logErr } = await sb.from('email_log').insert({ kind: 'nachbereitung', ref, user_id: p.id });
+    if (logErr) continue; // schon verschickt
+    const vorname = (p.name || '').split(' ')[0] || 'du';
+    const html = nachbereitungEmail({ vorname, thema, level: cls.level || '', nVok, nUb, nErr, link: `${site}/nachbereitung.html?id=${classId}` });
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Julia | deutschoderwas', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email: p.email, name: p.name || undefined }],
+        subject: `📖 Deine Nachbereitung: ${thema}`,
+        htmlContent: html,
+      }),
+    });
+    if (r.ok) sent++; else await sb.from('email_log').delete().eq('kind', 'nachbereitung').eq('ref', ref);
+  }
+  return sent;
+}
+
+function nachbereitungEmail({ vorname, thema, level, nVok, nUb, nErr, link }) {
+  const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
+  const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+  const bits = [];
+  if (nVok) bits.push(`📖 ${nVok} Vokabeln`);
+  if (nUb) bits.push(`✏️ ${nUb} Übungen`);
+  if (nErr) bits.push(`🔴 ${nErr} Fehlerkorrekturen`);
+  const list = bits.join(' · ');
+  return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#FDF8F1;font-family:${ff}">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:24px 14px"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:520px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.08)">
+      <tr><td style="height:6px;background:linear-gradient(135deg,#DD0000,#FFCE00)"></td></tr>
+      <tr><td style="padding:24px 28px 6px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.04em;color:#9CA3AF;text-transform:uppercase">deutschoderwas</div>
+        <h1 style="margin:8px 0 0;font-size:22px;color:#1a1a1a">📖 Deine Nachbereitung ist da!</h1>
+      </td></tr>
+      <tr><td style="padding:12px 28px 0;font-size:15px;line-height:1.6;color:#1a1a1a">
+        Hallo ${esc(vorname)},<br><br>
+        deine Nachbereitung zu <b>${esc(thema)}</b>${level ? ` (${esc(level)})` : ''} ist fertig.${list ? `<br><span style="color:#6f6a62;font-size:14px">${esc(list)}</span>` : ''}
+      </td></tr>
+      <tr><td align="center" style="padding:22px 28px 6px">
+        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
+      </td></tr>
+      <tr><td style="padding:18px 28px 26px;font-size:12px;color:#9CA3AF;text-align:center">Üb die neuen Vokabeln gleich im Trainer · deutschoderwas-club.de</td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+}
+
+/* ---------- Kleine Hausaufgabe pro Stunde (zum Einreichen) ----------
+   Abgeleitet aus der frisch erstellten Nachbereitung – kein zusaetzlicher
+   Modell-Aufruf, damit der Cron-Lauf nie daran haengenbleibt. Nimmt bevorzugt
+   eine Sprech-/Schreibaufgabe aus der Stunde; sonst eine Schreibaufgabe zum
+   Thema mit den neuen Vokabeln. Ueberschreibt NIE eine vom Lehrer bearbeitete. */
+function hausaufgabeAus(cls, pc) {
+  const thema = String(cls.topic || cls.title || 'das Thema der Stunde').replace(/"/g, '').replace(/\s+/g, ' ').trim().slice(0, 90);
+  const vocab = (Array.isArray(pc.vocab) ? pc.vocab : [])
+    .map(v => String((v && v.de) || '').replace(/^(der|die|das)\s+/i, '').trim())
+    .filter(Boolean).slice(0, 6);
+  const sp = (Array.isArray(pc.speaking) ? pc.speaking : []).find(s => s && s.task);
+  let aufgabe;
+  if (sp) {
+    aufgabe = String(sp.task).replace(/\s+/g, ' ').trim();
+    if (vocab.length) aufgabe += ' Verwende dabei mindestens ' + Math.min(5, vocab.length) + ' neue Wörter aus dieser Stunde (z. B. ' + vocab.slice(0, 4).join(', ') + ').';
+    aufgabe += ' Schreib deine Antwort unten auf und reiche sie ein.';
+  } else {
+    aufgabe = 'Schreib 4–6 Sätze zum Thema „' + thema + '".';
+    if (vocab.length) aufgabe += ' Benutze dabei mindestens ' + Math.min(5, vocab.length) + ' der neuen Vokabeln: ' + vocab.slice(0, 6).join(', ') + '.';
+    aufgabe += ' Reiche deinen kurzen Text unten ein.';
+  }
+  const hinweis = 'Schau dir die Beispielsätze und Vokabeln in der Nachbereitung an – die helfen dir beim Schreiben.';
+  return { aufgabe: aufgabe.slice(0, 600), hinweis };
+}
+async function hausaufgabeSpeichern(sb, classId, cls, pc) {
+  try {
+    const { data: ex } = await sb.from('hausaufgaben').select('class_id,auto').eq('class_id', classId).maybeSingle();
+    if (ex && ex.auto === false) return;   // Lehrer hat selbst bearbeitet → nicht überschreiben
+    const h = hausaufgabeAus(cls, pc);
+    if (!h.aufgabe) return;
+    await sb.from('hausaufgaben').upsert(
+      { class_id: classId, aufgabe: h.aufgabe, hinweis: h.hinweis, auto: true, updated_at: new Date().toISOString() },
+      { onConflict: 'class_id' }
+    );
+  } catch (e) { /* Hausaufgabe darf die Nachbereitung nie aufhalten */ }
+}
+
+function clip(s, n) { s = String(s == null ? '' : s).trim(); return s ? s.slice(0, n) : null; }
+function strList(a, max) { return (Array.isArray(a) ? a : []).map(x => String(x || '').trim()).filter(Boolean).slice(0, max); }
+
+// Alle Gruppenchats (Kleingruppen) der Stunde laden und als Text zusammenfassen.
+async function fetchGruppenChats(sb, classId) {
+  try {
+    const { data } = await sb.from('group_notes').select('grp,notes').eq('class_id', classId);
+    if (!data || !data.length) return '';
+    return data
+      .slice()
+      .sort((a, b) => (Number(a.grp) || 0) - (Number(b.grp) || 0))
+      .map(g => { const t = htmlToText(String(g.notes || '')); return t ? ('Gruppe ' + g.grp + ':\n' + t) : ''; })
+      .filter(Boolean)
+      .join('\n\n');
+  } catch (e) { return ''; }
+}
+
+// Präsentations-/Lektionsseite serverseitig laden und in Text umwandeln (Skripte/Styles raus).
+async function fetchPresentation(url) {
+  if (!url) return '';
+  try {
+    const r = await fetch(url, { headers: { 'user-agent': 'dow-nachbereitung' } });
+    if (!r.ok) return '';
+    const t = await r.text();
+    const noScript = String(t).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
+    return htmlToText(noScript);
+  } catch (e) { return ''; }
+}
+function normDialoge(a) {
+  return (Array.isArray(a) ? a : []).map(d => ({ titel: clip(d.titel || d.title, 120) || 'Dialog', zeilen: strList(d.zeilen || d.lines, 14) })).filter(d => d.zeilen.length >= 2).slice(0, 4);
+}
+
+function htmlToText(html) {
+  return String(html || '')
+    .replace(/<!--KORR-->/g, '\n\n--- Korrekturen / Tafel-Notizen ---\n')
+    .replace(/<\s*br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6]|tr)>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function normGrammar(g) {
+  if (!g || typeof g !== 'object') return null;
+  const title = clip(g.title, 120);
+  const headers = strList(g.headers, 6);
+  const rows = (Array.isArray(g.rows) ? g.rows : []).map(r => (Array.isArray(r) ? r.map(c => String(c == null ? '' : c)) : [])).filter(r => r.length).slice(0, 20);
+  const tips = (Array.isArray(g.tips) ? g.tips : []).map(t => ({ label: clip(t.label, 80) || '', text: clip(t.text, 400) || '' })).filter(t => t.text).slice(0, 6);
+  if (!title && !rows.length && !tips.length) return null;
+  return { title: title || 'Grammatik', headers, rows, tips };
+}
+function normSpeaking(a) {
+  return (Array.isArray(a) ? a : []).map(s => ({ task: clip(s.task || s.q, 300) || '', example: clip(s.example || s.answer, 500) || '' })).filter(s => s.task).slice(0, 8);
+}
+function normErrors(a) {
+  return (Array.isArray(a) ? a : []).map(e => ({ falsch: clip(e.falsch, 200) || '', richtig: clip(e.richtig, 200) || '', erklaerung: clip(e.erklaerung || e.erklarung, 400) || '' })).filter(e => e.falsch && e.richtig).slice(0, 10);
+}
+function normExercises(arr) {
+  const out = [];
+  (Array.isArray(arr) ? arr : []).forEach(e => {
+    if (!e || !e.type) return;
+    const t = e.type;
+    if (t === 'choice' || t === 'listen') {
+      const options = Array.isArray(e.options) ? e.options.map(String) : [];
+      if (!e.q || options.length < 2) return;
+      let answer = e.answer;
+      if (typeof answer === 'string') { const i = options.indexOf(answer); answer = i >= 0 ? i : 0; }
+      if (typeof answer !== 'number' || answer < 0 || answer >= options.length) answer = 0;
+      out.push({ type: t, q: String(e.q), options, answer });
+    } else if (t === 'gap') {
+      if (!e.text || !e.answer) return;
+      out.push({ type: 'gap', text: String(e.text), answer: String(e.answer), hint: e.hint ? String(e.hint) : undefined });
+    } else if (t === 'match') {
+      const pairs = (Array.isArray(e.pairs) ? e.pairs : []).filter(p => p && p.l && p.r).map(p => ({ l: String(p.l), r: String(p.r) }));
+      if (pairs.length < 2) return;
+      out.push({ type: 'match', intro: e.intro ? String(e.intro) : undefined, pairs });
+    } else if (t === 'order') {
+      if (!e.answer) return;
+      out.push({ type: 'order', answer: String(e.answer), hint: e.hint ? String(e.hint) : undefined });
+    }
+  });
+  return out;
+}
+
+// Pro Vokabel ein echtes Foto von Unsplash holen (nur wenn UNSPLASH_ACCESS_KEY gesetzt).
+async function addVocabImages(vocab) {
+  const key = process.env.UNSPLASH_ACCESS_KEY;
+  if (!key || !vocab || !vocab.length) return;
+  await Promise.all(vocab.map(async (v) => {
+    if (v.img) return;
+    const q = imgQuery(v);
+    if (!q) return;
+    try {
+      const r = await fetch('https://api.unsplash.com/search/photos?per_page=1&orientation=squarish&content_filter=high&query=' + encodeURIComponent(q), { headers: { Authorization: 'Client-ID ' + key } });
+      if (!r.ok) return;
+      const j = await r.json();
+      const u = j && j.results && j.results[0] && j.results[0].urls;
+      if (u) v.img = u.small || u.regular || u.thumb || null;
+    } catch (e) {}
+  }));
+}
+function imgQuery(v) {
+  let q = (v.info || '').trim();
+  if (!q || q.length > 40 || /[äöüß]/i.test(q)) q = String(v.de || '').replace(/^(der|die|das|den|dem|ein|eine)\s+/i, '').replace(/\(.*?\)/g, '').trim();
+  q = q.split(/[;,/]/)[0].trim();
+  return q.split(/\s+/).slice(0, 3).join(' ');
+}
+
+function buildPrompt(cls, srcText, existing, mode) {
+  const vocabList = existing.length ? existing.map(v => `- ${v.de}${v.info ? ' = ' + v.info : ''}`).join('\n') : '(noch keine)';
+  const hasT = /tafel/.test(mode);
+  const hasG = /gruppen/.test(mode);
+  const hasP = /praesi/.test(mode);
+  let quelle, modeHinweis;
+  if (mode === 'pdf') {
+    quelle = 'die hochgeladene Mitschrift (PDF)';
+    modeHinweis = 'Baue ein rundes Handout mit Dialogen und vielen Übungen auf Basis der Quelle.';
+  } else if (mode === 'praesi') {
+    quelle = 'die Präsentation/Lektion aus dem Unterricht (es gibt KEINE Live-Mitschrift)';
+    modeHinweis = 'WICHTIG: Es gibt KEINE Live-Mitschrift. Erstelle eine vollständige, eigenständige Nachbereitung AUS DER PRÄSENTATION: viele Übungen/Tests, alle wichtigen Vokabeln aus der Präsentation (für den Vokabeltrainer) und passende Dialoge zum Thema.';
+  } else {
+    const teile = [];
+    if (hasT) teile.push('die Live-Mitschrift von der Tafel');
+    if (hasG) teile.push('die Gruppenchats aus den Kleingruppen');
+    if (hasP) teile.push('wichtige Inhalte aus der Präsentation');
+    quelle = teile.join(' + ') || 'die Quelle aus dem Unterricht';
+    const wasSteht = (hasT && hasG) ? 'in der Live-Mitschrift von der Tafel UND in den Gruppenchats'
+      : hasT ? 'in der Live-Mitschrift von der Tafel'
+      : 'in den Gruppenchats der Kleingruppen';
+    modeHinweis = 'SEHR WICHTIG: Übernimm ALLES, was ' + wasSteht + ' steht – jedes Wort, jeder Ausdruck und jede Korrektur, die dort notiert wurde, muss als Vokabel MIT einem Beispielsatz in der Nachbereitung landen, damit die Schüler genau das wiederfinden, was im Unterricht aufgeschrieben wurde.'
+      + (hasP ? ' Ergänze das danach mit den wichtigsten Inhalten aus der Präsentation.' : '')
+      + ' Baue daraus ein rundes Handout mit Dialogen und vielen Übungen.';
+  }
+  return `Du bist Amanda, eine erfahrene Deutschlehrerin. Erstelle ein vollständiges, schönes NACHBEREITUNGS-HANDOUT für eine Deutsch-Unterrichtsstunde – auf Basis dessen, was unten in der Quelle steht.
+
+STUNDE:
+- Titel: ${cls.title || '—'}
+- Niveau: ${cls.level || '—'}
+- Thema: ${cls.topic || cls.title || '—'}
+
+${modeHinweis}
+
+QUELLE (${quelle}):
+"""
+${srcText}
+"""
+
+BEREITS ERFASSTE VOKABELN:
+${vocabList}
+
+Antworte AUSSCHLIESSLICH mit gültigem JSON (kein Text, keine Codeblöcke) in GENAU diesem Format:
+{
+  "thema": "1-3 Sätze: worum ging es in der Stunde (für die Zusammenfassung).",
+  "saetze": ["wichtiger Beispielsatz zum Thema", "noch einer", "..."],
+  "vocab": [ { "de": "das Wort", "info": "einfache Erklärung AUF DEUTSCH (kein Englisch!)", "example": "lebensnaher Beispielsatz aus dem Alltag", "related": ["verwandtes Wort", "noch eins"] } ],
+  "dialoge": [ { "titel": "kurzer Titel", "zeilen": ["A: …", "B: …", "A: …", "B: …"] } ],
+  "grammar": {
+    "title": "Grammatik-Schwerpunkt der Stunde",
+    "headers": ["Spalte 1","Spalte 2","..."],
+    "rows": [["Zelle","Zelle","..."]],
+    "tips": [ { "label": "Merkpunkt", "text": "kurze Erklärung" } ]
+  },
+  "exercises": [
+    { "type": "choice", "q": "Satz mit ___ Lücke?", "options": ["A","B","C"], "answer": 0 },
+    { "type": "gap", "text": "Ich ___ nach Hause.", "answer": "gehe", "hint": "gehen" }
+  ],
+  "speaking": [ { "task": "Sprech-/Schreibaufgabe", "example": "Beispielantwort" } ],
+  "errors": [ { "falsch": "typischer Fehler", "richtig": "korrigierte Version", "erklaerung": "warum" } ]
+}
+
+REGELN:
+- ÜBERTRAGE ZUERST ALLES aus der Live-Mitschrift und den Gruppenchats: Jedes dort notierte Wort, jeder Ausdruck und jede Korrektur wird zu einer Vokabel MIT Beispielsatz (das ist das Wichtigste – die Schüler sollen genau das wiederfinden, was im Unterricht aufgeschrieben wurde). Danach ergänze passende weitere Vokabeln zum Thema.
+- ALLES muss zum Thema der Stunde passen (gleiche Wörter, Grammatik, Beispiele). Nichts erfinden, was nicht zum Thema passt.
+- "vocab": 10-20 Vokabeln (lieber mehr, wenn viel aufgeschrieben wurde – alle Wörter aus Tafel & Gruppenchats zuerst). "info" = einfache, kurze Erklärung AUF DEUTSCH (NIEMALS englische Übersetzung!). "example" = lebensnaher Beispielsatz. "related" = 2-4 verwandte Wörter derselben Wortfamilie.
+- "dialoge": 1-3 kurze, alltagsnahe Dialoge zum Thema (je 4-8 Zeilen, mit "A:"/"B:").
+- "grammar": nur ausfüllen, wenn es einen klaren Grammatikpunkt gibt; sonst "tips" mit 1-2 Merkpunkten, "rows":[] lassen.
+- "exercises": 8-12 abwechslungsreiche Übungen/Tests (type "choice" mit 3 Optionen, "answer"=Index 0-basiert; und "gap"). Viele Tests!
+- "speaking": 2-4 freie Sprech-/Schreibaufgaben mit Beispielantwort.
+- "errors": 2-5 echte Fehlerkorrekturen, wenn die Quelle Fehler zeigt; sonst [].
+- WICHTIG fuer das JSON: Benutze im Text NIEMALS das gerade Anfuehrungszeichen \" — es zerbricht die Antwort mitten im Satz. Schreib Zitate und hervorgehobene Woerter entweder ganz ohne Anfuehrungszeichen oder mit den deutschen Zeichen \u201e und \u201c.
+- Deutsch, freundlich, klar. Nur reines JSON.`;
+}
+
+/* ---------- JSON, das ein Modell geschrieben hat, sicher lesen ----------
+   Claude setzt in deutschem Text gern Anfuehrungszeichen: „gehen" — das
+   oeffnende ist deutsch, das schliessende aber das gerade ". Und genau
+   dieses Zeichen beendet in JSON den Text mitten im Satz. Daran sind seit
+   dem 10.09. ALLE Nachbereitungen gestorben (Fehler: parse_failed).
+
+   reparieren() geht Zeichen fuer Zeichen durch und entscheidet bei jedem "
+   im String, ob es wirklich das Ende ist oder mitten im Text steht. Mitten
+   im Text wird daraus ein deutsches Anfuehrungszeichen — das kann JSON nie
+   kaputtmachen und ist im Lesetext ohnehin das richtige.
+   (Wortgleich aus api/generate-podcast.js, wo derselbe Fehler auftrat.) */
+function reparieren(roh) {
+  let out = '', inStr = false, esc = false;
+  const passtDanach = (i) => {
+    let j = i;
+    while (j < roh.length && /\s/.test(roh[j])) j++;
+    const c = roh[j];
+    if (c === undefined || c === ':') return true;
+    if (c === '}' || c === ']') return true;
+    if (c === ',') {
+      let k = j + 1;
+      while (k < roh.length && /\s/.test(roh[k])) k++;
+      const d = roh[k];
+      /* ']' und '}' gehoeren dazu: bei einem haengenden Komma am Listenende
+         ("a","b",] ) hielt die Pruefung das schliessende Zeichen sonst faelsch-
+         licherweise fuer mitten im Satz und zerlegte die ganze Antwort. */
+      return d === '"' || d === '{' || d === '[' || d === ']' || d === '}' || d === undefined;
+    }
+    return false;
+  };
+  for (let i = 0; i < roh.length; i++) {
+    const c = roh[i];
+    if (esc) { out += c; esc = false; continue; }
+    if (c === '\\') { out += c; esc = true; continue; }
+    if (c === '"') {
+      if (!inStr) { inStr = true; out += c; continue; }
+      if (passtDanach(i + 1)) { inStr = false; out += c; continue; }
+      const vor = out[out.length - 1];
+      out += (vor === undefined || /[\s(\[]/.test(vor)) ? '\u201e' : '\u201c';
+      continue;
+    }
+    if (inStr && (c === '\n' || c === '\r')) { out += '\\n'; continue; }
+    out += c;
+  }
+  return out.replace(/,(\s*[}\]])/g, '$1');
+}
+
+/* ---------- Letzte Rettung: eine abgeschnittene Antwort ----------
+   Laeuft die Antwort in das Token-Limit, fehlt am Ende alles: die
+   schliessenden Klammern, oft mitten im Wort. Fuer die Schuelerin ist
+   eine Nachbereitung mit 14 statt 18 Vokabeln aber unendlich viel
+   besser als keine. Also wird bis zum letzten vollstaendig
+   geschlossenen Element zurueckgeschnitten und von Hand zugemacht —
+   vom spaetesten Schnitt zum fruehesten, damit so viel wie moeglich
+   erhalten bleibt. */
+function retten(roh) {
+  let inStr = false, esc = false;
+  const stapel = [];        /* was noch offen ist */
+  const kandidaten = [];    /* Stellen, an denen ein Element fertig war */
+  for (let i = 0; i < roh.length; i++) {
+    const c = roh[i];
+    if (esc) { esc = false; continue; }
+    if (c === '\\') { esc = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === '{' || c === '[') stapel.push(c === '{' ? '}' : ']');
+    else if (c === '}' || c === ']') {
+      stapel.pop();
+      /* Erster Versuch war hier zu eng: nur Schnitte direkt unter dem
+         Wurzelobjekt. Abgeschnitten wird aber mitten in einer Liste —
+         dann muss ausser der Liste auch das Wurzelobjekt zugemacht
+         werden. Deshalb wird jetzt gemerkt, WAS noch offen ist. */
+      if (stapel.length) kandidaten.push({ bis: i, zu: stapel.slice().reverse().join('') });
+    }
+  }
+  for (let k = kandidaten.length - 1; k >= 0; k--) {
+    const kandidat = roh.slice(0, kandidaten[k].bis + 1).replace(/,\s*$/, '') + kandidaten[k].zu;
+    try { return JSON.parse(kandidat); } catch (e) {}
+    try { return JSON.parse(reparieren(kandidat)); } catch (e) {}
+  }
+  return null;
+}
+
+function jsonAus(text) {
+  const ohneZaun = String(text || '').replace(/^\s*```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+  const s = ohneZaun.indexOf('{'), e = ohneZaun.lastIndexOf('}');
+  if (s === -1 || e === -1) return null;
+  const roh = ohneZaun.slice(s, e + 1);
+  try { return JSON.parse(roh); } catch (err) {
+    try { return JSON.parse(reparieren(roh)); } catch (err2) {
+      try { return retten(roh) || retten(reparieren(roh)); } catch (err3) { return null; }
+    }
+  }
+}

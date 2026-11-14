@@ -30,6 +30,15 @@ export default async function handler(req, res) {
   const ids = [...new Set(bks.map(b => b.user_id))];
   const { data: profs } = await sb.from('profiles').select('id,name,email,email_optout').in('id', ids);
 
+  // Live-Mitschriften der Stunde: alle Gruppen + Hauptraum (grp 0), und wer in welcher Gruppe war.
+  const grpNotes = {};
+  try { const { data: gnRows } = await sb.from('group_notes').select('grp,notes').eq('class_id', classId);
+    (gnRows || []).forEach(r => { grpNotes[String(r.grp)] = r.notes || ''; }); } catch (_) {}
+  const memberGrp = {};
+  try { const { data: gmRows } = await sb.from('class_group_members').select('user_id,grp').eq('class_id', classId);
+    (gmRows || []).forEach(r => { memberGrp[r.user_id] = r.grp; }); } catch (_) {}
+  const hauptraum = grpNotes['0'] || '';
+
   const thema = cls.topic || cls.title || 'deine Stunde';
   let sent = 0, skipped = 0;
   for (const p of (profs || [])) {
@@ -38,14 +47,23 @@ export default async function handler(req, res) {
     const { error: logErr } = await sb.from('email_log').insert({ kind: 'nachb_link', ref, user_id: p.id });
     if (logErr) { skipped++; continue; } // schon gesendet
     const vorname = (p.name || '').split(' ')[0] || 'du';
-    const html = mail({ vorname, thema, level: cls.level || '', link });
+    // Mitschrift dieses Schülers: eigene Kleingruppe + Hauptraum, verbatim.
+    let mitschrift = '';
+    const eigen = memberGrp[p.id];
+    if (eigen != null && String(eigen) !== '0' && hatText(grpNotes[String(eigen)])) {
+      mitschrift += mitschriftBlock('#138a8a', '👥 Eure Kleingruppe' + (eigen ? ' (Gruppe ' + esc0(eigen) + ')' : ''), grpNotes[String(eigen)]);
+    }
+    if (hatText(hauptraum)) {
+      mitschrift += mitschriftBlock('#DD0000', '🏛️ Aus dem Hauptraum (alle zusammen)', hauptraum);
+    }
+    const html = mail({ vorname, thema, level: cls.level || '', link, mitschrift });
     const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
         to: [{ email: p.email, name: p.name || undefined }],
-        subject: `📖 Deine Nachbereitung: ${thema}`,
+        subject: `📝 Deine Mitschrift & Nachbereitung: ${thema}`,
         htmlContent: html,
       }),
     });
@@ -60,7 +78,21 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true, sent, skipped });
 }
 
-function mail({ vorname, thema, level, link }) {
+function esc0(x){ return String(x==null?'':x).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+function sauber(html){
+  return String(html||'')
+    .replace(/<script[\s\S]*?<\/script>/gi,'')
+    .replace(/ on[a-z]+\s*=\s*"[^"]*"/gi,'')
+    .replace(/ on[a-z]+\s*=\s*'[^']*'/gi,'')
+    .replace(/javascript:/gi,'');
+}
+function hatText(html){ return sauber(html).replace(/<[^>]+>/g,'').trim().length > 0; }
+function mitschriftBlock(farbe, titel, notes){
+  return `<div style="margin:12px 0;border:1px solid #eee;border-left:4px solid ${farbe};border-radius:10px;padding:12px 14px;background:#FCFBF8">`
+    + `<div style="font-weight:800;font-size:13.5px;color:${farbe};margin-bottom:6px">${titel}</div>`
+    + `<div style="font-size:14.5px;line-height:1.7;color:#1a1a1a">${sauber(notes)}</div></div>`;
+}
+function mail({ vorname, thema, level, link, mitschrift }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const ff = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"></head>
@@ -76,8 +108,13 @@ function mail({ vorname, thema, level, link }) {
         Hallo ${esc(vorname)},<br><br>
         deine Nachbereitung zu <b>${esc(thema)}</b>${level ? ` (${esc(level)})` : ''} ist fertig – mit Zusammenfassung, Vokabeln, Übungen &amp; Fehlerkorrektur. Schau gleich rein und wiederhole die Stunde! 🎯
       </td></tr>
+      ${mitschrift ? `<tr><td style="padding:14px 28px 0">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.03em;color:#9CA3AF;text-transform:uppercase;margin-bottom:2px">📝 Eure Live-Mitschrift</div>
+        <div style="font-size:12.5px;color:#9CA3AF;margin-bottom:6px">Genau das, was im Unterricht live mitgeschrieben wurde — damit nichts verloren geht.</div>
+        ${mitschrift}
+      </td></tr>` : ''}
       <tr><td align="center" style="padding:22px 28px 6px">
-        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur Nachbereitung</a>
+        <a href="${esc(link)}" style="display:inline-block;background:linear-gradient(135deg,#35AFD0,#138a8a);color:#063b35;font-weight:800;font-size:15px;text-decoration:none;padding:14px 30px;border-radius:50px">📖 Zur vollen Nachbereitung</a>
       </td></tr>
       <tr><td style="padding:18px 28px 26px;font-size:12px;color:#9CA3AF;text-align:center">Üb die neuen Vokabeln auch im Vokabeltrainer im Schülerbereich · deutschoderwas-club.de</td></tr>
     </table>

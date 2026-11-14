@@ -3419,6 +3419,7 @@ const MS_STYLE = `<style>
 .ms-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--rahmen,#e3e7e6);border-radius:999px;padding:8px 14px;min-width:200px;flex:1;max-width:320px}
 .ms-search input{border:none;outline:none;font:inherit;font-size:14px;width:100%;background:transparent}
 .ms-list{display:grid;gap:14px}
+.ms-list[hidden],.ms-chip-f[hidden],.ms-empty[hidden],#ms-noresult[hidden]{display:none!important}
 .ms-card{background:var(--card,#fff);border:1px solid var(--rahmen,#e3e7e6);border-left:4px solid var(--primary,#0E7C8C);border-radius:16px;padding:16px 18px;box-shadow:0 4px 16px rgba(30,40,38,.05)}
 .ms-card.is-past{border-left-color:#B9C2C0;background:#FBFCFC}
 .ms-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -3548,7 +3549,7 @@ function meineStundenHtml(){
       ? `${b.material_live?`<div class="phase"><b>📊 Präsentation</b><a href="${esc(b.material_live)}" target="_blank" rel="noopener">ansehen →</a></div>`:''}<div class="phase"><b>🃏 Vokabeln</b><a href="#" onclick="go('vokabeln');return false">wiederholen →</a></div>`
       : `${phaseHtml(b,'pre')}${phaseHtml(b,'live')}<div class="phase"><b>🃏 Vokabeln</b>${(m&&m.vocab&&m.vocab.length)||(b.vocab&&b.vocab.length)?`<a href="#" onclick="go('vokabeln');return false">üben →</a>`:'<span class="nope">folgt</span>'}</div>`;
     const mainBtns=isPast
-      ? `${nbReady?`<a class="btn btn-primary btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`:`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.7">📖 Nachbereitung folgt in Kürze</span>`}${rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`}`
+      ? `${nbReady?`<a class="btn btn-primary btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`:`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.7">📖 Nachbereitung folgt in Kürze</span>`}<a class="btn btn-ghost btn-sm" href="nachbereitung.html?id=${b.class_id}&tab=tafel" target="_blank" rel="noopener" style="text-decoration:none">🧑‍🏫 Live-Tafel</a>${rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`}`
       : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
     const haBtn=haClasses.has(b.class_id)?`<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}')">${haDone.has(b.class_id)?'✓ Hausaufgabe abgegeben':'📎 Hausaufgabe abgeben'}</button>`:'';
     const umbuchenBtn=`<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">🔁 Umbuchen</button>`;
