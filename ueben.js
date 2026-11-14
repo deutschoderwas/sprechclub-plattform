@@ -551,8 +551,129 @@
     ];
     UEBUNGEN.skills.push({id:'shadowing',name:'Shadowing',emoji:'🗣️',color:'#7C3AED',themes:th}); }
 
+  /* Linien-Icons im Lucide-Stil statt Emoji - wie auf der Startseite. */
+  var UBX_IC={
+    wortschatz:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    grammatik:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>',
+    hoeren:'<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+    aussprache:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>',
+    'lesen-schreiben':'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    shadowing:'<path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/>',
+    mix:'<path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/>',
+    wdh:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+    flamme:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+    stern:'<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
+    ziel:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    buch:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+    haken:'<path d="M20 6 9 17l-5-5"/>',
+    pfeil:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'
+  };
+  /* Themen ohne eigenes Bild: erst ein vorhandenes Themenfoto, das
+     inhaltlich passt, sonst eines aus dem Bildersatz der Fertigkeit.
+     Der Satz wird der Reihe nach vergeben, damit nie zwei gleiche
+     Fotos nebeneinander stehen. */
+  var UBX_PASST={
+    'a1-koerper':'bilder/thema/gesundheit.jpg','a1-beruf':'bilder/thema/buero.jpg','a1-stadt':'bilder/thema/stadt.jpg',
+    'a2-umzug':'bilder/thema/wohnen.jpg','b2-bildung':'bilder/thema/bildung.jpg','b2-digital':'bilder/thema/medien.jpg',
+    'b2-gesellschaft':'bilder/thema/menschen.jpg','b2-umwelt':'bilder/thema/natur.jpg','b2-gesundheit':'bilder/thema/pflege.jpg',
+    'c1-arbeitsrecht':'bilder/thema/amt.jpg','c1-wirtschaft':'bilder/thema/ki-arbeitswelt.jpg','b2-sprache':'bilder/thema/live-unterricht.jpg',
+    'b2-team-klaeren':'bilder/thema/buero.jpg','b2-amt-widerspruch':'bilder/thema/amt.jpg','b2-wohnen-vertrag':'bilder/thema/wohnen.jpg',
+    'b2-medien-einordnen':'bilder/thema/medien.jpg','b2-arzt-befund':'bilder/thema/gesundheit.jpg','b2-reise-stoerung':'bilder/thema/reisen.jpg',
+    'c1-bewerbungsgespraech':'bilder/thema/bewerbung.jpg','c1-verhandeln':'bilder/thema/kunden.jpg'
+  };
+  var UBX_ANZ={wortschatz:4,grammatik:4,aussprache:4,hoeren:4,'lesen-schreiben':6,shadowing:4};
+  function ubxErsatz(id,n){ var a=UBX_ANZ[id]||1, k=(n||0)%a; return 'bilder/bereich/ub-'+id+(k?'-'+(k+1):'')+'.webp'; }
+  function ubxIc(k){ return '<svg class="ubx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(UBX_IC[k]||UBX_IC.buch)+'</svg>'; }
+  function ubxCSS(){ if(document.getElementById('ubxCSS'))return; var st=document.createElement('style'); st.id='ubxCSS';
+    st.textContent=[
+    '#v-ueben .ubx-ic{width:18px;height:18px;flex:0 0 auto}',
+    '#v-ueben .ubx-held{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#0E6D85,#0A4E62);color:#fff;margin:0 0 22px;box-shadow:0 22px 44px -26px rgba(10,78,98,.65)}',
+    '#v-ueben .ubx-held-tx{padding:30px 32px;display:flex;flex-direction:column;gap:14px;justify-content:center;min-width:0}',
+    '#v-ueben .ubx-held h1{font-family:"Space Grotesk",Inter,sans-serif;font-size:clamp(26px,3.4vw,38px);letter-spacing:-.025em;line-height:1.1;margin:0;color:#fff}',
+    '#v-ueben .ubx-sub{margin:0;color:#D6EEF5;font-size:15px;line-height:1.55;max-width:520px}',
+    '#v-ueben .ubx-zahlen{display:flex;flex-wrap:wrap;gap:8px}',
+    '#v-ueben .ubx-z{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-size:13px;color:#E6F5FA;white-space:nowrap}',
+    '#v-ueben .ubx-z b{color:#fff;font-weight:700}',
+    '#v-ueben .ubx-z .ubx-ic{width:15px;height:15px;color:#A9DEEE}',
+    '#v-ueben .ubx-mini{display:inline-block;width:42px;height:5px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;margin-left:2px}',
+    '#v-ueben .ubx-mini i{display:block;height:100%;background:#7FE0D0;border-radius:9px}',
+    '#v-ueben .ubx-tun{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px}',
+    '#v-ueben .ubx-haupt{display:inline-flex;align-items:center;gap:12px;background:#fff;color:#0A4E62;border:0;border-radius:14px;padding:11px 20px 11px 16px;font:inherit;font-weight:700;font-size:15.5px;cursor:pointer;min-height:52px;text-align:left;box-shadow:0 10px 22px -12px rgba(0,0,0,.45);transition:transform .15s}',
+    '#v-ueben .ubx-haupt:hover{transform:translateY(-1px)}',
+    '#v-ueben .ubx-haupt .ubx-ic{width:22px;height:22px;color:#0E6D85}',
+    '#v-ueben .ubx-haupt small{display:block;font-weight:500;color:#4A6B76;font-size:12.5px;margin-top:1px}',
+    '#v-ueben .ubx-neben{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);border-radius:14px;padding:11px 16px;font:inherit;font-weight:600;font-size:14.5px;cursor:pointer;min-height:52px}',
+    '#v-ueben .ubx-neben:hover{background:rgba(255,255,255,.1)}',
+    '#v-ueben .ubx-held-bild{display:block;position:relative;min-height:260px;background:#0B5A70}',
+    '#v-ueben .ubx-held-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+    '#v-ueben .ubx-held-bild::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0C5D74 0%,rgba(12,93,116,0) 38%)}',
+    '#v-ueben .ubx-tabs{display:flex;gap:4px;overflow-x:auto;padding:4px;background:#F1F4F7;border:1px solid #E7EBF0;border-radius:16px;margin:0 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}',
+    '#v-ueben .ubx-tabs::-webkit-scrollbar{display:none}',
+    '#v-ueben .ubx-tab{flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;background:transparent;border-radius:12px;padding:10px 12px;font:inherit;font-weight:600;font-size:14px;color:#4B5A63;cursor:pointer;min-height:46px;white-space:nowrap;transition:background .15s,color .15s}',
+    '#v-ueben .ubx-tab:hover{color:#0A4E62}',
+    '#v-ueben .ubx-tab em{font-style:normal;font-size:12px;color:#8A979E;font-weight:600;background:#E6EBEF;border-radius:999px;padding:1px 7px}',
+    '#v-ueben .ubx-tab.an{background:#fff;color:#0A4E62;box-shadow:0 2px 8px -3px rgba(18,24,31,.25)}',
+    '#v-ueben .ubx-tab.an .ubx-ic{color:#0E6D85}',
+    '#v-ueben .ubx-tab.an em{background:#E3F2F6;color:#0E6D85}',
+    '@media(max-width:1320px){#v-ueben .ubx-tab em{display:none}}',
+    '@media(max-width:760px){#v-ueben .ubx-tab em{display:inline}}',
+    '#v-ueben .ubx-niv{display:flex;align-items:center;gap:10px;margin:28px 0 12px;font-family:"Space Grotesk",Inter,sans-serif;font-size:18px;font-weight:700;color:#14181B;letter-spacing:-.01em}',
+    '#v-ueben .ubx-niv .lv{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 8px;border-radius:8px;background:#0E6D85;color:#fff;font-family:Inter,sans-serif;font-size:12.5px;font-weight:700}',
+    '#v-ueben .ubx-niv .anz{margin-left:auto;font-family:Inter,sans-serif;font-size:13px;color:#6B7A82;font-weight:500;white-space:nowrap}',
+    '#v-ueben .ubx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}',
+    '#v-ueben .ubx-grid+.ubx-grid{margin-top:16px}',
+    '#v-ueben .ubx-grid[hidden]{display:none}',
+    '#v-ueben .ubx-k{display:flex;flex-direction:column;background:#fff;border:1px solid #E7EBF0;border-radius:18px;overflow:hidden;min-width:0;transition:box-shadow .2s,transform .2s}',
+    '#v-ueben .ubx-k:hover{box-shadow:0 14px 30px -18px rgba(18,24,31,.35);transform:translateY(-2px)}',
+    '#v-ueben .ubx-k-bild{position:relative;aspect-ratio:16/10;background:linear-gradient(140deg,#0E6D85,#0A4E62);overflow:hidden}',
+    '#v-ueben .ubx-k-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+    '#v-ueben .ubx-lv{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.94);color:#0A4E62;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:8px}',
+    '#v-ueben .ubx-ok{position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:4px;background:#0F7B5F;color:#fff;font-size:11.5px;font-weight:700;padding:3px 9px 3px 7px;border-radius:8px}',
+    '#v-ueben .ubx-ok .ubx-ic{width:13px;height:13px}',
+    '#v-ueben .ubx-k-tx{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}',
+    '#v-ueben .ubx-k-tx h3{margin:0;font-family:"Space Grotesk",Inter,sans-serif;font-size:16px;line-height:1.25;font-weight:700;color:#14181B;overflow-wrap:anywhere}',
+    '#v-ueben .ubx-meta{margin:0;font-size:13px;color:#6B7A82}',
+    '#v-ueben .ubx-bar{height:4px;background:#EEF2F5;border-radius:9px;overflow:hidden}',
+    '#v-ueben .ubx-bar i{display:block;height:100%;background:#0E9384;border-radius:9px}',
+    '#v-ueben .ubx-k-fuss{margin-top:auto;padding-top:6px;display:flex;gap:8px;align-items:stretch}',
+    '#v-ueben .ubx-los{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#0E6D85;color:#fff;border:0;border-radius:12px;min-height:44px;padding:0 12px;font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;transition:background .15s}',
+    '#v-ueben .ubx-los:hover{background:#0A4E62}',
+    '#v-ueben .ubx-los .ubx-ic{width:16px;height:16px}',
+    '#v-ueben .ubx-lek{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 12px;border:1px solid #E7EBF0;border-radius:12px;color:#33434B;font-weight:600;font-size:13.5px;text-decoration:none;background:#fff;transition:border-color .15s,color .15s}',
+    '#v-ueben .ubx-lek:hover{border-color:#0E6D85;color:#0E6D85}',
+    '#v-ueben .ubx-lek .ubx-ic{width:16px;height:16px}',
+    '#v-ueben .ubx-k .ub-warum{font-size:12.5px;margin:0}',
+    '#v-ueben .ub-mehrbtn{border:1px solid #E7EBF0;border-radius:12px;font-weight:600;color:#0A4E62;margin-top:14px}',
+    '#v-ueben .ub-mehrbtn:hover{border-color:#0E6D85;color:#0E6D85}',
+    '@media(max-width:760px){',
+    '  #v-ueben .ubx-held{grid-template-columns:1fr;border-radius:20px;margin-bottom:16px}',
+    '  #v-ueben .ubx-held-bild{order:-1;min-height:0;aspect-ratio:16/7}',
+    '  #v-ueben .ubx-held-bild::before{background:linear-gradient(0deg,#0D6680 0%,rgba(13,102,128,0) 55%)}',
+    '  #v-ueben .ubx-held-tx{padding:14px 18px 20px;gap:12px}',
+    '  #v-ueben .ubx-sub{font-size:14.5px}',
+    '  #v-ueben .ubx-tun>button{flex:1 1 100%;justify-content:center}',
+    '  #v-ueben .ubx-tab{flex:0 0 auto;padding:10px 12px;font-size:14px}',
+    '}',
+    '@media(max-width:560px){',
+    '  #v-ueben .ubx-grid{grid-template-columns:1fr 1fr;gap:12px}',
+    '  #v-ueben .ubx-grid+.ubx-grid{margin-top:12px}',
+    '  #v-ueben .ubx-niv{font-size:16px;margin:22px 0 10px}',
+    '  #v-ueben .ubx-niv .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '  #v-ueben .ubx-k{border-radius:16px}',
+    '  #v-ueben .ubx-k-bild{aspect-ratio:4/3}',
+    '  #v-ueben .ubx-k-tx{padding:11px 12px 12px;gap:6px}',
+    '  #v-ueben .ubx-k-tx h3{font-size:14.5px}',
+    '  #v-ueben .ubx-meta{font-size:12px}',
+    '  #v-ueben .ubx-k-fuss{flex-direction:column;gap:6px}',
+    '  #v-ueben .ubx-lek{min-height:40px}',
+    '  #v-ueben .ubx-k .ub-warum,#v-ueben .ubx-k .ub-vorher{display:none}',
+    '}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
   function renderUeben(){
-    injectCSS();
+    injectCSS(); ubxCSS();
     var el=document.getElementById('v-ueben'); if(!el)return;
     if(!window.UEBUNGEN||!UEBUNGEN.skills||!UEBUNGEN.skills.length){ el.innerHTML='<div class="pagehead"><h1>Üben</h1></div><div class="empty">Übungen werden geladen … lade die Seite neu, falls hier länger nichts erscheint.</div>'; return; }
     ensureShadow();
@@ -563,45 +684,65 @@
     var fael=wdhFaellig().length;
     if(!curSkill) curSkill=UEBUNGEN.skills[0].id;
     var sk=skillById(curSkill)||UEBUNGEN.skills[0];
+    /* Seit 14.11.2026 im Stil von „Meine Stunden“ und „Für dich“:
+       eine Petrol-Bühne mit Foto, die drei Zahlen als ruhige Chips
+       und ein Hauptknopf. Vorher standen drei Kästen, zwei bunte
+       Verlaufsknöpfe und sechs Pillen untereinander - am Handy war
+       der erste Themenkarte erst nach einem ganzen Bildschirm zu sehen. */
+    var niv=''; try{ niv=window.ICH?window.ICH.niveau():''; }catch(e){}
     var head=
-      '<div class="ub-hero"><h1>Üben</h1><p>Wortschatz, Grammatik, Hören und Aussprache in kurzen Runden. '+(window.ICH?'Deine Stufe '+E(window.ICH.niveau())+' steht oben.':'Zu jedem Thema gibt es die passende Lektion.')+'</p></div>'+
-      '<div class="ub-top">'+
-        '<div class="ub-stat"><div><div class="big">'+(s.streak||0)+'</div><div class="lbl">'+((s.streak||0)===1?'Tag':'Tage')+' in Folge</div></div></div>'+
-        '<div class="ub-stat"><div><div class="big">'+(s.xp||0)+'</div><div class="lbl">Punkte gesamt</div></div></div>'+
-        '<div class="ub-stat"><div class="ub-ring" style="--p:'+pct+'"><span>'+(s.dayXP||0)+'</span></div><div><div class="big">'+Math.min(s.dayXP||0,goal)+'/'+goal+'</div><div class="lbl">Tagesziel</div></div></div>'+
-      '</div>'+
-      '<div class="ub-zwei">'+
-        '<button class="ub-mix" onclick="ubStartMix()">Schnell-Mix: 10 gemischte Aufgaben</button>'+
-        (fael>0?'<button class="ub-wdh" onclick="ubStartWdh()">Wiederholen: '+fael+(fael===1?' Wort ist':' Wörter sind')+' heute dran</button>':'')+
-      '</div>';
-    var pills='<div class="ub-skills">'+UEBUNGEN.skills.map(function(x){
-        var on=x.id===curSkill; return '<button class="ub-skill'+(on?' on':'')+'" style="'+(on?'background:'+(x.color||'#D42A21')+';border-color:'+(x.color||'#D42A21'):'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+E(x.name)+'</button>';
-      }).join('')+'</div>';
+      '<header class="ubx-held"><div class="ubx-held-tx">'+
+        '<h1>Üben in kurzen Runden</h1>'+
+        '<p class="ubx-sub">Wortschatz, Grammatik, Hören und Aussprache. Eine Runde dauert ein paar Minuten, und zu vielen Themen gibt es die passende Lektion.'+(niv?' Deine Stufe '+E(niv)+' steht oben.':'')+'</p>'+
+        '<div class="ubx-zahlen">'+
+          '<span class="ubx-z">'+ubxIc('flamme')+'<b>'+(s.streak||0)+'</b> '+((s.streak||0)===1?'Tag':'Tage')+' in Folge</span>'+
+          '<span class="ubx-z">'+ubxIc('stern')+'<b>'+(s.xp||0)+'</b> Punkte</span>'+
+          '<span class="ubx-z">'+ubxIc('ziel')+'<b>'+Math.min(s.dayXP||0,goal)+'/'+goal+'</b> heute<i class="ubx-mini"><i style="width:'+pct+'%"></i></i></span>'+
+        '</div>'+
+        '<div class="ubx-tun">'+
+          '<button class="ubx-haupt" onclick="ubStartMix()">'+ubxIc('mix')+'<span>Schnell-Mix starten<small>10 gemischte Aufgaben</small></span></button>'+
+          (fael>0?'<button class="ubx-neben" onclick="ubStartWdh()">'+ubxIc('wdh')+(fael===1?'1 Wort wiederholen':fael+' Wörter wiederholen')+'</button>':'')+
+        '</div>'+
+      '</div><span class="ubx-held-bild"><img src="bilder/bereich/ub-hero.webp" alt="" onerror="this.parentNode.remove()"></span></header>';
+    var pills='<nav class="ubx-tabs" role="tablist" aria-label="Fertigkeit wählen">'+UEBUNGEN.skills.map(function(x){
+        var on=x.id===curSkill;
+        return '<button role="tab" aria-selected="'+on+'" class="ubx-tab'+(on?' an':'')+'" onclick="ubSetSkill(\''+x.id+'\')">'+ubxIc(x.id)+'<span>'+E(x.name)+'</span><em>'+((x.themes||[]).length)+'</em></button>';
+      }).join('')+'</nav>';
     /* Nach Niveau geordnet. Vorher lagen alle Themen eines Bereichs in
        einem einzigen Gitter - bei 47 Hoerthemen fand ein Anfaenger
        seins nicht. Jetzt kommt A1 zuerst, mit Ueberschrift und Anzahl. */
     var NIV=['A1','A2','B1','B2','C1'];
     var NIV_TEXT={A1:'Ganz am Anfang',A2:'Schon etwas sicherer',B1:'Alltag auf eigenen Beinen',B2:'Feinheiten und Meinung',C1:'Fast wie zu Hause'};
+    /* Jede Karte zeigt ein Foto. Hat das Thema kein eigenes, kommt das
+       Bild der Fertigkeit (bilder/bereich/ub-<fertigkeit>.webp). Fehlt
+       auch das, bleibt die Petrol-Fläche - nie ein grauer Kasten.
+       Die Klasse ist neu (ubx-k), damit club-icons.js keine Fotos von
+       einem fremden Server mehr darüberlegt. */
+    var fbZ=0;
     function karte(t,idx){
         var tp=(s.themes[themeKey(sk.id,t.id)]||{}).best||0;
-        var g=UB_PAL[idx%UB_PAL.length]; var grad='linear-gradient(135deg,'+g[0]+','+g[1]+')';
-        var em=t.emoji||UB_EMOJI[t.id]||sk.emoji; var lu=lessonUrl(sk.id,t.id);
-        return '<div class="ub-tcard">'+
-          '<div class="ub-band" style="background:'+grad+'">'+
-            (bildVon(t) ? '<img class="ub-bild" src="'+E(bildVon(t))+'" alt="" loading="lazy" onerror="this.remove()">' : '')+
-            (t.level?'<span class="ub-lv2">'+E(t.level)+'</span>':'')+
-            (tp>=100?'<span class="ub-done">✓ fertig</span>':'')+
-            '<span class="ub-emoji">'+em+'</span>'+
+        var lu=lessonUrl(sk.id,t.id);
+        var eigen=bildVon(t)||UBX_PASST[t.id]||'';
+        var ersatz=ubxErsatz(sk.id, fbZ++);
+        var src=eigen||ersatz;
+        var n=(t.exercises||[]).length;
+        return '<article class="ubx-k'+(tp>=100?' fertig':'')+'">'+
+          '<div class="ubx-k-bild">'+
+            '<img src="'+E(src)+'" alt="" loading="lazy" onerror="if(this.dataset.f||this.src.indexOf(\''+ersatz+'\')>-1){this.remove()}else{this.dataset.f=1;this.src=\''+ersatz+'\'}">'+
+            (t.level?'<span class="ubx-lv">'+E(t.level)+'</span>':'')+
+            (tp>=100?'<span class="ubx-ok">'+ubxIc('haken')+'fertig</span>':'')+
           '</div>'+
-          '<div class="ub-tbody">'+
-            '<div class="tt">'+E(t.title)+'</div>'+
+          '<div class="ubx-k-tx">'+
+            '<h3>'+E(t.title)+'</h3>'+
             pfadHtml(t)+
-            '<div class="meta">'+t.exercises.length+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</div>'+
-            '<div class="ub-pbar"><span style="width:'+tp+'%;background:'+grad+'"></span></div>'+
-            '<button class="ub-go2" style="background:'+grad+'" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">Üben →</button>'+
-            (lu?'<a class="ub-lesson" href="'+lu+'" target="_blank" rel="noopener">Passende Lektion</a>':'')+
+            '<p class="ubx-meta">'+n+' Aufgaben'+(tp?' · beste Runde '+tp+'%':'')+'</p>'+
+            '<div class="ubx-bar" aria-hidden="true"><i style="width:'+tp+'%"></i></div>'+
+            '<div class="ubx-k-fuss">'+
+              '<button class="ubx-los" onclick="ubStart(\''+sk.id+'\',\''+t.id+'\')">'+(tp>0&&tp<100?'Weiter üben':'Üben')+ubxIc('pfeil')+'</button>'+
+              (lu?'<a class="ubx-lek" href="'+lu+'" target="_blank" rel="noopener" title="Passende Lektion öffnen">'+ubxIc('buch')+'<span>Lektion</span></a>':'')+
+            '</div>'+
           '</div>'+
-        '</div>';
+        '</article>';
     }
     /* Der Lernpfad sagt, in welcher Reihenfolge die Themen Sinn ergeben
        und was vorher sitzen sollte. Fehlt die Datei, bleibt alles wie
@@ -632,13 +773,13 @@
        scrollt man am Handy minutenlang an Karten vorbei. */
     var OFFEN=8;
     function fach(lv,text,liste){
-      var kopf='<h2 class="ub-niv"><span class="lv">'+E(lv)+'</span>'+E(text)+
+      var kopf='<h2 class="ubx-niv"><span class="lv">'+E(lv==='alle'?'Alle':lv)+'</span><span class="tx">'+E(text)+'</span>'+
         '<span class="anz">'+liste.length+(liste.length===1?' Thema':' Themen')+'</span></h2>';
-      var bau=function(l){ return '<div class="ub-grid">'+l.map(function(o){return karte(o.t,o.i);}).join('')+'</div>'; };
+      var bau=function(l){ return '<div class="ubx-grid">'+l.map(function(o){return karte(o.t,o.i);}).join('')+'</div>'; };
       if(liste.length<=OFFEN) return kopf+bau(liste);
       var key=sk.id+'-'+lv.toLowerCase().replace(/[^a-z0-9]/g,'');
       return kopf+bau(liste.slice(0,OFFEN))+
-        '<div class="ub-grid" id="ubMehr-'+key+'" hidden>'+liste.slice(OFFEN).map(function(o){return karte(o.t,o.i);}).join('')+'</div>'+
+        '<div class="ubx-grid" id="ubMehr-'+key+'" hidden>'+liste.slice(OFFEN).map(function(o){return karte(o.t,o.i);}).join('')+'</div>'+
         '<button class="ub-mehrbtn" data-alle="'+liste.length+'" onclick="ubMehr(\''+key+'\',this)">Alle '+liste.length+' Themen zeigen ▾</button>';
     }
     window.ubMehr=function(key,btn){
@@ -655,6 +796,10 @@
     if(rest.length) teile.push(fach('alle','Für jedes Niveau',rest));
     var cards=teile.join('');
     el.innerHTML=head+pills+cards;
+    /* Der gewählte Reiter bleibt sichtbar, auch wenn die Leiste
+       seitlich scrollt (Shadowing steht ganz rechts). */
+    try{ var nav=el.querySelector('.ubx-tabs'), an=nav&&nav.querySelector('.ubx-tab.an');
+      if(an && nav.scrollWidth>nav.clientWidth){ nav.scrollLeft=Math.max(0,an.offsetLeft-nav.clientWidth/2+an.offsetWidth/2); } }catch(e){}
   }
   window.renderUeben=renderUeben;
   window.ubSetSkill=function(id){ curSkill=id; renderUeben(); };
