@@ -781,7 +781,7 @@
     var h = '<div class="vp">';
 
     /* ---------- 1  Heute ---------- */
-    h += '<div class="vp-heute' + (fertig ? ' fertig' : '') + '">'
+    h += '<div class="vp-heute vpx-held' + (fertig ? ' fertig' : '') + '">'
       + '<div class="tx">'
       + (serie > 0 ? '<span class="vp-serie">' + vpZahl(serie, 'Tag', 'Tage') + ' am Stück</span>' : '')
       + '<span class="vp-zuruf">' + (fertig ? 'Für heute reicht das' : 'Heute dran') + '</span>';
@@ -805,8 +805,11 @@
         + ' · etwa ' + plan.minuten + ' Minuten.</p>'
         + '<button class="vp-los" onclick="__vtStart()">Losgehen</button>';
     }
-    h += '</div><img src="' + (window.AmandaBild ? window.AmandaBild(fertig ? 'pokal' : 'lesen') : 'amanda/a-lesen.webp')
-      + '" alt="" onerror="this.remove()"></div>';
+    /* 14.11.2026: Foto statt Amanda-Zeichnung, wie in den anderen
+       Bereichen. Fehlt es, kommt Amanda wie vorher. */
+    var amandaBild = (window.AmandaBild ? window.AmandaBild(fertig ? 'pokal' : 'lesen') : 'amanda/a-lesen.webp');
+    h += '</div><span class="vpx-bild"><img src="bilder/bereich/vk-hero.webp" alt="" '
+      + 'onerror="if(this.dataset.f){this.parentNode.remove()}else{this.dataset.f=1;this.parentNode.className=\'vpx-bild amanda\';this.src=\'' + amandaBild + '\'}"></span></div>';
 
     /* ---------- 2  Die fuenf Kaesten ---------- */
     h += '<section class="vp-teil"><header><h3>Deine Wortkästen</h3>'
@@ -1478,13 +1481,70 @@
   }
 
   /* ================= Einstieg ================= */
+  /* 14.11.2026: der Trainer im Stil von „Meine Stunden“ - Petrol-Bühne,
+     die fünf Kästen als eine Leiste, Niveau als Reiter. Steht hier und
+     nicht in lernraum-stil.css, damit beides an einer Stelle bleibt.
+     Doppelte Klasse (.vp .vp-…), damit es vor lernraum-stil.css gewinnt. */
+  function vpxStil() {
+    if (document.getElementById('vpx-stil')) return;
+    var st = document.createElement('style'); st.id = 'vpx-stil';
+    st.textContent = [
+      '#v-vokabeln .vp .vp-heute.vpx-held{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0;align-items:stretch;padding:0;border:0;border-radius:24px;background:linear-gradient(140deg,#0E6D85,#0A4E62);color:#fff;box-shadow:0 22px 44px -26px rgba(10,78,98,.65)}',
+      '#v-vokabeln .vp .vpx-held .tx{padding:30px 32px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}',
+      '#v-vokabeln .vp .vpx-held h2{font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,38px);letter-spacing:-.025em;line-height:1.1;color:#fff;margin:0 0 10px}',
+      '#v-vokabeln .vp .vpx-held p{color:#D6EEF5;font-size:15px;line-height:1.55;margin:0 0 20px}',
+      '#v-vokabeln .vp .vpx-held p b{color:#fff}',
+      '#v-vokabeln .vp .vpx-held .vp-zuruf{font-family:Inter,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#A9DEEE;margin-bottom:6px}',
+      '#v-vokabeln .vp .vpx-held .vp-serie{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);color:#fff;margin-bottom:10px}',
+      '#v-vokabeln .vp .vpx-held .vp-los{background:#fff;color:#0A4E62;border-radius:14px;padding:13px 26px;min-height:50px;box-shadow:0 10px 22px -12px rgba(0,0,0,.45)}',
+      '#v-vokabeln .vp .vpx-held .vp-los:hover{background:#F2F8FA}',
+      '#v-vokabeln .vp .vpx-bild{display:block;position:relative;min-height:250px;background:#0B5A70}',
+      '#v-vokabeln .vp .vpx-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+      '#v-vokabeln .vp .vpx-bild::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0C5D74 0%,rgba(12,93,116,0) 38%)}',
+      '#v-vokabeln .vp .vpx-bild.amanda{background:transparent;display:flex;align-items:flex-end;justify-content:center}',
+      '#v-vokabeln .vp .vpx-bild.amanda::before{display:none}',
+      '#v-vokabeln .vp .vpx-bild.amanda img{position:static;width:auto;height:170px;object-fit:contain}',
+      '#v-vokabeln .vp .vp-teil h3{font-family:"Space Grotesk",Inter,sans-serif;font-size:21px;letter-spacing:-.01em}',
+      '#v-vokabeln .vp .vp-teil header p{color:#6B7A82}',
+      '#v-vokabeln .vp .vp-kaesten{grid-template-columns:repeat(5,minmax(0,1fr));gap:0;background:#fff;border:1px solid #E7EBF0;border-radius:18px;overflow:hidden}',
+      '#v-vokabeln .vp .vp-kasten{border:0;border-radius:0;border-right:1px solid #EEF2F5;padding:16px 16px 16px;background:#fff}',
+      '#v-vokabeln .vp .vp-kasten:last-child{border-right:0}',
+      '#v-vokabeln .vp .vp-kasten:hover:not(:disabled){transform:none;box-shadow:none;background:#F2F8FA}',
+      '#v-vokabeln .vp .vp-kasten:disabled{opacity:1}',
+      '#v-vokabeln .vp .vp-kasten:disabled .v,#v-vokabeln .vp .vp-kasten:disabled b{color:#9AA6AD}',
+      '#v-vokabeln .vp .vp-kasten .v{font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:30px;color:#0E6D85}',
+      '#v-vokabeln .vp .vp-kasten .w{color:#6B7A82}',
+      '#v-vokabeln .vp .vp-niv{display:inline-flex;flex-wrap:nowrap;gap:4px;padding:4px;background:#F1F4F7;border:1px solid #E7EBF0;border-radius:14px;max-width:100%;overflow-x:auto;scrollbar-width:none}',
+      '#v-vokabeln .vp .vp-niv::-webkit-scrollbar{display:none}',
+      '#v-vokabeln .vp .vp-nchip{flex:0 0 auto;border:0;background:transparent;border-radius:10px;padding:9px 14px;color:#4B5A63;font-weight:600;min-height:40px}',
+      '#v-vokabeln .vp .vp-nchip.an{background:#fff;color:#0A4E62;box-shadow:0 2px 8px -3px rgba(18,24,31,.25)}',
+      '#v-vokabeln .vp .vp-hinweis{background:#F2F8FA;border:1px solid #D5E8EE;color:#0A4E62;border-radius:16px}',
+      '@media(max-width:760px){',
+      '  #v-vokabeln .vp .vp-heute.vpx-held{grid-template-columns:1fr;border-radius:20px}',
+      '  #v-vokabeln .vp .vpx-bild{order:-1;min-height:0;aspect-ratio:16/7}',
+      '  #v-vokabeln .vp .vpx-bild::before{background:linear-gradient(0deg,#0D6680 0%,rgba(13,102,128,0) 55%)}',
+      '  #v-vokabeln .vp .vpx-bild.amanda{aspect-ratio:auto;order:2}',
+      '  #v-vokabeln .vp .vpx-bild.amanda img{height:110px}',
+      '  #v-vokabeln .vp .vpx-held .tx{padding:14px 18px 20px}',
+      '  #v-vokabeln .vp .vpx-held .vp-los{width:100%}',
+      '  #v-vokabeln .vp .vp-kaesten{grid-template-columns:repeat(5,minmax(0,1fr))}',
+      '  #v-vokabeln .vp .vp-kasten{padding:12px 6px;align-items:center;text-align:center}',
+      '  #v-vokabeln .vp .vp-kasten .nr,#v-vokabeln .vp .vp-kasten .w{display:none}',
+      '  #v-vokabeln .vp .vp-kasten b{font-size:11.5px}',
+      '  #v-vokabeln .vp .vp-kasten .v{font-size:21px}',
+      '  #v-vokabeln .vp .vp-regale{grid-template-columns:1fr 1fr}',
+      '}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
   window.renderVokabeln = async function () {
     /* Ohne Zugang wird hier nicht gezeichnet. Die Seite hat an dieser
        Stelle schon die Sperrseite stehen; frueher hat der Trainer sie
        ueberschrieben, sobald er geladen war, und ein Konto ohne Zugang
        sah die Woerter trotzdem. */
     if (window.zugangGesperrt && window.zugangGesperrt('vokabeln')) return;
-    stil();
+    stil(); vpxStil();
     var ziel = document.getElementById('v-vokabeln');
     if (!ziel) return;
     if (!(window.VOK_POOL && window.VOK_POOL.length)) {
