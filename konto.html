@@ -306,6 +306,22 @@ h2.sec{margin:24px 0 12px;font-size:19px}
 .ev-btn.book{background:var(--secondary);color:#fff}
 .ev-btn.meet{background:var(--turquoise);color:#fff}
 .ev-btn.mine{background:var(--green-soft);color:var(--green);font-weight:800}
+.ev-btn.storno{background:#fff;color:#B3241C;border:1px solid #F3C6C1;font-weight:700;margin-top:4px}
+.ev-btn.storno:hover{background:#FDECEA}
+.ev.mein{outline:2px solid #1f7a4d;outline-offset:-2px;border-radius:14px}
+.ev.mein .ev-top::after{content:"✓ Gebucht";font-size:10.5px;font-weight:800;color:#1f7a4d;background:#E7F6EC;border-radius:999px;padding:2px 8px;margin-left:auto}
+.mbz{max-width:820px;margin:6px auto 14px;background:#fff;border:1px solid var(--border,#ECECEC);border-radius:16px;padding:12px 15px;box-shadow:0 6px 18px -14px rgba(16,98,122,.5)}
+.mbz-head{font-weight:800;font-size:14px;color:#10627A;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.mbz-n{background:#E3F1F5;color:#10627A;border-radius:999px;font-size:12px;padding:1px 9px}
+.mbz-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 0;border-top:1px solid #F0F0F0}
+.mbz-when{font-weight:700;font-size:13px;color:#1a1a1a;min-width:155px}
+.mbz-topic{flex:1;min-width:140px;font-size:14px;color:#3f4650}
+.mbz-act{display:flex;gap:8px;flex-wrap:wrap}
+.mbz-join{background:#10627A;color:#fff;text-decoration:none;font-weight:700;font-size:12.5px;padding:6px 12px;border-radius:999px}
+.mbz-join:hover{filter:brightness(1.1)}
+.mbz-storno{background:#fff;color:#B3241C;border:1px solid #F3C6C1;font-weight:700;font-size:12.5px;padding:6px 12px;border-radius:999px;cursor:pointer}
+.mbz-storno:hover{background:#FDECEA}
+@media(max-width:560px){.mbz-when{min-width:0;width:100%}}
 .ev-btn.off{background:#FFFFFF;color:#6B7C84}
 /* Julia, 1.11.2026: "Rot ausgebucht" — eine volle Stunde soll man
    beim Ueberfliegen des Wochenplans sofort sehen, nicht erst lesen. */
@@ -2864,6 +2880,7 @@ function renderKalender(){
     +   '<p data-i18n="kl_sub3">Hier buchst du deinen LIVE-Unterricht. Such dir eine Stunde aus, die zu deinem Niveau und deiner Woche passt.</p>'
     + '</div>'
     + buchbarHinweis()
+    + meineBuchungenListe()
     + KAL_VIEWTOG()
     + '<div id="kalBody"><div class="empty">lädt…</div></div>'
     + '<div style="margin:18px auto 4px;max-width:660px;text-align:center;background:linear-gradient(135deg,#E9F7FB,#F3FBF6);border:1px solid rgba(27,155,192,.22);border-radius:18px;padding:15px 20px;color:#0E5A6E;font-size:15px;line-height:1.6;box-shadow:0 6px 18px -12px rgba(16,98,122,.4)">✨ <b>Buche jede Stunde, die dir gefällt.</b> Im Unterricht sprichst du von der ersten Minute an — mit einem Partner auf deinem Niveau. Deine Sprechzeit gehört wirklich dir.</div>';
@@ -2965,6 +2982,21 @@ function meineStundenKarte(){
     +     '<button class="st-b st-b1" onclick="go(\'stunden\')"><span data-i18n="ms_auf">Meine Stunden öffnen</span> →</button>'
     +   '</div>'
     + '</div></div></div>';
+}
+function meineBuchungenListe(){
+  const s=stats||{upcoming:[]};
+  const up=(s.upcoming||[]);
+  if(!up.length) return '';
+  const rows=up.slice(0,16).map(function(b){
+    const d=new Date(b.starts_at);
+    const wann=d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr';
+    const thema=esc(b.topic||b.title||'Live-Stunde');
+    const raum='klassenraum.html?stunde='+b.class_id+'&titel='+encodeURIComponent(b.title||'')+'&niveau='+encodeURIComponent(b.level||'');
+    return '<div class="mbz-row"><div class="mbz-when">'+esc(wann)+'</div><div class="mbz-topic">'+thema+'</div>'
+      +'<div class="mbz-act"><a class="mbz-join" href="'+raum+'" target="_blank" rel="noopener">🎥 Klassenzimmer</a>'
+      +'<button class="mbz-storno" onclick="kalStorno(\''+b.class_id+'\')">✕ Stornieren</button></div></div>';
+  }).join('');
+  return '<div class="mbz"><div class="mbz-head">🗓️ Deine gebuchten Stunden <span class="mbz-n">'+up.length+'</span></div>'+rows+'</div>';
 }
 function kalLevelMatch(classLevel,filter){
   if(filter==='alle') return true;
@@ -3110,7 +3142,8 @@ function kalEv(c){
   const f=kalFokus(c.topic||c.title);
   const farbe=kalArtFarbe(f.art, f.fokus);
   let btn;
-  if(c.mine){ btn=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`; }
+  if(c.mine){ const _join=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`;
+    btn=_join + (past?'':`<button class="ev-btn storno" onclick="kalStorno('${c.id}')">✕ Stornieren</button>`); }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   /* Feiertage stehen mit Platzzahl 0 im Kalender — "ausgebucht" waere
      dort das falsche Wort. */
@@ -3152,7 +3185,7 @@ function kalEv(c){
   }
   const kicker = f.art ? `<span class="ev-art">${esc(f.art)}</span>` : '';
   const teil = f.teil ? `<span class="ev-teil">Teil ${esc(f.teil)}</span>` : '';
-  return `<div class="ev ${past?'vorbei':''}" style="--kc:${farbe.c};--kcs:${farbe.s}">`
+  return `<div class="ev ${past?'vorbei':''} ${c.mine?'mein':''}" style="--kc:${farbe.c};--kcs:${farbe.s}">`
     + `<div class="ev-top"><span class="ev-time">${fmtTimeK(start)}</span>${seats}</div>`
     + (kicker||teil ? `<div class="ev-kick">${kicker}${teil}</div>` : '')
     + `<div class="ev-title">${esc(f.fokus)}</div>`
@@ -3655,6 +3688,19 @@ async function cancelB(classId){
     if(session){ fetch('/api/notify-cancel',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:classId }) }).catch(()=>{}); }
   }catch(e){}
   toast('Storniert — der Platz ist wieder frei.'); await load(); show('stunden');
+}
+
+// Storno direkt aus dem Kalender — danach bleibt man im Kalender und er wird aufgefrischt.
+async function kalStorno(classId){
+  if(!confirm('Diese gebuchte Stunde wirklich stornieren? Der Platz wird wieder frei.')) return;
+  const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
+  if(error||!data||!data.ok){ toast(data&&data.error==='too_late'?'Storno nicht mehr möglich (unter 6 h).':'Storno fehlgeschlagen.'); return; }
+  try{ const { data:{ session } } = await sb.auth.getSession();
+    if(session){ fetch('/api/notify-cancel',{ method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+session.access_token }, body:JSON.stringify({ class_id:classId }) }).catch(()=>{}); }
+  }catch(e){}
+  toast('Storniert — der Platz ist wieder frei.');
+  await load();
+  if(typeof kalRefresh==='function') kalRefresh();
 }
 
 // Umbuchen ist kein eigener Vorgang in der Datenbank: die Stunde wird
