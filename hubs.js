@@ -258,7 +258,9 @@
         });
       }).join('');
 
-    v.innerHTML = kopf('Sprechen', 'Such dir aus, wie du heute sprechen willst. So oft du willst, ohne Zuschauer.')
+    /* 14.11.2026: die Bühne mit Foto kommt aus sprech-zentrale.js. */
+    v.innerHTML = (window.sprechHeldHtml ? window.sprechHeldHtml(daten('DIALOGE').length)
+        : kopf('Sprechen', 'Such dir aus, wie du heute sprechen willst. So oft du willst, ohne Zuschauer.'))
       /* 9.11.2026: die Sprechmodi aus sprech-zentrale.js stehen oben
          (Telefonieren, Diskutieren, Rollenspiel, Nachsprechen, Aussprache).
          Fehlt die Datei, bleibt das alte Band. */
