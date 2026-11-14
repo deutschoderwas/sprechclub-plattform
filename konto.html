@@ -604,9 +604,16 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 </style>
 <link rel="stylesheet" href="club-theme.css?v=5">
 <style id="kalMonthCss">
-.kal-viewtog{display:flex;gap:8px;justify-content:center;margin:10px 0 4px}
-.kal-viewtog button{font-size:13px;font-weight:700;padding:6px 18px;border-radius:999px;border:1.5px solid #E6F8FC;background:#fff;color:#6B7C84;cursor:pointer}
-.kal-viewtog button.active{background:#1B9BC0;border-color:#1B9BC0;color:#14181B}
+.kal-viewtog{display:flex;justify-content:center;gap:0;margin:14px 0 10px}
+.kal-viewtog button{font-size:14px;font-weight:800;padding:10px 26px;border:1.5px solid #CFE6EC;background:#fff;color:#5A6B72;cursor:pointer;transition:.15s}
+.kal-viewtog button:first-child{border-radius:999px 0 0 999px;border-right:none}
+.kal-viewtog button:last-child{border-radius:0 999px 999px 0;border-left:none}
+.kal-viewtog button.active{background:#1B9BC0;border-color:#1B9BC0;color:#fff;box-shadow:0 6px 16px -8px rgba(27,155,192,.6)}
+.kmo-cell.hat-meins{border-color:#1f7a4d;box-shadow:0 0 0 2px rgba(31,122,77,.18)}
+.kmo-dot.mine{background:#1f7a4d!important;width:8px;height:8px;box-shadow:0 0 0 2px #E7F6EC}
+.kmo-legend{text-align:center;font-size:12px;color:#5A6B72;font-weight:600;margin:-6px 0 8px}
+.kmo-legend b{color:#1f7a4d}
+@media(max-width:560px){.kmo-cell{min-height:46px;padding:3px 3px 4px;gap:3px}.kmo-num{font-size:11px}.kmo-dot{width:6px;height:6px}.kmo-grid{gap:3px}.kal-viewtog button{padding:10px 0;flex:1 1 0;max-width:180px}}
 .kmo-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 16px}
 .kmo-wd{text-align:center;font-size:11px;font-weight:700;color:#6B7C84;padding:2px 0}
 .kmo-cell{min-height:54px;border:1px solid #FFFFFF;border-radius:10px;padding:4px 4px 5px;display:flex;flex-direction:column;gap:4px;background:#fff}
@@ -3212,7 +3219,7 @@ function kalIcs(id){
  if(typeof toast==='function')toast('Termin heruntergeladen – zu deinem Kalender hinzufügen 📅');
 }
 function kalIcsBtn(c,past){if(past)return '';return '<button class="ev-btn ics" onclick="kalIcs(\''+c.id+'\')">📅 Zu meinem Kalender</button>';}
-function KAL_VIEWTOG(){return '<div class="kal-viewtog"><button class="'+(kalView==='woche'?'active':'')+'" onclick="setKalView(\'woche\')">Woche</button><button class="'+(kalView==='monat'?'active':'')+'" onclick="setKalView(\'monat\')">Monat</button></div>';}
+function KAL_VIEWTOG(){return '<div class="kal-viewtog"><button class="'+(kalView==='woche'?'active':'')+'" onclick="setKalView(\'woche\')">📅 Woche</button><button class="'+(kalView==='monat'?'active':'')+'" onclick="setKalView(\'monat\')">🗓️ Monat</button></div>';}
 function setKalView(v){kalView=v;if(v==='monat')kalSelDay=null;renderKalender();}
 function kalRefresh(){return kalView==='monat'?loadKalMonth():loadKalender();}
 function kalMonatGrenze(){
@@ -3249,11 +3256,12 @@ function kalRenderMonth(){
  var first=new Date(y,mo,1);var startDow=(first.getDay()+6)%7;var gs=new Date(y,mo,1-startDow);
  var wd=['Mo','Di','Mi','Do','Fr','Sa','So'];var cells=wd.map(function(w){return '<div class="kmo-wd">'+w+'</div>';}).join('');
  for(var i=0;i<42;i++){var d=new Date(gs.getFullYear(),gs.getMonth(),gs.getDate()+i);var k=kalDayKey(d);var inM=d.getMonth()===mo;var evs=byday[k]||[];
-  var dots=evs.slice(0,4).map(function(c){return '<span class="kmo-dot" style="background:'+(c.club_color||'#7ED8EA')+'"></span>';}).join('');
+  var mine=evs.some(function(c){return c.mine;});
+  var dots=(mine?'<span class="kmo-dot mine" title="gebucht"></span>':'')+evs.slice(0,4).map(function(c){return '<span class="kmo-dot" style="background:'+(c.club_color||'#7ED8EA')+'"></span>';}).join('');
   var more=evs.length>4?('<span class="kmo-more">+'+(evs.length-4)+'</span>'):'';
-  var cls='kmo-cell'+(inM?'':' out')+(k===todayK?' today':'')+(k===kalSelDay?' sel':'')+(evs.length?' has':'');
+  var cls='kmo-cell'+(inM?'':' out')+(k===todayK?' today':'')+(k===kalSelDay?' sel':'')+(evs.length?' has':'')+(mine?' hat-meins':'');
   cells+='<div class="'+cls+'"'+(evs.length?(' onclick="selectKalDay(\''+k+'\')"'):'')+'><span class="kmo-num">'+d.getDate()+'</span><span class="kmo-dots">'+dots+more+'</span></div>';}
- var grid='<div class="kmo-grid">'+cells+'</div>';
+ var grid='<div class="kmo-grid">'+cells+'</div><div class="kmo-legend">\u2705 Gr\u00fcn umrandet = <b>deine gebuchten Tage</b> \u00b7 tippe einen Tag f\u00fcr die Stunden</div>';
  var nav='<div class="kal-week"><button onclick="kalMonthChange(-1)">←</button><span>'+base.toLocaleDateString('de-DE',{month:'long',year:'numeric'})+'</span><button onclick="kalMonthChange(1)">→</button></div>';
  var sel=byday[kalSelDay]||[];var selD=new Date(kalSelDay+'T00:00:00');
  var dayHead='<div class="kmo-daytitle">'+selD.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+'</div>';
