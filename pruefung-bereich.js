@@ -1232,7 +1232,7 @@
     /* Lernziel noch nicht da (frisch eingeloggt)? Einmal nachladen, dann neu zeichnen. */
     if(!lzGeladen && window.LZ && !window.LZ.data && window.LZ.laden){
       lzGeladen=true;
-      window.LZ.laden().then(function(d){ if(d && document.getElementById('v-pruefung')===v && v.querySelector('.pf-kopf')) window.renderPruefungen(); });
+      window.LZ.laden().then(function(d){ if(d && document.getElementById('v-pruefung')===v && v.querySelector('.pfx-held')) window.renderPruefungen(); });
     }
     var mein = meinePruefung();
     /* 12.11.2026: Julia: „alles nach der Reihenfolge A1–C1“. Vorher
@@ -1243,9 +1243,9 @@
       var reihe = function(titel, unter, ids){
         var l = ids.map(pruefungVon).filter(function(p){ return p && nicht(p); });
         if(!l.length) return '';
-        return '<div class="pf-gruppe"><span class="pf-gr-t">'+titel+'</span>'
-          + (unter ? '<span class="pf-gr-u" style="margin-left:10px;font-size:13px;font-weight:600;color:#6B7280">'+unter+'</span>' : '') + '</div>'
-          + '<div class="pf-liste">' + l.map(kachel).join('') + '</div>';
+        return '<div class="pfx-gruppe"><h2>'+titel+'</h2>'
+          + (unter ? '<span>'+unter+'</span>' : '') + '</div>'
+          + '<div class="pfx-liste">' + l.map(kachel).join('') + '</div>';
       };
       return reihe('Goethe-Institut', 'A1 bis C2', PF_REIHE.goethe)
         + reihe('telc', 'A1 bis C2', PF_REIHE.telc)
@@ -1255,28 +1255,34 @@
     if(mein){
       stilMeine();
       var tt = terminText(mein.termin);
-      unten = '<div class="pf-gruppe"><span class="pf-gr-t">Deine Prüfung</span></div>'
+      unten = '<div class="pfx-gruppe"><h2>Deine Prüfung</h2></div>'
         + '<div class="pf-mein-info"><span>Du hast <b>'+E(mein.name)+'</b> als Ziel gewählt'
         +   (tt && !tt.vorbei ? ' — am <b>'+E(tt.datum)+'</b>, '+E(tt.rest) : '')+'.</span>'
         +   '<button type="button" onclick="pruefTerminAendern()">'+(tt?'Ändern':'Termin eintragen')+'</button></div>'
-        + '<div class="pf-liste pf-mein">' + kachel(mein.p) + '</div>'
+        + '<div class="pfx-liste pf-mein">' + kachel(mein.p) + '</div>'
         + '<details class="pf-andere"><summary>Andere Prüfungen ansehen</summary>' + gruppen(mein.p.id) + '</details>';
     } else {
       unten = gruppen(null);
     }
+    /* 14.11.2026: Bühne mit Foto wie in den anderen Bereichen. Die
+       Prüfungen stehen als ruhige Zeilen, am Rechner zweispaltig - vorher
+       hatte jede der 24 Zeilen einen eigenen roten Knopf und ein Foto,
+       das oft nichts mit der Prüfung zu tun hatte. */
+    stilPfx();
+    var anz = PRUEFUNGEN.length;
     v.innerHTML =
-        '<div class="pf-kopf">'
-      +   '<span class="pf-kicker">Prüfungsvorbereitung</span>'
+        '<header class="pfx-held"><div class="pfx-held-tx">'
       +   '<h1>Keine Angst mehr vor der Prüfung.</h1>'
-      +   '<p>Du weißt vorher, was drankommt, wie lange du hast und wie bewertet wird. '
-      +   'Und du hast es geübt, bevor es zählt.</p>'
-      +   '<a class="pf-test" href="niveau-test-club.html" target="_blank" rel="noopener">'
-      +     '<span class="pf-test-ic">🎯</span>'
-      +     '<span class="pf-test-tx"><b>Du weißt nicht, welche Prüfung?</b>'
-      +     '<span>Der Einstufungstest sagt es dir in 15 Minuten — 112 Aufgaben, mit Auswertung.</span></span>'
-      +     '<span class="pf-test-go">Test starten →</span>'
-      +   '</a>'
-      + '</div>'
+      +   '<p class="pfx-sub">Du weißt vorher, was drankommt, wie lange du hast und wie bewertet wird. Und du hast es geübt, bevor es zählt.</p>'
+      +   '<div class="pfx-chips">'
+      +     '<span class="pfx-chip">'+pfxIc('liste')+'<b>'+anz+'</b> Prüfungen</span>'
+      +     '<span class="pfx-chip">'+pfxIc('stufen')+'A1 bis C2</span>'
+      +     '<span class="pfx-chip">'+pfxIc('haken')+'Goethe, telc, DTZ</span>'
+      +   '</div>'
+      +   '<a class="pfx-test" href="niveau-test-club.html" target="_blank" rel="noopener">'+pfxIc('ziel')
+      +     '<span><b>Welche Prüfung passt zu dir?</b><small>Einstufungstest: 15 Minuten, 112 Aufgaben, mit Auswertung</small></span>'
+      +     pfxIc('pfeil')+'</a>'
+      + '</div><span class="pfx-held-bild"><img src="bilder/bereich/pf-hero.webp" alt="" onerror="this.parentNode.remove()"></span></header>'
       + unten;
     try{ window.scrollTo(0,0); }catch(e){}
   };
@@ -1290,18 +1296,83 @@
   }
 
   function kachel(p){
-    /* Die Farbwelt steigt mit dem Niveau — dieselbe wie auf der Prüfungsseite. */
-    return '<button type="button" class="pf-k pf-w-'+farbwelt(p)+'" onclick="pruefungOeffnen(\'' + p.id + '\')">'
-      + '<span class="pf-k-bild"><img src="bilder/thema/'+p.bild+'-s.jpg" alt="" loading="lazy" onerror="this.remove()">'
-      +   '<span class="pf-k-niv">'+E(p.niveau)+'</span></span>'
-      + '<span class="pf-k-tx">'
-      +   '<span class="pf-k-n">'+E(p.name)+'</span>'
-      +   '<span class="pf-k-a">'+E(p.anbieter)+'</span>'
-      +   '<span class="pf-k-f">'+E(p.fuer)+'</span>'
+    /* Die Farbwelt steigt mit dem Niveau — dieselbe wie auf der Prüfungsseite,
+       nur leiser: ein Feld mit dem Niveau statt Foto und rotem Knopf. */
+    return '<button type="button" class="pfx-k pfx-'+farbwelt(p)+'" onclick="pruefungOeffnen(\'' + p.id + '\')">'
+      + '<span class="pfx-niv'+(String(p.niveau||'').length>2?' lang':'')+'">'+E(p.niveau)+'</span>'
+      + '<span class="pfx-tx">'
+      +   '<span class="pfx-n">'+E(p.name)+'</span>'
+      +   '<span class="pfx-a">'+E(p.anbieter)+'</span>'
+      +   '<span class="pfx-f">'+E(p.fuer)+'</span>'
       + '</span>'
-      + '<span class="pf-k-r"><span class="pf-k-anz">'+lektionZahl(p)+'</span>'
-      +   '<span class="pf-k-go">Öffnen →</span></span>'
+      + '<span class="pfx-r"><span class="pfx-anz">'+lektionZahl(p)+'</span>'+pfxIc('pfeil')+'</span>'
       + '</button>';
+  }
+
+  var PFX_IC = {
+    liste:'<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>',
+    stufen:'<path d="M3 20h4v-5h4v-5h4V5h6"/>',
+    haken:'<path d="M20 6 9 17l-5-5"/>',
+    ziel:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    pfeil:'<path d="m9 18 6-6-6-6"/>'
+  };
+  function pfxIc(k){ return '<svg class="pfx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(PFX_IC[k]||'')+'</svg>'; }
+  function stilPfx(){
+    if(document.getElementById('pfx-stil')) return;
+    var st=document.createElement('style'); st.id='pfx-stil';
+    st.textContent=[
+      '#v-pruefung .pfx-ic{width:18px;height:18px;flex:0 0 auto}',
+      '#v-pruefung .pfx-held{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#0E6D85,#0A4E62);color:#fff;margin:0 0 8px;box-shadow:0 22px 44px -26px rgba(10,78,98,.65)}',
+      '#v-pruefung .pfx-held-tx{padding:30px 32px;display:flex;flex-direction:column;gap:14px;justify-content:center;min-width:0}',
+      '#v-pruefung .pfx-held h1{font-size:clamp(26px,3.4vw,38px);letter-spacing:-.025em;line-height:1.1;margin:0;color:#fff}',
+      '#v-pruefung .pfx-sub{margin:0;color:#D6EEF5;font-size:15px;line-height:1.55;max-width:520px}',
+      '#v-pruefung .pfx-chips{display:flex;flex-wrap:wrap;gap:8px}',
+      '#v-pruefung .pfx-chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-size:13px;color:#E6F5FA;white-space:nowrap}',
+      '#v-pruefung .pfx-chip b{color:#fff}',
+      '#v-pruefung .pfx-chip .pfx-ic{width:15px;height:15px;color:#A9DEEE}',
+      '#v-pruefung .pfx-test{display:flex;align-items:center;gap:12px;background:#fff;color:#0A4E62;border-radius:14px;padding:12px 16px;text-decoration:none;max-width:460px;box-shadow:0 10px 22px -12px rgba(0,0,0,.45);transition:transform .15s}',
+      '#v-pruefung .pfx-test:hover{transform:translateY(-1px)}',
+      '#v-pruefung .pfx-test>.pfx-ic:first-child{width:22px;height:22px;color:#0E6D85}',
+      '#v-pruefung .pfx-test span{flex:1;min-width:0}',
+      '#v-pruefung .pfx-test b{display:block;font-size:15px}',
+      '#v-pruefung .pfx-test small{display:block;font-size:12.5px;color:#4A6B76;margin-top:1px}',
+      '#v-pruefung .pfx-held-bild{display:block;position:relative;min-height:270px;background:#0B5A70}',
+      '#v-pruefung .pfx-held-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+      '#v-pruefung .pfx-held-bild::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0C5D74 0%,rgba(12,93,116,0) 38%)}',
+      '#v-pruefung .pfx-gruppe{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:30px 0 12px}',
+      '#v-pruefung .pfx-gruppe h2{font-family:"Space Grotesk",Inter,sans-serif;font-size:21px;font-weight:700;margin:0;color:#14181B;letter-spacing:-.01em}',
+      '#v-pruefung .pfx-gruppe span{font-size:13.5px;color:#6B7A82}',
+      '#v-pruefung .pfx-liste{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:12px}',
+      '#v-pruefung .pfx-k{display:flex;align-items:center;gap:14px;text-align:left;background:#fff;border:1px solid #E7EBF0;border-radius:16px;padding:14px 14px 14px 14px;font:inherit;color:inherit;cursor:pointer;min-width:0;transition:border-color .15s,box-shadow .2s,transform .2s}',
+      '#v-pruefung .pfx-k:hover{border-color:#B9D9E2;box-shadow:0 12px 26px -18px rgba(18,24,31,.35);transform:translateY(-1px)}',
+      '#v-pruefung .pfx-niv{flex:0 0 auto;width:62px;height:54px;padding:0 4px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:16px;letter-spacing:-.01em;background:#E3F2F6;color:#0E6D85}',
+      '#v-pruefung .pfx-niv.lang{font-size:13px;letter-spacing:-.02em}',
+      '#v-pruefung .pfx-b1 .pfx-niv{background:#FFF3D6;color:#8A5A00}',
+      '#v-pruefung .pfx-b2 .pfx-niv{background:#FDE9E7;color:#B3261E}',
+      '#v-pruefung .pfx-c1 .pfx-niv{background:#F1E9F7;color:#6B3E8F}',
+      '#v-pruefung .pfx-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}',
+      '#v-pruefung .pfx-n{font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:16px;color:#14181B;line-height:1.25}',
+      '#v-pruefung .pfx-a{font-size:12.5px;font-weight:600;color:#0E6D85}',
+      '#v-pruefung .pfx-f{font-size:13px;color:#5E6A78;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '#v-pruefung .pfx-r{flex:0 0 auto;display:flex;align-items:center;gap:6px;color:#8A979E}',
+      '#v-pruefung .pfx-anz{font-size:12.5px;font-weight:600;color:#6B7A82;white-space:nowrap}',
+      '#v-pruefung .pfx-k:hover .pfx-r{color:#0E6D85}',
+      '@media(max-width:760px){',
+      '  #v-pruefung .pfx-held{grid-template-columns:1fr;border-radius:20px}',
+      '  #v-pruefung .pfx-held-bild{order:-1;min-height:0;aspect-ratio:16/7}',
+      '  #v-pruefung .pfx-held-bild::before{background:linear-gradient(0deg,#0D6680 0%,rgba(13,102,128,0) 55%)}',
+      '  #v-pruefung .pfx-held-tx{padding:14px 18px 20px;gap:12px}',
+      '  #v-pruefung .pfx-sub{font-size:14.5px}',
+      '  #v-pruefung .pfx-liste{grid-template-columns:1fr;gap:10px}',
+      '}',
+      '@media(max-width:520px){',
+      '  #v-pruefung .pfx-k{gap:12px;padding:12px}',
+      '  #v-pruefung .pfx-niv{width:54px;height:48px;font-size:14.5px;border-radius:12px}#v-pruefung .pfx-niv.lang{font-size:12px}',
+      '  #v-pruefung .pfx-n{font-size:15px}',
+      '  #v-pruefung .pfx-anz{display:none}',
+      '}'
+    ].join('\n');
+    document.head.appendChild(st);
   }
 
   /* ============================================================
