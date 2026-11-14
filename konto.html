@@ -1458,6 +1458,79 @@ function schliesseLiveUpgrade(){
   document.body.style.overflow='';
   document.removeEventListener('keydown',lupEsc);
 }
+
+/* --- Echtes Upgrade Lernclub -> Sprechclub (Proration über api/upgrade-sprechclub.js) ---
+   Bestätigungsfenster, dann wird das laufende Abo bei Stripe auf 139 €/Monat
+   umgestellt; Stripe bucht nur die anteilige Differenz ab. Der Tarifwechsel im
+   Profil kommt per Webhook (invoice.paid), deshalb lädt die Seite danach neu. */
+function upgradeSprechclub(){
+  var alt=document.getElementById('upSc'); if(alt) alt.remove();
+  var d=document.createElement('div'); d.id='upSc'; d.className='lup-back';
+  d.innerHTML=
+     '<div class="lup" role="dialog" aria-modal="true" aria-labelledby="upScT">'
+    +'<button class="lup-x" onclick="schliesseUpSc()" aria-label="Schließen">×</button>'
+    +'<div class="lup-ic">🗣️</div>'
+    +'<div class="lup-eyebrow">Upgrade</div>'
+    +'<h2 id="upScT">Auf den Sprechclub upgraden</h2>'
+    +'<p class="lup-lead">Du wechselst vom <b>Lernclub</b> in den <b>Sprechclub</b> — <b>139 €/Monat</b>. '
+      +'Jetzt zahlst du nur die anteilige <b>Differenz</b> für den Rest deines laufenden Monats, danach 139 € im Monat. '
+      +'Dein Abo stellt sich sofort um, alles aus dem Lernclub bleibt.</p>'
+    +'<ul class="lup-list">'
+      +'<li><span>🗓️</span><span><b>Täglich LIVE sprechen</b> — Montag bis Sonntag, so oft du willst.</span></li>'
+      +'<li><span>👥</span><span>Kleine Gruppen nach Niveau — und ein Lehrer kommt dazu und hilft.</span></li>'
+      +'<li><span>💛</span><span><b>Sofort freigeschaltet</b> — monatlich kündbar.</span></li>'
+    +'</ul>'
+    +'<button class="lup-go" id="upScGo" onclick="upgradeSprechclubGo(this)">⬆️ Jetzt upgraden</button>'
+    +'<button class="lup-later" onclick="schliesseUpSc()">Abbrechen</button>'
+    +'<p class="lup-lead" id="upScMsg" style="font-size:13px;opacity:.85;margin-top:8px"></p>'
+    +'</div>';
+  document.body.appendChild(d);
+  document.body.style.overflow='hidden';
+  d.addEventListener('click',function(ev){ if(ev.target===d) schliesseUpSc(); });
+  document.addEventListener('keydown',upScEsc);
+}
+function upScEsc(ev){ if(ev.key==='Escape') schliesseUpSc(); }
+function schliesseUpSc(){
+  var d=document.getElementById('upSc'); if(d) d.remove();
+  document.body.style.overflow='';
+  document.removeEventListener('keydown',upScEsc);
+}
+async function upgradeSprechclubGo(btn){
+  var msg=document.getElementById('upScMsg');
+  function sag(t){ if(msg) msg.textContent=t||''; }
+  if(!/^https?:$/.test(location.protocol)){ sag('Vorschau — das Upgrade läuft nur auf der Live-Seite.'); return; }
+  if(btn){ btn.disabled=true; btn.textContent='Einen Moment …'; }
+  sag('');
+  try{
+    var sess=await sb.auth.getSession();
+    var tok=sess && sess.data && sess.data.session && sess.data.session.access_token;
+    if(!tok){ sag('Bitte melde dich neu an.'); if(btn){ btn.disabled=false; btn.textContent='⬆️ Jetzt upgraden'; } return; }
+    var r=await fetch('/api/upgrade-sprechclub',{ method:'POST',
+      headers:{ 'Authorization':'Bearer '+tok, 'Content-Type':'application/json' }, body:'{}' });
+    var j=await r.json().catch(function(){ return {}; });
+    if(r.ok && j && j.ok){
+      var box=document.querySelector('#upSc .lup');
+      if(box){ box.innerHTML='<button class="lup-x" onclick="schliesseUpSc()" aria-label="Schließen">×</button>'
+        +'<div class="lup-ic">🎉</div><div class="lup-eyebrow">Willkommen im Sprechclub</div>'
+        +'<h2>Geschafft — du bist jetzt im Sprechclub!</h2>'
+        +'<p class="lup-lead">Die Differenz wurde abgebucht und dein Zugang wird gerade freigeschaltet. '
+        +'Das dauert einen kurzen Moment — wir laden die Seite für dich neu.</p>'
+        +'<button class="lup-go" onclick="location.reload()">Alles klar</button>'; }
+      setTimeout(function(){ location.reload(); }, 4000);
+      return;
+    }
+    var fehler=(j && (j.hinweis || j.error)) || '';
+    if(j && j.error==='karte_abgelehnt') fehler=j.hinweis||'Deine Karte wurde abgelehnt. Prüf bitte dein Zahlungsmittel.';
+    else if(j && j.error==='fremder_zahler') fehler=j.hinweis||'Dein Zugang wird von jemand anderem bezahlt — das Upgrade macht, wer das Abo abgeschlossen hat.';
+    else if(j && j.error==='kein_abo') fehler='Wir finden gerade kein laufendes Abo bei Stripe. Schreib Julia kurz an, dann klären wir das.';
+    else if(!fehler) fehler='Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.';
+    sag(fehler);
+    if(btn){ btn.disabled=false; btn.textContent='⬆️ Jetzt upgraden'; }
+  }catch(e){
+    sag('Das hat gerade nicht geklappt — versuch es bitte gleich noch einmal.');
+    if(btn){ btn.disabled=false; btn.textContent='⬆️ Jetzt upgraden'; }
+  }
+}
 /* Premium ist bis zum 1. November nicht kaufbar — der Weg fuehrt auf die Warteliste.
    Wer eingeloggt ist, wird NICHT auf die Verkaufsseite geschickt: Name und
    E-Mail kennen wir ja, also tragen wir direkt hier ein. Ein Klick, fertig. */
@@ -4622,8 +4695,8 @@ function aboKarteHtml(d){
 
   /* Community: der Sprechclub ist der nächste Schritt. */
   if(tier==='community' && !gekuendigt && !pausiert && !offen){
-    h+='<div class="abo-tipp"><b>🗣️ Der LIVE-Sprechclub startet am 1. November.</b>'
-      +'<span>Er gehört zum Sprechclub. Alles, was du jetzt hast, bleibt dabei erhalten.</span></div>';
+    h+='<div class="abo-tipp"><b>🗣️ Jederzeit in den Sprechclub upgraden.</b>'
+      +'<span>Du zahlst nur die anteilige Differenz zu 139 €/Monat, dein Abo stellt sich sofort um — alles aus dem Lernclub bleibt.</span></div>';
   }
 
   h+='<div class="abo-knoepfe">';
@@ -4637,7 +4710,7 @@ function aboKarteHtml(d){
     /* Premium ist bis zum 1. November nicht kaufbar. Der Knopf bleibt
        stehen, führt aber ins Fenster mit dem Starttermin und der
        Warteliste — nicht in einen Tarifwechsel bei Stripe. */
-    h+='<button class="btn btn-primary" onclick="zeigeLiveUpgrade()">Auf Premium wechseln</button>';
+    h+='<button class="btn btn-primary" onclick="upgradeSprechclub()">⬆️ Auf Sprechclub upgraden</button>';
   }
   /* Wer von Hand eingetragen ist, liegt bei Stripe gar nicht — dort
      gibt es fuer ihn weder Rechnungen noch einen Kuendigen-Knopf. Ein
@@ -4651,7 +4724,7 @@ function aboKarteHtml(d){
   h+='</div>';
 
   if(tier==='community' && !gekuendigt && !pausiert && !offen){
-    h+='<p class="abo-fuss" style="border:none;padding-top:0;margin-top:2px">Ein Wechsel auf Premium ist ab dem <b>1. November</b> möglich — dann startet der LIVE-Sprechclub.</p>';
+    h+='<p class="abo-fuss" style="border:none;padding-top:0;margin-top:2px">Beim Upgrade zahlst du nur die anteilige <b>Differenz</b> zu 139 €/Monat. Alles, was du gelernt hast, bleibt.</p>';
   }
   if(a.von_hand){
     h+='<p class="abo-fuss">Diese Mitgliedschaft ist bei uns von Hand eingetragen — sie läuft nicht über Stripe. '
