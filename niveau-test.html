@@ -14,60 +14,250 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="niveautest.css">
 <style>
+/* ============================================================
+   Niveau-Test — die eigene Seite
+
+   Julia, 15.11.2026: "hier bitte visueller und moderner".
+
+   Vorher stand hier eine Ueberschrift und darunter sofort das
+   Formular: zwei Felder, ein Haken, ein Knopf. Wer zum ersten Mal
+   kommt, soll aber seine E-Mail eintragen, bevor er weiss, was er
+   dafuer bekommt. Darum jetzt oben ein echter Hero mit Julia, der
+   Sprechblase und der Niveau-Leiter — dieselbe Bildsprache, die der
+   Test schon auf der Startseite hat (nt-hero-cut in niveautest.css) —
+   und unter dem Formular drei Karten, die zeigen, was im Test steckt,
+   und was am Ende herauskommt.
+
+   Das Formular selbst zeichnet weiter niveautest.js. Hier wird kein
+   Skript angefasst, nur die Seite drumherum.
+   ============================================================ */
 :root{
   --turq:#13A89A; --turq-l:#7ED8EA; --ink:#1A1A1A; --soft:#5C5C5C;
   --cream:#FFFCF5; --line:#ECECEC; --rot:#D42A21; --gold:#FFCE00;
+  --tief:#0E5F6E;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);
-  background:linear-gradient(160deg,#FFFCF5,#F6F9FA);min-height:100vh;background-attachment:fixed}
+  background:var(--cream);min-height:100vh}
 
-/* ---- Kopfzeile (cleaner Marken-Look) ---- */
-.ntp-bar{background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
-.ntp-bar-in{max-width:760px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* ---- Kopfzeile ---- */
+.ntp-bar{background:rgba(255,252,245,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.ntp-bar-in{max-width:1080px;margin:0 auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .ntp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px}
 .ntp-logo img{width:36px;height:36px;border-radius:50%;object-fit:cover}
 .ntp-logo span b{color:var(--turq)}
 .ntp-logo small{display:block;font-family:'Inter',sans-serif;font-weight:600;font-size:12px;color:#9aa5a3;margin-top:-2px}
 .ntp-back{font-family:'Inter',sans-serif;font-weight:700;font-size:14px;text-decoration:none;color:var(--ink);
   border:1px solid var(--line);background:#fff;padding:9px 16px;border-radius:40px;box-shadow:0 4px 12px rgba(0,0,0,.05);white-space:nowrap;transition:.15s}
-.ntp-back:hover{background:var(--cream);transform:translateY(-1px)}
+.ntp-back:hover{background:#fff;border-color:var(--turq-l);transform:translateY(-1px)}
 
-/* ---- Kopf des Tests ---- */
-.ntp-main{max-width:760px;margin:0 auto;padding:30px 16px 80px}
-.ntp-head{text-align:center;margin-bottom:22px}
-.ntp-kick{display:inline-block;background:#fff;color:var(--rot);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:6px 14px;border-radius:30px;box-shadow:0 6px 16px rgba(0,0,0,.05);margin-bottom:12px}
-.ntp-head h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,5vw,44px);line-height:1.08;margin:0;font-weight:700}
-.ntp-head h1 .cap{background:linear-gradient(135deg,var(--turq),var(--turq-l));-webkit-background-clip:text;background-clip:text;color:transparent}
-.ntp-head p{color:var(--soft);font-size:16px;margin:10px auto 0;max-width:520px}
-#niveautest-app{max-width:760px;margin:0 auto}
+/* ============================================================
+   Hero
+   ============================================================ */
+.nth{position:relative;overflow:hidden;
+  background:
+    radial-gradient(90% 120% at 8% 0%,rgba(126,216,234,.30),transparent 55%),
+    radial-gradient(80% 110% at 100% 100%,rgba(255,206,0,.22),transparent 55%),
+    linear-gradient(160deg,#FFFDF8,#F4FAFB)}
+.nth-in{max-width:1080px;margin:0 auto;padding:40px 20px 34px;
+  display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:center}
 
-/* Die Karte wiederholt Kicker und Titel — auf dieser Seite stehen sie schon oben */
-.nt-intro .nt-eyebrow,.nt-intro .nt-h{display:none!important}
-.nt-intro .nt-sub{margin-top:2px}
+.nth-kick{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--rot);
+  font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  padding:7px 15px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.nth h1{font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(30px,4.6vw,50px);line-height:1.06;letter-spacing:-.02em;
+  margin:16px 0 0;text-wrap:balance}
+.nth h1 em{font-style:normal;white-space:nowrap;padding:0 .06em;border-radius:.16em;
+  background-image:linear-gradient(90deg,var(--turq-l),rgba(255,206,0,.8));
+  background-repeat:no-repeat;background-size:100% .34em;background-position:0 86%}
+.nth-sub{color:var(--soft);font-size:17px;line-height:1.55;margin:14px 0 0;max-width:46ch}
+.nth-sub b{color:var(--ink)}
 
-footer.ntp-foot{text-align:center;padding:6px 18px 46px;font-size:14px;color:#9aa5a3}
+/* die Niveau-Leiter: A1 bis C1 als Weg, nicht als lose Chips */
+.nth-leiter{display:flex;align-items:center;gap:0;margin:22px 0 0;max-width:420px}
+.nth-leiter span{flex:1;position:relative;text-align:center;font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:14px;color:var(--tief);padding:9px 0 0}
+.nth-leiter span::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  width:11px;height:11px;border-radius:50%;background:#fff;border:2.5px solid var(--turq-l)}
+.nth-leiter span::after{content:'';position:absolute;top:-4px;left:50%;width:100%;height:2.5px;background:var(--turq-l)}
+.nth-leiter span::before{z-index:1}
+.nth-leiter span:last-child::after{display:none}
+.nth-leiter span:last-child::before{border-color:var(--gold);background:var(--gold)}
+
+.nth-fakten{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 0}
+.nth-fakt{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #E9F2F4;
+  border-radius:999px;padding:8px 14px;font-size:13.5px;font-weight:600;color:#43555B;
+  box-shadow:0 3px 10px rgba(14,95,110,.06)}
+.nth-fakt i{font-style:normal;flex:none;line-height:1}
+.nth-fakt b{color:var(--ink);font-weight:800}
+
+.nth-cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;margin:24px 0 0;
+  background:linear-gradient(135deg,var(--turq-l),var(--turq));color:#06403A;text-decoration:none;
+  font-weight:800;font-size:16.5px;padding:16px 30px;border-radius:999px;
+  box-shadow:0 12px 26px -10px rgba(19,168,154,.9);transition:transform .15s ease,box-shadow .2s ease}
+.nth-cta:hover{transform:translateY(-2px);box-shadow:0 16px 32px -10px rgba(19,168,154,1)}
+
+/* Julia mit Sprechblase */
+.nth-bild{position:relative;justify-self:center;align-self:end;width:100%;max-width:380px}
+.nth-bild img{display:block;width:100%;height:auto;border-radius:50%;
+  box-shadow:0 26px 60px -22px rgba(14,95,110,.75)}
+.nth-blase{position:absolute;left:-6%;top:2%;z-index:3;background:#fff;border:2px solid var(--turq-l);
+  border-radius:24px;padding:14px 18px;max-width:235px;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;line-height:1.32;
+  box-shadow:0 16px 34px rgba(126,216,234,.3)}
+.nth-blase::after{content:'';position:absolute;left:26px;bottom:-15px;width:15px;height:15px;border-radius:50%;
+  background:#fff;border:2px solid var(--turq-l)}
+.nth-blase::before{content:'';position:absolute;left:16px;bottom:-28px;width:8px;height:8px;border-radius:50%;
+  background:#fff;border:2px solid var(--turq-l)}
+.nth-f{position:absolute;font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1;z-index:1;
+  animation:nthSchweben 4.4s ease-in-out infinite}
+.nth-f1{top:6%;right:4%;font-size:40px;color:var(--turq-l)}
+.nth-f2{top:34%;right:-2%;font-size:26px;color:var(--rot);animation-delay:.7s}
+.nth-f3{bottom:12%;right:8%;font-size:46px;color:var(--gold);animation-delay:1.2s}
+@keyframes nthSchweben{0%,100%{transform:translateY(0) rotate(-7deg)}50%{transform:translateY(-11px) rotate(7deg)}}
+@media(prefers-reduced-motion:reduce){.nth-f{animation:none}}
+
+/* ============================================================
+   Das Formular (zeichnet niveautest.js)
+   ============================================================ */
+.ntp-main{max-width:760px;margin:0 auto;padding:0 16px 10px;position:relative;z-index:5}
+#niveautest-app{max-width:760px;margin:-26px auto 0}
+.nt-card{box-shadow:0 26px 60px -24px rgba(14,95,110,.55)!important}
+/* Kicker, Titel und der lange Absatz stehen schon im Hero darueber. */
+.nt-intro .nt-eyebrow,.nt-intro .nt-h,.nt-intro .nt-sub{display:none!important}
+.nt-intro-body{padding:28px 30px 30px}
+.nt-intro-body::before{content:'Trag deine E-Mail ein — dann geht es sofort los.';
+  display:block;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:19px;margin:0 0 18px;color:var(--ink)}
+
+/* ============================================================
+   Was im Test steckt / was herauskommt
+   ============================================================ */
+.ntp-sek{max-width:1080px;margin:0 auto;padding:46px 20px 0}
+.ntp-sek h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(22px,3vw,30px);
+  text-align:center;margin:0 0 6px;letter-spacing:-.01em}
+.ntp-sek p.unter{text-align:center;color:var(--soft);font-size:15.5px;margin:0 auto 24px;max-width:52ch}
+.ntp-karten{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ntp-k{background:#fff;border:1px solid #EDF3F4;border-radius:20px;padding:22px 20px;
+  box-shadow:0 10px 28px -20px rgba(14,95,110,.8)}
+.ntp-k .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;
+  background:rgba(126,216,234,.18);margin-bottom:12px}
+.ntp-k h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;margin:0 0 6px}
+.ntp-k p{color:var(--soft);font-size:14.5px;line-height:1.55;margin:0}
+
+.ntp-erg{margin-top:16px;background:linear-gradient(135deg,#0E5F6E,#13A89A);color:#fff;
+  border-radius:24px;padding:28px 26px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+.ntp-erg h2{color:#fff;text-align:left;margin:0 0 8px}
+.ntp-erg p{color:#D6F0F3;font-size:15.5px;line-height:1.6;margin:0}
+.ntp-erg ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ntp-erg li{display:flex;gap:10px;align-items:flex-start;font-size:15px;font-weight:600;line-height:1.45}
+.ntp-erg li i{font-style:normal;flex:none;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);
+  display:grid;place-items:center;font-size:13px}
+
+footer.ntp-foot{text-align:center;padding:40px 18px 48px;font-size:14px;color:#9aa5a3}
 footer.ntp-foot a{color:var(--turq);font-weight:700}
 
-@media(max-width:560px){.ntp-main{padding:18px 10px 70px}.ntp-logo small{display:none}}
+/* ============================================================
+   Handy
+   ============================================================ */
+@media(max-width:900px){
+  .nth-in{grid-template-columns:1fr;gap:22px;padding:28px 18px 26px}
+  .nth-bild{order:-1;max-width:260px;justify-self:center}
+  .nth-blase{position:static;max-width:none;margin:0 0 14px;font-size:15px}
+  .nth-blase::before,.nth-blase::after{display:none}
+  .nth-f1{top:0;right:0;font-size:30px}.nth-f2{display:none}.nth-f3{bottom:4%;right:2%;font-size:34px}
+  .nth h1{margin-top:12px}
+  .nth-cta{width:100%;padding:17px 20px;margin-bottom:4px}
+  #niveautest-app{margin-top:10px}
+  .ntp-logo{font-size:15px}
+  .ntp-karten{grid-template-columns:1fr}
+  .ntp-erg{grid-template-columns:1fr;padding:24px 20px}
+  .ntp-erg h2{text-align:left}
+}
+@media(max-width:560px){
+  .ntp-logo small{display:none}
+  .nth-leiter{max-width:none}
+  .nt-intro-body{padding:22px 18px 24px}
+  .nt-intro-body::before{font-size:17px}
+  .ntp-sek{padding-top:36px}
+}
 </style>
 </head>
 <body>
 
 <header class="ntp-bar">
   <div class="ntp-bar-in">
-    <a class="ntp-logo" href="index.html"><img src="logo.PNG" alt="deutschoderwas" onerror="this.style.display='none'"><span>deutschoderwas <b>club</b><small>Niveau-Test</small></span></a>
+    <a class="ntp-logo" href="index.html"><img src="logo.PNG" width="500" height="500" alt="deutschoderwas" onerror="this.style.display='none'"><span>deutschoderwas <b>club</b><small>Niveau-Test</small></span></a>
     <a class="ntp-back" href="index.html">← Startseite</a>
   </div>
 </header>
 
-<main class="ntp-main">
-  <div class="ntp-head">
-    <div class="ntp-kick">Gratis Einstufung · A1 bis C1</div>
-    <h1>Teste dein <span class="cap">Deutschniveau</span></h1>
+<section class="nth">
+  <div class="nth-in">
+    <div class="nth-txt">
+      <span class="nth-kick">Gratis Einstufung · A1 bis C1</span>
+      <h1>Weißt du wirklich, auf welchem <em>Niveau</em> du bist?</h1>
+      <p class="nth-sub">Die meisten schätzen sich falsch ein — und lernen dann mit Material, das zu leicht oder zu schwer ist. Dieser Test stuft dich <b>nach demselben Prinzip wie Goethe und telc</b> ein: Leseverstehen, Hörverstehen mit echten Audios und Sprachbausteine.</p>
+      <div class="nth-leiter" aria-label="Die Niveaus von A1 bis C1">
+        <span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span>
+      </div>
+      <div class="nth-fakten">
+        <span class="nth-fakt"><i>⏱️</i><span><b>ab 7 Minuten</b></span></span>
+        <span class="nth-fakt"><i>🎧</i><span>echte <b>Audios</b></span></span>
+        <span class="nth-fakt"><i>🎯</i><span>Prinzip von <b>Goethe &amp; telc</b></span></span>
+        <span class="nth-fakt"><i>💶</i><span><b>kostenlos</b>, kein Abo</span></span>
+      </div>
+      <a class="nth-cta" href="#start">Test starten →</a>
+    </div>
+
+    <div class="nth-bild">
+      <div class="nth-blase">Welches Deutschniveau habe ich eigentlich?</div>
+      <span class="nth-f nth-f1" aria-hidden="true">?</span>
+      <span class="nth-f nth-f2" aria-hidden="true">?</span>
+      <span class="nth-f nth-f3" aria-hidden="true">?</span>
+      <img src="julia-rund.png" width="1114" height="1114" alt="Julia, deine Lehrerin bei deutschoderwas" fetchpriority="high">
+    </div>
   </div>
+</section>
+
+<main class="ntp-main" id="start">
   <div id="niveautest-app"></div>
 </main>
+
+<section class="ntp-sek">
+  <h2>Was im Test steckt</h2>
+  <p class="unter">Keine Multiple-Choice-Schätzerei über dein Gefühl, sondern Aufgaben, wie sie in einer echten Prüfung vorkommen.</p>
+  <div class="ntp-karten">
+    <div class="ntp-k">
+      <div class="ic">📖</div>
+      <h3>Leseverstehen</h3>
+      <p>Kurze Texte aus dem Alltag: Anzeigen, Nachrichten, E-Mails. Du zeigst, was du beim Lesen wirklich verstehst.</p>
+    </div>
+    <div class="ntp-k">
+      <div class="ic">🎧</div>
+      <h3>Hörverstehen</h3>
+      <p>Echte Audios, keine Vorlesestimme. Durchsagen, Gespräche, Telefonate — in normalem Sprechtempo.</p>
+    </div>
+    <div class="ntp-k">
+      <div class="ic">🧩</div>
+      <h3>Sprachbausteine</h3>
+      <p>Grammatik dort, wo sie zählt: im Satz. Präpositionen, Konnektoren, Endungen — ohne Regelabfrage.</p>
+    </div>
+  </div>
+
+  <div class="ntp-erg">
+    <div>
+      <h2>Was du am Ende bekommst</h2>
+      <p>Dein Ergebnis steht sofort auf dem Bildschirm und kommt zusätzlich per E-Mail — damit du es wiederfindest, wenn du es brauchst.</p>
+    </div>
+    <ul>
+      <li><i>✓</i><span>Dein Niveau von <b>A1 bis C1</b></span></li>
+      <li><i>✓</i><span>Wo du schon sicher bist — und wo es noch hakt</span></li>
+      <li><i>✓</i><span>Ein Vorschlag, womit du weitermachst</span></li>
+    </ul>
+  </div>
+</section>
 
 <footer class="ntp-foot">Fragen? Schreib an <a href="mailto:deutschlernen@deutschoderwas.de">deutschlernen@deutschoderwas.de</a></footer>
 
