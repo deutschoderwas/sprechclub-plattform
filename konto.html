@@ -605,9 +605,21 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 <link rel="stylesheet" href="club-theme.css?v=5">
 <style id="kalMonthCss">
 .kal-viewtog{display:flex;justify-content:center;gap:0;margin:14px 0 10px}
-.kal-viewtog button{font-size:14px;font-weight:800;padding:10px 26px;border:1.5px solid #CFE6EC;background:#fff;color:#5A6B72;cursor:pointer;transition:.15s}
-.kal-viewtog button:first-child{border-radius:999px 0 0 999px;border-right:none}
-.kal-viewtog button:last-child{border-radius:0 999px 999px 0;border-left:none}
+.kal-viewtog button{font-size:13.5px;font-weight:800;padding:10px 20px;border:1.5px solid #CFE6EC;background:#fff;color:#5A6B72;cursor:pointer;transition:.15s}
+.kal-viewtog button:first-child{border-radius:999px 0 0 999px}
+.kal-viewtog button:last-child{border-radius:0 999px 999px 0}
+.kal-viewtog button:not(:first-child){border-left:none}
+/* Agenda/Liste-Ansicht (karate-klar) */
+.kal-agenda{display:flex;flex-direction:column;gap:14px;max-width:720px;margin:0 auto}
+.kag-day{background:#fff;border:1px solid var(--border,#ECECEC);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.kag-day.today{border-color:#1B9BC0;box-shadow:0 6px 20px rgba(27,155,192,.16)}
+.kag-head{display:flex;align-items:baseline;gap:10px;padding:12px 16px;background:#F7FAFB;border-bottom:1px solid var(--border,#ECECEC)}
+.kag-head b{font-family:'Space Grotesk',sans-serif;font-size:16px;text-transform:capitalize}
+.kag-head span{font-size:13px;color:#6B7C84}
+.kag-head em{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;background:#1B9BC0;color:#fff;padding:2px 9px;border-radius:999px;margin-left:auto}
+.kag-head.today b{color:#1B9BC0}
+.kag-list{display:grid;gap:10px;padding:12px 14px}
+.kag-leer{padding:11px 16px;color:#9CA7AC;font-size:13.5px}
 .kal-viewtog button.active{background:#1B9BC0;border-color:#1B9BC0;color:#fff;box-shadow:0 6px 16px -8px rgba(27,155,192,.6)}
 .kmo-cell.hat-meins{border-color:#1f7a4d;box-shadow:0 0 0 2px rgba(31,122,77,.18)}
 .kmo-dot.mine{background:#1f7a4d!important;width:8px;height:8px;box-shadow:0 0 0 2px #E7F6EC}
@@ -2770,7 +2782,7 @@ function phaseHtml(b, phase){
 }
 
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
-let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[]; let kalView='woche', kalMonth=0, kalSelDay=null;
+let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[]; let kalView='liste', kalMonth=0, kalSelDay=null;
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
 function fmtTimeK(d){ return _berlinT.format(d); }
 /* Live Unterricht — eine Seite für alles:
@@ -3219,9 +3231,9 @@ function kalIcs(id){
  if(typeof toast==='function')toast('Termin heruntergeladen – zu deinem Kalender hinzufügen 📅');
 }
 function kalIcsBtn(c,past){if(past)return '';return '<button class="ev-btn ics" onclick="kalIcs(\''+c.id+'\')">📅 Zu meinem Kalender</button>';}
-function KAL_VIEWTOG(){return '<div class="kal-viewtog"><button class="'+(kalView==='woche'?'active':'')+'" onclick="setKalView(\'woche\')">📅 Woche</button><button class="'+(kalView==='monat'?'active':'')+'" onclick="setKalView(\'monat\')">🗓️ Monat</button></div>';}
+function KAL_VIEWTOG(){var b=function(v,l){return '<button class="'+(kalView===v?'active':'')+'" onclick="setKalView(\''+v+'\')">'+l+'</button>';};return '<div class="kal-viewtog">'+b('liste','📋 Liste')+b('woche','📅 Woche')+b('monat','🗓️ Monat')+'</div>';}
 function setKalView(v){kalView=v;if(v==='monat')kalSelDay=null;renderKalender();}
-function kalRefresh(){return kalView==='monat'?loadKalMonth():loadKalender();}
+function kalRefresh(){return kalView==='monat'?loadKalMonth():(kalView==='liste'?loadKalListe():loadKalender());}
 function kalMonatGrenze(){
   var start=new Date(2026,5,1), jetzt=new Date();
   var bisStart=(start.getFullYear()-jetzt.getFullYear())*12 + (start.getMonth()-jetzt.getMonth());
@@ -3236,6 +3248,29 @@ function kalClubPills(){return '<div class="kal-pills"><button class="kpill '+(k
 function kalLevelPills(){ return ''; }  /* Niveaus werden im Kalender nicht mehr gezeigt */
 function kalLegend(){if(kalClub!=='alle')return '';return '<div class="cal-legend">'+kalClubs.map(function(c){return '<span class="lg"><span class="dot" style="background:'+(c.color||'#7ED8EA')+'"></span>'+esc(c.name)+'</span>';}).join('')+'</div>';}
 function kalDayKey(d){return d.getFullYear()+'-'+kalPad(d.getMonth()+1)+'-'+kalPad(d.getDate());}
+async function loadKalListe(){
+  if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
+  const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
+  const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
+  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
+  let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
+  if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
+  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+6);
+  const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
+  const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 <span data-i18n="kl_tz">Alle Zeiten in deutscher Zeit (Berlin)</span></div>'
+    + (kalWeek<0 ? '<div class="kal-rueckblick"><span data-i18n="kl_frueher">Das ist eine vergangene Woche. Du kannst nachsehen, was lief — buchen geht hier nicht mehr.</span></div>' : '');
+  const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);}
+  const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
+  const today=new Date().toDateString();
+  const agenda='<div class="kal-agenda">'+days.map(d=>{
+    const arr=(byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
+    const isT=d.toDateString()===today;
+    const head=`<div class="kag-head ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'long'})}</span>${isT?'<em>heute</em>':''}</div>`;
+    const body=arr.length?('<div class="kag-list">'+arr.map(kalEv).join('')+'</div>'):'<div class="kag-leer">Keine Stunde an diesem Tag.</div>';
+    return `<div class="kag-day ${isT?'today':''}">${head}${body}</div>`;
+  }).join('')+'</div>';
+  document.getElementById('kalBody').innerHTML=wc+tzHint+agenda;
+}
 async function loadKalMonth(){
  if(!kalClubs.length){var r=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order');kalClubs=r.data||[];}
  var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
