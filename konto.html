@@ -2782,7 +2782,12 @@ function phaseHtml(b, phase){
 }
 
 // ---------- Kalender (alle Clubs, farbig, filterbar) ----------
-let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[]; let kalView='liste', kalMonth=0, kalSelDay=null;
+let kalClub='alle', kalLevel='alle', kalWeek=(function(){var s=new Date(2026,5,29),n=new Date();function m(d){var x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x;}var w=Math.round((m(s)-m(n))/6048e5);return w>0?w:0;})(), kalClubs=[], kalCache=[]; let kalView='woche', kalMonth=0, kalSelDay=null;
+/* Umbuchen laeuft in zwei Schritten: Solange hier eine Stunde steht,
+   sucht der Schueler gerade ihren Ersatz. Erst wenn der neue Platz
+   wirklich gebucht ist, wird der alte frei - so steht niemand ohne
+   Termin da, wenn die Wunschstunde inzwischen voll ist. */
+let kalUmbuch = null;
 function startOfWeekK(d,off=0){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+off*7); x.setHours(0,0,0,0); return x; }
 function fmtTimeK(d){ return _berlinT.format(d); }
 /* Live Unterricht — eine Seite für alles:
@@ -3013,6 +3018,7 @@ function meineBuchungenListe(){
     const raum='klassenraum.html?stunde='+b.class_id+'&titel='+encodeURIComponent(b.title||'')+'&niveau='+encodeURIComponent(b.level||'');
     return '<div class="mbz-row"><div class="mbz-when">'+esc(wann)+'</div><div class="mbz-topic">'+thema+'</div>'
       +'<div class="mbz-act"><a class="mbz-join" href="'+raum+'" target="_blank" rel="noopener">🎥 Klassenzimmer</a>'
+      +'<button class="mbz-umb" onclick="kalUmbuchStart(\''+b.class_id+'\','+kalArg(b.topic||b.title||'')+')">↔ Umbuchen</button>'
       +'<button class="mbz-storno" onclick="kalStorno(\''+b.class_id+'\')">✕ Stornieren</button></div></div>';
   }).join('');
   return '<div class="mbz"><div class="mbz-head">🗓️ Deine gebuchten Stunden <span class="mbz-n">'+up.length+'</span></div>'+rows+'</div>';
@@ -3071,7 +3077,7 @@ async function loadKalender(){
   }
   const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 <span data-i18n="kl_tz">Alle Zeiten in deutscher Zeit (Berlin)</span></div>'
     + (kalWeek<0 ? '<div class="kal-rueckblick"><span data-i18n="kl_frueher">Das ist eine vergangene Woche. Du kannst nachsehen, was lief — buchen geht hier nicht mehr.</span></div>' : '');
-  document.getElementById('kalBody').innerHTML=lvlPills+wc+tzHint+grid;
+  document.getElementById('kalBody').innerHTML=kalUmbuchBand()+lvlPills+wc+tzHint+grid;
 }
 /* Niveaus werden nirgends mehr angezeigt — weder im Kalender noch bei
    den gebuchten Stunden. Die Funktion bleibt, weil zwei Ansichten sie
@@ -3161,8 +3167,16 @@ function kalEv(c){
   const f=kalFokus(c.topic||c.title);
   const farbe=kalArtFarbe(f.art, f.fokus);
   let btn;
-  if(c.mine){ const _join=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`;
-    btn=_join + (past?'':`<button class="ev-btn storno" onclick="kalStorno('${c.id}')">✕ Stornieren</button>`); }
+  /* Umbuch-Modus: eine gebuchte Stunde sucht ihren Ersatz. Die alte
+     Karte sagt, dass sie verschoben wird; jede freie Stunde wird zum
+     Ziel. Alles andere bleibt, wie es ist. */
+  const _umb = (typeof kalUmbuch!=='undefined') ? kalUmbuch : null;
+  if(_umb && String(_umb.id)===String(c.id)){
+    btn = `<span class="ev-btn wird">↔ wird verschoben</span>`
+        + `<button class="ev-btn zurueck" onclick="kalUmbuchAbbrechen()">Doch behalten</button>`; }
+  else if(c.mine){ const _join=dowJoinBtn({class_id:c.id,starts_at:c.starts_at,title:c.title,level:c.level},'ev-btn meet')||`<span class="ev-btn mine">✓ Gebucht</span>`;
+    btn=_join + (past?'':`<button class="ev-btn umb" onclick="kalUmbuchStart('${c.id}',${kalArg(kalFokus(c.topic||c.title).fokus||'')})">↔ Umbuchen</button>`
+      + `<button class="ev-btn storno" onclick="kalStorno('${c.id}')">✕ Stornieren</button>`); }
   else if(past){ btn=`<span class="ev-btn off">vorbei</span>`; }
   /* Feiertage stehen mit Platzzahl 0 im Kalender — "ausgebucht" waere
      dort das falsche Wort. */
@@ -3180,7 +3194,9 @@ function kalEv(c){
      (book_class, 1.11.2026), wäre der Knopf eine Falle — man tippt
      auf Buchen und bekommt eine Fehlermeldung. */
   else if(free<=0){ btn=`<span class="ev-btn off voll">ausgebucht</span>`; }
-  else{ btn=`<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
+  else{ btn = _umb
+      ? `<button class="ev-btn book ziel" onclick="kalUmbuchZiel('${c.id}')">↔ Hierhin verschieben</button>`
+      : `<button class="ev-btn book" onclick="kalBook('${c.id}')">Buchen</button>`; }
   /* Julia, 31.10.2026: "Alle Schueler muessen das Material und auch die
      Vorbereitung dazu ansehen koennen." Material-Knopf jetzt fuer alle
      eingeloggten Schueler, nicht nur aktive oder gebuchte. */
@@ -3231,9 +3247,14 @@ function kalIcs(id){
  if(typeof toast==='function')toast('Termin heruntergeladen – zu deinem Kalender hinzufügen 📅');
 }
 function kalIcsBtn(c,past){if(past)return '';return '<button class="ev-btn ics" onclick="kalIcs(\''+c.id+'\')">📅 Zu meinem Kalender</button>';}
-function KAL_VIEWTOG(){var b=function(v,l){return '<button class="'+(kalView===v?'active':'')+'" onclick="setKalView(\''+v+'\')">'+l+'</button>';};return '<div class="kal-viewtog">'+b('liste','📋 Liste')+b('woche','📅 Woche')+b('monat','🗓️ Monat')+'</div>';}
-function setKalView(v){kalView=v;if(v==='monat')kalSelDay=null;renderKalender();}
-function kalRefresh(){return kalView==='monat'?loadKalMonth():(kalView==='liste'?loadKalListe():loadKalender());}
+/* Julia, 15.11.2026: "die Ansicht Liste kannst du entfernen ist
+   ueberfluessig." Stimmt: Liste und Woche zeigten dieselben Karten,
+   nur anders gestapelt. Geblieben sind Woche und Monat; die
+   Wochenansicht wird auf dem Handy von allein zur Tagesliste. */
+function KAL_VIEWTOG(){var b=function(v,l){return '<button class="'+(kalView===v?'active':'')+'" onclick="setKalView(\''+v+'\')">'+l+'</button>';};return '<div class="kal-viewtog">'+b('woche','📅 Woche')+b('monat','🗓️ Monat')+'</div>';}
+function setKalView(v){if(v==='liste')v='woche';  /* alte Lesezeichen */
+  kalView=v;if(v==='monat')kalSelDay=null;renderKalender();}
+function kalRefresh(){return kalView==='monat'?loadKalMonth():loadKalender();}
 function kalMonatGrenze(){
   var start=new Date(2026,5,1), jetzt=new Date();
   var bisStart=(start.getFullYear()-jetzt.getFullYear())*12 + (start.getMonth()-jetzt.getMonth());
@@ -3248,29 +3269,10 @@ function kalClubPills(){return '<div class="kal-pills"><button class="kpill '+(k
 function kalLevelPills(){ return ''; }  /* Niveaus werden im Kalender nicht mehr gezeigt */
 function kalLegend(){if(kalClub!=='alle')return '';return '<div class="cal-legend">'+kalClubs.map(function(c){return '<span class="lg"><span class="dot" style="background:'+(c.color||'#7ED8EA')+'"></span>'+esc(c.name)+'</span>';}).join('')+'</div>';}
 function kalDayKey(d){return d.getFullYear()+'-'+kalPad(d.getMonth()+1)+'-'+kalPad(d.getDate());}
-async function loadKalListe(){
-  if(!kalClubs.length){ const {data}=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order'); kalClubs=data||[]; }
-  const from=startOfWeekK(new Date(), kalWeek); const to=new Date(from); to.setDate(to.getDate()+7);
-  const { data } = await sb.rpc('week_classes',{p_from:from.toISOString(),p_to:to.toISOString()});
-  const all=(data||[]).map(c=>{ if(c&&c.starts_at){ const s=String(c.starts_at).replace(' ','T'); c.starts_at=s.replace(/([+-]\d{2})$/,'$1:00'); } return c; }); kalCache=all;
-  let list=(kalClub==='alle')?all:all.filter(c=>c.club===kalClub);
-  if(kalLevel!=='alle') list=list.filter(c=>kalLevelMatch(c.level,kalLevel));
-  const satEnd=new Date(from); satEnd.setDate(satEnd.getDate()+6);
-  const wc=`<div class="kal-week"><button onclick="kalWeekChange(-1)">←</button><span>${from.toLocaleDateString('de-DE',{day:'numeric',month:'short'})} – ${satEnd.toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}</span><button onclick="kalWeekChange(1)">→</button></div>`;
-  const tzHint='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 <span data-i18n="kl_tz">Alle Zeiten in deutscher Zeit (Berlin)</span></div>'
-    + (kalWeek<0 ? '<div class="kal-rueckblick"><span data-i18n="kl_frueher">Das ist eine vergangene Woche. Du kannst nachsehen, was lief — buchen geht hier nicht mehr.</span></div>' : '');
-  const days=[]; for(let i=0;i<7;i++){const d=new Date(from);d.setDate(d.getDate()+i);days.push(d);}
-  const byDay={}; list.forEach(c=>{const k=new Date(c.starts_at).toDateString();(byDay[k]=byDay[k]||[]).push(c);});
-  const today=new Date().toDateString();
-  const agenda='<div class="kal-agenda">'+days.map(d=>{
-    const arr=(byDay[d.toDateString()]||[]).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
-    const isT=d.toDateString()===today;
-    const head=`<div class="kag-head ${isT?'today':''}"><b>${d.toLocaleDateString('de-DE',{weekday:'long'})}</b><span>${d.toLocaleDateString('de-DE',{day:'numeric',month:'long'})}</span>${isT?'<em>heute</em>':''}</div>`;
-    const body=arr.length?('<div class="kag-list">'+arr.map(kalEv).join('')+'</div>'):'<div class="kag-leer">Keine Stunde an diesem Tag.</div>';
-    return `<div class="kag-day ${isT?'today':''}">${head}${body}</div>`;
-  }).join('')+'</div>';
-  document.getElementById('kalBody').innerHTML=wc+tzHint+agenda;
-}
+/* loadKalListe() ist am 15.11.2026 entfallen: die Ansicht "Liste"
+   zeigte dieselben Karten wie die Woche, nur untereinander. Seit die
+   Wochenansicht auf schmalen Bildschirmen selbst zur Tagesliste wird,
+   war sie doppelt. Der alte Stand steht in der Versionsgeschichte. */
 async function loadKalMonth(){
  if(!kalClubs.length){var r=await sb.from('clubs').select('*').eq('is_active',true).order('sort_order');kalClubs=r.data||[];}
  var base=new Date();base=new Date(base.getFullYear(),base.getMonth()+kalMonth,1);
@@ -3302,7 +3304,7 @@ function kalRenderMonth(){
  var dayHead='<div class="kmo-daytitle">'+selD.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+'</div>';
  var dayList='<div id="kalMonthDay">'+dayHead+(sel.length?sel.map(kalEv).join(''):'<div class="empty">Keine Live-Stunden an diesem Tag.</div>')+'</div>';
  var tz='<div class="muted" style="text-align:center;font-size:12px;font-weight:600;margin:2px 0 8px">🕒 Alle Zeiten in deutscher Zeit (Berlin)</div>';
- document.getElementById('kalBody').innerHTML=kalLevelPills()+nav+tz+grid+dayList;
+ document.getElementById('kalBody').innerHTML=kalUmbuchBand()+kalLevelPills()+nav+tz+grid+dayList;
 }
 function selectKalDay(k){kalSelDay=k;kalRenderMonth();}
 
@@ -3734,6 +3736,90 @@ async function cancelB(classId){
 }
 
 // Storno direkt aus dem Kalender — danach bleibt man im Kalender und er wird aufgefrischt.
+/* ============================================================
+   Umbuchen im Kalender - in dieser Reihenfolge, nicht anders
+
+   Julia, 15.11.2026: "unter stornieren auch umbuchen koennen im
+   Kalender", und auf die Frage nach dem Ablauf: erst den neuen Termin,
+   dann wird der alte frei.
+
+   Das ist die ganze Idee. Der alte Weg (im Sprechen-Bereich) storniert
+   zuerst und schickt einen in den Kalender. Ist die Wunschstunde dann
+   voll, steht man ohne Termin da - und der alte Platz ist weg. Hier
+   wird erst gebucht; nur wenn das geklappt hat, wird storniert.
+   Schlaegt das Stornieren fehl, sagen wir es und lassen beide stehen,
+   statt still eine Buchung zu verlieren.
+   ============================================================ */
+/* Der Stundentitel wandert in ein onclick="...". JSON.stringify haette
+   dort echte Anfuehrungszeichen hineingeschrieben und das Attribut
+   mitten im Titel beendet - bei "Beim Arzt" faellt das nicht auf, bei
+   einem Titel mit Anfuehrungszeichen bricht der Knopf. Darum: einfache
+   Anfuehrungszeichen fuer JavaScript, &quot; fuer HTML. */
+function kalArg(t){
+  return "'" + String(t==null?'':t)
+    .replace(/\\/g,'\\\\').replace(/'/g,"\\'")
+    .replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + "'";
+}
+function kalUmbuchBand(){
+  if(!kalUmbuch) return '';
+  var t = kalUmbuch.titel ? ('\u201e'+kalUmbuch.titel+'\u201c') : 'deine Stunde';
+  return '<div class="kal-umb-band">'
+    + '<div class="kub-t">\u2194 Neuen Termin f\u00fcr '+t+' w\u00e4hlen</div>'
+    + '<div class="kub-s">Tippe auf eine freie Stunde. Deinen alten Platz beh\u00e4ltst du so lange.</div>'
+    + '<button class="kub-x" onclick="kalUmbuchAbbrechen()">Abbrechen</button>'
+    + '</div>';
+}
+function kalUmbuchStart(classId, titel){
+  kalUmbuch = { id:String(classId), titel:String(titel||'') };
+  kalView = 'woche';
+  if(typeof go==='function') go('kalender');
+  if(typeof renderKalender==='function') renderKalender();
+  try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){}
+}
+function kalUmbuchAbbrechen(){
+  kalUmbuch = null;
+  if(typeof kalRefresh==='function') kalRefresh();
+}
+async function kalUmbuchZiel(neuId){
+  var u = kalUmbuch; if(!u) return;
+  if(String(neuId)===String(u.id)){ toast('Das ist dieselbe Stunde.'); return; }
+
+  /* Schritt 1: den neuen Platz holen. Geht das schief, aendert sich
+     nichts - der alte Termin steht noch. */
+  var b = await sb.rpc('book_class',{p_class_id:neuId});
+  if(b.error || !b.data || !b.data.ok){
+    var m = {class_full:'Diese Stunde ist voll \u2014 dein alter Termin bleibt.',
+             already_booked:'Die hast du schon gebucht.',
+             class_in_past:'Diese Stunde ist schon vorbei.',
+             booking_paused:'Buchung ist gerade pausiert.',
+             kein_premium:'Zum LIVE-Unterricht geh\u00f6rt der Sprechclub.',
+             kein_zugang:'Daf\u00fcr brauchst du eine aktive Mitgliedschaft.',
+             kein_unterricht:'An diesem Tag ist kein Unterricht.'};
+    toast(m[b.data&&b.data.error] || 'Das hat nicht geklappt \u2014 dein alter Termin bleibt.');
+    return;
+  }
+
+  /* Schritt 2: erst jetzt den alten Platz freigeben. */
+  var alt = u.id;
+  var c = await sb.rpc('cancel_booking',{p_class_id:alt});
+  var storniert = !!(c && c.data && c.data.ok);
+  kalUmbuch = null;
+
+  try{
+    var sitz = await sb.auth.getSession();
+    var session = sitz && sitz.data && sitz.data.session;
+    if(session){
+      fetch('/api/notify-booking',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({class_id:neuId})}).catch(function(){});
+      if(storniert){ fetch('/api/notify-cancel',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({class_id:alt,umbuchung:true})}).catch(function(){}); }
+    }
+  }catch(e){}
+
+  toast(storniert ? 'Umgebucht \u2713 Der neue Termin steht.'
+                  : 'Neuer Termin gebucht. Die alte Stunde lie\u00df sich nicht stornieren \u2014 bitte storniere sie von Hand.');
+  await load();
+  if(typeof kalRefresh==='function') kalRefresh();
+}
+
 async function kalStorno(classId){
   if(!confirm('Diese gebuchte Stunde wirklich stornieren? Der Platz wird wieder frei.')) return;
   const { data,error }=await sb.rpc('cancel_booking',{p_class_id:classId});
@@ -6263,5 +6349,90 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
        das Menue oben und ueber den runden Knopf unten rechts. -->
   <button class="navlink" data-view="fortschritt" onclick="go('fortschritt')"><span class="ic">🎒</span><span data-i18n="nv_mein">Mein Bereich</span></button>
 </nav>
+<style id="kalProfi">
+/* ============================================================
+   Kalender: Umbuchen, ruhigere Knopfordnung, Handy
+
+   Dieser Block steht bewusst hier unten und nicht im <head>: der
+   Block "kal-neu" weiter oben setzt .calweek und .ev-btn noch einmal,
+   und CSS nimmt bei gleicher Staerke das, was spaeter kommt. Oben
+   wuerde hier nichts davon ankommen.
+   ============================================================ */
+
+/* ---- das Band, solange eine Stunde ihren Ersatz sucht ---- */
+.kal-umb-band{position:sticky;top:0;z-index:40;max-width:820px;margin:0 auto 12px;
+  background:linear-gradient(135deg,#10627A,#1B9BC0);color:#fff;border-radius:16px;
+  padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;
+  box-shadow:0 10px 26px -14px rgba(16,98,122,.9)}
+.kal-umb-band .kub-t{flex:1 1 100%;font-family:'Space Grotesk',Inter,sans-serif;
+  font-weight:800;font-size:16px;letter-spacing:-.01em}
+.kal-umb-band .kub-s{flex:1 1 auto;font-size:13px;font-weight:600;color:#D8F2F8;line-height:1.35}
+.kal-umb-band .kub-x{flex:0 0 auto;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);
+  border-radius:999px;padding:9px 16px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;min-height:40px}
+.kal-umb-band .kub-x:hover{background:#fff;color:#10627A}
+
+/* ---- die neuen Knoepfe auf der Stundenkarte ---- */
+.calcol .ev-btn.umb,#kalMonthDay .ev-btn.umb{margin-top:6px;background:#fff;color:#10627A;
+  border:1px solid #BFDFE8;font-weight:800;box-shadow:none}
+.calcol .ev-btn.umb:hover{background:#EAF9FC}
+.calcol .ev-btn.storno,#kalMonthDay .ev-btn.storno{margin-top:6px;background:#fff;color:#B3241C;
+  border:1px solid #F3C6C1;font-weight:700;box-shadow:none}
+.calcol .ev-btn.storno:hover{background:#FDECEA}
+.calcol .ev-btn.wird,#kalMonthDay .ev-btn.wird{background:#FFF3D6;color:#8A5A00;font-weight:800;cursor:default}
+.calcol .ev-btn.zurueck,#kalMonthDay .ev-btn.zurueck{margin-top:6px;background:#fff;color:#5A6B72;
+  border:1px solid #E7ECEE;font-weight:700}
+/* Das Ziel beim Umbuchen soll man nicht suchen muessen. */
+.calcol .ev-btn.book.ziel,#kalMonthDay .ev-btn.book.ziel{background:linear-gradient(135deg,#10627A,#1B9BC0);
+  color:#fff;box-shadow:0 8px 18px -8px rgba(16,98,122,.85)}
+.mbz-umb{background:#fff;color:#10627A;border:1px solid #BFDFE8;font-weight:700;font-size:12.5px;
+  padding:6px 12px;border-radius:999px;cursor:pointer;font-family:inherit}
+.mbz-umb:hover{background:#EAF9FC}
+
+/* ---- Umschalter: zwei Knoepfe statt drei ---- */
+.kal-viewtog button{min-height:42px;padding:10px 24px}
+.kal-viewtog button.active{background:#10627A;border-color:#10627A;color:#fff}
+
+/* ============================================================
+   Handy: aus der Woche wird eine Tagesliste
+
+   Julia, 15.11.2026: "buttons hinzufuegen in der mobilen version vor
+   allem welcher Wochentag das ist". Also: der Wochentag gross und
+   ausgeschrieben ueber jedem Tag, er bleibt beim Scrollen stehen,
+   und jeder Knopf ist mit dem Daumen zu treffen.
+   ============================================================ */
+@media(max-width:760px){
+  .calweek{grid-template-columns:1fr!important;gap:14px}
+  .calcol{display:block!important;padding:0!important;overflow:hidden;
+    border:1px solid #EAF0F2;border-radius:18px;background:#fff}
+  .calcol.leer{display:none!important}
+
+  /* Der Tageskopf: eine eigene Zeile, nicht mehr ein Zusatz neben der Zahl */
+  .calcol-head{position:sticky!important;top:0;z-index:5;
+    display:flex!important;align-items:baseline;gap:9px;
+    padding:12px 15px!important;margin:0;
+    background:#F4FAFB;border-bottom:1px solid #E4EEF1!important;border-radius:0}
+  .calcol-head b{display:inline!important;font-size:17px!important;font-weight:800;color:#0C4F62}
+  .calcol-head span{font-size:13px!important;color:#6B7C84}
+  .calcol-head em{position:static!important;margin-left:auto!important;font-size:10px}
+  .calcol.today .calcol-head{background:linear-gradient(135deg,#1B9BC0,#10627A)}
+  .calcol.today .calcol-head b,.calcol.today .calcol-head span{color:#fff!important}
+  .calcol.today .calcol-head em{background:#fff;color:#10627A}
+
+  /* Die Stunden darunter, mit Luft dazwischen */
+  .calcol .ev{margin:11px 13px;border-radius:14px;border:1px solid #EAF0F2}
+  .calcol .ev:hover{transform:none}
+  .calcol .ev-btn{min-height:48px;font-size:14px;border-radius:12px}
+  .calcol .ev-btn+.ev-btn{margin-top:8px}
+  .ev-title{font-size:15.5px}
+  .ev-time{font-size:17px}
+
+  .kal-viewtog{margin:12px 0 10px}
+  .kal-viewtog button{flex:1;padding:12px 10px;min-height:48px;font-size:14px}
+  .kal-umb-band{border-radius:14px;padding:13px 14px}
+  .kal-umb-band .kub-x{flex:1 1 100%;min-height:46px;margin-top:4px}
+  .mbz-act{width:100%}
+  .mbz-act>*{flex:1;text-align:center;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+}
+</style>
 </body>
 </html>
