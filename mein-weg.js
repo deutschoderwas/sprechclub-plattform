@@ -386,7 +386,12 @@
        wer sein Niveau kennt, soll nicht erst zehn Minuten testen
        muessen, um den Lernbereich zu sehen. Falsch gewaehlt ist
        kein Schaden — die Stufe laesst sich jederzeit aendern. */
-    return '<div class="lw-kopf"><h2>Lernen</h2><p>Ein Weg, Lektion für Lektion. Jede Lektion: Wörter, Hören, Grammatik, Gespräch.</p></div>'
+    /* 15.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+    return (window.dowHeld ? window.dowHeld({
+        titel: 'Lernen', text: 'Ein Weg, Lektion für Lektion. Jede Lektion: Wörter, Hören, Grammatik, Gespräch.',
+        bild: 'bilder/bereich/ln-hero.webp',
+        chips: [{ ic: 'buch', t: 'Vier Teile pro Lektion' }, { ic: 'stufen', t: 'A1 bis C1' }]
+      }) : '<div class="lw-kopf"><h2>Lernen</h2><p>Ein Weg, Lektion für Lektion. Jede Lektion: Wörter, Hören, Grammatik, Gespräch.</p></div>')
       + '<div class="mw-start">'
       + '<div class="mw-start-kopf">'
       + '<h2>Wo fängst du an?</h2>'

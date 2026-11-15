@@ -1713,7 +1713,14 @@
       return true;
     });
 
-    var kopf='<div class="ku-kopf"><h1>Schreiben</h1>'
+    /* 15.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+    var kopf= window.dowHeld ? window.dowHeld({
+        titel:'Schreiben',
+        text:'Der Brief ans Amt, eine Beschwerde, die Krankmeldung, eine Bewerbung, ein Widerspruch, ein Beitrag im Forum. Zu jeder Aufgabe gibt es einen Text zum Vergleichen.',
+        bild:'bilder/bereich/sw-hero.webp',
+        chips:[{ic:'liste',t:'<b>'+alle.length+'</b> Aufgaben'},{ic:'stufen',t:'A1 bis C1'},{ic:'text',t:'Mustertext zum Vergleichen'}]
+      })
+      : '<div class="ku-kopf"><h1>Schreiben</h1>'
       +'<p>'+alle.length+' Aufgaben von A1 bis C1: der Brief ans Amt, eine Beschwerde, die Krankmeldung, '
       +'eine Bewerbung, ein Widerspruch, ein Beitrag im Forum. Zu jeder gibt es einen Text zum Vergleichen.</p></div>';
 

@@ -368,7 +368,13 @@
     stil();
     offen.medien = 'podcast';
 
-    v.innerHTML = kopf('Podcast', 'Julias Folgen zum Hören — jede mit Text zum Mitlesen.')
+    /* 15.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+    v.innerHTML = (window.dowHeld ? window.dowHeld({
+        titel: 'Podcast',
+        text: 'Julias Folgen zum Hören, jede mit Text zum Mitlesen. Nach Niveau geordnet, deine Stufe zuerst.',
+        bild: 'bilder/bereich/md-hero.webp',
+        chips: [{ ic: 'kopfhoerer', t: 'Julias Stimme' }, { ic: 'text', t: 'Text zum Mitlesen' }, { ic: 'stufen', t: 'Nach Niveau' }]
+      }) : kopf('Podcast', 'Julias Folgen zum Hören — jede mit Text zum Mitlesen.'))
       + '<div id="hbMedien">' + leer('Einen Moment …') + '</div>'
       + '<div class="hb-werkzeug">'
       +   band({ em: '📄', t: 'Material', u: 'Handouts zu deinen Stunden', tun: "go('materialien')", ruhig: true })

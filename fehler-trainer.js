@@ -67,11 +67,22 @@
       '</div></div>';
   }
 
+  /* 15.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+  function ftKopf(total, done) {
+    if (!window.dowHeld) return '<div class="pagehead"><h1>📘 Dein Fehler-Trainer</h1><p>Deine persönlichen Merksätze — aus jeder Korrektur in der Community.</p></div>';
+    return window.dowHeld({
+      titel: 'Dein Fehler-Trainer',
+      text: 'Deine persönlichen Merksätze aus jeder Korrektur in der Community. Was du einmal falsch gemacht hast, übst du hier, bis es sitzt.',
+      bild: 'bilder/bereich/ft-hero.webp',
+      chips: total ? [{ ic: 'liste', t: '<b>' + total + '</b> Merksätze' }, { ic: 'haken', t: '<b>' + (done || 0) + '</b> gelernt' }] : [{ ic: 'blase', t: 'Aus der Community' }]
+    });
+  }
+
   async function renderFehlerTrainer() {
     injectStyle();
     var r = root(); if (!r) return;
     var sb = getSb(), me = getUser();
-    r.innerHTML = '<div class="pagehead"><h1>📘 Dein Fehler-Trainer</h1><p>Deine persönlichen Merksätze — aus jeder Korrektur in der Community.</p></div><div class="card">Lädt…</div>';
+    r.innerHTML = ftKopf(0, 0) + '<div class="card">Lädt…</div>';
     if (!sb || !me) { r.innerHTML = gateHtml(); return; }
     if (!active()) { r.innerHTML = gateHtml(); return; }
     var rows = [];
@@ -80,7 +91,7 @@
       rows = res.data || [];
     } catch (e) {}
     var total = rows.length, done = rows.filter(function (x) { return x.mastered; }).length;
-    var head = '<div class="pagehead"><h1>📘 Dein Fehler-Trainer</h1><p>Deine persönlichen Merksätze — aus jeder Korrektur in der Community.</p></div>';
+    var head = ftKopf(total, done);
     if (!total) {
       r.innerHTML = head +
         '<div class="ft-empty"><div class="ic">🌱</div><h3>Noch keine Fehler gesammelt</h3>' +
