@@ -449,7 +449,8 @@ async function sendNachbereitungMails(sb, classId, cls, pc) {
   const _memberGrp = {};
   try { const { data: gmRows } = await sb.from('class_group_members').select('user_id,grp').eq('class_id', classId);
     (gmRows || []).forEach(r => { _memberGrp[r.user_id] = r.grp; }); } catch (_) {}
-  const _hauptraum = _grpNotes['0'] || '';
+  let _hauptraum = '';
+  try { const { data: _cnRow } = await sb.from('class_notes').select('notes').eq('class_id', classId).maybeSingle(); _hauptraum = (_cnRow && _cnRow.notes) || ''; } catch (_) {}
   let sent = 0;
   for (const p of (profs || [])) {
     if (!p.email || p.email_optout) continue;

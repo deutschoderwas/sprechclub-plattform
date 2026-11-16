@@ -37,7 +37,8 @@ export default async function handler(req, res) {
   const memberGrp = {};
   try { const { data: gmRows } = await sb.from('class_group_members').select('user_id,grp').eq('class_id', classId);
     (gmRows || []).forEach(r => { memberGrp[r.user_id] = r.grp; }); } catch (_) {}
-  const hauptraum = grpNotes['0'] || '';
+  let hauptraum = '';
+  try { const { data: cnRow } = await sb.from('class_notes').select('notes').eq('class_id', classId).maybeSingle(); hauptraum = (cnRow && cnRow.notes) || ''; } catch (_) {}
 
   const thema = cls.topic || cls.title || 'deine Stunde';
   let sent = 0, skipped = 0;

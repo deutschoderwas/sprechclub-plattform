@@ -135,7 +135,7 @@ async function init(){
   window._uid = session.user.id;
   const [{ data:c }, { data:cn }, { data:sn }, { data:gm }, { data:ha }, { data:abg }, { data:prof }] = await Promise.all([
     sb.from('classes').select('title,level,topic,starts_at').eq('id',id).maybeSingle(),
-    sb.from('class_notes').select('post_content').eq('class_id',id).maybeSingle(),
+    sb.from('class_notes').select('post_content,notes').eq('class_id',id).maybeSingle(),
     sb.from('student_nachbereitung').select('post_content').eq('class_id',id).eq('user_id',session.user.id).maybeSingle(),
     sb.from('class_group_members').select('grp').eq('class_id',id).eq('user_id',session.user.id).maybeSingle(),
     sb.from('hausaufgaben').select('aufgabe,hinweis,auto').eq('class_id',id).maybeSingle(),
@@ -157,14 +157,17 @@ async function init(){
       } else subs=[];
     }catch(e){ subs=[]; }
   }
-  // Live-Mitschriften laden: ALLE Gruppen-Tafeln + Hauptraum (für die Original-Ansicht), plus die eigene Gruppe.
-  let gnRaw='', hnRaw='', grp=(gm && gm.grp) || null, allNotes=[];
+  // Live-Mitschriften: HAUPTTAFEL (Hauptraum) liegt in class_notes.notes; die GRUPPEN-Tafeln in group_notes (grp>0).
+  // Reihenfolge für die Live-Tafel: zuerst Hauptraum, dann die Gruppen (nicht durcheinander).
+  let gnRaw='', hnRaw=(cn && cn.notes) || '', grp=(gm && gm.grp) || null, allNotes=[];
+  const _hat=function(h){ return String(h||'').replace(/<[^>]+>/g,'').trim().length; };
+  if(_hat(hnRaw)) allNotes.push({ grp:0, notes:hnRaw });
   try{
     const { data:gnRows } = await sb.from('group_notes').select('grp,notes').eq('class_id',id);
-    const byGrp={}; (gnRows||[]).forEach(r=>{ byGrp[String(r.grp)]=r.notes||''; });
-    allNotes = (gnRows||[]).filter(r=> String(r.notes||'').replace(/<[^>]+>/g,'').trim().length);
-    hnRaw = byGrp['0'] || '';
-    if(grp && Number(grp)!==0) gnRaw = byGrp[String(grp)] || '';
+    const byGrp={}; (gnRows||[]).forEach(r=>{ if(Number(r.grp)>0) byGrp[String(r.grp)]=r.notes||''; });
+    (gnRows||[]).filter(r=> Number(r.grp)>0 && _hat(r.notes)).sort((a,b)=>a.grp-b.grp)
+      .forEach(r=> allNotes.push({ grp:Number(r.grp), notes:r.notes }));
+    if(grp && Number(grp)>0) gnRaw = byGrp[String(grp)] || '';
   }catch(e){}
   // Eigene (pro Gruppe personalisierte) Version bevorzugen, sonst die gemeinsame
   const pc = (sn && sn.post_content) ? sn.post_content : (cn && cn.post_content);
