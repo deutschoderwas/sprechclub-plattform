@@ -1026,6 +1026,26 @@ body{background:radial-gradient(1200px 520px at 84% -14%,#FFFFFF 0%,#FFFFFF 60%)
 .kb-rowhead .ic{width:40px;height:40px;border-radius:13px;background:#fff;border:1px solid var(--border,#FFFFFF);box-shadow:0 2px 6px rgba(20,20,20,.05);display:flex;align-items:center;justify-content:center;font-size:19px;flex:none;color:#10627A}
 .kb-rowhead .ic svg{width:19px;height:19px}
 .kb-nivtest .ntic svg{width:20px;height:20px;color:#fff}
+/* 15.11.2026: Kursbibliothek-Kopf als Petrol-Bühne (renderKurse) */
+#v-kurse .kbx-held{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#0E6D85,#0A4E62);color:#fff;margin:0 0 16px;box-shadow:0 22px 44px -26px rgba(10,78,98,.65)}
+#v-kurse .kbx-held.ohne{grid-template-columns:1fr}
+#v-kurse .kbx-tx{padding:30px 32px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+#v-kurse .kbx .kb-eyebrow{color:#A9DEEE}
+#v-kurse .kbx .kb-eyebrow::before{background:#A9DEEE}
+#v-kurse .kbx h1{color:#fff;font-weight:700!important}
+#v-kurse .kbx .kb-lead{color:#D6EEF5;margin-bottom:20px}
+#v-kurse .kbx .kb-nivtest{margin:0;border:0;max-width:460px;border-radius:14px;box-shadow:0 10px 22px -12px rgba(0,0,0,.45)}
+#v-kurse .kbx .kb-nivtest .ntic{background:#E3F2F6;box-shadow:none}
+#v-kurse .kbx .kb-nivtest .ntic svg{color:#0E6D85}
+#v-kurse .kbx .kb-nivtest .nttx b{color:#0A4E62}
+#v-kurse .kbx-bild{display:block;position:relative;min-height:250px;background:#0B5A70}
+#v-kurse .kbx-bild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#v-kurse .kbx-bild::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0C5D74 0%,rgba(12,93,116,0) 38%)}
+#v-kurse .kbx-filter{display:inline-flex;flex-wrap:nowrap;gap:4px;padding:4px;background:#F1F4F7;border:1px solid #E7EBF0;border-radius:14px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+#v-kurse .kbx-filter::-webkit-scrollbar{display:none}
+.view .kbx-filter .kb-chip{flex:0 0 auto;border:0!important;background:transparent;border-radius:10px!important;padding:9px 14px;color:#4B5A63;font-weight:600;box-shadow:none;transform:none}
+.view .kbx-filter .kb-chip.on{background:#fff!important;color:#0A4E62!important;box-shadow:0 2px 8px -3px rgba(18,24,31,.25)}
+@media(max-width:760px){#v-kurse .kbx-held{grid-template-columns:1fr;border-radius:20px}#v-kurse .kbx-bild{order:-1;min-height:0;aspect-ratio:16/7}#v-kurse .kbx-bild::before{background:linear-gradient(0deg,#0D6680 0%,rgba(13,102,128,0) 55%)}#v-kurse .kbx-tx{padding:14px 18px 20px}}
 .mtabs{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(252,250,246,.97);backdrop-filter:saturate(1.6) blur(18px);border-top:1px solid #E7ECEE;padding-bottom:env(safe-area-inset-bottom)}
 .mtabs-in{display:flex;max-width:600px;margin:0 auto;padding:6px 4px 4px}
 .mtab{flex:1;border:none;background:none;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;color:#6B7C84;font-size:10px;font-weight:600;letter-spacing:-.01em;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .22s}
@@ -2296,15 +2316,18 @@ const MAT_THEMES=[
 ];
 function matTheme(m){ const s=((m.folder||'')+' '+(m.title||'')).toLowerCase(); for(const r of MAT_THEMES){ if(r[1].test(s)) return r[0]; } return 'Weitere Mitschriften'; }
 function matDate(m){ const f=m.folder||''; const y=(f.match(/20\d\d/)||['2026'])[0]; const dm=f.match(/(\d{1,2})\.(\d{1,2})(?!\d)/g); let dd='',mm=''; if(dm&&dm.length){ const p=dm[dm.length-1].split('.'); dd=p[0].padStart(2,'0'); mm=p[1].padStart(2,'0'); } return { key:y+'-'+(mm||'00')+'-'+(dd||'00'), label:(dd&&mm)?(dd+'.'+mm+'.'+y):'' }; }
-function setMatMode(m){ matMode=m; matOpenTheme=null; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'var(--primary,#D42A21)':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
+function setMatMode(m){ matMode=m; matOpenTheme=null; document.querySelectorAll('.matmode').forEach(b=>{ const on=b.dataset.m===m; b.style.background=on?'#0E6D85':'#fff'; b.style.color=on?'#fff':'var(--text-soft,#5C5C5C)'; }); drawMaterials((document.getElementById('matSearch')?.value||'').toLowerCase()); }
 async function renderMaterialien(){
   const el=document.getElementById('v-materialien');
   const mb='padding:9px 14px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit';
-  el.innerHTML=`<div class="pagehead"><h1 data-i18n="mt_h1">Materialien</h1><p data-i18n="mt_sub">Alle Arbeitsblätter, Mitschriften & PDFs aus dem Unterricht — sortiert nach Thema oder Datum.</p></div>
+  /* 15.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+  const mtKopf = window.dowHeld ? window.dowHeld({titel:'Materialien', text:'Alle Arbeitsblätter, Mitschriften und PDFs aus dem Unterricht. Sortiert nach Thema oder Datum, mit Suche.', bild:'bilder/bereich/mt-hero.webp', chips:[{ic:'text',t:'Arbeitsblätter & PDFs'},{ic:'liste',t:'Nach Thema oder Datum'}]})
+    : `<div class="pagehead"><h1 data-i18n="mt_h1">Materialien</h1><p data-i18n="mt_sub">Alle Arbeitsblätter, Mitschriften & PDFs aus dem Unterricht — sortiert nach Thema oder Datum.</p></div>`;
+  el.innerHTML=`${mtKopf}
     ${isActive()?'':`<div class="card" style="border:2px solid #f5b942;background:#FFFFFF;margin-bottom:14px"><b>🔒 Hinweis:</b> <span class="muted">Du siehst dein bisheriges Material. Neues Material wird mit einem Paket wieder freigeschaltet.</span> <a href="index.html#pakete" style="font-weight:700">Pakete ansehen →</a></div>`}
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
       <div style="display:inline-flex;border:2px solid var(--border);border-radius:12px;overflow:hidden">
-        <button class="matmode" data-m="thema" onclick="setMatMode('thema')" style="${mb};background:var(--primary,#D42A21);color:#fff"><span data-i18n="mt_thema">🗂️ Nach Thema</span></button>
+        <button class="matmode" data-m="thema" onclick="setMatMode('thema')" style="${mb};background:#0E6D85;color:#fff"><span data-i18n="mt_thema">🗂️ Nach Thema</span></button>
         <button class="matmode" data-m="datum" onclick="setMatMode('datum')" style="${mb};background:#fff;color:var(--text-soft,#5C5C5C)"><span data-i18n="mt_datum">📅 Nach Datum</span></button>
       </div>
       <input id="matSearch" placeholder="🔍 Suchen… (z.B. Pflege, Grammatik, Reisen)" style="flex:1;min-width:200px;max-width:420px;padding:11px 13px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px" oninput="drawMaterials(this.value.toLowerCase())">
@@ -5065,7 +5088,7 @@ async function logout(){ await sb.auth.signOut(); location.href='index.html'; }
      Notausgang: ?voll=1 an die Adresse haengen laedt alles sofort wie
      frueher.
      ============================================================ -->
-<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "niveau-korrektur.js?v=2", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "wort-ki.js?v=1", "ueben.js?v=9", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=6", "pruefung.js?v=2", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "lesen-telc-a2.js", "hoeren-telc-a2.js", "schreiben-telc-a2.js", "sprechen-telc-a2.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=18", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=17", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=16", "pruefung-schreiben.js?v=16", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=22"]</script>
+<script id="spaete-dateien" type="application/json">["uebungen.js", "hoer-neu.js?v=1", "hoeren-a1-neu.js?v=1", "aussprache-neu.js?v=1", "aussprache-plus.js", "hoeren-b2-neu.js?v=1", "hoeren-c1-neu.js?v=1", "hoeren-b2c1-plus.js", "wortschatz-neu.js?v=1", "grammatik-reihenfolge.js?v=1", "wortschatz-a1-neu.js?v=1", "grammatik-neu.js?v=1", "grammatik-c1-neu.js?v=1", "grammatik-b1-mehr.js?v=1", "grammatik-b2c1-mehr.js?v=1", "grammatik-c1-plus.js", "lesen-schreiben-neu.js?v=1", "lesen-schreiben-plus.js", "wortschatz-plus.js?v=1", "vielfalt-neu.js?v=1", "grammatik-vielfalt.js?v=2", "grammatik-karten-fix.js?v=1", "themen-zusammenfuehren.js?v=1", "niveau-korrektur.js?v=2", "woerter-sprachen.js?v=1", "hoer-fragen.js?v=1", "shadowing-neu.js?v=2", "wort-ki.js?v=1", "ueben.js?v=9", "a1.js", "a2.js", "schreiben.js", "berufe.js", "kurs.js?v=7", "pruefung.js?v=2", "lesen-a1.js", "lesen-a2.js", "lesen-b1.js", "lesen-b2.js", "lesen-c1.js", "lesen-telc-b1.js", "hoeren-telc-b1.js", "schreiben-telc-b1.js", "sprechen-telc-b1.js", "lesen-telc-b2.js", "hoeren-telc-b2.js", "schreiben-telc-b2.js", "sprechen-telc-b2.js", "lesen-telc-a2b1.js", "hoeren-telc-a2b1.js", "schreiben-telc-a2b1.js", "sprechen-telc-a2b1.js", "lesen-telc-c1h.js", "hoeren-telc-c1h.js", "schreiben-telc-c1h.js", "sprechen-telc-c1h.js", "lesen-telc-c1.js", "hoeren-telc-c1.js", "schreiben-telc-c1.js", "sprechen-telc-c1.js", "lesen-telc-b1b.js", "hoeren-telc-b1b.js", "schreiben-telc-b1b.js", "sprechen-telc-b1b.js", "lesen-telc-b2b.js", "hoeren-telc-b2b.js", "schreiben-telc-b2b.js", "sprechen-telc-b2b.js", "lesen-telc-b1b2.js", "hoeren-telc-b1b2.js", "schreiben-telc-b1b2.js", "sprechen-telc-b1b2.js", "lesen-telc-b2c1.js", "hoeren-telc-b2c1.js", "schreiben-telc-b2c1.js", "sprechen-telc-b2c1.js", "lesen-telc-c1b.js", "hoeren-telc-c1b.js", "schreiben-telc-c1b.js", "sprechen-telc-c1b.js", "lesen-telc-c2.js", "hoeren-telc-c2.js", "schreiben-telc-c2.js", "sprechen-telc-c2.js", "lesen-dtz.js", "hoeren-dtz.js", "schreiben-dtz.js", "sprechen-dtz.js", "lesen-telc-pflege.js", "hoeren-telc-pflege.js", "schreiben-telc-pflege.js", "sprechen-telc-pflege.js", "lesen-telc-a2.js", "hoeren-telc-a2.js", "schreiben-telc-a2.js", "sprechen-telc-a2.js", "schreiben-c1.js", "sprechen-c1.js", "hoeren-c1.js", "pruefung-lesen.js?v=18", "hoeren-a1.js", "hoeren-a2.js", "hoeren-b1.js", "hoeren-b2.js", "pruefung-hoeren.js?v=17", "schreiben-a1.js", "schreiben-a2.js", "schreiben-b1.js", "schreiben-b2.js", "sprechen-a1.js", "sprechen-a2.js", "sprechen-b1.js", "sprechen-b2.js", "pruefung-sprechen.js?v=16", "pruefung-schreiben.js?v=16", "pruefung-bildschirm.js?v=2", "pruefung-bereich.js?v=22"]</script>
 <script>
 (function(){
   var liste = [];
@@ -5298,11 +5321,14 @@ window.renderKurse=function(){
   var chips='<button class="kb-chip '+(kbLevel==='alle'?'on':'')+'" onclick="kbSetLevel(\'alle\')" data-i18n="kb_all">Alle Niveaus</button>'
     +KB_LV.map(function(l){return '<button class="kb-chip '+(kbLevel===l?'on':'')+'" onclick="kbSetLevel(\''+l+'\')">'+l+'</button>';}).join('');
   document.getElementById('v-kurse').innerHTML=
-    '<div class="kb-hero"><span class="kb-eyebrow" data-i18n="kb_eyebrow">Dein Lernbereich</span>'
+    /* 15.11.2026: derselbe Kopf, jetzt als Petrol-Bühne mit Foto wie in den anderen Bereichen.
+       Die data-i18n-Felder bleiben, damit die Übersetzung weiter greift. */
+    '<div class="kb-hero kbx"><div class="kbx-held"><div class="kbx-tx"><span class="kb-eyebrow" data-i18n="kb_eyebrow">Dein Lernbereich</span>'
     +'<h1 data-i18n="kb_title">Deine Kursbibliothek</h1>'
     +'<p class="kb-lead" data-i18n="kb_lead">Alles, was du brauchst, um endlich flüssig Deutsch zu sprechen — an einem Ort.</p>'
-    +'<a class="kb-nivtest" href="niveau-test-club.html" target="_blank" rel="noopener"><span class="ntic">'+(window.ICON?window.ICON('chart',20):'')+'</span><span class="nttx"><b data-i18n="kb_nt_t">Teste dein Deutsch</b><span data-i18n="kb_nt_s">Finde in wenigen Minuten dein Niveau – im Goethe-/telc-Stil.</span></span><span class="ntgo">→</span></a>'
-    +'<div class="kb-filters">'+chips+'</div></div>'
+    +'<a class="kb-nivtest" href="niveau-test-club.html" target="_blank" rel="noopener"><span class="ntic">'+(window.ICON?window.ICON('chart',20):'')+'</span><span class="nttx"><b data-i18n="kb_nt_t">Teste dein Deutsch</b><span data-i18n="kb_nt_s">Finde in wenigen Minuten dein Niveau – im Goethe-/telc-Stil.</span></span><span class="ntgo">→</span></a></div>'
+    +'<span class="kbx-bild"><img src="bilder/bereich/kb-hero.webp" alt="" onerror="var h=this.closest(\'.kbx-held\');if(h)h.classList.add(\'ohne\');this.parentNode.remove()"></span></div>'
+    +'<div class="kb-filters kbx-filter">'+chips+'</div></div>'
     +KURSBIB.map(kbRow).join('')
     +'<div class="kb-foot" data-i18n="kb_footnote">Neue Inhalte kommen regelmäßig dazu. 💛</div>';
   kbReapply(); window.scrollTo(0,0);
