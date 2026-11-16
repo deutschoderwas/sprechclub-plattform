@@ -62,6 +62,28 @@ textarea:focus{outline:2px solid var(--teal);border-color:var(--teal);}
 .rich:focus{outline:2px solid var(--teal);border-color:var(--teal);}
 .rich:empty:before{content:attr(data-ph);color:var(--ink-mute);}
 .toolhint{color:var(--ink-soft);font-size:.82rem;margin:.55rem 0 0;}
+
+/* ---- Umschalter: deine Tafel / die Kleingruppen ----
+   Julia, 16.11.2026: "da muessen Umschaltknoepfe sein und zwar kommt
+   man auch zu den Mitschriften der KLEINEN GRUPPEN." Die Gruppen
+   schreiben im Klassenraum in group_notes (eine Zeile je Gruppe);
+   gesehen hat das bisher nur die KI bei der Nachbereitung. */
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0 .2rem;}
+.tab{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1.5px solid var(--sand);
+  border-radius:999px;padding:.6rem 1.1rem;font-family:var(--fb);font-size:.95rem;font-weight:700;
+  color:var(--ink-soft);cursor:pointer;transition:.15s;min-height:44px;}
+.tab:hover{border-color:var(--teal);color:var(--ink);}
+.tab.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+.tab .n{font-weight:600;font-size:.82rem;opacity:.75;}
+.tab .leer{opacity:.5;font-weight:600;font-size:.82rem;}
+.grphinweis{background:#EAF6F6;border:1px solid #BFE3E0;border-radius:12px;padding:.9rem 1.1rem;
+  margin:0 0 1rem;font-size:.95rem;line-height:1.55;}
+.grphinweis b{color:#0E6F68;}
+.grphinweis .akt{display:inline-flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem;}
+.grphinweis button{font-family:var(--fb);font-size:.88rem;font-weight:700;cursor:pointer;
+  border:1.5px solid #BFE3E0;background:#fff;color:#0E6F68;border-radius:999px;padding:.55rem 1rem;min-height:40px;}
+.grphinweis button:hover{background:#D9F0EE;}
+@media(max-width:560px){.tab{flex:1 1 calc(50% - .5rem);justify-content:center;}}
 </style>
 </head>
 <body>
@@ -86,6 +108,7 @@ async function init(){
   if(!c){ app.innerHTML='<div class="center">Stunde nicht gefunden.</div>'; return; }
   cls=c;
   const { data:cn }=await sb.from('class_notes').select('notes,post_content,generated_at').eq('class_id',classId).maybeSingle();
+  await gruppenLaden();
   render(cn||{});
 }
 
@@ -96,12 +119,10 @@ function render(cn){
     <div class="eyebrow">Live-Tafel · deutschoderwas</div>
     <h1>${esc(cls.topic||cls.title)}</h1>
     <div class="meta"><span class="badge">${esc(cls.level)}</span> &nbsp; 🗓️ ${esc(when)} Uhr</div>
-    <div class="note">
-      <span class="nt">📌 Wichtig für Lehrer:innen – bitte hier mitschreiben!</span>
-      Schreib während der Stunde alles Wichtige auf: <b>neue Wörter, Beispielsätze, Korrekturen</b>. Daraus erstellt die KI <b>nach der Stunde automatisch</b> die Nachbereitung + Vokabeln für deine Schüler:innen (fließen direkt in den Vokabeltrainer). Wird laufend gespeichert ✓ — <b>ohne Mitschrift gibt es keine automatische Nachbereitung.</b>
-    </div>
+    ${tabsHtml()}
+    ${hinweisHtml()}
     <div class="card">
-      <h2>Notizen</h2>
+      <h2 id="notizTitel">Notizen</h2>
       <div class="tools" id="tools">
         <button type="button" class="tbtn" id="mk-y" onmousedown="toggleMarker(event,'#FFE08A')" title="Gelb markieren"><span class="dot" style="background:#FFE08A"></span>Marker</button>
         <button type="button" class="tbtn" id="mk-r" onmousedown="toggleMarker(event,'#FCA5A5')" title="Rot markieren"><span class="dot" style="background:#FCA5A5"></span>Marker</button>
@@ -126,12 +147,113 @@ function render(cn){
       <div class="status" id="genStatus"></div>
       <div class="preview ${pc?'show':''}" id="preview">${pc?previewHtml(pc):''}</div>
     </div>`;
+  window._tafelText=cn.notes||'';
   const ed=document.getElementById('notes');
   try{ document.execCommand('styleWithCSS',false,true); }catch(e){}
   ed.addEventListener('input',()=>{ const s=document.getElementById('saveState'); s.textContent='Speichert …'; s.className='save';
     clearTimeout(saveTimer); saveTimer=setTimeout(save,800); });
   autoMark(ed);
   document.getElementById('genBtn').addEventListener('click',generate);
+}
+
+/* ============================================================
+   Die Kleingruppen
+
+   Im Klassenraum teilt die Lehrkraft in Kleingruppen. Jede Gruppe
+   schreibt in ihr eigenes Feld, das in group_notes landet - eine
+   Zeile je (Stunde, Gruppe). Zeile 0 ist der Hauptraum des
+   Klassenzimmers; was die Lehrkraft hier auf der Tafel schreibt,
+   steht dagegen in class_notes.
+
+   Lesen und schreiben darf die Lehrkraft alles (Policy
+   "gnotes_lehrer"), diese Seite ist ohnehin nur fuer Lehrer:innen.
+   ============================================================ */
+let gruppen=[], gnText={}, gnNamen={}, aktiv={art:'tafel'};
+
+async function gruppenLaden(){
+  gruppen=[]; gnText={}; gnNamen={};
+  try{
+    const { data:gn }=await sb.from('group_notes').select('grp,notes').eq('class_id',classId);
+    (gn||[]).forEach(r=>{ gnText[String(r.grp)]=r.notes||''; });
+    const { data:gm }=await sb.from('class_group_members').select('grp,name').eq('class_id',classId);
+    (gm||[]).forEach(r=>{ const k=String(r.grp); (gnNamen[k]=gnNamen[k]||[]).push(r.name||''); });
+  }catch(e){}
+  const alle={};
+  Object.keys(gnText).forEach(k=>alle[k]=1);
+  Object.keys(gnNamen).forEach(k=>alle[k]=1);
+  gruppen=Object.keys(alle).map(Number).filter(n=>!isNaN(n))
+    .filter(n=> n!==0 || hatText(gnText['0']))   /* Hauptraum nur, wenn dort etwas steht */
+    .sort((a,b)=>a-b);
+}
+function hatText(h){ return !!String(h||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim(); }
+function grpName(n){ return n===0 ? 'Hauptraum' : ('Gruppe '+n); }
+
+function tabsHtml(){
+  if(!gruppen.length) return '';
+  var t='<div class="tabs" id="tabs">';
+  t+='<button type="button" class="tab'+(aktiv.art==='tafel'?' on':'')+'" onclick="tabWechseln(\'tafel\')">\u270F\uFE0F Deine Tafel</button>';
+  gruppen.forEach(function(n){
+    var leute=(gnNamen[String(n)]||[]).filter(Boolean);
+    var zusatz = hatText(gnText[String(n)])
+      ? (leute.length ? '<span class="n">'+esc(leute.slice(0,3).join(', '))+(leute.length>3?' +'+(leute.length-3):'')+'</span>' : '')
+      : '<span class="leer">noch leer</span>';
+    t+='<button type="button" class="tab'+(aktiv.art==='grp'&&aktiv.grp===n?' on':'')+'" onclick="tabWechseln(\'grp\','+n+')">'
+      + (n===0?'\uD83C\uDFE0 ':'\uD83D\uDC65 ') + grpName(n) + zusatz + '</button>';
+  });
+  t+='</div>';
+  return t;
+}
+
+async function tabWechseln(art, n){
+  clearTimeout(saveTimer);
+  await save();                      /* was offen ist, kommt zuerst weg */
+  aktiv = (art==='grp') ? {art:'grp', grp:n} : {art:'tafel'};
+  await gruppenLaden();              /* die Gruppen schreiben waehrend der Stunde weiter */
+  if(aktiv.art==='grp'){
+    const { data:frisch }=await sb.from('class_notes').select('notes,post_content').eq('class_id',classId).maybeSingle();
+    window._tafelText=(frisch&&frisch.notes)||window._tafelText||'';
+  }
+  const ed=document.getElementById('notes');
+  if(ed) ed.innerHTML = aktiv.art==='grp' ? toEditorHtml(gnText[String(aktiv.grp)]||'') : toEditorHtml(window._tafelText||'');
+  const tb=document.getElementById('tabs'); if(tb) tb.outerHTML=tabsHtml();
+  const hw=document.getElementById('hinweis'); if(hw) hw.outerHTML=hinweisHtml();
+  const st=document.getElementById('saveState'); if(st){ st.textContent='Automatisch gespeichert'; st.className='save'; }
+}
+
+function hinweisHtml(){
+  if(aktiv.art==='tafel'){
+    return '<div class="note" id="hinweis">'
+      + '<span class="nt">\uD83D\uDCCC Wichtig f\u00fcr Lehrer:innen \u2013 bitte hier mitschreiben!</span>'
+      + 'Schreib w\u00e4hrend der Stunde alles Wichtige auf: <b>neue W\u00f6rter, Beispiels\u00e4tze, Korrekturen</b>. '
+      + 'Daraus erstellt die KI <b>nach der Stunde automatisch</b> die Nachbereitung + Vokabeln f\u00fcr deine Sch\u00fcler:innen '
+      + '(flie\u00dfen direkt in den Vokabeltrainer). Wird laufend gespeichert \u2713 \u2014 '
+      + '<b>ohne Mitschrift gibt es keine automatische Nachbereitung.</b></div>';
+  }
+  var n=aktiv.grp, leute=(gnNamen[String(n)]||[]).filter(Boolean);
+  return '<div class="grphinweis" id="hinweis">'
+    + '<b>'+esc(grpName(n))+'</b>' + (leute.length? ' \u00b7 '+esc(leute.join(', ')) : '')
+    + '<br>Das hier schreibt die Gruppe selbst im Klassenraum. Du kannst mitlesen und auch hineinschreiben \u2014 '
+    + 'die Gruppe sieht deine \u00c4nderung w\u00e4hrend der Stunde. '
+    + 'In die Nachbereitung flie\u00dfen die Gruppen-Mitschriften ohnehin mit ein.'
+    + '<div class="akt">'
+    + '<button type="button" onclick="grpUebernehmen()">\u2193 In deine Tafel \u00fcbernehmen</button>'
+    + '<button type="button" onclick="tabWechseln(\'grp\','+n+')">\u21BB Aktualisieren</button>'
+    + '</div></div>';
+}
+
+/* Haengt die Gruppen-Mitschrift unten an die eigene Tafel an. Angehaengt,
+   nicht ersetzt - sonst waere mit einem Klick die eigene Mitschrift weg. */
+async function grpUebernehmen(){
+  if(aktiv.art!=='grp') return;
+  const n=aktiv.grp, txt=gnText[String(n)]||'';
+  if(!hatText(txt)){ alert('In dieser Gruppe steht noch nichts.'); return; }
+  const { data:cn }=await sb.from('class_notes').select('notes').eq('class_id',classId).maybeSingle();
+  const alt=(cn&&cn.notes)||'';
+  const neu=alt + (hatText(alt)?'<br><br>':'') + '<b>' + esc(grpName(n)) + '</b><br>' + txt;
+  const { error }=await sb.from('class_notes').upsert({ class_id:classId, notes:neu, updated_at:new Date().toISOString() });
+  if(error){ alert('Das hat nicht geklappt.'); return; }
+  window._tafelText=neu;
+  await tabWechseln('tafel');
 }
 
 // Legacy-Notizen (reiner Text) -> HTML; bereits formatierte Notizen unverändert lassen
@@ -185,8 +307,20 @@ function previewHtml(pc){
 async function save(){
   const el=document.getElementById('notes'); if(!el) return;
   const notes=el.innerHTML;
-  const { error }=await sb.from('class_notes').upsert({ class_id:classId, notes, updated_at:new Date().toISOString() });
+  let error;
+  if(aktiv.art==='grp'){
+    /* onConflict, weil es je Stunde und Gruppe genau eine Zeile gibt -
+       ohne das legt jeder Tastendruck eine neue an. */
+    gnText[String(aktiv.grp)]=notes;
+    ({ error } = await sb.from('group_notes').upsert(
+      { class_id:classId, grp:aktiv.grp, notes, updated_at:new Date().toISOString() },
+      { onConflict:'class_id,grp' }));
+  } else {
+    window._tafelText=notes;
+    ({ error } = await sb.from('class_notes').upsert({ class_id:classId, notes, updated_at:new Date().toISOString() }));
+  }
   const st=document.getElementById('saveState');
+  if(!st) return;
   if(error){ st.textContent='Speichern fehlgeschlagen'; st.className='save bad'; }
   else { st.textContent='Gespeichert ✓'; st.className='save ok'; }
 }
