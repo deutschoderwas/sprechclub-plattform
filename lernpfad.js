@@ -272,7 +272,24 @@
     .lernpfad .lp-heute h2{font-size:20px}
     .lernpfad .lp-strasse{padding-left:26px}
     .lernpfad .lp-szene::before{left:-26px}
-  }`;
+  }
+  /* 16.11.2026: ruhiger, wie der Rest der Plattform. Keine dicken
+     schwarzen Ränder und Schlagschatten mehr, Knopf und Marker in Petrol.
+     Die doppelte Klasse gewinnt gegen club-stil.css. */
+  .lernpfad.lernpfad .lp-heute{background:#fff;border:1px solid #E7EBF0;border-radius:18px;box-shadow:0 14px 30px -20px rgba(18,24,31,.35)}
+  .lernpfad.lernpfad .lp-heute small{font-family:Inter,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0E6D85}
+  .lernpfad.lernpfad .lp-heute .btn,.lernpfad.lernpfad .btn-primary{background:#0E6D85!important;border:0!important;color:#fff!important;border-radius:12px!important;box-shadow:none!important}
+  .lernpfad.lernpfad .stat{border:1px solid #E7EBF0;box-shadow:none;border-radius:16px}
+  .lernpfad.lernpfad .stat b{color:#0E6D85}
+  .lernpfad.lernpfad .kpill{border:1px solid #E7EBF0;box-shadow:none;border-radius:10px}
+  .lernpfad.lernpfad .kpill.active{background:#0E6D85;color:#fff;border-color:#0E6D85}
+  .lernpfad.lernpfad .lp-szene{border:1px solid #E7EBF0;box-shadow:none}
+  .lernpfad.lernpfad .lp-szene:hover{border-color:#B9D9E2;box-shadow:0 10px 24px -18px rgba(18,24,31,.35)}
+  .lernpfad.lernpfad .lp-szene.dran{border:1.5px solid #0E6D85;box-shadow:0 10px 24px -18px rgba(14,109,133,.5)}
+  .lernpfad.lernpfad .lp-szene::before{border:2px solid #B9D9E2}
+  .lernpfad.lernpfad .lp-szene.dran::before{background:#0E6D85;border-color:#0E6D85}
+  .lernpfad.lernpfad .lp-szene .lp-foto{border:0}
+  `;
 
   function stilEinsetzen() {
     if (document.getElementById('lernpfadStil')) return;
@@ -410,10 +427,17 @@
     stilEinsetzen();
     var r = wurzel(zielId || 'v-lernpfad'); if (!r) return;
     var niveau = gewaehltesNiveau || meinNiveau();
-    r.innerHTML = '<div class="lernpfad">' +
-      '<div class="pagehead"><div class="kick">Schritt für Schritt</div>' +
-      '<h1>Dein <span class="mark">Lernpfad</span></h1>' +
-      '<p>Sechs Kapitel je Niveau. Eine Szene dauert nur 2 bis 6 Minuten.</p></div>' +
+    /* 16.11.2026: Bühne aus dow-held.js, sonst die alte Überschrift. */
+    var kopf = window.dowHeld ? window.dowHeld({
+        titel: 'Dein Lernpfad',
+        text: 'Echte Situationen aus dem Alltag, eine nach der anderen. Sechs Kapitel je Niveau, eine Szene dauert nur 2 bis 6 Minuten.',
+        bild: 'bilder/bereich/lp-hero.webp',
+        chips: [{ ic: 'liste', t: 'Sechs Kapitel je Niveau' }, { ic: 'stufen', t: '2 bis 6 Minuten pro Szene' }]
+      })
+      : '<div class="pagehead"><div class="kick">Schritt für Schritt</div>' +
+        '<h1>Dein <span class="mark">Lernpfad</span></h1>' +
+        '<p>Sechs Kapitel je Niveau. Eine Szene dauert nur 2 bis 6 Minuten.</p></div>';
+    r.innerHTML = '<div class="lernpfad">' + kopf +
       heuteHtml(niveau) + standHtml(niveau) + pfadHtml(niveau) + '</div>';
     binde(r);
   }
