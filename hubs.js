@@ -72,7 +72,9 @@
   function kachel(o) {
     if (o.bild) {
       return '<button class="hb-k mitbild" onclick="' + o.tun + '">'
-        + '<span class="hb-kbild"><img src="' + o.bild + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>'
+        + '<span class="hb-kbild"><img src="' + o.bild + '" alt="" loading="lazy" onerror="'
+        + (o.alt ? 'if(this.dataset.f){this.parentNode.remove()}else{this.dataset.f=1;this.src=\'' + o.alt + '\'}' : 'this.parentNode.remove()')
+        + '"></span>'
         + '<span class="hb-kkoerper">'
         + '<span class="hb-kt">' + E(o.t) + '</span>'
         + (o.u ? '<span class="hb-ku">' + E(o.u) + '</span>' : '')
@@ -251,7 +253,9 @@
         var lv = {}; nach[k].forEach(function (d) { lv[(d.lvl || '').split('–')[0]] = 1; });
         var stufen = Object.keys(lv).filter(Boolean).sort().join(' · ');
         return kachel({
-          em: b[0], t: b[1], bild: dialogBild(BEREICHBILD[k]),
+          /* 17.11.2026: eigene Fotos je Bereich im Petrol-Look (bilder/bereich/rs-*),
+             das alte Gesprächsbild bleibt als Ersatz. */
+          em: b[0], t: b[1], bild: 'bilder/bereich/rs-' + k + '.webp', alt: dialogBild(BEREICHBILD[k]),
           u: nach[k].length + (nach[k].length === 1 ? ' Gespräch' : ' Gespräche'),
           wert: stufen,
           tun: "hubSprechBereich('" + k + "')"
