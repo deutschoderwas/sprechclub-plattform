@@ -21,7 +21,18 @@
 import { createClient } from '@supabase/supabase-js';
 import { gruppeHtml, gruppeBetreff } from './_whatsapp-gruppe-mail.js';
 
-const KENNUNG = 'whatsapp_gruppe_okt26';
+/* Jeder Rundlauf braucht eine eigene Kennung. Die Oktober-Einladung
+   steht mit 115 Eintraegen in email_log; wuerde ein zweiter Lauf
+   dieselbe Kennung benutzen, bekaeme niemand die Mail noch einmal.
+
+   Julia, 17.11.2026: "alle muessen nochmal eine Email also alle
+   Premium und community mitglieder." Also ein neuer Lauf, und der
+   Doppelschutz gilt wieder nur innerhalb dieses Laufs.
+
+   ?lauf=okt26 holt den alten Stand zurueck, falls jemand nachsehen
+   will, wer damals dran war. */
+const LAEUFE = { okt26: 'whatsapp_gruppe_okt26', nov26: 'whatsapp_gruppe_nov26' };
+const LAUF_STANDARD = 'nov26';
 const TEST_AN = 'deutschoderwas@gmail.com';
 const STUFEN  = ['community', 'premium', 'premiumplus', 'premium_plus'];
 
@@ -36,10 +47,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, skipped: 'supabase fehlt' });
   }
 
+  const lauf = String(req.query?.lauf || LAUF_STANDARD);
+  const KENNUNG = LAEUFE[lauf];
+  if (!KENNUNG) return res.status(400).json({ ok: false, error: 'unbekannter lauf', moeglich: Object.keys(LAEUFE) });
   const trocken = String(req.query?.trocken || '') === '1';
   const nurTest = String(req.query?.test || '') === '1';
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-  const bericht = { trocken, test: nurTest, gesendet: [], uebersprungen: [], fehler: [] };
+  const bericht = { lauf, kennung: KENNUNG, trocken, test: nurTest, gesendet: [], uebersprungen: [], fehler: [] };
 
   const absender = {
     sender: { name: 'Julia · deutschoderwas club',
