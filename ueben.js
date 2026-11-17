@@ -81,7 +81,7 @@
     var r;
     try{ r=new SR(); }catch(e){ return; }
     r.lang='de-DE'; r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
-    srLaeuft=r; k.classList.add('hoert'); k.textContent='🎙️ Ich höre zu … (tippen zum Beenden)';
+    srLaeuft=r; k.classList.add('hoert'); k.textContent='Ich höre zu … (tippen zum Beenden)';
     var fest='';
     r.onresult=function(ev){
       var zw='';
@@ -91,11 +91,11 @@
       if(box){ box.style.display='block'; box.className='ub-gehoert';
         box.innerHTML='<span class="lbl">Ich höre …</span>'+E((fest+zw).trim()); }
     };
-    r.onerror=function(){ k.classList.remove('hoert'); k.textContent='🎤 Nochmal sprechen'; srLaeuft=null; };
+    r.onerror=function(){ k.classList.remove('hoert'); k.textContent='Nochmal sprechen'; srLaeuft=null; };
     r.onend=function(){
       k.classList.remove('hoert'); srLaeuft=null;
       var gehoert=fest.trim();
-      if(!gehoert){ k.textContent='🎤 Nochmal sprechen';
+      if(!gehoert){ k.textContent='Nochmal sprechen';
         if(box){ box.style.display='block'; box.className='ub-gehoert';
           box.innerHTML='<span class="lbl">Nichts verstanden</span>Sprich bitte etwas lauter — oder tipp unten auf „Hat geklappt".'; }
         return; }
@@ -107,7 +107,7 @@
         box.innerHTML='<span class="lbl">Das habe ich gehört</span>'+E(gehoert)+
           (v.fehlt.length?'<div style="margin-top:7px;font-size:15px;color:var(--soft,#5C5C5C)">Gefehlt hat: '+
             v.fehlt.map(function(w){return '<b class="fehlt">'+E(w)+'</b>';}).join(', ')+'</div>':''); }
-      k.textContent='🎤 Nochmal sprechen';
+      k.textContent='Nochmal sprechen';
       var b=document.getElementById('ubBtn'); if(b){ b.disabled=false; b.textContent='Weiter'; }
     };
     try{ r.start(); }catch(e){ k.classList.remove('hoert'); srLaeuft=null; }
@@ -125,7 +125,7 @@
   function save(s){ gSet('ub',s); }
   function addXP(n){ var s=load(); s.xp+=n; s.dayXP=(s.dayXP||0)+n; var goal=META().dailyGoal||30;
     if(s.dayXP>=goal && s.goalDay!==today()){ if(s.goalDay===yest())s.streak=(s.streak||0)+1; else s.streak=1; s.goalDay=today(); save(s);
-      setTimeout(function(){ celebrate('🔥 Tagesziel geschafft!','Streak: '+s.streak+' '+(s.streak===1?'Tag':'Tage')); },250); return s; }
+      setTimeout(function(){ celebrate('Tagesziel geschafft!','Streak: '+s.streak+' '+(s.streak===1?'Tag':'Tage')); },250); return s; }
     save(s); return s; }
   function markKnown(de){ if(!de)return; try{ var k=gGet('known',[])||[]; if(k.indexOf(de)<0){ k.push(de); gSet('known',k); } }catch(e){} }
   function themeKey(sk,th){ return sk+'|'+th; }
@@ -496,8 +496,8 @@
     `;
     document.head.appendChild(st);
   }
-  function celebrate(t,sub){ injectCSS(); var d=document.createElement('div'); d.className='ub-cele';
-    d.innerHTML='<div class="box"><div style="font-size:54px">🎉</div><h3 style="font-family:Space Grotesk,sans-serif;margin:6px 0">'+E(t)+'</h3><p style="color:#5C5C5C">'+E(sub||'')+'</p></div>';
+  function celebrate(t,sub){ injectCSS(); try{ ubxCSS(); }catch(e){} var d=document.createElement('div'); d.className='ub-cele';
+    d.innerHTML='<div class="box"><div class="ubx-endic gut">'+ubxIc('stern')+'</div><h3 style="font-family:Space Grotesk,sans-serif;margin:6px 0">'+E(t)+'</h3><p style="color:#5C5C5C">'+E(sub||'')+'</p></div>';
     d.onclick=function(){ d.remove(); }; document.body.appendChild(d); setTimeout(function(){ if(d.parentNode)d.remove(); },2200); }
 
   // ---------- HOME ----------------------------------------------------------
@@ -645,6 +645,21 @@
     '#v-ueben .ubx-k .ub-warum{font-size:12.5px;margin:0}',
     '#v-ueben .ub-mehrbtn{border:1px solid #E7EBF0;border-radius:12px;font-weight:600;color:#0A4E62;margin-top:14px}',
     '#v-ueben .ub-mehrbtn:hover{border-color:#0E6D85;color:#0E6D85}',
+    /* 17.11.2026: die Übungsrunde selbst */
+    '#ubOv .ub-prog{height:8px;background:#E7ECEE}',
+    '#ubOv .ub-prog span{background:#0E9384!important}',
+    '#ubOv .ub-hearts{display:inline-flex;gap:3px;align-items:center}',
+    '#ubOv .ubx-herz{width:19px;height:19px;fill:none;stroke:#C9D3D8;stroke-width:2}',
+    '#ubOv .ubx-herz.voll{fill:#E5484D;stroke:#E5484D}',
+    '#ubOv .ub-btn{background:#0E6D85!important;border-radius:14px!important;box-shadow:none!important;font-weight:700}',
+    '#ubOv .ub-btn:hover:not([disabled]){background:#0A4E62!important}',
+    '#ubOv .ub-btn[disabled]{background:#B9C7CD!important;opacity:1}',
+    '#ubOv .ub-btn.hell{background:#fff!important;color:#0A4E62!important;border:1px solid #D5E8EE!important}',
+    '#ubOv .ub-btn.hell:hover{background:#F2F8FA!important}',
+    '#ubOv .ub-end .xp{color:#0E6D85}',
+    '.ubx-endic{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:#F1F4F7;color:#6B7A82}',
+    '.ubx-endic.gut{background:#E3F2F6;color:#0E6D85}',
+    '.ubx-endic .ubx-ic{width:34px;height:34px}',
     '@media(max-width:760px){',
     '  #v-ueben .ubx-held{grid-template-columns:1fr;border-radius:20px;margin-bottom:16px}',
     '  #v-ueben .ubx-held-bild{order:-1;min-height:0;aspect-ratio:16/7}',
@@ -806,7 +821,7 @@
 
   // ---------- SESSION -------------------------------------------------------
   var S=null; // session state
-  function ensureOverlay(){ var o=document.getElementById('ubOv'); if(o)return o;
+  function ensureOverlay(){ try{ ubxCSS(); }catch(e){} var o=document.getElementById('ubOv'); if(o)return o;
     o=document.createElement('div'); o.className='ub-ov'; o.id='ubOv';
     /* Zwei getrennte Knoepfe: der Pfeil geht eine Aufgabe zurueck, das
        Kreuz beendet die Runde. Vorher war es einer, der je nach Stelle
@@ -1266,7 +1281,10 @@
     if(window.zurueckErledigt) zurueckErledigt('ueben');
     if(document.getElementById('v-ueben').classList.contains('active')) renderUeben(); };
 
-  function hearts(){ var h=S.hearts,m=META().maxHearts||5,s=''; for(var i=0;i<m;i++)s+= i<h?'❤️':'🤍'; return s; }
+  /* 17.11.2026: Herzen als Linien-Symbol statt Emoji - ruhiger, überall gleich dargestellt. */
+  function hearts(){ var h=S.hearts,m=META().maxHearts||5,s='';
+    for(var i=0;i<m;i++) s+='<svg class="ubx-herz'+(i<h?' voll':'')+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>';
+    return s; }
   function setProg(){ document.getElementById('ubProg').style.width=Math.round(S.idx/S.items.length*100)+'%'; document.getElementById('ubHearts').innerHTML=hearts(); }
 
   var ART=['der','die','das'];
@@ -1390,7 +1408,7 @@
          ein Satz aus dem Alltag. Danach kommt dasselbe Wort in der
          Runde als Aufgabe zurück. */
       h+=karteHtml(e);
-      btn.disabled=false; btn.textContent='Verstanden 👍';
+      btn.disabled=false; btn.textContent='Verstanden';
       if(!e.regel) setTimeout(function(){ speak(ohneArt(e.w||e.wort||'')); },260);
     } else if(e.type==='tippen'){
       if(e.img){ h+='<img class="ub-kimgs" src="'+E(e.img)+'" alt="" onerror="this.remove()">'; }
@@ -1427,7 +1445,7 @@
       else { h+='<button class="ub-play" onclick="ubSpeak(\''+E(e.word).replace(/'/g,"\\'")+'\')">🔊</button>'; }
       h+='<div class="ub-word">'+E(e.word)+'</div>'+(e.tip?'<div class="ub-tip">'+E(e.tip)+'</div>':'');
       h+=micHtml(e.word);
-      btn.disabled=false; btn.textContent='👍 Hat geklappt';
+      btn.disabled=false; btn.textContent='Hat geklappt';
       if(e.audioUrl){ setTimeout(function(){ ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
       else { setTimeout(function(){ speak(e.word); },200); }
     } else if(e.type==='lesen'){
@@ -1480,7 +1498,7 @@
       if(e.tip) h+='<div class="ub-tip">💡 '+E(e.tip)+'</div>';
       h+='<div style="text-align:center;margin-top:6px"><button class="ub-recbtn" id="ubRecBtn" onclick="ubRecToggle()">🎙️ Aufnehmen</button></div><div id="ubCmp"></div>';
       h+=micHtml(e.text);
-      btn.disabled=false; btn.textContent='Fertig 👍';
+      btn.disabled=false; btn.textContent='Fertig';
       if(e.audioUrl){ setTimeout(function(){ window.ubPlayUrl(e.audioUrl, document.querySelector('#ubBody .ub-play')); },300); }
       else { setTimeout(function(){ speak(e.text); },300); }
     }
@@ -1699,7 +1717,7 @@
     try { window.dispatchEvent(new CustomEvent('ub:fertig', { detail:{
       skId:S.skId, thId:S.thId, titel:S.title||'', richtig:S.correct, gesamt:total, prozent:pct }})); } catch(e){}
     try{ if(window.klang && !outOfHearts && pct>=50) window.klang('fertig'); }catch(_k){}
-    var em = outOfHearts?'💔':(pct>=80?'🏆':(pct>=50?'💪':'🙂'));
+    var em = '<span class="ubx-endic'+(outOfHearts?'':(pct>=50?' gut':''))+'">'+ubxIc(outOfHearts?'wdh':(pct>=80?'stern':(pct>=50?'haken':'ziel')))+'</span>';
     var msg= outOfHearts?'Keine Herzen mehr. Kein Problem, nächste Runde klappt es besser!':(pct>=80?'Stark gemacht!':(pct>=50?'Gut – dranbleiben!':'Übung macht den Meister.'));
     var body=document.getElementById('ubBody');
     body.innerHTML='<div class="ub-end"><div class="em">'+em+'</div><h2>'+E(msg)+'</h2>'+
@@ -1711,8 +1729,8 @@
     var bq = (S.thId && String(S.thId).indexOf('#')<0 && window.ubHatBilderQuiz && window.ubHatBilderQuiz(S.skId,S.thId));
     foot.innerHTML=(bq?'<button class="ub-btn" style="margin-bottom:10px" onclick="ubBilderQuiz(\''+S.skId+'\',\''+S.thId+'\')">Bilder-Quiz zu diesem Thema</button>':'')+
                    '<button class="ub-btn" onclick="ubAgain()">Nochmal üben</button>'+
-                   (lu?'<a class="ub-btn" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--primary,#D42A21),var(--accent,#FFCE00));margin-top:10px">📖 Passende Lektion ansehen</a>':'')+
-                   '<button class="ub-btn" style="background:#fff;color:var(--ink,#1A1A1A);border:2px solid var(--border,#ECECEC);box-shadow:none;margin-top:10px" onclick="ubClose()">Fertig</button>';
+                   (lu?'<a class="ub-btn hell" href="'+lu+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">Passende Lektion ansehen</a>':'')+
+                   '<button class="ub-btn hell" style="margin-top:10px" onclick="ubClose()">Fertig</button>';
   }
   window.ubAgain=function(){ var foot=document.querySelector('#ubOv .ub-foot'); foot.innerHTML='<button class="ub-btn" id="ubBtn" disabled onclick="ubBtn()">Prüfen</button>';
     if(S.thId==='mix') ubStartMix();
