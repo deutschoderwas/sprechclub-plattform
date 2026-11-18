@@ -1901,7 +1901,51 @@ const VIEWS=['dashboard','fuerdich','weg','lernen','sprechen','medien','bereiche
 function go(v){ location.hash=v; }
 function toggleNav(){ document.body.classList.toggle('nav-open'); }
 const VIEW_TITLES={dashboard:['Schülerbereich','Startseite'],fuerdich:['Lernen','Für dich'],fertigkeit:['Lernen','Fertigkeiten'],weg:['Lernen','Mein Kurs'],lernen:['Lernen','Dein Lernbereich'],sprechen:['Sprechen','Live und mit Amanda'],medien:['Medien','Podcast und Material'],kurs:['Lernbereich','Dein Kurs'],pruefung:['Prüfung','Prüfungsvorbereitung'],schreiben:['Lernen','Schreibtrainer'],kurse:['Lernen','Kursbibliothek'],kalender:['Live Unterricht','Kalender'],stunden:['Live Unterricht','Meine Stunden'],community:['Community-Chat','Deine Themen'],ueben:['Lernen','Üben'],vokabeln:['Lernen','Vokabeltrainer'],materialien:['Lernen','Materialien'],fortschritt:['Schülerbereich','Mein Bereich'],nachrichten:['Nachrichten','Team'],amanda:['Amanda','KI-Sprechpartnerin'],lernpfad:['Lernen','Mein Lernplan'],szenen:['Lernen','Meine Szenen'],fehler:['Lernen','Fehler-Trainer'],buddy:['Lernen','Sprech-Buddy'],abo:['Konto','Mein Abo'],profil:['Konto','Profil'],podcast:['Medien','Podcast'],amandasprechen:['Sprechen','Mit Amanda']};
-function updateTopbar(v){var t=VIEW_TITLES[v]||['Schülerbereich','']; var s=document.getElementById('tbS'),b=document.getElementById('tbT'); var lang='de'; try{lang=localStorage.getItem('dow_lang')||'de';}catch(e){} var TT=window.__I18N__||{}; function tr(x){var o=TT[x]; return (o&&o[lang]!=null)?o[lang]:x;} if(s){s.setAttribute('data-de',t[0]);s.setAttribute('data-i18n',t[0]);s.textContent=tr(t[0]);} if(b){b.setAttribute('data-de',t[1]);b.setAttribute('data-i18n',t[1]);b.textContent=tr(t[1]);}}
+/* Die beiden Zeilen oben links (Bereich und Titel) standen in jeder
+   Sprache auf Deutsch. Der Grund stand in einer einzigen Zeile:
+
+     s.setAttribute('data-i18n', t[0]); s.textContent = tr(t[0]);
+
+   t[0] ist der deutsche Titel, nicht sein Schluessel. tr() hat also im
+   Woerterbuch nach "Schuelerbereich" gesucht, nichts gefunden und das
+   Deutsche zurueckgegeben - und das Gleiche beim naechsten
+   Ansichtswechsel wieder. Wer auf Englisch stellte, sah ueberall
+   englische Menuepunkte und darueber "Live Unterricht · Kalender".
+
+   Jetzt uebersetzt die Kopfzeile ueber die Schluessel, die es laengst
+   gibt: dieselben Woerter, die auch im Menue stehen, also dieselben
+   geprueften Uebersetzungen. Fuer die Titel, zu denen es noch keinen
+   Schluessel gibt, bleibt bewusst das Deutsche stehen - lieber ein
+   deutsches Wort als ein erfundenes. Welche das sind, steht unten. */
+var TITEL_SCHLUESSEL = {
+  'Schülerbereich':'k_area', 'Startseite':null,
+  'Lernen':'nv_grp_lernen2', 'Für dich':'nv_fuerdich', 'Fertigkeiten':'nv_fert',
+  'Mein Kurs':'nv_kurs', 'Dein Lernbereich':'kb_eyebrow', 'Sprechen':'nv_grp_sprechen',
+  'Materialien':'nv_material', 'Kursbibliothek':'nv_bib', 'Kalender':'kl_h1',
+  'Live Unterricht':'ms_zur', 'Meine Stunden':'nv_stunden', 'Community-Chat':'nv_news',
+  'Üben':'nv_grp_ueben', 'Vokabeltrainer':'vo_h1', 'Mein Bereich':'nv_mein',
+  'Nachrichten':'k_msg', 'Profil':'k_profile', 'Mein Abo':'nav_abo'
+};
+function updateTopbar(v){
+  var t=VIEW_TITLES[v]||['Schülerbereich',''];
+  var s=document.getElementById('tbS'), b=document.getElementById('tbT');
+  var lang='de'; try{ lang=localStorage.getItem('dow_lang')||'de'; }catch(e){}
+  var TT=window.__I18N__||{};
+  function tr(deutsch){
+    if(lang==='de') return deutsch;
+    var k=TITEL_SCHLUESSEL[deutsch];
+    var o=k?TT[k]:null;
+    return (o&&o[lang]!=null&&o[lang]!=='') ? o[lang] : deutsch;
+  }
+  function setz(el, deutsch){
+    if(!el) return;
+    el.setAttribute('data-de', deutsch);
+    var k=TITEL_SCHLUESSEL[deutsch];
+    if(k) el.setAttribute('data-i18n', k); else el.removeAttribute('data-i18n');
+    el.textContent=tr(deutsch);
+  }
+  setz(s, t[0]); setz(b, t[1]);
+}
 function routeFromHash(){ let v=(location.hash||'#dashboard').slice(1);
   /* Nach aussen heisst der Bereich "Chat". #chat fuehrt deshalb auf
      dieselbe Ansicht wie das alte #community — Links aus alten Mails
@@ -5411,7 +5455,15 @@ window.kbOpen=function(id){
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_sept": {"en": "from 1 September", "es": "desde el 1 de septiembre", "ru": "\u0441 1 \u0441\u0435\u043d\u0442\u044f\u0431\u0440\u044f", "uk": "\u0437 1 \u0432\u0435\u0440\u0435\u0441\u043d\u044f", "tr": "1 Eyl\u00fcl'den itibaren", "it": "dal 1\u00b0 settembre", "fa": "\u0627\u0632 \u06f1 \u0633\u067e\u062a\u0627\u0645\u0628\u0631"}, "kb_from9": {"en": "from 01/09", "es": "desde 01/09", "ru": "\u0441 01.09", "uk": "\u0437 01.09", "tr": "01.09'dan", "it": "dal 01/09", "fa": "\u0627\u0632 \u06f0\u06f1.\u06f0\u06f9"}, "kb_lektionen": {"en": "lessons", "es": "lecciones", "ru": "\u0443\u0440\u043e\u043a\u043e\u0432", "uk": "\u0443\u0440\u043e\u043a\u0456\u0432", "tr": "ders", "it": "lezioni", "fa": "\u062f\u0631\u0633"}, "kb_note9": {"en": "This course opens on 1 September. Until then you can already see what is waiting for you. \ud83d\udc9b", "es": "Este curso abre el 1 de septiembre. Hasta entonces ya puedes ver lo que te espera. \ud83d\udc9b", "ru": "\u042d\u0442\u043e\u0442 \u043a\u0443\u0440\u0441 \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f 1 \u0441\u0435\u043d\u0442\u044f\u0431\u0440\u044f. \u0410 \u043f\u043e\u043a\u0430 \u0442\u044b \u0443\u0436\u0435 \u0432\u0438\u0434\u0438\u0448\u044c, \u0447\u0442\u043e \u0442\u0435\u0431\u044f \u0436\u0434\u0451\u0442. \ud83d\udc9b", "uk": "\u0426\u0435\u0439 \u043a\u0443\u0440\u0441 \u0432\u0456\u0434\u043a\u0440\u0438\u0454\u0442\u044c\u0441\u044f 1 \u0432\u0435\u0440\u0435\u0441\u043d\u044f. \u0410 \u043f\u043e\u043a\u0438 \u0442\u0438 \u0432\u0436\u0435 \u0431\u0430\u0447\u0438\u0448, \u0449\u043e \u043d\u0430 \u0442\u0435\u0431\u0435 \u0447\u0435\u043a\u0430\u0454. \ud83d\udc9b", "tr": "Bu kurs 1 Eyl\u00fcl'de a\u00e7\u0131l\u0131yor. O zamana kadar seni neyin bekledi\u011fini \u015fimdiden g\u00f6rebilirsin. \ud83d\udc9b", "it": "Questo corso apre il 1\u00b0 settembre. Fino ad allora puoi gi\u00e0 vedere cosa ti aspetta. \ud83d\udc9b", "fa": "\u0627\u06cc\u0646 \u062f\u0648\u0631\u0647 \u06f1 \u0633\u067e\u062a\u0627\u0645\u0628\u0631 \u0628\u0627\u0632 \u0645\u06cc\u200c\u0634\u0648\u062f. \u062a\u0627 \u0622\u0646 \u0632\u0645\u0627\u0646 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc \u0628\u0628\u06cc\u0646\u06cc \u0686\u0647 \u0686\u06cc\u0632\u06cc \u062f\u0631 \u0627\u0646\u062a\u0638\u0627\u0631\u062a \u0627\u0633\u062a. \ud83d\udc9b"}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_eyebrow": {"en": "Your learning space", "es": "Tu espacio de aprendizaje", "ru": "Твоё пространство для учёбы", "uk": "Твій простір для навчання", "tr": "Öğrenme alanın", "it": "Il tuo spazio di apprendimento", "fa": "فضای یادگیری تو"}});</script>
 <script>window.__I18N__=Object.assign(window.__I18N__||{},{"kb_start": {"en": "Start learning", "es": "Empezar a aprender", "ru": "Начать урок", "uk": "Почати урок", "tr": "Öğrenmeye başla", "it": "Inizia a imparare", "fa": "شروع یادگیری"}, "kb_done": {"en": "✓ completed — practise again?", "es": "✓ completada — ¿repasar otra vez?", "ru": "✓ пройдено — повторить ещё раз?", "uk": "✓ пройдено — повторити ще раз?", "tr": "✓ tamamlandı — tekrar çalışalım mı?", "it": "✓ completata — ripassare di nuovo?", "fa": "✓ تمام شد — دوباره تمرین کنیم؟"}});</script>
-<script>(function(){var T=window.__I18N__||{};var LANG="de";function ca(el){if(!el.getAttribute("data-de"))el.setAttribute("data-de",el.innerHTML);if(LANG==="de"){el.innerHTML=el.getAttribute("data-de");return;}var k=el.getAttribute("data-i18n");el.innerHTML=(T[k]&&T[k][LANG]!=null)?T[k][LANG]:el.getAttribute("data-de");}window.setLang=function(lang){LANG=lang;document.documentElement.lang=lang;document.documentElement.dir=(lang==="fa")?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(ca);var sel=document.getElementById("langSel");if(sel)sel.value=lang;try{localStorage.setItem("dow_lang",lang);}catch(e){}};var obs=new MutationObserver(function(m){if(LANG==="de")return;m.forEach(function(x){x.addedNodes&&Array.prototype.forEach.call(x.addedNodes,function(nd){if(nd.nodeType!==1)return;if(nd.hasAttribute&&nd.hasAttribute("data-i18n"))ca(nd);if(nd.querySelectorAll)nd.querySelectorAll("[data-i18n]").forEach(ca);});});});function boot(){var sv=null;try{sv=localStorage.getItem("dow_lang");}catch(e){}var sup=["de","en","es","ru","uk","tr","it","fa"];var l=sv;if(!l){var b=(navigator.language||"de").slice(0,2).toLowerCase();l=sup.indexOf(b)>=0?b:"de";}setLang(l);obs.observe(document.body,{childList:true,subtree:true});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script>
+<script>(function(){var T=window.__I18N__||{};var LANG="de";function ca(el){if(!el.getAttribute("data-de"))el.setAttribute("data-de",el.innerHTML);if(LANG==="de"){el.innerHTML=el.getAttribute("data-de");return;}var k=el.getAttribute("data-i18n");el.innerHTML=(T[k]&&T[k][LANG]!=null)?T[k][LANG]:el.getAttribute("data-de");}window.setLang=function(lang){LANG=lang;document.documentElement.lang=lang;document.documentElement.dir=(lang==="fa")?"rtl":"ltr";document.querySelectorAll("[data-i18n]").forEach(ca);var sel=document.getElementById("langSel");if(sel)sel.value=lang;try{localStorage.setItem("dow_lang",lang);}catch(e){}};var obs=new MutationObserver(function(m){if(LANG==="de")return;m.forEach(function(x){x.addedNodes&&Array.prototype.forEach.call(x.addedNodes,function(nd){if(nd.nodeType!==1)return;if(nd.hasAttribute&&nd.hasAttribute("data-i18n"))ca(nd);if(nd.querySelectorAll)nd.querySelectorAll("[data-i18n]").forEach(ca);});});});function boot(){var sv=null;try{sv=localStorage.getItem("dow_lang");}catch(e){}var sup=["de","en","es","ru","uk","tr","it","fa"];
+/* Die oeffentlichen Seiten bieten elf Sprachen an, der Schuelerbereich
+   acht - Arabisch, Franzoesisch und Chinesisch fehlen hier. Die
+   gespeicherte Wahl wurde bisher ungeprueft uebernommen: Wer draussen
+   auf Arabisch gestellt hatte, kam mit lang="ar" herein, fand im
+   Woerterbuch nichts, sah alles auf Deutsch - und im Waehler oben
+   stand nicht einmal seine Sprache. Jetzt faellt eine Sprache, die es
+   hier nicht gibt, sichtbar auf Deutsch zurueck. */
+var l=(sv&&sup.indexOf(sv)>=0)?sv:null;if(!l){var b=(navigator.language||"de").slice(0,2).toLowerCase();l=sup.indexOf(b)>=0?b:"de";}setLang(l);obs.observe(document.body,{childList:true,subtree:true});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();})();</script>
 
 
 <script>
