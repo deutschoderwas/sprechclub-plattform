@@ -1317,6 +1317,52 @@
     pfeil:'<path d="m9 18 6-6-6-6"/>'
   };
   function pfxIc(k){ return '<svg class="pfx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(PFX_IC[k]||'')+'</svg>'; }
+  /* 18.11.2026: die Seite einer Prüfung im ruhigen Stil der übrigen
+     Plattform. Vorher: Kopf je Niveau in Gold, Rot oder Violett mit
+     Punkten, Farbklecksen und Flaggenstreifen, darunter vier bunt
+     gefüllte Karten mit Knöpfen in vier Farben, ein roter und ein
+     schwarzer Knopf. Jetzt: Petrol-Kopf mit Foto, weiße Karten, alle
+     Knöpfe Petrol. Die Farbe des Prüfungsteils bleibt als kleiner
+     Akzent (Etikett, Nummern, Balken), damit man die Teile auseinander-
+     hält. Das Niveau steht weiter im Etikett oben. */
+  function stilPfx2(){
+    if(document.getElementById('pfx2-stil')) return;
+    var st=document.createElement('style'); st.id='pfx2-stil';
+    st.textContent=[
+      '#v-pruefung .pf-hero{background:linear-gradient(140deg,#0E6D85,#0A4E62)!important}',
+      '#v-pruefung .pf-hero::after,#v-pruefung .pf-blob,#v-pruefung .pf-punkte{display:none}',
+      '#v-pruefung .pf-hero-foto{opacity:.6;mix-blend-mode:normal;-webkit-mask-image:linear-gradient(100deg,transparent 0,#000 55%);mask-image:linear-gradient(100deg,transparent 0,#000 55%)}',
+      '#v-pruefung .pf-mark{transform:none}',
+      '#v-pruefung .pf-mark::after{display:none}',
+      '#v-pruefung .pf-p-gold{background:#fff;color:#0A4E62}',
+      '#v-pruefung .pf-p-weiss{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.24)}',
+      '#v-pruefung .pf-lead{color:#D6EEF5}',
+      '#v-pruefung .pf-ring{background:conic-gradient(#7FE0D0 calc(var(--p)*1%),rgba(255,255,255,.2) 0)!important}',
+      '#v-pruefung .pf-ring i{background:rgba(6,40,52,.45)}',
+      '#v-pruefung .pf-ring b{color:#fff!important}',
+      '#v-pruefung .pf-hf{background:rgba(255,255,255,.12)}',
+      '#v-pruefung .pf-termin{background:#F2F8FA;border:1px solid #D5E8EE}',
+      '#v-pruefung .pf-termin > span{color:#0E6D85}',
+      '#v-pruefung .pf-termin button{background:#0E6D85}',
+      '#v-pruefung .pf-jetzt{background:#fff;border:1px solid #E7EBF0;box-shadow:0 14px 30px -20px rgba(18,24,31,.35)}',
+      '#v-pruefung .pf-jetzt-z{transform:none;background:#E3F2F6;color:#0E6D85;box-shadow:none}',
+      '#v-pruefung .pf-jetzt-t > span{color:#0E6D85}',
+      '#v-pruefung .pf-jetzt-b{background:#0E6D85;border-radius:12px;box-shadow:none}',
+      '#v-pruefung .pf-jetzt-b:hover{background:#0A4E62;transform:none;box-shadow:none}',
+      '#v-pruefung .pf-m{background:#fff;border:1px solid #E7EBF0;border-radius:20px}',
+      '#v-pruefung .pf-m:hover{transform:translateY(-2px);box-shadow:0 14px 30px -20px rgba(18,24,31,.35)}',
+      '#v-pruefung .pf-m.hat{border-color:#E7EBF0;box-shadow:none}',
+      '#v-pruefung .pf-m-z{transform:none;background:var(--pf-w);box-shadow:none}',
+      '#v-pruefung .pf-m-min{background:var(--pf-w)}',
+      '#v-pruefung .pf-m-tr{background:#F7F9FA;border:1px solid #EEF2F5}',
+      '#v-pruefung .pf-m-tb,#v-pruefung .pf-m-b{background:#0E6D85;box-shadow:none;border-radius:12px}',
+      '#v-pruefung .pf-m-tb:hover,#v-pruefung .pf-m-b:hover{background:#0A4E62;transform:none;box-shadow:none}',
+      '#v-pruefung .pf-m-l{border:1px solid #EEF2F5;box-shadow:none}',
+      '#v-pruefung .pf-m-bar{background:#EEF2F5}',
+      '#v-pruefung .pf-m-bald{background:var(--pf-w)}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
   function stilPfx(){
     if(document.getElementById('pfx-stil')) return;
     var st=document.createElement('style'); st.id='pfx-stil';
@@ -1513,6 +1559,7 @@
   }
 
   window.pruefungOeffnen=function(id, bereich){
+    stilPfx2();
     var p=pruefungVon(id); if(!p) return;
     stilMeine();
     var v=document.getElementById('v-pruefung'); if(!v) return;
