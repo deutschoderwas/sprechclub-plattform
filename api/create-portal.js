@@ -16,6 +16,42 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
 import { kundeSuchen } from './_stripe-kunde.js';
+/* Eine eigene Portal-Konfiguration ohne Tarifwechsel. Einmal angelegt,
+   danach am Vermerk in den Metadaten wiedergefunden. Geht etwas schief,
+   kommt null zurueck und das Portal oeffnet wie bisher - ein Portal mit
+   einer ueberfluessigen Liste ist immer noch besser als keines. */
+const PORTAL_KONFIG_MARKE = 'dow-ohne-tarifwechsel-v1';
+let _portalKonfigId = null;
+
+async function portalKonfig(stripe, site) {
+  if (_portalKonfigId) return _portalKonfigId;
+  try {
+    const liste = await stripe.billingPortal.configurations.list({ limit: 100 });
+    const da = (liste.data || []).find(k => k && k.metadata && k.metadata.dow === PORTAL_KONFIG_MARKE);
+    if (da) { _portalKonfigId = da.id; return _portalKonfigId; }
+    const neu = await stripe.billingPortal.configurations.create({
+      business_profile: {
+        headline: 'deutschoderwas club',
+        privacy_policy_url: site + '/datenschutz.html',
+        terms_of_service_url: site + '/agb.html',
+      },
+      features: {
+        customer_update: { enabled: true, allowed_updates: ['email', 'address', 'name', 'phone'] },
+        invoice_history: { enabled: true },
+        payment_method_update: { enabled: true },
+        subscription_cancel: { enabled: true, mode: 'at_period_end' },
+        subscription_update: { enabled: false },
+      },
+      metadata: { dow: PORTAL_KONFIG_MARKE },
+    });
+    _portalKonfigId = neu.id;
+    return _portalKonfigId;
+  } catch (e) {
+    console.error('portal-konfig', (e && e.message) || e);
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   if (!process.env.STRIPE_SECRET_KEY) return res.status(500).json({ error: 'stripe_not_configured' });
@@ -76,6 +112,29 @@ export default async function handler(req, res) {
     }
 
     const opts = { customer: customerId, return_url: `${site}/konto.html#abo` };
+
+    /* Julia, 18.11.2026, mit Bildschirmfoto aus dem Kundenportal:
+       "was ist das fuer ein quatsch?????" Dort standen noch die alten
+       Stundenpakete zur Auswahl - Sprechclub 4 fuer 79, 8 fuer 129, 12
+       fuer 149 Euro. Die gibt es seit dem 3.11.2026 nicht mehr: kein
+       Guthaben, keine Stunden, nichts dahinter.
+
+       Warum sie trotzdem dastanden: Die Liste der wechselbaren Tarife
+       ist eine Einstellung IN STRIPE, keine Zeile bei uns. Beim
+       Abschaffen der Pakete wurde unser Code aufgeraeumt - diese
+       zweite Stelle nicht.
+
+       Hier wird die Tuer zugemacht, die durch unseren Code fuehrt: Wir
+       oeffnen das Portal mit einer eigenen Konfiguration, in der der
+       Tarifwechsel ausgeschaltet ist. Zahlungsmittel aendern,
+       Rechnungen ansehen und kuendigen bleiben. Die Konfiguration
+       wird einmal angelegt und danach wiedergefunden.
+
+       Der Link in den Mails (billing.stripe.com/p/login/...) geht nicht
+       hier durch, sondern nimmt die Standard-Einstellung im
+       Stripe-Dashboard. Den Schalter dort muss Julia selbst umlegen. */
+    const konfig = await portalKonfig(stripe, site);
+    if (konfig) opts.configuration = konfig;
     if (subId && flow === 'kuendigen') {
       opts.flow_data = { type: 'subscription_cancel', subscription_cancel: { subscription: subId } };
     }
@@ -85,9 +144,18 @@ export default async function handler(req, res) {
       session = await stripe.billingPortal.sessions.create(opts);
     } catch (e) {
       /* Ist der gewuenschte Weg im Portal nicht eingeschaltet, lehnt Stripe
-         ihn ab. Dann oeffnen wir die Uebersicht, statt gar nichts zu tun. */
+         ihn ab. Dann oeffnen wir die Uebersicht, statt gar nichts zu tun.
+         Dasselbe gilt fuer unsere eigene Konfiguration: lieber das Portal
+         wie bisher als eine Fehlermeldung. */
       if (opts.flow_data) {
         delete opts.flow_data;
+        try { session = await stripe.billingPortal.sessions.create(opts); }
+        catch (e2) {
+          if (opts.configuration) { delete opts.configuration; session = await stripe.billingPortal.sessions.create(opts); }
+          else { throw e2; }
+        }
+      } else if (opts.configuration) {
+        delete opts.configuration;
         session = await stripe.billingPortal.sessions.create(opts);
       } else { throw e; }
     }
