@@ -81,9 +81,38 @@ export default async function handler(req, res) {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return res.status(200).json({ ok: false, skipped: 'supabase fehlt' });
 
   const trocken = String(req.query?.trocken || '') === '1';
+  const ersetzen = String(req.query?.ersetzen || '') === '1';
   const tage = Math.min(60, Math.max(1, Number(req.query?.tage) || 14));
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const bericht = { trocken, tage, geplant: [], uebersprungen: [], hinweise: [] };
+
+  /* ?ersetzen=1 raeumt die eigene Vorausplanung weg und plant neu.
+
+     Gebraucht am 20.11.2026: Der erste Lauf gab jedem der drei
+     Wochentage eine andere Podcastfolge, der rote Faden der Woche war
+     weg. Der Fehler war schnell behoben, das Aufraeumen nicht - eine
+     Loeschung von aussen stellt eine Rueckfrage, und die kam dreimal
+     nicht durch. Also macht es der Dienst selbst, der die Zeilen auch
+     angelegt hat.
+
+     Angefasst wird ausschliesslich Eigenes: status 'geplant', in der
+     Zukunft, und die Quelle traegt den Planer-Stempel. Was schon
+     veroeffentlicht ist, bleibt unberuehrt. */
+  if (ersetzen && !trocken) {
+    const { data: weg, error: wegFehler } = await sb.from('ki_beitraege')
+      .delete().eq('status', 'geplant').gt('geplant_fuer', new Date().toISOString())
+      .like('quelle', '%|plan:%').select('quelle');
+    if (wegFehler) return res.status(500).json({ ok: false, error: 'aufraeumen: ' + wegFehler.message });
+    bericht.entfernt = (weg || []).length;
+    /* Die Impulse, die daran hingen, wieder freigeben - sonst waeren
+       sie verbraucht, ohne je erschienen zu sein. */
+    const impWeg = (weg || []).map((r) => String(r.quelle || ''))
+      .filter((q) => q.startsWith('impuls:')).map((q) => q.split('|')[0].slice(7));
+    for (const id of impWeg) {
+      await sb.from('community_impuls').update({ benutzt: null, zuletzt_am: null }).eq('id', id)
+        .then(() => {}, () => {});
+    }
+  }
 
   // --- was es schon gibt, damit nichts doppelt entsteht
   const { data: schon } = await sb.from('ki_beitraege').select('quelle,geplant_fuer,status');
