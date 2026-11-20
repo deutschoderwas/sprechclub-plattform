@@ -1833,6 +1833,109 @@ html.dow-an .an-rein.da{opacity:1;transform:none}
 }
 @media(max-width:560px){.rbild{width:40px;height:40px;border-radius:10px}}
 </style>
+<style id="navPasst">
+/* ============================================================
+   Die Navigation darf nicht ueber den Rand laufen
+
+   Julia, 20.11.2026, mit Bildschirmfoto: "warum sieht man den Button
+   Mitglied werden nicht??"
+
+   Weil die Leiste bisher nur zwei Stufen kannte: volle Breite bis
+   900 px, darunter das Burgermenue. Dazwischen stehen acht Punkte in
+   einer Reihe, die nicht umbrechen und nicht schrumpfen duerfen - sie
+   passen also nicht in die 1160 px der Leiste, laufen rechts hinaus,
+   und was ganz rechts steht, verschwindet hinter dem Fensterrand. Das
+   war ausgerechnet "Mitglied werden".
+
+   Jetzt gibt die Reihe von aussen nach innen nach: zuerst die
+   Punkte, die ohnehin nur zu einem Abschnitt weiter unten springen.
+   Preise, Niveau-Test, Schuelerbereich, Sprache und "Mitglied werden"
+   bleiben bis 900 px stehen - ab da uebernimmt das Burgermenue.
+   ============================================================ */
+.nav-in{max-width:1240px}
+.nav-links{min-width:0}
+/* Der eigentliche Grund, warum "Mitglied werden" fehlte: Die Knoepfe
+   in der Leiste sind Flex-Kinder und duerfen darum schrumpfen. Wird es
+   eng, schrumpft der letzte - und weil seine Schrift nicht umbricht,
+   steht sie zur Haelfte ausserhalb des Knopfes. Er ist also da, nur
+   abgeschnitten. Hier darf nichts mehr schrumpfen; eng wird es
+   stattdessen dadurch, dass weiter unten Punkte weichen. */
+.nav-links > *{flex:0 0 auto}
+@media (max-width:1560px){.nav-links a.l[href="lehrkraft-werden.html"]{display:none}}
+@media (max-width:1340px){.nav-links a.l[href="#stimmen"]{display:none}}
+@media (max-width:1200px){.nav-links a.l[href="#plattform"]{display:none}}
+@media (max-width:1080px){.nav-links a.l[href="#ablauf"]{display:none}}
+@media (max-width:1000px){.nav-links a.l[href="#preise"],.nav-links a.l[onclick*="openPreise"]{display:none}}
+</style>
+<style id="heroMitte">
+/* ============================================================
+   Die Startseite mit Video oben
+
+   Julia, 20.11.2026: "So waere die Landingpage mega am Anfang mit
+   einem grossen Text Untertext und dann das Video und dann der Rest."
+
+   Darum steht der Hero jetzt in EINER mittigen Spalte, in der
+   Reihenfolge: Ueberschrift - Untertext - Video - Knopf.
+
+   Umgebaut wird dafuer nichts: .rhero-txt wird zu display:contents,
+   seine Kinder werden selbst zu Rasterfeldern und bekommen hier ihre
+   Reihenfolge. So bleibt das Markup, wie es ist - und damit auch alles,
+   was daran haengt (Uebersetzung, Animation, die Knoepfe).
+
+   Solange es das Video noch nicht gibt, steht an seiner Stelle die
+   Bildergalerie wie bisher. Sobald window.HERO_VIDEO gesetzt ist,
+   tritt das Video an ihre Stelle - eine Zeile, kein Umbau.
+   ============================================================ */
+/* !important, weil die alte zweispaltige Fassung weiter unten selbst
+   mit !important steht (.rhero-in{grid-template-columns:.95fr 1.05fr
+   !important}). Ohne das hier bliebe der Hero zweispaltig, und die
+   Teile wuerden in der neuen Reihenfolge im Zickzack stehen. */
+.rhero-mitte .rhero-in{grid-template-columns:1fr !important;gap:0 !important;
+  justify-items:center;text-align:center;
+  max-width:940px;margin-left:auto;margin-right:auto;padding:62px 0 70px}
+.rhero-mitte .rhero-txt{display:contents}
+.rhero-mitte .reyebrow{order:1}
+.rhero-mitte h1{order:2;font-size:clamp(34px,5.4vw,62px);max-width:18ch;margin:14px 0 0}
+.rhero-mitte .rangebot{order:3;margin-top:18px}
+.rhero-mitte .rsub{order:4;display:block;max-width:54ch;margin:18px 0 0;
+  font-size:clamp(16.5px,2.1vw,19.5px);line-height:1.6}
+.rhero-mitte .rcafe{order:5;margin-top:8px}
+/* Der kleine Bilderrahmen mit Julia steht oben links aus dem Bild
+   heraus. In der mittigen Fassung liegt darueber jetzt Text, also
+   braucht das Bild Luft nach oben. */
+.rhero-mitte .rhero-img,.rhero-mitte .hero-film{order:6;width:100%;max-width:760px;margin:58px 0 0}
+.rhero-mitte .rcta{order:7;justify-content:center;margin-top:24px}
+.rhero-mitte .rchips{order:8;display:flex;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.rhero-mitte .rcount{order:9}
+.rhero-mitte .rtrust{order:10;justify-content:center;margin-top:18px}
+
+/* Das Video selbst */
+.hero-film{position:relative;border-radius:20px;overflow:hidden;background:#000;
+  aspect-ratio:16/9;box-shadow:0 30px 70px rgba(0,0,0,.36)}
+.hero-film video{width:100%;height:100%;display:block;object-fit:cover}
+.hf-play{position:absolute;inset:0;margin:auto;width:88px;height:88px;border:0;border-radius:50%;
+  cursor:pointer;background:rgba(255,255,255,.95);box-shadow:0 12px 36px rgba(0,0,0,.42);
+  display:grid;place-items:center;transition:transform .18s ease}
+.hf-play span{width:0;height:0;margin-left:7px;border-left:25px solid #10627A;
+  border-top:15px solid transparent;border-bottom:15px solid transparent}
+.hf-play:hover{transform:scale(1.06)}
+.hero-film.laeuft .hf-play{display:none}
+/* Gibt es ein Video, weicht die Bildergalerie. */
+html.hat-film .rhero-mitte .rhero-img.hslides{display:none}
+
+@media (max-width:760px){
+  .rhero-mitte .rhero-in{padding:38px 0 46px}
+  /* Auf dem Handy war der Untertext bisher ausgeblendet. In dieser
+     Fassung ist er die halbe Botschaft - also zeigen wir ihn. */
+  .rhero.rhero-mitte .rsub{display:block}
+  .rhero.rhero-mitte .rchips{display:flex}
+  .rhero-mitte h1{max-width:none;margin-top:10px}
+  .rhero-mitte .rhero-img,.rhero-mitte .hero-film{margin-top:46px}
+  .hf-play{width:64px;height:64px}
+  .hf-play span{border-left-width:19px;border-top-width:11px;border-bottom-width:11px;margin-left:5px}
+}
+@media (prefers-reduced-motion:reduce){.hf-play{transition:none}}
+</style>
 </head>
 <body>
 <div class="flagbar"></div>
@@ -1852,7 +1955,7 @@ html.dow-an .an-rein.da{opacity:1;transform:none}
 </nav><div class="kaufbar" id="kaufbar" hidden><div class="kbx-t"><b id="kbxTitel">👑 Sprechclub · Warteliste</b><span id="kbxText">139 € im Monat · die Anmeldung ist gerade geschlossen</span></div><button type="button" class="btn btn-kauf" id="kbxKnopf" onclick="zurWarteliste('Premium')">🔔 Auf die Warteliste</button><button type="button" class="kbx-zu" aria-label="Leiste schließen" onclick="kaufbarZu()">✕</button></div><div class="mobmenu-bg" id="mobmenuBg" onclick="closeMenu()"></div><nav class="mobmenu" id="mobmenu" aria-label="Menü"><button class="mm-x" aria-label="Schließen" onclick="closeMenu()">✕</button><a class="mm-l" href="#ablauf" data-i18n="t003" onclick="closeMenu()">So läuft's</a><a class="mm-l" href="#stimmen" data-i18n="t005" onclick="closeMenu()">Feedback</a><a class="mm-l" href="lehrkraft-werden.html" onclick="closeMenu()">Lehrkraft werden</a><a class="mm-l" data-i18n="y03" href="#preise" onclick="closeMenu();if(window.openPreise){openPreise();return false}">Preise</a><a class="mm-l" href="konto.html" id="navAuthM" data-i18n="t007" onclick="closeMenu();goBereich(event)">🔒 Schülerbereich</a><div class="mm-lang"><span aria-hidden="true">🌐</span><span class="mm-lang-l">Webseiten Sprache:</span><select aria-label="Sprache" id="langSelM" onchange="setLang(this.value)"><option value="de">Deutsch</option><option value="en">English</option><option value="es">Español</option><option value="ru">Русский</option><option value="tr">Türkçe</option><option value="ar">العربية</option><option value="fr">Français</option><option value="it">Italiano</option><option value="uk">Українська</option><option value="zh">中文</option><option value="fa">فارسی</option></select></div><button type="button" class="btn btn-kauf mm-cta" data-i18n="nb01" onclick="closeMenu();zuPreisen()">Mitglied werden</button></nav>
 <!-- HERO -->
 
-<header class="rhero">
+<header class="rhero rhero-mitte">
 <div class="wrap rhero-in">
 <div class="rhero-txt">
 <span class="reyebrow" data-i18n="nb101">Der Sprechclub von deutschoderwas</span>
@@ -1883,8 +1986,42 @@ html.dow-an .an-rein.da{opacity:1;transform:none}
 
 <div class="rhero-img hslides" id="hslides"><figure class="jrahmen"><div class="jrahmen-b"><div class="jrahmen-bild" id="jrBild"><img src="start-bilder/club-julia.jpg" alt="Julia im Sprechclub" class="on" loading="eager" width="402" height="248"><img src="start-bilder/club-dmitry.jpg" alt="Dmitry spricht im Sprechclub" loading="lazy" width="648" height="358"><img src="start-bilder/club-vitalii.jpg" alt="Vitalii im Sprechclub" loading="lazy" width="688" height="310"><img src="start-bilder/club-anna.jpg" alt="Anna im Sprechclub" loading="lazy" width="672" height="296">
 <img src="start-bilder/club-gruppe.jpg" alt="Der Klassenraum im Sprechclub" loading="lazy" width="794" height="496"></div></div></figure><div class="hs-stage"><img class="on" alt="Live-Klassenraum im Sprechclub" src="start-bilder/21-sprechclub-thema.jpg" width="1600" height="816" fetchpriority="high" decoding="async"/><img class="" alt="Live-Klassenraum im Sprechclub" src="start-bilder/22-sprechclub-zu-zweit.jpg" width="1600" height="816" loading="lazy" decoding="async"/><img class="" alt="Live-Klassenraum im Sprechclub" src="start-bilder/23-sprechclub-alltag.jpg" width="1600" height="816" loading="lazy" decoding="async"/><img class="" alt="Live-Klassenraum im Sprechclub" src="start-bilder/24-sprechclub-live-tafel.jpg" width="1600" height="816" loading="lazy" decoding="async"/></div><div class="hs-bar"><div class="hs-caps"><span class="hs-cap on"><b>1</b><span data-i18n="nb97">Das Thema steht – als Präsentation vorbereitet</span></span><span class="hs-cap"><b>2</b><span data-i18n="nb98">Dialoge, Rollenspiele, frei sprechen</span></span><span class="hs-cap"><b>3</b><span data-i18n="nb99">Situationen aus dem echten Alltag</span></span><span class="hs-cap"><b>4</b><span data-i18n="nb100b">Die Lehrkraft kommt in die Gruppen und hilft weiter</span></span></div><div class="hs-dots"><button type="button" class="on" aria-label="1"></button><button type="button" class="" aria-label="2"></button><button type="button" class="" aria-label="3"></button><button type="button" class="" aria-label="4"></button></div></div></div>
+<div class="hero-film" id="heroFilm" hidden>
+<video id="heroFilmV" playsinline preload="metadata" controls></video>
+<button class="hf-play" type="button" id="heroFilmPlay" aria-label="Video abspielen"><span></span></button>
+</div>
 </div>
 </header>
+<script>
+/* Das Video oben. Solange hier null steht, zeigt der Hero die
+   Bildergalerie. Ist die Aufnahme da, reicht eine Zeile:
+     window.HERO_VIDEO = { datei:'/film/sprechclub.mp4',
+                           bild:'start-bilder/21-sprechclub-thema.jpg',
+                           untertitel:'/film/sprechclub.vtt' };
+   Untertitel bitte nicht weglassen - das Video startet stumm, und die
+   Haelfte schaut ohne Ton. */
+window.HERO_VIDEO = window.HERO_VIDEO || null;
+(function () {
+  var c = window.HERO_VIDEO, box = document.getElementById('heroFilm');
+  if (!box || !c || !c.datei) return;
+  var v = document.getElementById('heroFilmV');
+  v.src = c.datei;
+  if (c.bild) v.poster = c.bild;
+  if (c.untertitel) {
+    var sp = document.createElement('track');
+    sp.kind = 'captions'; sp.src = c.untertitel; sp.srclang = 'de';
+    sp.label = 'Deutsch'; sp.default = true;
+    v.appendChild(sp);
+  }
+  box.hidden = false;
+  document.documentElement.classList.add('hat-film');
+  document.getElementById('heroFilmPlay').onclick = function () {
+    try { v.play(); } catch (e) {}
+  };
+  v.addEventListener('play', function () { box.classList.add('laeuft'); });
+  v.addEventListener('pause', function () { box.classList.remove('laeuft'); });
+})();
+</script>
 <hr class="rbeam"/>
 <!-- BEWEIS -->
 <div class="proof">
