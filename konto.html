@@ -3460,6 +3460,92 @@ window.zuStartWoche = function(){
   try{ renderKalender(); }catch(e){ loadKalender(); }
   const z=document.getElementById('v-kalender'); if(z) z.scrollIntoView({behavior:'smooth',block:'start'});
 };
+/* ============================================================
+   Eine Stunde am Tag
+
+   Julia, 20.11.2026: "Wenn die Schueler einen zweiten Unterricht am
+   selben Tag buchen wollen, dann erscheint ein Fenster: Du hast an
+   diesem Tag schon einen Unterricht, moechtest du umbuchen? Du kannst
+   nur 1 Stunde am Tag den Unterricht besuchen."
+
+   Gesucht wird in kalCache - was am selben Tag liegt, liegt auch in
+   derselben Woche oder demselben Monat, also immer im geladenen
+   Ausschnitt.
+
+   Zwei Wege, wie sie es beschrieben hat: auf die neue Zeit umbuchen,
+   dann wird die alte storniert - oder es bei der alten Zeit lassen.
+   Umgebucht wird in dieser Reihenfolge: erst die neue Stunde buchen,
+   und nur wenn das geklappt hat, die alte freigeben. Sonst steht
+   jemand ohne Termin da, weil die Wunschstunde inzwischen voll war.
+
+   Hat die alte Stunde schon angefangen, laesst sie sich nicht mehr
+   stornieren. Dann bieten wir das Umbuchen gar nicht erst an, statt
+   es zu versuchen und daran zu scheitern. */
+function tagesText(d){
+  try{ return d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}); }
+  catch(e){ return ''; }
+}
+function schonAnDiesemTag(neu){
+  if(!neu || !neu.starts_at) return null;
+  var tag = new Date(neu.starts_at).toDateString();
+  return (kalCache||[]).find(function(x){
+    return x && x.mine && String(x.id)!==String(neu.id)
+      && x.starts_at && new Date(x.starts_at).toDateString()===tag;
+  }) || null;
+}
+function zeigeTagesregel(alt, neu){
+  var aStart=new Date(alt.starts_at), nStart=new Date(neu.starts_at);
+  var schonGelaufen = aStart.getTime() <= Date.now();
+  var altTitel=esc(kalFokus(alt.topic||alt.title).fokus||alt.title||'Unterricht');
+  var neuTitel=esc(kalFokus(neu.topic||neu.title).fokus||neu.title||'Unterricht');
+  var card=document.getElementById('cfmCard');
+  card.innerHTML='<div class="ico">\uD83D\uDCC5</div>'
+    + '<h3>Du hast an diesem Tag schon einen Unterricht</h3>'
+    + '<p class="hint">Du kannst <b>eine Stunde am Tag</b> besuchen \u2014 so bleibt Platz f\u00fcr alle, und du kommst in Ruhe nach.</p>'
+    + '<div class="det"><b>'+altTitel+'</b><span>'+esc(tagesText(aStart))+' \u00b7 '+esc(fmtTimeK(aStart))+' Uhr</span></div>'
+    + (schonGelaufen
+        ? '<p class="hint">Diese Stunde hat schon angefangen und l\u00e4sst sich nicht mehr stornieren. Buche gern morgen wieder.</p>'
+          + '<div class="acts"><button class="btn btn-primary" onclick="closeCfm()" style="flex:1">Verstanden</button></div>'
+        : '<p class="hint">M\u00f6chtest du auf <b>'+esc(fmtTimeK(nStart))+' Uhr</b> umbuchen? Dann wird <b>'+altTitel+'</b> storniert und der Platz wieder frei.</p>'
+          + '<div class="acts"><button class="btn btn-ghost" onclick="closeCfm()">Bei der alten Zeit bleiben</button>'
+          + '<button class="btn btn-primary" id="cfmUmb">\u2194 Auf '+esc(fmtTimeK(nStart))+' Uhr umbuchen</button></div>');
+  if(!schonGelaufen){
+    document.getElementById('cfmUmb').onclick=function(){ tagUmbuchen(alt.id, neu.id); };
+  }
+  document.getElementById('cfmModal').classList.add('open');
+}
+async function tagUmbuchen(altId, neuId){
+  var k=document.getElementById('cfmUmb');
+  if(k){ k.disabled=true; k.textContent='Wird umgebucht \u2026'; }
+  var b=await sb.rpc('book_class',{p_class_id:neuId});
+  if(b.error || !b.data || !b.data.ok){
+    var m={class_full:'Diese Stunde ist voll \u2014 dein alter Termin bleibt.',
+           already_booked:'Die hast du schon gebucht.',
+           class_in_past:'Diese Stunde ist schon vorbei.',
+           booking_paused:'Buchung ist gerade pausiert.',
+           kein_premium:'Zum LIVE-Unterricht geh\u00f6rt der Sprechclub.',
+           kein_zugang:'Daf\u00fcr brauchst du eine aktive Mitgliedschaft.',
+           kein_unterricht:'An diesem Tag ist kein Unterricht.'};
+    closeCfm(); toast(m[b.data&&b.data.error]||'Das hat nicht geklappt \u2014 dein alter Termin bleibt.');
+    return;
+  }
+  var c=await sb.rpc('cancel_booking',{p_class_id:altId});
+  var storniert=!!(c&&c.data&&c.data.ok);
+  try{
+    var sitz=await sb.auth.getSession();
+    var session=sitz&&sitz.data&&sitz.data.session;
+    if(session){
+      fetch('/api/notify-booking',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({class_id:neuId})}).catch(function(){});
+      if(storniert) fetch('/api/notify-cancel',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({class_id:altId,umbuchung:true})}).catch(function(){});
+    }
+  }catch(e){}
+  closeCfm();
+  toast(storniert ? 'Umgebucht \u2713 Der neue Termin steht.'
+                  : 'Neuer Termin gebucht. Die alte Stunde lie\u00df sich nicht stornieren \u2014 bitte storniere sie von Hand.');
+  await load();
+  if(typeof kalRefresh==='function') kalRefresh();
+}
+
 function kalBook(id){
   /* Frueher stand hier hart credits<1. Premium bucht ab 01.11.2026 aber
      ohne Guthaben — und wurde deshalb schon vom eigenen Knopf abgewiesen,
@@ -3471,6 +3557,10 @@ function kalBook(id){
      gar nicht erst gezeigt, aber eine Seite, die seit Mitternacht offen
      steht, oder ein Aufruf aus der Monatsansicht koennte hier landen. */
   if(c && !stundeErlaubt(c.starts_at)){ erstAbStart(); return; }
+  /* Eine Stunde am Tag: liegt an diesem Tag schon eine eigene Stunde,
+     fragen wir erst, bevor wir die Buchung bestaetigen lassen. */
+  var schon = c ? schonAnDiesemTag(c) : null;
+  if(schon){ zeigeTagesregel(schon, c); return; }
   const start=c?new Date(c.starts_at):null;
   const title=c?esc(c.topic||c.title||'Unterricht'):'Unterricht';
   /* Das Niveau stand hier mit in der Zeile. Julia, 17.10.2026: "auch
