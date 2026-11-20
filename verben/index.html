@@ -13,160 +13,171 @@
 <meta name="apple-mobile-web-app-title" content="Verben">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Shantell+Sans:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Shantell+Sans:wght@500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   Verben — im Stil von deutschoderwas
+   Verben — die Mechanik von Duolingo, die Handschrift von
+   deutschoderwas
 
-   Julia, 20.11.2026, zur ersten Fassung: "Das ist zu KI mäßig."
-   Sie hatte recht, und der Grund stand in club-stil.css: Dort ist die
-   Handschrift der Marke festgelegt — Caveat Brush und Shantell Sans,
-   die handgezeichnete Ecke (--hand), harte Schatten ohne Weichzeichner,
-   Türkis, Gelb, Rot. Ich hatte stattdessen Inter, Haarlinien, graue
-   Pfeilchen und weiche Schatten genommen: das Aussehen, das jede
-   zweite neue App hat.
+   Julia, 20.11.2026, in drei Schritten: "zu KI maessig" — "noch
+   professioneller" — "copy duolingo".
 
-   Jetzt dieselben Bausteine wie im Schülerbereich. Schlicht bleibt es
-   trotzdem — wenig auf dem Bildschirm, große Schrift, viel Luft —,
-   aber es ist ihre Schrift und nicht irgendeine.
+   Kopiert wird das, was frei ist: der Pfad aus runden Knoten, die
+   kurze Lektion mit Balken und Abbrechen-Kreuz, die drei Herzen, das
+   farbige Band, das nach der Antwort von unten hochfaehrt, und die
+   dicken Knoepfe mit Unterkante, die sich beim Druecken senken. Das
+   sind Bedienmuster, keine Marke.
+
+   NICHT kopiert: Logo, Eule, deren Gruen, deren Schrift, deren Texte.
+   Die Farben und Schriften sind die aus club-stil.css — Petrol,
+   Tuerkis, Caveat Brush, Shantell Sans.
    ============================================================ */
 :root{
-  --tuerkis:#39CCE3; --tuerkis-dunkel:#10627A; --auf-tuerkis:#063138; --tuerkis-hauch:#E6F8FC;
-  --gelb:#FFE100; --gruen:#77D42A; --gruen-tief:#4E9E12; --rot:#D42A21; --rot-tief:#B02B24;
-  --tinte:#14181B; --tinte-2:#5A6B72; --creme:#F6F9FA; --karte:#FFFFFF; --linie:#E7ECEE;
+  --tuerkis:#39CCE3; --tuerkis-tief:#1FA8C4; --petrol:#10627A; --petrol-tief:#063138;
+  --tuerkis-hauch:#E6F8FC; --gelb:#FFE100;
+  --gruen:#58CC02; --gruen-tief:#46A302; --gruen-hauch:#EBFBE0;
+  --rot:#D42A21; --rot-tief:#A81D16; --rot-hauch:#FDECEB;
+  --tinte:#14181B; --tinte-2:#5A6B72; --tinte-3:#9FB0B7;
+  --grund:#F6F9FA; --karte:#FFFFFF; --linie:#DDE6E9; --gleis:#E4EBEE;
   --hand:255px 12px 225px 15px/15px 225px 15px 255px;
-  --schrift-titel:'Caveat Brush',cursive;
-  --schrift-kopf:'Shantell Sans','Inter',cursive;
-  --schrift-text:'Inter',system-ui,sans-serif;
+  --titel:'Caveat Brush',cursive; --kopf:'Shantell Sans','Inter',sans-serif; --text:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{font-family:var(--schrift-text);color:var(--tinte);background:var(--creme);line-height:1.55;font-size:16px}
+body{font-family:var(--text);color:var(--tinte);background:var(--grund);line-height:1.55;font-size:16px;
+  overscroll-behavior-y:none}
 img{display:block;max-width:100%}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-.huelle{max-width:540px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 18px max(30px,env(safe-area-inset-bottom))}
+.huelle{max-width:540px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 20px 150px}
 
-/* ---- Kopf ---- */
-.kopf{display:flex;align-items:center;min-height:32px;margin-bottom:18px}
-.marke{font-family:var(--schrift-kopf);font-weight:700;font-size:14px;color:var(--tinte-2)}
-.kopf .rechts{margin-left:auto;font-family:var(--schrift-kopf);font-weight:700;font-size:14px;
-  color:var(--auf-tuerkis);background:var(--tuerkis-hauch);border:2.5px solid var(--auf-tuerkis);
-  border-radius:var(--hand);padding:3px 12px;font-variant-numeric:tabular-nums}
-.zurueck{font-family:var(--schrift-kopf);font-weight:700;font-size:15px;color:var(--tinte);
-  display:inline-block;margin:0 0 16px;padding:4px 0}
+/* ---------- Kopfleiste: Herzen und Punkte ---------- */
+.leiste{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.leiste .marke{font-family:var(--kopf);font-weight:700;font-size:13.5px;color:var(--tinte-3)}
+.leiste .rechts{margin-left:auto;display:flex;align-items:center;gap:14px;
+  font-weight:800;font-size:14.5px;font-variant-numeric:tabular-nums}
+.leiste .pkt{color:var(--petrol)}
+.leiste .hz{color:var(--rot);letter-spacing:1px}
 
-h1{font-family:var(--schrift-titel);font-weight:400;font-size:46px;line-height:1;letter-spacing:.01em}
-.unter{color:var(--tinte-2);font-size:15.5px;margin-top:8px;max-width:34ch}
+h1{font-family:var(--titel);font-weight:400;font-size:42px;line-height:1}
+.unter{color:var(--tinte-2);font-size:15px;margin-top:6px}
 
-/* ---- Karten: Bereiche und Lektionen ---- */
-.liste{display:grid;gap:12px;margin-top:24px}
-.zeile{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--karte);
-  border:2.5px solid var(--tinte);border-radius:var(--hand);box-shadow:3px 4px 0 rgba(32,33,31,.12);
-  padding:15px 18px;transition:transform .14s ease,box-shadow .14s ease}
-.zeile:hover{transform:translateY(-2px);box-shadow:4px 5px 0 rgba(32,33,31,.16)}
-.zeile:active{transform:translateY(0);box-shadow:2px 3px 0 rgba(32,33,31,.12)}
-.zeile.fertig{background:var(--tuerkis-hauch);border-color:var(--auf-tuerkis)}
-.zeile .txt{display:block;flex:1;min-width:0}
-.zeile .name{display:block;font-family:var(--schrift-kopf);font-weight:700;font-size:18px;line-height:1.2}
-.zeile .meta{display:block;font-size:13.5px;color:var(--tinte-2);margin-top:3px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.zeile .haken{flex:none;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--tinte);
-  display:grid;place-items:center;font-family:var(--schrift-kopf);font-weight:700;font-size:14px;background:var(--creme)}
-.zeile.fertig .haken{background:var(--gruen);border-color:var(--gruen-tief);color:#10340A}
+/* ---------- Der Pfad ---------- */
+.bereich{margin-top:34px}
+.bereich-kopf{display:flex;align-items:center;gap:12px;background:var(--petrol);color:#fff;
+  border-radius:16px;padding:13px 18px;box-shadow:0 4px 0 var(--petrol-tief)}
+.bereich-kopf b{font-family:var(--kopf);font-weight:700;font-size:16.5px;flex:1}
+.bereich-kopf span{font-size:13px;font-weight:700;opacity:.85;font-variant-numeric:tabular-nums}
 
-/* ---- Übung ---- */
-.schritte{display:flex;gap:5px;margin-bottom:24px}
-.schritte i{flex:1;height:9px;background:var(--karte);border:2px solid var(--tinte);border-radius:99px}
-.schritte i.da{background:var(--tuerkis);border-color:var(--auf-tuerkis)}
-.frage{font-family:var(--schrift-kopf);font-weight:700;font-size:20px;line-height:1.25;margin-bottom:18px}
-/* Die --hand-Ecke gehoert auf Knoepfe und Karten. Auf einem
-   quadratischen Foto verzieht sie das Bild sichtbar - im
-   Bildschirmfoto sah es aus wie ein Fehler. Darum hier eine ruhige,
-   nur leicht ungleiche Rundung. */
-.bild{width:100%;max-width:290px;aspect-ratio:1/1;margin:0 auto 22px;overflow:hidden;background:var(--karte);
-  border:2.5px solid var(--tinte);border-radius:26px 22px 24px 20px;box-shadow:3px 4px 0 rgba(32,33,31,.12)}
+.pfad{display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 0 4px}
+.knoten{display:flex;flex-direction:column;align-items:center;gap:5px}
+.knoten button{width:78px;height:70px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--kopf);font-weight:700;font-size:21px;color:#fff;
+  background:var(--gleis);box-shadow:0 7px 0 #CBD6DA;transition:transform .09s,box-shadow .09s}
+.knoten button:active{transform:translateY(5px);box-shadow:0 2px 0 #CBD6DA}
+.knoten.offen button{background:var(--tuerkis);box-shadow:0 7px 0 var(--tuerkis-tief);color:var(--petrol-tief)}
+.knoten.fertig button{background:var(--gruen);box-shadow:0 7px 0 var(--gruen-tief)}
+.knoten.zu button{color:var(--tinte-3);cursor:default}
+.knoten small{font-size:11.5px;font-weight:700;color:var(--tinte-3);letter-spacing:.03em}
+.knoten.offen small{color:var(--petrol)}
+.knoten:nth-child(2){margin-left:84px}.knoten:nth-child(3){margin-left:110px}
+.knoten:nth-child(4){margin-left:40px}.knoten:nth-child(5){margin-left:-62px}
+.knoten:nth-child(6){margin-left:-96px}.knoten:nth-child(7){margin-left:-30px}
+@media(max-width:380px){.knoten:nth-child(n){margin-left:0}}
+
+/* ---------- Lektion ---------- */
+.lek-kopf{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.lek-kopf .x{font-size:26px;line-height:1;color:var(--tinte-3);padding:2px 4px}
+.gleis{flex:1;height:14px;background:var(--gleis);border-radius:999px;overflow:hidden}
+.gleis i{display:block;height:100%;background:var(--tuerkis);border-radius:999px;transition:width .35s ease}
+.lek-kopf .hz{color:var(--rot);font-weight:800;font-size:15px;letter-spacing:1px}
+
+.frage{font-family:var(--kopf);font-weight:700;font-size:21px;line-height:1.3;margin-bottom:22px}
+.bild{width:100%;max-width:270px;aspect-ratio:1/1;margin:0 auto 24px;overflow:hidden;background:var(--karte);
+  border:2px solid var(--linie);border-radius:20px}
 .bild img{width:100%;height:100%;object-fit:cover}
-.satz{background:var(--karte);border:2.5px solid var(--tinte);border-radius:var(--hand);
-  box-shadow:2px 3px 0 rgba(32,33,31,.10);padding:14px 17px;font-size:18px;margin-bottom:20px;line-height:1.45}
-.hinweis{font-size:16.5px;color:var(--tinte-2);margin-bottom:18px}
+.satz{background:var(--karte);border:2px solid var(--linie);border-radius:14px;padding:15px 17px;
+  font-size:18px;line-height:1.5;margin-bottom:24px}
+.hinweis{font-size:16.5px;color:var(--tinte-2);margin-bottom:22px}
+
 .wahl{display:grid;gap:11px}
-.wahl button{font-family:var(--schrift-kopf);font-weight:700;font-size:16.5px;text-align:left;
-  background:var(--karte);border:2.5px solid var(--tinte);border-radius:var(--hand);
-  box-shadow:2px 3px 0 rgba(32,33,31,.12);padding:14px 18px;min-height:54px;
-  transition:transform .12s ease,box-shadow .12s ease,background .12s}
-.wahl button:hover:not([disabled]){transform:translateY(-2px);box-shadow:3px 4px 0 rgba(32,33,31,.16)}
-.wahl button.ja{background:var(--gruen);border-color:var(--gruen-tief);color:#10340A}
-.wahl button.nein{background:var(--rot);border-color:var(--rot-tief);color:#fff}
-input[type=text]{width:100%;padding:14px 17px;border:2.5px solid var(--tinte);border-radius:var(--hand);
-  font-family:var(--schrift-kopf);font-weight:700;font-size:18px;background:var(--karte);outline:none;
-  box-shadow:2px 3px 0 rgba(32,33,31,.12)}
-input[type=text]:focus{border-color:var(--tuerkis-dunkel)}
+.wahl button{font-family:var(--kopf);font-weight:700;font-size:16.5px;text-align:left;background:var(--karte);
+  border:2px solid var(--linie);border-bottom-width:4px;border-radius:14px;padding:15px 18px;min-height:58px;
+  transition:transform .09s,border-color .12s,background .12s}
+.wahl button:active:not([disabled]){transform:translateY(2px);border-bottom-width:2px;margin-bottom:2px}
+.wahl button.gewaehlt{border-color:var(--tuerkis);background:var(--tuerkis-hauch);color:var(--petrol)}
+.wahl button.ja{border-color:var(--gruen-tief);background:var(--gruen-hauch);color:#3A7A02}
+.wahl button.nein{border-color:var(--rot-tief);background:var(--rot-hauch);color:var(--rot)}
+input[type=text]{width:100%;padding:16px 18px;border:2px solid var(--linie);border-bottom-width:4px;
+  border-radius:14px;font-family:var(--kopf);font-weight:700;font-size:18px;background:var(--karte);outline:none}
+input[type=text]:focus{border-color:var(--tuerkis)}
 
-.fuss{margin-top:24px}
-.weiter{display:block;width:100%;font-family:var(--schrift-kopf);font-weight:700;font-size:17px;
-  background:var(--tuerkis);color:var(--auf-tuerkis);border:2.5px solid var(--auf-tuerkis);
-  border-radius:var(--hand);box-shadow:2px 3px 0 rgba(6,49,56,.28);padding:14px;min-height:54px;
-  transition:transform .12s ease,box-shadow .12s ease}
-.weiter:hover{transform:translateY(-2px);box-shadow:3px 4px 0 rgba(6,49,56,.28)}
-.weiter.still{background:var(--karte);color:var(--tinte);border-color:var(--tinte);box-shadow:2px 3px 0 rgba(32,33,31,.16)}
-.echo{background:var(--karte);border:2.5px solid var(--tinte);border-radius:var(--hand);
-  box-shadow:2px 3px 0 rgba(32,33,31,.10);padding:14px 17px;margin-bottom:16px}
-.echo b{display:block;font-family:var(--schrift-kopf);font-weight:700;font-size:17px;margin-bottom:4px}
-.echo.ja b{color:var(--gruen-tief)} .echo.nein b{color:var(--rot-tief)}
-.echo span{display:block;font-size:15px;color:var(--tinte-2)}
+/* ---------- Das Band von unten ---------- */
+.band{position:fixed;left:0;right:0;bottom:0;background:var(--karte);border-top:2px solid var(--linie);
+  padding:16px 20px max(18px,env(safe-area-inset-bottom));z-index:40}
+.band-in{max-width:540px;margin:0 auto}
+.band.ja{background:var(--gruen-hauch);border-top-color:#C7EFA8}
+.band.nein{background:var(--rot-hauch);border-top-color:#F3C9C6}
+.band b{display:block;font-family:var(--kopf);font-weight:700;font-size:18px;margin-bottom:3px}
+.band.ja b{color:#3A7A02} .band.nein b{color:var(--rot-tief)}
+.band .wort{font-size:15px;color:var(--tinte-2)}
+.band .bsp{font-size:14.5px;color:var(--tinte-2);font-style:italic;margin-top:2px}
+.knopf{display:block;width:100%;margin-top:14px;font-family:var(--kopf);font-weight:700;font-size:17px;
+  color:#fff;background:var(--petrol);border-radius:var(--hand);padding:15px;min-height:56px;
+  box-shadow:0 5px 0 var(--petrol-tief);transition:transform .09s,box-shadow .09s}
+.knopf:active{transform:translateY(3px);box-shadow:0 2px 0 var(--petrol-tief)}
+.knopf.gruen{background:var(--gruen);box-shadow:0 5px 0 var(--gruen-tief)}
+.knopf.rot{background:var(--rot);box-shadow:0 5px 0 var(--rot-tief)}
+.knopf.grau{background:var(--gleis);color:var(--tinte-3);box-shadow:0 5px 0 #CBD6DA;cursor:default}
+.knopf.still{background:var(--karte);color:var(--tinte);box-shadow:0 0 0 2px var(--linie) inset}
 
-/* ---- Ende ---- */
-.ende{padding:34px 0 10px}
-.ende h2{font-family:var(--schrift-titel);font-weight:400;font-size:38px;line-height:1.05}
-.ende .quote{font-size:16px;color:var(--tinte-2);margin:8px 0 26px;font-variant-numeric:tabular-nums}
-.fein{font-size:13.5px;color:var(--tinte-2);margin-top:26px}
-.fein a{color:var(--tuerkis-dunkel)}
+/* ---------- Ende ---------- */
+.ende{text-align:center;padding:46px 0 10px}
+.ende h2{font-family:var(--titel);font-weight:400;font-size:40px;line-height:1.05;margin-bottom:6px}
+.ende p{color:var(--tinte-2);margin-bottom:26px}
+.ende .zahlen{display:flex;gap:10px;justify-content:center;margin-bottom:26px}
+.ende .zahlen div{flex:1;max-width:150px;background:var(--karte);border:2px solid var(--linie);
+  border-bottom-width:4px;border-radius:14px;padding:12px 8px}
+.ende .zahlen b{display:block;font-family:var(--kopf);font-weight:700;font-size:21px;font-variant-numeric:tabular-nums}
+.ende .zahlen small{font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--tinte-3)}
+.fein{font-size:13px;color:var(--tinte-3);margin-top:30px;text-align:center}
+.fein a{color:var(--petrol)}
 </style>
 </head>
 <body>
 <div class="huelle" id="app"></div>
+<div id="unten"></div>
 
 <script src="verben-daten.js"></script>
 <script>
 (function(){
   'use strict';
-  var VERBEN = (window.VERBEN || []).slice();
-  var BEREICHE = window.BEREICHE || [];
-  var PRO_LEKTION = 5, FRAGEN = 10, SPEICHER = 'dow_verben_v2';
+  var VERBEN=(window.VERBEN||[]).slice(), BEREICHE=window.BEREICHE||[];
+  var PRO=5, FRAGEN=10, HERZEN=3, SPEICHER='dow_verben_v3';
 
-  var stand = { fertig:{} };
-  try { var roh = localStorage.getItem(SPEICHER); if (roh) stand = Object.assign(stand, JSON.parse(roh)); } catch(e){}
-  function sichern(){ try{ localStorage.setItem(SPEICHER, JSON.stringify(stand)); }catch(e){} }
+  var stand={fertig:{},xp:0};
+  try{ var r=localStorage.getItem(SPEICHER); if(r) stand=Object.assign(stand,JSON.parse(r)); }catch(e){}
+  function sichern(){ try{ localStorage.setItem(SPEICHER,JSON.stringify(stand)); }catch(e){} }
 
-  /* Lektionen: je Bereich Fünferpäckchen, Reihenfolge wie in den Daten
-     (nach Niveau sortiert) — leicht beginnen, schwerer werden. */
-  var lektionen = [];
+  var lektionen=[];
   BEREICHE.forEach(function(g){
-    var dr = VERBEN.filter(function(v){ return v.g === g; });
-    for (var i=0;i<dr.length;i+=PRO_LEKTION){
-      var teil = dr.slice(i,i+PRO_LEKTION);
-      if (teil.length) lektionen.push({ id:g+'#'+(i/PRO_LEKTION+1), g:g, nr:i/PRO_LEKTION+1, verben:teil });
-    }
+    var dr=VERBEN.filter(function(v){return v.g===g;});
+    for(var i=0;i<dr.length;i+=PRO){ var t=dr.slice(i,i+PRO);
+      if(t.length) lektionen.push({id:g+'#'+(i/PRO+1),g:g,nr:i/PRO+1,verben:t}); }
   });
-  function lekVon(g){ return lektionen.filter(function(l){ return l.g === g; }); }
-  function fertigVon(g){ return lekVon(g).filter(function(l){ return stand.fertig[l.id]; }).length; }
+  function lekVon(g){ return lektionen.filter(function(l){return l.g===g;}); }
 
-  function mischen(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-  function schlicht(s){ return String(s||'').toLowerCase().trim()
-    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z]/g,''); }
-  function andere(v,n){
-    var nah = VERBEN.filter(function(x){ return x.w!==v.w && x.g===v.g; });
-    var pool = nah.length>=n ? nah : VERBEN.filter(function(x){ return x.w!==v.w; });
-    return mischen(pool).slice(0,n);
-  }
+  function mischen(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function schlicht(s){return String(s||'').toLowerCase().trim().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z]/g,'');}
+  function andere(v,n){var nah=VERBEN.filter(function(x){return x.w!==v.w&&x.g===v.g;});
+    var pool=nah.length>=n?nah:VERBEN.filter(function(x){return x.w!==v.w;});return mischen(pool).slice(0,n);}
 
   function aufgaben(lek){
-    var arten=['bild','bedeutung','satz','tippen'], liste=[];
+    var arten=['bild','bedeutung','satz','tippen'],liste=[];
     mischen(lek.verben.concat(lek.verben)).slice(0,FRAGEN).forEach(function(v,i){
-      var a=arten[i%arten.length]; if(a==='bild'&&!v.bild) a='bedeutung';
+      var a=arten[i%arten.length]; if(a==='bild'&&!v.bild)a='bedeutung';
       var f=andere(v,3);
-      if(a==='bild') liste.push({art:a,v:v,frage:'Welches Verb?',bild:v.bild,wahl:mischen([v.w].concat(f.map(function(x){return x.w;}))),loesung:v.w});
+      if(a==='bild') liste.push({art:a,v:v,frage:'Welches Verb siehst du?',bild:v.bild,wahl:mischen([v.w].concat(f.map(function(x){return x.w;}))),loesung:v.w});
       else if(a==='bedeutung') liste.push({art:a,v:v,frage:'Was bedeutet „'+v.w+'“?',wahl:mischen([v.b].concat(f.map(function(x){return x.b;}))),loesung:v.b});
       else if(a==='satz') liste.push({art:a,v:v,frage:'Welches Verb steckt im Satz?',satz:v.s,wahl:mischen([v.w].concat(f.map(function(x){return x.w;}))),loesung:v.w});
       else liste.push({art:'tippen',v:v,frage:'Schreib das Verb',bild:v.bild,hinweis:v.b,loesung:v.w});
@@ -174,119 +185,129 @@ input[type=text]:focus{border-color:var(--tuerkis-dunkel)}
     return mischen(liste);
   }
 
-  var app=document.getElementById('app'), lauf=null;
-  function kopf(rechts){ return '<div class="kopf"><span class="marke">deutschoderwas</span>'
-    + (rechts?'<span class="rechts">'+rechts+'</span>':'') + '</div>'; }
+  var app=document.getElementById('app'), unten=document.getElementById('unten'), lauf=null;
+  function band(h){ unten.innerHTML = h || ''; }
 
-  /* ---------- Bereiche ---------- */
-  function zeigeStart(){
-    var ganz = lektionen.filter(function(l){ return stand.fertig[l.id]; }).length;
-    app.innerHTML = kopf(ganz+' / '+lektionen.length)
-      + '<h1>Verben</h1>'
-      + '<p class="unter">'+VERBEN.length+' Verben mit Bild, Bedeutung und Beispielsatz — nach Bereichen geordnet.</p>'
-      + '<div class="liste">' + BEREICHE.map(function(g){
-          var alle=lekVon(g), f=fertigVon(g), anz=VERBEN.filter(function(v){return v.g===g;}).length;
-          var teil = alle.length ? Math.round(f/alle.length*100) : 0;
-          return '<button class="zeile '+(teil===100?'fertig':'')+'" data-g="'+esc(g)+'">'
-            + '<span class="haken">'+(teil===100?'✓':Math.max(1,alle.length))+'</span>'
-            + '<span class="txt"><span class="name">'+esc(g)+'</span>'
-            + '<span class="meta">'+anz+' Verben · '+alle.length+(alle.length===1?' Lektion':' Lektionen')+'</span></span>'
-            + '<span class="fort"><i style="width:'+teil+'%"></i></span>'
-            + '</button>';
-        }).join('') + '</div>'
-      + '<p class="fein">Dein Fortschritt bleibt auf diesem Gerät. <a href="https://www.deutschoderwas-club.de/" target="_blank" rel="noopener">deutschoderwas club</a></p>';
-    Array.prototype.forEach.call(app.querySelectorAll('[data-g]'),function(b){
-      b.onclick=function(){ zeigeBereich(b.getAttribute('data-g')); };
-    });
+  function leiste(herzen){
+    return '<div class="leiste"><span class="marke">deutschoderwas</span><span class="rechts">'
+      + (herzen!=null ? '<span class="hz">'+Array(herzen+1).join('♥')+(herzen===0?'—':'')+'</span>' : '')
+      + '<span class="pkt">'+(stand.xp||0)+' XP</span></span></div>';
   }
 
-  function zeigeBereich(g){
-    var alle=lekVon(g);
-    app.innerHTML = kopf(fertigVon(g)+' / '+alle.length)
-      + '<button class="zurueck" id="zur">← Bereiche</button>'
-      + '<h1>'+esc(g)+'</h1>'
-      + '<div class="liste">' + alle.map(function(l){
-          var ist=!!stand.fertig[l.id];
-          return '<button class="zeile '+(ist?'fertig':'')+'" data-l="'+esc(l.id)+'">'
-            + '<span class="haken">'+(ist?'✓':l.nr)+'</span>'
-            + '<span class="txt"><span class="name">Lektion '+l.nr+'</span>'
-            + '<span class="meta">'+l.verben.map(function(v){return v.w;}).join(' · ')+'</span></span>'
-            + '</button>';
-        }).join('') + '</div>';
-    document.getElementById('zur').onclick=zeigeStart;
+  /* ---------- Pfad ---------- */
+  function zeigeStart(){
+    band('');
+    var h = leiste() + '<h1>Verben</h1><p class="unter">'+VERBEN.length+' Verben mit Bild — Lektion für Lektion.</p>';
+    BEREICHE.forEach(function(g){
+      var alle=lekVon(g), f=alle.filter(function(l){return stand.fertig[l.id];}).length;
+      var offenGesetzt=false;
+      h += '<section class="bereich"><div class="bereich-kopf"><b>'+esc(g)+'</b>'
+        + '<span>'+f+' / '+alle.length+'</span></div><div class="pfad">'
+        + alle.map(function(l){
+            var ist=!!stand.fertig[l.id];
+            var offen = !ist && !offenGesetzt; if(offen) offenGesetzt=true;
+            var zu = !ist && !offen;
+            return '<div class="knoten '+(ist?'fertig':offen?'offen':'zu')+'">'
+              + '<button type="button" '+(zu?'disabled':'')+' data-l="'+esc(l.id)+'">'+(ist?'✓':l.nr)+'</button>'
+              + '<small>'+esc(l.verben[0].n)+'</small></div>';
+          }).join('')
+        + '</div></section>';
+    });
+    h += '<p class="fein">Dein Fortschritt bleibt auf diesem Gerät. <a href="https://www.deutschoderwas-club.de/" target="_blank" rel="noopener">deutschoderwas club</a></p>';
+    app.innerHTML=h;
     Array.prototype.forEach.call(app.querySelectorAll('[data-l]'),function(b){
-      b.onclick=function(){ starte(b.getAttribute('data-l')); };
+      if(!b.disabled) b.onclick=function(){ starte(b.getAttribute('data-l')); };
     });
   }
 
   function starte(id){
     var lek=lektionen.filter(function(l){return l.id===id;})[0]; if(!lek) return;
-    lauf={lek:lek,a:aufgaben(lek),i:0,richtig:0}; zeigeAufgabe();
+    lauf={lek:lek,a:aufgaben(lek),i:0,richtig:0,herzen:HERZEN};
+    zeigeAufgabe();
   }
 
   function zeigeAufgabe(){
-    if(lauf.i>=lauf.a.length) return zeigeEnde();
+    if(lauf.i>=lauf.a.length) return zeigeEnde(true);
     var a=lauf.a[lauf.i];
-    var schritte='<div class="schritte">'+lauf.a.map(function(_,k){return '<i class="'+(k<lauf.i?'da':'')+'"></i>';}).join('')+'</div>';
-    var h = kopf() + '<button class="zurueck" id="zur">‹ '+esc(lauf.lek.g)+'</button>' + schritte
+    var h = '<div class="lek-kopf"><button class="x" id="x" aria-label="Abbrechen">✕</button>'
+      + '<span class="gleis"><i style="width:'+Math.round(lauf.i/lauf.a.length*100)+'%"></i></span>'
+      + '<span class="hz">'+Array(lauf.herzen+1).join('♥')+'</span></div>'
       + '<div class="frage">'+esc(a.frage)+'</div>';
-    if(a.bild) h += '<div class="bild"><img src="'+esc(a.bild)+'" alt=""></div>';
-    if(a.satz) h += '<div class="satz">'+esc(a.satz)+'</div>';
+    if(a.bild) h+='<div class="bild"><img src="'+esc(a.bild)+'" alt=""></div>';
+    if(a.satz) h+='<div class="satz">'+esc(a.satz)+'</div>';
     if(a.art==='tippen'){
-      h += '<p class="hinweis">'+esc(a.hinweis)+'</p>'
-        + '<input id="feld" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Verb">';
+      h+='<p class="hinweis">'+esc(a.hinweis)+'</p>'
+       + '<input id="feld" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Verb">';
     } else {
-      h += '<div class="wahl" id="wahl">'+a.wahl.map(function(w){
+      h+='<div class="wahl" id="wahl">'+a.wahl.map(function(w){
         return '<button type="button" data-w="'+esc(w)+'">'+esc(w)+'</button>';}).join('')+'</div>';
     }
-    h += '<div class="fuss" id="fuss"></div>';
     app.innerHTML=h;
-    document.getElementById('zur').onclick=function(){ zeigeBereich(lauf.lek.g); };
+    document.getElementById('x').onclick=zeigeStart;
+
     if(a.art==='tippen'){
       var feld=document.getElementById('feld');
-      document.getElementById('fuss').innerHTML='<button class="weiter" id="p">Prüfen</button>';
+      band('<div class="band"><div class="band-in"><button class="knopf" id="p">Prüfen</button></div></div>');
       document.getElementById('p').onclick=function(){ pruefe(a, schlicht(feld.value)===schlicht(a.loesung), feld); };
       feld.addEventListener('keydown',function(e){ if(e.key==='Enter') pruefe(a, schlicht(feld.value)===schlicht(a.loesung), feld); });
-      setTimeout(function(){ try{feld.focus();}catch(e){} },50);
+      setTimeout(function(){ try{feld.focus();}catch(e){} },60);
     } else {
+      var gewaehlt=null;
+      band('<div class="band"><div class="band-in"><button class="knopf grau" id="p" disabled>Prüfen</button></div></div>');
       Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(b){
         b.onclick=function(){
-          var ok=b.getAttribute('data-w')===a.loesung;
-          Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(x){
-            x.disabled=true;
-            if(x.getAttribute('data-w')===a.loesung) x.className='ja';
-          });
-          if(!ok) b.className='nein';
-          pruefe(a, ok);
+          Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(x){ x.className=''; });
+          b.className='gewaehlt'; gewaehlt=b;
+          var k=document.getElementById('p'); k.className='knopf'; k.disabled=false;
+          k.onclick=function(){
+            var ok=gewaehlt.getAttribute('data-w')===a.loesung;
+            Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(x){
+              x.disabled=true;
+              if(x.getAttribute('data-w')===a.loesung) x.className='ja';
+            });
+            if(!ok) gewaehlt.className='nein';
+            pruefe(a, ok);
+          };
         };
       });
     }
   }
 
   function pruefe(a, ok, feld){
-    if(ok) lauf.richtig++;
-    if(feld){ feld.disabled=true; feld.style.borderColor = ok?'var(--ja)':'var(--nein)'; }
+    if(ok){ lauf.richtig++; stand.xp=(stand.xp||0)+10; sichern(); }
+    else { lauf.herzen--; }
+    if(feld) feld.disabled=true;
     var v=a.v;
-    document.getElementById('fuss').innerHTML =
-      '<div class="echo '+(ok?'ja':'nein')+'"><b>'+(ok?'Richtig':'Richtig wäre: '+esc(a.loesung))+'</b>'
-      + '<span>'+esc(v.w)+' — '+esc(v.b)+'</span>'
-      + '<span style="margin-top:4px">'+esc(v.s)+'</span></div>'
-      + '<button class="weiter" id="w">Weiter</button>';
-    document.getElementById('w').onclick=function(){ lauf.i++; zeigeAufgabe(); };
+    var hz=document.querySelector('.lek-kopf .hz'); if(hz) hz.textContent=Array(Math.max(0,lauf.herzen)+1).join('♥');
+    band('<div class="band '+(ok?'ja':'nein')+'"><div class="band-in">'
+      + '<b>'+(ok?'Richtig':'Richtig wäre: '+esc(a.loesung))+'</b>'
+      + '<div class="wort">'+esc(v.w)+' — '+esc(v.b)+'</div>'
+      + '<div class="bsp">'+esc(v.s)+'</div>'
+      + '<button class="knopf '+(ok?'gruen':'rot')+'" id="w">Weiter</button>'
+      + '</div></div>');
+    document.getElementById('w').onclick=function(){
+      if(lauf.herzen<=0) return zeigeEnde(false);
+      lauf.i++; zeigeAufgabe();
+    };
   }
 
-  function zeigeEnde(){
-    stand.fertig[lauf.lek.id]=true; sichern();
-    var alle=lekVon(lauf.lek.g);
-    var naechste=alle.filter(function(l){ return !stand.fertig[l.id]; })[0]
-      || lektionen.filter(function(l){ return !stand.fertig[l.id]; })[0];
-    app.innerHTML = kopf()
-      + '<div class="ende"><h2>Lektion '+lauf.lek.nr+' geschafft</h2>'
-      + '<p class="quote">'+lauf.richtig+' von '+lauf.a.length+' richtig · '+esc(lauf.lek.g)+'</p>'
-      + (naechste ? '<button class="weiter" id="n">Weiter mit '+esc(naechste.g)+' · Lektion '+naechste.nr+'</button>' : '')
-      + '<button class="weiter still" id="zur" style="margin-top:9px">Zur Übersicht</button></div>';
-    document.getElementById('zur').onclick=zeigeStart;
-    if(naechste) document.getElementById('n').onclick=function(){ starte(naechste.id); };
+  function zeigeEnde(geschafft){
+    band('');
+    if(geschafft){ stand.fertig[lauf.lek.id]=true; sichern(); }
+    var naechste=lektionen.filter(function(l){ return !stand.fertig[l.id]; })[0];
+    app.innerHTML = leiste()
+      + '<div class="ende"><h2>'+(geschafft?'Geschafft!':'Herzen alle')+'</h2>'
+      + '<p>'+esc(lauf.lek.g)+' · Lektion '+lauf.lek.nr+'</p>'
+      + '<div class="zahlen">'
+      + '<div><b>'+lauf.richtig+'/'+lauf.a.length+'</b><small>RICHTIG</small></div>'
+      + '<div><b>+'+(lauf.richtig*10)+'</b><small>XP</small></div>'
+      + '</div>'
+      + (geschafft && naechste ? '<button class="knopf gruen" id="n">Weiter mit Lektion '+naechste.nr+'</button>' : '')
+      + (!geschafft ? '<button class="knopf rot" id="n2">Noch einmal</button>' : '')
+      + '<button class="knopf still" id="z" style="margin-top:10px">Zur Übersicht</button></div>';
+    document.getElementById('z').onclick=zeigeStart;
+    var n=document.getElementById('n'); if(n) n.onclick=function(){ starte(naechste.id); };
+    var n2=document.getElementById('n2'); if(n2) n2.onclick=function(){ starte(lauf.lek.id); };
   }
 
   zeigeStart();
