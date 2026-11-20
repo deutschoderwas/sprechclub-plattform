@@ -63,16 +63,21 @@ export const istSprechclubPlan = (id) => /^premium_/.test(String(id || ''));
    ob Premium dafuer wieder aufgeht: "Nur waehrend der Aktion."
 
    Also haengt der Riegel jetzt an der Uhr statt an einem Haken, den
-   jemand setzen und wieder vergessen muss. Montag, 24.11. um 0 Uhr
-   geht Premium auf, Montag, 1.12. um 0 Uhr wieder zu — Berliner Zeit,
-   ohne dass jemand nachts am Rechner sitzt.
+   jemand setzen und wieder vergessen muss. Montag, 1.12. um 0 Uhr geht
+   er wieder zu — Berliner Zeit, ohne dass jemand nachts am Rechner
+   sitzt.
+
+   Julia, 20.11.2026: "wir muessen wegen der Black week eine Aenderung
+   machen und zwar oeffnen die Tueren schon ab dem 23.11 also Montag".
+   Vorher war es der 24.11. Jetzt geht Premium einen Tag frueher auf,
+   Montag 23.11. um 0 Uhr.
 
    Dieselben Daten stehen in aktion.js fuer die Seiten. Zwei Stellen,
    weil der Browser nicht entscheiden darf, was etwas kostet: Wer das
    Datum im eigenen Rechner verstellt, sieht vielleicht die Leiste,
    kommt aber nicht an den Preis.
    ------------------------------------------------------------ */
-export const AKTION_VON = Date.parse('2026-11-24T00:00:00+01:00');
+export const AKTION_VON = Date.parse('2026-11-23T00:00:00+01:00');
 export const AKTION_BIS = Date.parse('2026-12-01T00:00:00+01:00');
 export const AKTION_PREIS = 97;    // Premium im Monat waehrend der Aktion (= 30 % unter 139)
 export const AKTION_ALT   = 139;   // regulaer

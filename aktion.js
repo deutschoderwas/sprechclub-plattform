@@ -27,10 +27,18 @@
   'use strict';
 
   var A = {
-    /* Montag 24.11. 0 Uhr bis Montag 1.12. 0 Uhr Berliner Zeit —
-       also die ganze Black Week inklusive Cyber Monday. */
-    von:   Date.parse('2026-11-24T00:00:00+01:00'),
+    /* Montag 23.11. 0 Uhr bis Montag 1.12. 0 Uhr Berliner Zeit —
+       also die ganze Black Week inklusive Cyber Monday.
+
+       Julia, 20.11.2026: "oeffnen die Tueren schon ab dem 23.11 also
+       Montag du kannst schon mal die laufende Leiste einblenden".
+       Vorher war der Start der 24.11. */
+    von:   Date.parse('2026-11-23T00:00:00+01:00'),
     bis:   Date.parse('2026-12-01T00:00:00+01:00'),
+    /* Der Vorlauf: die Leiste laeuft schon, bevor die Tueren aufgehen.
+       Sie kuendigt an und verkauft noch nichts - Preise, Kasse und
+       Pop-up haengen weiter allein an von/bis. */
+    vorlauf: Date.parse('2026-11-20T00:00:00+01:00'),
     preis: 97,      // Aktionspreis Premium im Monat
     alt:   139,     // regulaerer Preis seit 3.11.2026
     name:  'Black Week'
@@ -44,6 +52,11 @@
     var t = jetzt || Date.now();
     return t >= A.von && t < A.bis;
   };
+  /* Nur die Leiste, noch kein Angebot. */
+  A.vorlaufLaeuft = function (jetzt) {
+    var t = jetzt || Date.now();
+    return t >= A.vorlauf && t < A.von;
+  };
   window.AKTION = A;
 
   /* Der Rabatt in der Form, die die Seiten schon kennen: dort steht
@@ -52,7 +65,7 @@
   A.rabatt = function () { return A.laeuft() ? A.preis : 0; };
   A.preisJetzt = function () { return A.laeuft() ? A.preis : A.alt; };
 
-  if (!A.laeuft()) return;
+  if (!A.laeuft() && !A.vorlaufLaeuft()) return;
 
   /* ---------- Die Preise auf den Seiten ----------
 
@@ -182,15 +195,35 @@
     return 'letzte Stunde';
   }
 
+  /* Im Vorlauf zaehlt die Leiste nicht herunter, sondern hin: nicht
+     "nur noch", sondern "es geht los". */
+  function bisAuf() {
+    var ms = A.von - Date.now();
+    if (ms <= 0) return '';
+    var tage = Math.floor(ms / 86400000);
+    var std  = Math.floor((ms % 86400000) / 3600000);
+    if (tage > 1)   return 'in ' + tage + ' Tagen geht es los';
+    if (tage === 1) return 'morgen geht es los';
+    if (std > 1)    return 'in ' + std + ' Stunden geht es los';
+    return 'heute Nacht geht es los';
+  }
+
   function teil() {
-    var p = [
+    var p = (A.laeuft() ? [
       '🖤 <b>' + A.name + '</b> im Sprechclub',
       '<b>' + A.prozent + ' % Rabatt</b> auf Premium',
       'nur <b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
       'du sparst <b>' + A.spart + ' € jeden Monat</b>',
       'der Preis bleibt dir <b>dauerhaft</b>',
       rest()
-    ].filter(Boolean);
+    ] : [
+      '🖤 <b>' + A.name + '</b> im Sprechclub',
+      'die T\u00fcren gehen auf: <b>Montag, 23. November</b>',
+      '<b>' + A.prozent + ' % Rabatt</b> auf Premium',
+      '<b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
+      'der Preis bleibt dir <b>dauerhaft</b>',
+      bisAuf()
+    ]).filter(Boolean);
     return '<span class="akt-teil">' + p.map(function (s) {
       return '<span class="akt-pkt">' + s + '</span>';
     }).join('<span class="akt-pkt" aria-hidden="true">·</span>') + '</span>';
@@ -207,7 +240,9 @@
     var bar = document.createElement('div');
     bar.id = 'akt-leiste';
     bar.setAttribute('role', 'region');
-    bar.setAttribute('aria-label', A.name + ': Premium ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat');
+    bar.setAttribute('aria-label', A.laeuft()
+      ? A.name + ': Premium ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat'
+      : A.name + ' ab Montag, 23. November: Premium ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat');
     /* Zweimal derselbe Block: so laeuft der Text nahtlos weiter,
        statt am Ende eine Luecke zu zeigen. */
     bar.innerHTML = '<div class="akt-lauf">' + teil() + teil() + '</div>'
@@ -218,13 +253,18 @@
     };
     document.body.insertBefore(bar, document.body.firstChild);
 
-    /* Stundenweise auffrischen, damit die Restzeit stimmt, wenn
-       jemand die Seite lange offen liegen laesst. */
+    /* Regelmaessig auffrischen, damit die Zeitangabe stimmt, wenn
+       jemand die Seite lange offen liegen laesst. Alle fuenf Minuten
+       statt stuendlich, weil die Leiste um Mitternacht vom "es geht
+       los" auf das laufende Angebot umschaltet - und dann muessen auch
+       die Preise auf der Seite nachgezogen werden. */
+    var warVorlauf = !A.laeuft();
     setInterval(function () {
+      if (!A.laeuft() && !A.vorlaufLaeuft()) { bar.remove(); return; }
       var l = bar.querySelector('.akt-lauf');
       if (l) l.innerHTML = teil() + teil();
-      if (!A.laeuft()) bar.remove();
-    }, 3600000);
+      if (warVorlauf && A.laeuft()) { warVorlauf = false; nachsetzen(); }
+    }, 300000);
   }
 
   function start() { leisteBauen(); nachsetzen(); }
