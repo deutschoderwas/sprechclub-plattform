@@ -100,7 +100,15 @@ export default async function handler(req, res) {
     .select('id,datum,level,titel,dauer,woerter,status')
     .eq('status', 'live').order('datum', { ascending: false }).limit(60);
 
+  /* EINE Folge je Woche, nicht je Beitrag. Im alten Rhythmus gehoerten
+     die drei Beitraege zusammen: Amanda bringt am Montag das Wort,
+     Mila greift mittwochs dasselbe Thema auf, Tom laesst freitags
+     einen Satz mit demselben Wort schreiben. Ohne diesen Merker holte
+     sich jeder Tag eine andere Folge, und der rote Faden der Woche war
+     weg. */
+  const wocheFolge = {};
   function folgeFuerWoche(montag) {
+    if (wocheFolge[montag]) return wocheFolge[montag];
     const passend = (folgen || []).filter((f) => {
       if (folgenBenutzt.has('folge:' + f.id)) return false;
       const w = Array.isArray(f.woerter) ? f.woerter : [];
@@ -109,7 +117,9 @@ export default async function handler(req, res) {
     /* Am liebsten eine Folge aus der Woche davor: frisch, aber schon
        gehoert. Sonst die neueste, die noch nicht dran war. */
     const vorwoche = passend.filter((f) => f.datum < montag && f.datum >= tagPlus(montag, -9));
-    return vorwoche[0] || passend[0] || null;
+    const gewaehlt = vorwoche[0] || passend[0] || null;
+    if (gewaehlt) { wocheFolge[montag] = gewaehlt; folgenBenutzt.add('folge:' + gewaehlt.id); }
+    return gewaehlt;
   }
 
   // --- Impulse, nach Wochentag, nur unbenutzte
@@ -165,7 +175,6 @@ export default async function handler(req, res) {
       }
       if (!aktiv.has(channel)) { bericht.hinweise.push({ datum, hinweis: 'Kanal ' + channel + ' ist abgeschaltet' }); continue; }
       neu.push({ wer, channel, body, geplant_fuer: berlinISO(datum, wt === 1 ? 9 : wt === 3 ? 18 : 12), status: 'geplant', quelle });
-      folgenBenutzt.add('folge:' + f.id);
       belegt.add(marke);
       continue;
     }
