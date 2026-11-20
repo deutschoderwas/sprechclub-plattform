@@ -14,7 +14,11 @@ self.addEventListener('activate', function (e) {
 });
 self.addEventListener('fetch', function (e) {
   var u = new URL(e.request.url);
-  if (e.request.method !== 'GET' || u.origin !== location.origin) return;
+  /* Die Marken-Schriften liegen bei Google. Ohne sie faellt die App
+     offline auf die Systemschrift zurueck - dann sieht sie wieder
+     aus wie jede andere. Also mitspeichern. */
+  var schrift = u.host === 'fonts.googleapis.com' || u.host === 'fonts.gstatic.com';
+  if (e.request.method !== 'GET' || (u.origin !== location.origin && !schrift)) return;
   e.respondWith(caches.match(e.request).then(function (treffer) {
     if (treffer) return treffer;
     return fetch(e.request).then(function (antwort) {
