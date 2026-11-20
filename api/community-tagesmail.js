@@ -100,13 +100,26 @@ function mailHtml({ vorname, datum, kanaele, gesamt, leute, podcasts = [], podca
      <div style="background:#FFFCF5;border:1px solid #F0E5D8;border-radius:16px;padding:16px 18px">
        <div style="font-size:13px;font-weight:800;color:#1A1A1A">🎧 ${esc(podcastKopf)}: ${podcasts.length} ${podcasts.length === 1 ? 'Folge' : 'Folgen'}</div>
        <div style="font-size:12.5px;color:#6B7280;margin-top:3px;line-height:1.5">Für jedes Niveau eine — such dir deins aus und hör rein.</div>
-       ${podcasts.map((p) => `
+       ${podcasts.map((p) => {
+         /* Julia, 20.11.2026: "nicht einfach auf die Hauptseite sondern
+            direkt dahin wohin es fuehren muss". Stimmt: Die Folgen
+            standen als reiner Text da, anklickbar war nur der Knopf zum
+            Verzeichnis. Jetzt fuehrt jeder Titel auf /folge/<id> - die
+            Umleitung setzt den Hash #podcast/<id>, und wer sich erst
+            anmelden muss, landet danach trotzdem bei genau dieser
+            Folge (das Ziel liegt solange in dow-folge-ziel). */
+         const ziel = p.id ? `${site}/folge/${encodeURIComponent(p.id)}` : `${site}/podcast.html`;
+         return `
          <div style="margin-top:12px">
-           <span style="display:inline-block;background:#FFCE00;color:#1A1A1A;font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px">${esc(p.level)}</span>
-           <span style="font-size:14px;font-weight:700;color:#1A1A1A"> ${esc(p.titel)}</span>
-           <span style="font-size:12px;color:#9CA3AF">${p.dauer ? ' · ' + esc(p.dauer) : ''}</span>
+           <a href="${ziel}" style="text-decoration:none;color:inherit">
+             <span style="display:inline-block;background:#FFCE00;color:#1A1A1A;font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px">${esc(p.level)}</span>
+             <span style="font-size:14px;font-weight:700;color:#1A1A1A"> ${esc(p.titel)}</span>
+             <span style="font-size:12px;color:#9CA3AF">${p.dauer ? ' · ' + esc(p.dauer) : ''}</span>
+           </a>
            ${untertitel(p) ? `<div style="font-size:13px;color:#5C4E3E;line-height:1.5;margin-top:1px">${esc(untertitel(p))}</div>` : ''}
-         </div>`).join('')}
+           <div style="margin-top:4px"><a href="${ziel}" style="font-size:12.5px;font-weight:700;color:#0F766E;text-decoration:none">▶︎ Diese Folge hören</a></div>
+         </div>`;
+       }).join('')}
        <div style="margin-top:14px">
          <a href="${site}/podcast.html" style="display:inline-block;background:#1A1A1A;color:#fff;font-weight:700;font-size:13.5px;text-decoration:none;padding:9px 18px;border-radius:999px">Zum Podcast</a>
        </div>
@@ -176,7 +189,7 @@ export default async function handler(req, res) {
   const REIHE = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   const seit = new Date(jetzt.getTime() - 26 * 60 * 60000).toISOString();
   const { data: pods } = await sb.from('podcasts')
-    .select('level,titel,thema,kurz,dauer,datum,status,created_at')
+    .select('id,level,titel,thema,kurz,dauer,datum,status,created_at')
     .eq('status', 'live').gte('created_at', seit);
   const podcasts = (pods || []).slice()
     .sort((a, b) => REIHE.indexOf(a.level) - REIHE.indexOf(b.level));

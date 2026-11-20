@@ -60,9 +60,13 @@ export default async function handler(req, res) {
   const kanalOk = await sb.from('community_channels').select('slug').eq('slug', KANAL).eq('is_active', true).maybeSingle();
   if (!kanalOk.data) return res.status(200).json({ ok: false, datum, grund: 'Kanal ' + KANAL + ' ist abgeschaltet' });
 
+  /* Der Chat macht aus [Text](URL) einen Link (siehe community.js).
+     Damit steht der Titel selbst als Link da, statt einer nackten
+     Adresse darunter - und ein Klick fuehrt direkt in genau diese
+     Folge, nicht ins Verzeichnis. */
   const zeilen = folgen.map((f) =>
-    '• ' + f.level + ' — „' + f.titel + '"' + (f.dauer ? ' (' + f.dauer + ' Minuten)' : '')
-    + '\n  ' + SEITE + '/folge/' + f.id).join('\n');
+    '• ' + f.level + ' — [' + f.titel + '](' + SEITE + '/folge/' + f.id + ')'
+    + (f.dauer ? ' · ' + f.dauer + ' Minuten' : '')).join('\n');
 
   const body = '🎧 Neue Podcastfolgen sind da\n\n' + zeilen
     + '\n\nSuch dir dein Niveau aus. Zu jeder Folge gibt es den Text zum Mitlesen und die Wörter — '
