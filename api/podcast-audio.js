@@ -368,6 +368,15 @@ export default async function handler(req, res) {
        „nichts offen“ nach Ordnung aus, obwohl noch Entwürfe liegen. */
     const { count } = await db.from('podcasts')
       .select('id', { count: 'exact', head: true }).eq('status', 'entwurf').lt('datum', ab);
+    /* Nichts mehr offen heisst: der Tag ist fertig vertont. Genau
+       jetzt gehoert die Ankuendigung in den Chat - nicht um 7 Uhr,
+       wenn der Ton noch gar nicht da ist. Der Endpunkt legt je Tag nur
+       einen Beitrag an, mehrfaches Aufrufen schadet also nicht. */
+    try {
+      await fetch(SITE + '/api/podcast-ankuendigen', {
+        headers: { 'x-intern': geheim || '' }, signal: AbortSignal.timeout(8000)
+      });
+    } catch (e) { /* die Ankuendigung darf den Lauf nicht aufhalten */ }
     return res.status(200).json({ ok: true, info: 'nichts offen', aeltere_entwuerfe: count || 0 });
   }
 

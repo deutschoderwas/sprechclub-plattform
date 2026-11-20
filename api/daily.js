@@ -34,7 +34,10 @@ export default async function handler(req, res) {
   /* 'stunden-woerter' (11.11.2026): fuellt die Wortliste jeder Stunde
      aus ihrer Unterrichtsseite, damit der Vokabeltrainer fuer jede
      gebuchte Stunde Woerter hat, auch ohne Tafel-Nachbereitung. */
-  const intern = ['stunden-woerter', 'pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben', 'tagesbericht'];
+  /* ki-team-planen haelt den Chat von Mila, Tom und Amanda gefuellt:
+     Der Vorrat von Hand geplanter Beitraege war am 13.11.2026 zu Ende,
+     seitdem lief der Veroeffentlicher taeglich ins Leere. */
+  const intern = ['stunden-woerter', 'pruefe-mitgliedschaften', 'freischalten?alle=1', 'abbuchung-verschieben', 'ki-team-planen', 'tagesbericht'];
   const ran = {};
   for (const e of eps) {
     try { const r = await fetch(base + '/api/' + e); ran[e] = r.status; }
@@ -92,6 +95,16 @@ export default async function handler(req, res) {
     } catch (err) {
       ran['generate-podcast'] = 'angestossen';   // Zeitüberschreitung ist hier der Normalfall
     }
+    /* Die Ankuendigung im Chat. Sie laeuft hier mit und ausserdem
+       stuendlich, weil der Ton erst spaeter fertig wird — der Endpunkt
+       ist absichtlich mehrfach aufrufbar und legt je Tag nur einen
+       Beitrag an. */
+    try {
+      await fetch(base + '/api/podcast-ankuendigen', {
+        headers: { 'x-intern': process.env.CRON_SECRET || '' }, signal: AbortSignal.timeout(8000)
+      });
+      ran['podcast-ankuendigen'] = 'angestossen';
+    } catch (err) { ran['podcast-ankuendigen'] = 'angestossen'; }
   } else {
     ran['generate-podcast'] = 'heute nicht (nur Mo, Mi, Fr)';
     /* Kein Schreibtag — aber liegengebliebene Entwuerfe trotzdem
