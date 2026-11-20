@@ -1,7 +1,11 @@
 /* admin-stil.css — Team-Bereich im Stil von „Meine Stunden“ (20.11.2026)
    Nur Optik. Wird NACH club-theme.css geladen; club-theme.css setzt Knöpfe
    mit !important rot, deshalb hier ID-Präfix (#app, #gate) + !important.
-   Die Farbe bleibt Petrol, Rot nur noch für Löschen und kleine Zähler. */
+   v3 (20.11. abends), Julia: „ruhig etwas farblicher, das ist ja langweilig
+   und man kann die Farben gar nicht unterscheiden“. Deshalb: jeder Bereich
+   hat wieder eine eigene Farbe (Symbol, Unterstrich, aktiver Reiter), die
+   Kennzahl-Karten tragen ihre Farbe als Streifen, und die farbigen Knöpfe,
+   Etiketten und Kästen im Inhalt bleiben so bunt wie vorher. */
 
 :root{
   --primary:#0E6D85; --secondary:#14181B; --turq:#0E6D85; --turq2:#A9DEEE;
@@ -19,16 +23,11 @@ body{background:#F6F8FA!important}
 
 /* ---------- Knöpfe ---------- */
 #app .btn,#gate .btn{border-radius:12px!important;box-shadow:none!important;transform:none!important;font-weight:700!important}
-#app .btn-primary,#gate .btn-primary,
-#app button[style*="background:#DD0000"],#app a[style*="background:#DD0000"],#app button[style*="background:#1A1A1A"],#app button[style*="background:#D42A21"]{
+#app .btn-primary,#gate .btn-primary{
   background:#0E6D85!important;color:#fff!important;border:1px solid #0E6D85!important}
 #app .btn-primary:hover,#gate .btn-primary:hover{background:#0A4E62!important;border-color:#0A4E62!important}
 #app .btn-ghost{background:#fff!important;color:#14181B!important;border:1px solid #E7EBF0!important}
 #app .btn-ghost:hover{background:#F6F8FA!important;border-color:#D5DCE3!important}
-/* Andere Knopffarben (Türkis, Hellblau, Grün) im Bestand: alle auf Petrol */
-#app button[style*="background:#13A89A"],#app button[style*="background:#0E7C8C"],#app button[style*="background:#10627A"],
-#app button[style*="background:#2DD4BF"],#app button[style*="background:#7ED8EA"],#app button[style*="background:#1B9BC0"]{
-  background:#0E6D85!important;color:#fff!important;box-shadow:none!important}
 #jkMailFab{background:#0E6D85!important;box-shadow:0 6px 18px rgba(14,109,133,.28)!important}
 
 /* ---------- Bereiche (obere Ebene) ---------- */
@@ -37,26 +36,36 @@ body{background:#F6F8FA!important}
 #app .bereiche button svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
 #app .bereiche button:hover{color:#0E6D85!important}
 #app .bereiche button.active{color:#0E6D85!important;border-bottom-color:#0E6D85!important}
+/* Jeder Bereich seine Farbe: Symbol immer farbig, aktiv auch Schrift und Unterstrich */
+#app .bereiche button svg{opacity:1}
+#app .bereiche button[data-b="start"]{--bf:#0E6D85;--bh:#E3F2F6}
+#app .bereiche button[data-b="unterricht"]{--bf:#2563EB;--bh:#E6EEFE}
+#app .bereiche button[data-b="menschen"]{--bf:#7C3AED;--bh:#F0E9FE}
+#app .bereiche button[data-b="inhalte"]{--bf:#D97706;--bh:#FDF1DE}
+#app .bereiche button[data-b="austausch"]{--bf:#059669;--bh:#E1F5EE}
+#app .bereiche button[data-b] svg{color:var(--bf);background:var(--bh);border-radius:8px;padding:4px;width:26px!important;height:26px!important;box-sizing:border-box}
+#app .bereiche button[data-b]:hover{color:var(--bf)!important}
+#app .bereiche button[data-b].active{color:var(--bf)!important;border-bottom-color:var(--bf)!important}
+/* Aktiver Reiter in der Farbe seines Bereichs */
+#app[data-bereich="start"]{--af:#0E6D85}
+#app[data-bereich="unterricht"]{--af:#2563EB}
+#app[data-bereich="menschen"]{--af:#7C3AED}
+#app[data-bereich="inhalte"]{--af:#D97706}
+#app[data-bereich="austausch"]{--af:#059669}
 
 /* ---------- Reiter (zweite Ebene) als Segmentleiste ---------- */
 #app .tabs{width:fit-content;max-width:100%;gap:3px!important;background:#EDF1F4;border-radius:13px;padding:4px;margin:14px 0 18px!important;flex-wrap:wrap}
 #app .tabs button{border:none!important;background:transparent!important;border-radius:10px!important;padding:8px 14px!important;font-size:13.5px!important;font-weight:600!important;color:#4B5763!important}
 #app .tabs button:hover{background:rgba(255,255,255,.6)!important;color:#14181B!important}
-#app .tabs button.active{background:#fff!important;color:#0E6D85!important;box-shadow:0 1px 3px rgba(16,24,40,.08)!important}
+#app .tabs button.active{background:#fff!important;color:var(--af,#0E6D85)!important;box-shadow:0 1px 3px rgba(16,24,40,.08)!important}
 
 /* ---------- Karten, Tabellen, Felder ---------- */
-#app .card{background:#fff!important;border:1px solid #E7EBF0!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
-/* Cremefarbene und gelbe Kästen aus dem alten Stil: weiß mit Rand */
-#app [style*="background:#FFFCF5"],#app [style*="background:#FFF8E0"],#app [style*="background:#FFF6DC"],
-#app [style*="background:#FFF4D6"],#app [style*="background:#FBF7EE"],#app [style*="background:#FAF7F0"],#app [style*="background:#faf7f2"]{
-  background:#fff!important}
-#app .card[style*="#FFCE00"],#app .card[style*="#F0D58C"],#app .card[style*="#E8C66A"]{border-color:#E7EBF0!important;border-width:1px!important}
+#app .card{border:1px solid #E7EBF0;border-radius:16px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
 #app table{border:1px solid #E7EBF0!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(16,24,40,.04)!important}
 #app th{background:#F6F8FA!important;color:#5F6B76!important;font-weight:700!important}
 #app tr[style*="background:#FFF"] td,#app td[style*="background:#FFF8E0"]{background:#F6F8FA!important}
 #app input,#app select,#app textarea,#gate input{border:1px solid #DCE2E8!important;border-radius:11px!important;background:#fff!important}
 #app input:focus,#app select:focus,#app textarea:focus,#gate input:focus{border-color:#0E6D85!important;box-shadow:0 0 0 3px rgba(14,109,133,.12)!important;outline:none!important}
-#app .pill{background:#EEF3F6;color:#334155}
 #app a{color:#0E6D85}
 
 /* ---------- Startseite: Bühne wie „Meine Stunden“ ---------- */
@@ -79,11 +88,18 @@ body{background:#F6F8FA!important}
 }
 
 /* Kennzahl-Karten */
-#app .st-karte{border:1px solid #E7EBF0!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(16,24,40,.04);transition:transform .15s,box-shadow .15s}
+#app .st-karte{border:1px solid #E7EBF0!important;border-top:4px solid var(--kf,#0E6D85)!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(16,24,40,.04);transition:transform .15s,box-shadow .15s}
 #app .st-karte:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.07)}
 #app .st-karte .zahl{font-size:32px!important}
-#app .st-karte button{background:#E8F4F7!important;color:#0E6D85!important;border-radius:10px!important}
-#app .st-karte button:hover{background:#D3EBF1!important}
+#app .st-karte button{background:var(--kh,#E8F4F7)!important;color:var(--kf,#0E6D85)!important;border-radius:10px!important}
+#app .st-karte button:hover{filter:brightness(.96)}
+/* Die Zahl hat schon ihre Farbe (grün = erledigt, orange = fehlt, rot = wartet);
+   Streifen und Knopf nehmen sie auf, damit man es auf einen Blick sieht. */
+#app .st-karte:has(.zahl[style*="#0F766E"]){--kf:#0F766E;--kh:#DDF3EF}
+#app .st-karte:has(.zahl[style*="#B45309"]){--kf:#D97706;--kh:#FDF1DE}
+#app .st-karte:has(.zahl[style*="#B91C1C"]),#app .st-karte:has(.zahl[style*="#DD0000"]){--kf:#DC2626;--kh:#FDE8E8}
+#app .st-karte:has(.zahl[style*="#15803D"]){--kf:#16A34A;--kh:#E3F6EA}
+#app .st-karte:has(.zahl[style*="#9CA3AF"]){--kf:#9CA3AF;--kh:#F1F3F5}
 
 /* Wochenraster der Stunden */
 #app .klcol.today{background:#E8F4F7!important;border-color:#BFDDE6!important}

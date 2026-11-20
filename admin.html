@@ -97,7 +97,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
 .klcard.open{outline:2px solid var(--turq)!important;background:#F1FAF8!important}
 </style>
 <link rel="stylesheet" href="club-theme.css">
-<link rel="stylesheet" href="admin-stil.css?v=2">
+<link rel="stylesheet" href="admin-stil.css?v=3">
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -881,7 +881,7 @@ function zeichneBereiche(aktiv){
          wartet — sonst klickt dort niemand hinein. */
       const punkt = (b.id==='austausch' && (ABZEICHEN.commBdg||0) > 0)
         ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D42A21;margin-left:6px;vertical-align:middle"></span>' : '';
-      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + admIc(b.id) + b.name + (nurLink ? ' \u2197' : '') + punkt + '</button>';
+      return '<button data-b="' + b.id + '" class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + admIc(b.id) + b.name + (nurLink ? ' \u2197' : '') + punkt + '</button>';
     }).join('');
 }
 function zeichneReiter(bereich, aktivId){
@@ -917,6 +917,8 @@ function show(id){
     if (el) el.style.display = (x.id===id) ? 'block' : 'none';
   });
   AKT_BEREICH = b;
+  /* Farbe des aktiven Bereichs für die Reiterleiste (admin-stil.css) */
+  const _app = document.getElementById('app'); if (_app) _app.setAttribute('data-bereich', b.id);
   zeichneBereiche(b);
   zeichneReiter(b, id);
   if (r.laden) r.laden();
@@ -4159,6 +4161,5 @@ setTimeout(function(){
   }).catch(function(){});
 }, 1200);
 </script>
-<script src="admin-ruhe.js?v=1"></script>
 </body>
 </html>
