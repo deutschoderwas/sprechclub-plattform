@@ -289,7 +289,7 @@ function hausaufgabeAus(cls, pc) {
 async function hausaufgabeSpeichern(sb, classId, cls, pc) {
   try {
     const { data: ex } = await sb.from('hausaufgaben').select('class_id,auto').eq('class_id', classId).maybeSingle();
-    if (ex && ex.auto === false) return;
+    if (ex) return;   // Aufgabe steht schon fest → NIE überschreiben
     const h = hausaufgabeAus(cls, pc);
     if (!h.aufgabe) return;
     await sb.from('hausaufgaben').upsert(

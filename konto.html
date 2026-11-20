@@ -1264,7 +1264,7 @@ const RANKS = [
 ];
 
 let sb=null, user=null, profile={}, bookings=[], creditLog=[], messages=[], ratings=[];
-let materials={}, progress={}, postNotes={}, myGroupClasses=new Set(), studentNachb={}, haClasses=new Set(), haDone=new Set();   // materials[class_id]=content ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden mit eigener Kleingruppe ; studentNachb[class_id]=persoenliche Nachbereitung (inkl. Gruppen-Vokabeln)
+let materials={}, progress={}, postNotes={}, myGroupClasses=new Set(), studentNachb={}, haClasses=new Set(), haDone=new Set(), haKorr=new Set();   // materials[class_id]=content ; postNotes[class_id]={notes,post_content} ; myGroupClasses = Stunden mit eigener Kleingruppe ; studentNachb[class_id]=persoenliche Nachbereitung (inkl. Gruppen-Vokabeln)
 let credits=0, stats={};
 
 const _qp = new URLSearchParams(location.search);
@@ -1783,7 +1783,7 @@ async function load(){
   window.bookings = bookings;
   // KI-Material für gebuchte Stunden
   const ids = [...new Set(bookings.filter(b=>b.status==='booked').map(b=>b.class_id))];
-  materials = {}; postNotes = {}; studentNachb = {}; myGroupClasses = new Set(); haClasses = new Set(); haDone = new Set();
+  materials = {}; postNotes = {}; studentNachb = {}; myGroupClasses = new Set(); haClasses = new Set(); haDone = new Set(); haKorr = new Set();
   if (ids.length){
     const { data:mats } = await sb.from('class_materials').select('class_id,content').in('class_id', ids);
     (mats||[]).forEach(m=>materials[m.class_id]=m.content);
@@ -1795,7 +1795,7 @@ async function load(){
     try{ const { data:sns } = await sb.from('student_nachbereitung').select('class_id,post_content').eq('user_id', user.id).in('class_id', ids); studentNachb={}; (sns||[]).forEach(s=>{ studentNachb[s.class_id]=s.post_content; }); }catch(e){ studentNachb={}; }
     // Hausaufgaben: welche Stunden haben eine, und welche habe ICH schon abgegeben
     try{ const { data:has } = await sb.from('hausaufgaben').select('class_id').in('class_id', ids); haClasses = new Set((has||[]).map(h=>h.class_id)); }catch(e){ haClasses = new Set(); }
-    try{ const { data:habs } = await sb.from('hausaufgaben_abgaben').select('class_id').eq('user_id', user.id).in('class_id', ids); haDone = new Set((habs||[]).map(h=>h.class_id)); }catch(e){ haDone = new Set(); }
+    try{ const { data:habs } = await sb.from('hausaufgaben_abgaben').select('class_id,korrektur').eq('user_id', user.id).in('class_id', ids); haDone = new Set((habs||[]).map(h=>h.class_id)); haKorr = new Set((habs||[]).filter(h=>h.korrektur && String(h.korrektur).trim()).map(h=>h.class_id)); }catch(e){ haDone = new Set(); haKorr = new Set(); }
   }
   // Vokabel-Fortschritt geräteübergreifend: DB <-> localStorage mergen
   try{
@@ -3632,7 +3632,7 @@ function meineStundenHtml(){
     return dd.toLocaleDateString('de-DE',{day:'2-digit',month:'short'});
   }
   // Hausaufgabe abgeben: öffnet die Nachbereitung – dort ist der Hausaufgaben-Tab (mit Textfeld) ganz vorn.
-  window.hausaufgabeAbgeben = function(classId){ window.open('nachbereitung.html?id='+encodeURIComponent(classId), '_blank', 'noopener'); };
+  window.hausaufgabeAbgeben = function(classId){ window.open('nachbereitung.html?id='+encodeURIComponent(classId)+'&tab=hausaufgabe', '_blank', 'noopener'); };
   // Nachricht an Lehrerin: öffnet die vorhandene Nachrichten-Ansicht (messages-Thread) mit Stundenbezug vorausgefüllt.
   window.nachrichtAnLehrerin = function(classId, title){
     try{ go('nachrichten'); }catch(e){}
@@ -3698,7 +3698,7 @@ function meineStundenHtml(){
     const mainBtns=isPast
       ? `${nbReady?`<a class="btn btn-primary btn-sm" href="nachbereitung.html?id=${b.class_id}" target="_blank" rel="noopener" style="text-decoration:none">📖 Nachbereitung öffnen</a>`:`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.7">📖 Nachbereitung folgt in Kürze</span>`}<a class="btn btn-ghost btn-sm" href="nachbereitung.html?id=${b.class_id}&tab=tafel" target="_blank" rel="noopener" style="text-decoration:none">🧑‍🏫 Live-Tafel</a>${rated?`<span class="ms-stars">${'★'.repeat(rated.stars)}${'☆'.repeat(5-rated.stars)}</span>`:`<button class="btn btn-ghost btn-sm" onclick="rateClass('${b.class_id}')">⭐ Bewerten</button>`}`
       : `${dowJoinBtn(b,'btn btn-primary btn-sm')}${/Sprachspiele/i.test(b.title||'')?`<span class="btn btn-ghost btn-sm" style="pointer-events:none;opacity:.8">✨ Keine Vorbereitung nötig</span>`:''}`;
-    const haBtn=haClasses.has(b.class_id)?`<button class="btn btn-ghost btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}')">${haDone.has(b.class_id)?'✓ Hausaufgabe abgegeben':'📎 Hausaufgabe abgeben'}</button>`:'';
+    const haBtn=haClasses.has(b.class_id)?`<button class="btn ${haKorr.has(b.class_id)?'btn-primary':'btn-ghost'} btn-sm" onclick="hausaufgabeAbgeben('${b.class_id}')">${haKorr.has(b.class_id)?'✅ Hausaufgabe korrigiert':(haDone.has(b.class_id)?'✓ Hausaufgabe abgegeben':'📎 Hausaufgabe abgeben')}</button>`:'';
     const umbuchenBtn=`<button class="btn btn-ghost btn-sm" ${cancellable?'':'disabled title="Umbuchen nur bis zum Beginn"'} onclick="umbuchen('${b.class_id}',${esc(JSON.stringify(b.title||''))})">🔁 Umbuchen</button>`;
     const stornoBtn=`<button class="btn btn-ghost btn-sm danger" ${cancellable?'':'disabled title="Storno nur bis zum Beginn"'} onclick="cancelB('${b.class_id}')">✕ Stornieren</button>`;
     const nachrichtBtn=`<button class="btn btn-ghost btn-sm" onclick="nachrichtAnLehrerin('${b.class_id}',${esc(JSON.stringify(b.title||''))})">✉️ Nachricht an Lehrer</button>`;
