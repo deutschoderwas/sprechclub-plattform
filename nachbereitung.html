@@ -198,15 +198,15 @@ function render(id, c, pc, extra){
         return `<div class="fehler-card"><div style="font-weight:700">${esc(s.name)} <span style="color:var(--muted);font-weight:400;font-size:.82rem">· ${esc(new Date(s.when).toLocaleString('de-DE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}</span>${hat?' <span style="color:#127a44;font-weight:700;font-size:.8rem">· ✅ korrigiert</span>':''}</div>`
           +`<div style="white-space:pre-wrap;margin:4px 0 10px">${esc(s.text)}</div>`
           +`<div style="border-top:1px dashed #d9d2c2;padding-top:10px">`
-          +`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center"><button style="${btnGold}" onclick="dowHaKI('${esc(id)}','${uid}',this)">🤖 KI-Korrektur erstellen</button><span id="haki-${uid}" style="font-weight:700"></span></div>`
-          +`<textarea id="hak-${uid}" placeholder="Korrektur — „KI-Korrektur erstellen", prüfen, anpassen, dann senden …" style="${taStyle};min-height:120px">${esc(s.korrektur||'')}</textarea>`
+          +`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center"><button style="${btnGold}" onclick="dowHaKI('${esc(id)}','${uid}',this)">✨ Korrektur erstellen</button><span id="haki-${uid}" style="font-weight:700"></span></div>`
+          +`<textarea id="hak-${uid}" placeholder="Korrektur — „Korrektur erstellen", prüfen, anpassen, dann senden …" style="${taStyle};min-height:120px">${esc(s.korrektur||'')}</textarea>`
           +`<div style="margin-top:8px"><button style="${btn}" onclick="dowHaKorrSenden('${esc(id)}','${uid}',this)">📨 An Schüler senden</button> <span id="haks-${uid}" style="font-weight:700;margin-left:8px"></span></div>`
           +`</div></div>`;
       }).join('') : '<p class="muted">Noch keine Abgaben.</p>')+`</div>`;
     } else {
       h += `<div class="card a-teal"><h2>${eingereicht?'✅ Deine Abgabe':'✍️ Deine Lösung'}</h2>${eingereicht?`<p style="color:#127a44;font-weight:700;margin:0 0 8px">✓ Eingereicht am ${esc(wann)} — du kannst sie noch ändern.</p>`:'<p style="color:var(--muted);font-size:.88rem;margin:0 0 8px">Schreib deine Lösung und klick auf „Einreichen". Deine Lehrerin sieht sie dann und schickt dir die Korrektur zurück.</p>'}<textarea id="haAbgabe" placeholder="Hier schreiben …" style="${taStyle}">${esc(eingereicht?ab.text:'')}</textarea><div style="margin-top:10px"><button style="${btn}" onclick="dowHaEinreichen('${esc(id)}')">📤 ${eingereicht?'Abgabe aktualisieren':'Einreichen'}</button> <span id="haOk" style="font-weight:700;margin-left:8px"></span></div></div>`;
       if(ab && ab.korrektur && ab.korrektur.trim()){
-        h += `<div class="card a-gold"><h2>✅ Deine korrigierte Hausaufgabe</h2><div style="font-size:.98rem;line-height:1.7">${sanitizeNotes(ab.korrektur)}</div></div>`;
+        h += `<div class="card a-gold"><h2>✅ Deine Korrektur</h2><div style="font-size:.98rem;line-height:1.7">${sanitizeNotes(ab.korrektur)}</div></div>`;
       }
     }
     tabs.push({ label:'📎 Hausaufgabe', html:h });
@@ -380,13 +380,13 @@ async function dowHaSpeichern(id){
 }
 async function dowHaKI(id, uid, btn){
   const ta=document.getElementById('hak-'+uid); const info=document.getElementById('haki-'+uid);
-  if(btn) btn.disabled=true; if(info){ info.style.color='#6b7280'; info.textContent='🤖 KI korrigiert …'; }
+  if(btn) btn.disabled=true; if(info){ info.style.color='#6b7280'; info.textContent='Korrektur wird erstellt …'; }
   try{
     const sess=await sb.auth.getSession(); const tok=sess&&sess.data&&sess.data.session&&sess.data.session.access_token;
     const r=await fetch('/api/korrigiere-hausaufgabe',{method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},body:JSON.stringify({class_id:id,user_id:uid})});
     const j=await r.json().catch(()=>({}));
     if(j&&j.ok&&j.korrektur){ if(ta) ta.value=j.korrektur; if(info){ info.style.color='#127a44'; info.textContent='✓ Vorschlag da — prüfen & senden'; } }
-    else { if(info){ info.style.color='#b45309'; info.textContent=(j&&j.error==='keine_abgabe')?'Keine Abgabe vorhanden.':'KI-Korrektur fehlgeschlagen.'; } }
+    else { if(info){ info.style.color='#b45309'; info.textContent=(j&&j.error==='keine_abgabe')?'Keine Abgabe vorhanden.':'Korrektur fehlgeschlagen.'; } }
   }catch(e){ if(info){ info.style.color='#b45309'; info.textContent='Fehler — nochmal versuchen.'; } }
   if(btn) btn.disabled=false;
 }
