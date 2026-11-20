@@ -201,6 +201,28 @@ export default async function handler(req, res) {
     return res.status(200).setHeader('Content-Type', 'text/html; charset=utf-8').send(inhalt('Julia'));
   }
 
+  /* Julia, 20.11.2026, auf die Frage, ob sie die Mail erst einmal
+     sehen will: "ja". ?trocken=1 zeigt sie nur im Browser - wie sie im
+     Postfach ankommt, sieht man erst, wenn sie wirklich verschickt
+     wurde. Darum dieser Weg: genau eine Mail an Julias eigene
+     Adresse, kein Eintrag im Protokoll, niemand sonst bekommt etwas. */
+  if (String(req.query?.test || '') === '1') {
+    if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok: false, grund: 'kein_brevo_schluessel' });
+    const an = process.env.JULIA_EMAIL || 'deutschoderwas@gmail.com';
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'deutschoderwas club', email: process.env.BREVO_SENDER_EMAIL || 'deutschlernen@deutschoderwas.de' },
+        to: [{ email: an, name: 'Julia' }],
+        subject: '[Test] ' + betreff,
+        htmlContent: inhalt('Julia'),
+      }),
+    });
+    if (!r.ok) return res.status(200).json({ ok: false, test: true, fehler: 'HTTP ' + r.status + ' ' + (await r.text().catch(() => '')).slice(0, 200) });
+    return res.status(200).json({ ok: true, test: true, an, betreff });
+  }
+
   const { data: alle } = await sb.from('profiles').select('id,name,email,status,email_optout,chat_mail_aus');
   const ziele = (alle || []).filter((p) => p.email && !p.email_optout && !p.chat_mail_aus && p.status !== 'beendet');
   if (!ziele.length) return res.status(200).json({ ok: true, sent: 0, grund: 'keine Empfaenger' });
