@@ -13,7 +13,7 @@ window.PODCASTS_SEED = [
   datum: '2026-07-20',
   dauer: '4:52',
   datei: 'podcast/a2-montag-sommerferien.m4a',
-  bild: 'kat-alltag',
+  bild: 'illu/kat-alltag.jpg',
   kurz: 'Sechs Wochen keine Schule — was machen die Deutschen in den Ferien? Mit Übung zum Nachsprechen.',
   woerter: ['die Ferien','der Urlaub','das Meer','die Berge','der Koffer','die Sonnencreme','ausschlafen','Balkonien'],
   transkript: [

@@ -103,7 +103,7 @@
 '.td-fin{display:flex;align-items:center;gap:11px;border-top:1px solid var(--line2);margin-top:16px;padding-top:15px;flex-wrap:wrap}',
 '.td-fin .ok{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--acc-d)}',
 /* Missionsliste */
-'.td-list{display:grid;gap:9px}',
+'.td-list{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}',
 '.td-li{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:var(--surf);border-radius:15px;padding:12px 14px;cursor:pointer;font-family:inherit;transition:.18s}',
 '.td-li:hover{border-color:var(--ink3);transform:translateY(-1px)}',
 '.td-li.on{border-color:var(--acc);background:var(--acc-soft)}',
@@ -117,8 +117,11 @@
 '.td-tb{border:1px solid var(--line);background:var(--surf);border-radius:99px;padding:7px 15px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink2);cursor:pointer;transition:.18s}',
 '.td-tb:hover{border-color:var(--ink3)}',
 '.td-tb.on{background:var(--ink);border-color:var(--ink);color:#fff}',
-'.td-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:start}',
-'@media(max-width:900px){.td-grid{grid-template-columns:1fr}}',
+'.td-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:18px;align-items:start}',
+/* 20.11.2026: minmax(0,…) und min-width:0, sonst drückt ein langer Satz
+   die Spalte breiter als den Bildschirm (Karte ragte am Handy rechts raus). */
+'.td-grid>*{min-width:0}',
+'@media(max-width:900px){.td-grid{grid-template-columns:minmax(0,1fr)}}',
 '.td-sec{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin:0 2px 11px}',
 '.td-safe{font-size:12.5px;color:var(--ink3);line-height:1.6;margin:13px 2px 0;display:flex;gap:8px}',
 '.td-safe .ic{flex:none;margin-top:1px}',
