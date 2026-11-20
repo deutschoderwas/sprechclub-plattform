@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Verben · deutschoderwas</title>
+<meta name="description" content="Deutsche Verben nach Bereichen üben — mit Bild, Bedeutung und Beispielsatz. Offline, A1 bis C2.">
+<meta name="theme-color" content="#FFFDF8">
+<link rel="manifest" href="app.webmanifest">
+<link rel="apple-touch-icon" href="/logo.PNG">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Verben">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Verben — nach Bereichen, so schlicht wie möglich
+
+   Julia, 20.11.2026: "Nach Bereichen sortiert, Minimalismus, so clear
+   wie möglich so gut wie möglich."
+
+   Darum ist hier nichts, was nur hübsch ist: keine Schatten, keine
+   dicken Knöpfe, kein Feuer-Symbol für die Serie, keine Punkte. Eine
+   Akzentfarbe, Haarlinien, viel Luft. Was zählt, ist das Bild, das
+   Verb und ob die Antwort stimmt.
+
+   Die 50 Themen aus den Lektionen waren als Gliederung unbrauchbar —
+   die Hälfte hat ein einziges Verb. Sie sind zu sieben Bereichen
+   zusammengefasst; die Zuordnung steht im Erzeuger, nicht hier.
+   ============================================================ */
+:root{
+  --tinte:#171717; --tinte-2:#6B6B66; --tinte-3:#A3A39C;
+  --grund:#FFFDF8; --flaeche:#fff; --linie:#E9E4D8; --linie-2:#F2EEE4;
+  --akzent:#0E8C80; --akzent-hell:#E6F4F2;
+  --ja:#2F7D32; --ja-hell:#EFF7EF; --nein:#B3241C; --nein-hell:#FCF0EF;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,sans-serif;color:var(--tinte);background:var(--grund);
+  line-height:1.55;font-size:16px}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.huelle{max-width:520px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 20px max(28px,env(safe-area-inset-bottom))}
+
+/* ---- Kopf ---- */
+.kopf{display:flex;align-items:center;min-height:34px;margin-bottom:26px}
+.marke{font-size:13px;font-weight:600;letter-spacing:.01em;color:var(--tinte-3)}
+.kopf .rechts{margin-left:auto;font-size:13px;font-weight:600;color:var(--tinte-3);font-variant-numeric:tabular-nums}
+.zurueck{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--tinte-2);
+  margin:-6px 0 20px;padding:6px 0}
+.zurueck:hover{color:var(--tinte)}
+
+h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:30px;letter-spacing:-.025em;line-height:1.1}
+.unter{color:var(--tinte-2);font-size:15px;margin-top:6px}
+
+/* ---- Liste der Bereiche ---- */
+.liste{margin-top:30px;border-top:1px solid var(--linie-2)}
+.zeile{display:flex;align-items:center;gap:16px;width:100%;text-align:left;
+  padding:17px 2px;border-bottom:1px solid var(--linie-2)}
+.zeile:hover{background:#FCFAF3}
+.zeile .txt{flex:1;min-width:0}
+/* Beide muessen Bloecke sein: als Inline-Spans klebte der Name am
+   Text dahinter ("Alltag21 Verben") - im Bildschirmfoto sofort zu
+   sehen, im Markup nicht. */
+.zeile .txt{display:block}
+.zeile .name{display:block;font-weight:600;font-size:16.5px;letter-spacing:-.01em}
+.zeile .meta{display:block;font-size:13.5px;color:var(--tinte-3);margin-top:1px;
+  font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.zeile .pfeil{color:var(--tinte-3);font-size:17px;flex:none}
+.zeile.fertig .name{color:var(--tinte-2)}
+.zeile .haken{flex:none;width:20px;color:var(--akzent);font-size:15px;text-align:center}
+
+/* dünner Fortschritt, rechtsbündig */
+.fort{flex:none;width:52px;height:3px;background:var(--linie);border-radius:2px;overflow:hidden}
+.fort i{display:block;height:100%;background:var(--akzent)}
+
+/* ---- Übung ---- */
+.schritte{display:flex;gap:4px;margin-bottom:28px}
+.schritte i{flex:1;height:3px;background:var(--linie);border-radius:2px}
+.schritte i.da{background:var(--akzent)}
+.frage{font-size:14px;font-weight:600;color:var(--tinte-3);letter-spacing:.02em;text-transform:uppercase;margin-bottom:14px}
+.bild{width:100%;max-width:300px;aspect-ratio:1/1;margin:0 auto 22px;border-radius:14px;overflow:hidden;background:#F4F0E6}
+.bild img{width:100%;height:100%;object-fit:cover}
+.satz{font-size:19px;line-height:1.45;margin-bottom:22px;font-weight:500}
+.hinweis{font-size:16px;color:var(--tinte-2);margin-bottom:20px}
+.wahl{display:grid;gap:9px}
+.wahl button{border:1px solid var(--linie);border-radius:11px;padding:14px 16px;text-align:left;
+  font-size:16px;font-weight:500;background:var(--flaeche);min-height:52px;transition:border-color .12s,background .12s}
+.wahl button:hover:not([disabled]){border-color:var(--tinte-3)}
+.wahl button.ja{border-color:var(--ja);background:var(--ja-hell);color:var(--ja);font-weight:600}
+.wahl button.nein{border-color:var(--nein);background:var(--nein-hell);color:var(--nein);font-weight:600}
+input[type=text]{width:100%;padding:14px 16px;border:1px solid var(--linie);border-radius:11px;
+  font:inherit;font-size:17px;font-weight:600;background:var(--flaeche);outline:none}
+input[type=text]:focus{border-color:var(--akzent)}
+
+.fuss{margin-top:26px}
+.weiter{display:block;width:100%;background:var(--tinte);color:#fff;font-weight:600;font-size:16px;
+  padding:15px;border-radius:11px;min-height:52px}
+.weiter.still{background:var(--flaeche);color:var(--tinte);border:1px solid var(--linie)}
+.echo{border-left:2px solid;padding:2px 0 2px 14px;margin-bottom:20px}
+.echo.ja{border-color:var(--ja)} .echo.nein{border-color:var(--nein)}
+.echo b{display:block;font-size:15px;margin-bottom:3px}
+.echo.ja b{color:var(--ja)} .echo.nein b{color:var(--nein)}
+.echo span{display:block;font-size:14.5px;color:var(--tinte-2)}
+
+/* ---- Ende ---- */
+.ende{padding:40px 0 10px}
+.ende h2{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:26px;letter-spacing:-.02em}
+.ende .quote{font-size:15px;color:var(--tinte-2);margin:8px 0 28px;font-variant-numeric:tabular-nums}
+.fein{font-size:13px;color:var(--tinte-3);margin-top:26px}
+.fein a{color:var(--tinte-2)}
+</style>
+</head>
+<body>
+<div class="huelle" id="app"></div>
+
+<script src="verben-daten.js"></script>
+<script>
+(function(){
+  'use strict';
+  var VERBEN = (window.VERBEN || []).slice();
+  var BEREICHE = window.BEREICHE || [];
+  var PRO_LEKTION = 5, FRAGEN = 10, SPEICHER = 'dow_verben_v2';
+
+  var stand = { fertig:{} };
+  try { var roh = localStorage.getItem(SPEICHER); if (roh) stand = Object.assign(stand, JSON.parse(roh)); } catch(e){}
+  function sichern(){ try{ localStorage.setItem(SPEICHER, JSON.stringify(stand)); }catch(e){} }
+
+  /* Lektionen: je Bereich Fünferpäckchen, Reihenfolge wie in den Daten
+     (nach Niveau sortiert) — leicht beginnen, schwerer werden. */
+  var lektionen = [];
+  BEREICHE.forEach(function(g){
+    var dr = VERBEN.filter(function(v){ return v.g === g; });
+    for (var i=0;i<dr.length;i+=PRO_LEKTION){
+      var teil = dr.slice(i,i+PRO_LEKTION);
+      if (teil.length) lektionen.push({ id:g+'#'+(i/PRO_LEKTION+1), g:g, nr:i/PRO_LEKTION+1, verben:teil });
+    }
+  });
+  function lekVon(g){ return lektionen.filter(function(l){ return l.g === g; }); }
+  function fertigVon(g){ return lekVon(g).filter(function(l){ return stand.fertig[l.id]; }).length; }
+
+  function mischen(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function schlicht(s){ return String(s||'').toLowerCase().trim()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[^a-z]/g,''); }
+  function andere(v,n){
+    var nah = VERBEN.filter(function(x){ return x.w!==v.w && x.g===v.g; });
+    var pool = nah.length>=n ? nah : VERBEN.filter(function(x){ return x.w!==v.w; });
+    return mischen(pool).slice(0,n);
+  }
+
+  function aufgaben(lek){
+    var arten=['bild','bedeutung','satz','tippen'], liste=[];
+    mischen(lek.verben.concat(lek.verben)).slice(0,FRAGEN).forEach(function(v,i){
+      var a=arten[i%arten.length]; if(a==='bild'&&!v.bild) a='bedeutung';
+      var f=andere(v,3);
+      if(a==='bild') liste.push({art:a,v:v,frage:'Welches Verb?',bild:v.bild,wahl:mischen([v.w].concat(f.map(function(x){return x.w;}))),loesung:v.w});
+      else if(a==='bedeutung') liste.push({art:a,v:v,frage:'Was bedeutet „'+v.w+'“?',wahl:mischen([v.b].concat(f.map(function(x){return x.b;}))),loesung:v.b});
+      else if(a==='satz') liste.push({art:a,v:v,frage:'Welches Verb steckt im Satz?',satz:v.s,wahl:mischen([v.w].concat(f.map(function(x){return x.w;}))),loesung:v.w});
+      else liste.push({art:'tippen',v:v,frage:'Schreib das Verb',bild:v.bild,hinweis:v.b,loesung:v.w});
+    });
+    return mischen(liste);
+  }
+
+  var app=document.getElementById('app'), lauf=null;
+  function kopf(rechts){ return '<div class="kopf"><span class="marke">deutschoderwas</span>'
+    + (rechts?'<span class="rechts">'+rechts+'</span>':'') + '</div>'; }
+
+  /* ---------- Bereiche ---------- */
+  function zeigeStart(){
+    var ganz = lektionen.filter(function(l){ return stand.fertig[l.id]; }).length;
+    app.innerHTML = kopf(ganz+' / '+lektionen.length)
+      + '<h1>Verben</h1>'
+      + '<p class="unter">'+VERBEN.length+' Verben mit Bild, Bedeutung und Beispielsatz — nach Bereichen geordnet.</p>'
+      + '<div class="liste">' + BEREICHE.map(function(g){
+          var alle=lekVon(g), f=fertigVon(g), anz=VERBEN.filter(function(v){return v.g===g;}).length;
+          var teil = alle.length ? Math.round(f/alle.length*100) : 0;
+          return '<button class="zeile '+(teil===100?'fertig':'')+'" data-g="'+esc(g)+'">'
+            + '<span class="haken">'+(teil===100?'✓':'')+'</span>'
+            + '<span class="txt"><span class="name">'+esc(g)+'</span>'
+            + '<span class="meta">'+anz+' Verben · '+alle.length+(alle.length===1?' Lektion':' Lektionen')+'</span></span>'
+            + '<span class="fort"><i style="width:'+teil+'%"></i></span>'
+            + '<span class="pfeil">›</span></button>';
+        }).join('') + '</div>'
+      + '<p class="fein">Dein Fortschritt bleibt auf diesem Gerät. <a href="https://www.deutschoderwas-club.de/" target="_blank" rel="noopener">deutschoderwas club</a></p>';
+    Array.prototype.forEach.call(app.querySelectorAll('[data-g]'),function(b){
+      b.onclick=function(){ zeigeBereich(b.getAttribute('data-g')); };
+    });
+  }
+
+  function zeigeBereich(g){
+    var alle=lekVon(g);
+    app.innerHTML = kopf(fertigVon(g)+' / '+alle.length)
+      + '<button class="zurueck" id="zur">‹ Bereiche</button>'
+      + '<h1>'+esc(g)+'</h1>'
+      + '<div class="liste">' + alle.map(function(l){
+          var ist=!!stand.fertig[l.id];
+          return '<button class="zeile '+(ist?'fertig':'')+'" data-l="'+esc(l.id)+'">'
+            + '<span class="haken">'+(ist?'✓':'')+'</span>'
+            + '<span class="txt"><span class="name">Lektion '+l.nr+'</span>'
+            + '<span class="meta">'+l.verben.map(function(v){return v.w;}).join(' · ')+'</span></span>'
+            + '<span class="pfeil">›</span></button>';
+        }).join('') + '</div>';
+    document.getElementById('zur').onclick=zeigeStart;
+    Array.prototype.forEach.call(app.querySelectorAll('[data-l]'),function(b){
+      b.onclick=function(){ starte(b.getAttribute('data-l')); };
+    });
+  }
+
+  function starte(id){
+    var lek=lektionen.filter(function(l){return l.id===id;})[0]; if(!lek) return;
+    lauf={lek:lek,a:aufgaben(lek),i:0,richtig:0}; zeigeAufgabe();
+  }
+
+  function zeigeAufgabe(){
+    if(lauf.i>=lauf.a.length) return zeigeEnde();
+    var a=lauf.a[lauf.i];
+    var schritte='<div class="schritte">'+lauf.a.map(function(_,k){return '<i class="'+(k<lauf.i?'da':'')+'"></i>';}).join('')+'</div>';
+    var h = kopf() + '<button class="zurueck" id="zur">‹ '+esc(lauf.lek.g)+'</button>' + schritte
+      + '<div class="frage">'+esc(a.frage)+'</div>';
+    if(a.bild) h += '<div class="bild"><img src="'+esc(a.bild)+'" alt=""></div>';
+    if(a.satz) h += '<div class="satz">'+esc(a.satz)+'</div>';
+    if(a.art==='tippen'){
+      h += '<p class="hinweis">'+esc(a.hinweis)+'</p>'
+        + '<input id="feld" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Verb">';
+    } else {
+      h += '<div class="wahl" id="wahl">'+a.wahl.map(function(w){
+        return '<button type="button" data-w="'+esc(w)+'">'+esc(w)+'</button>';}).join('')+'</div>';
+    }
+    h += '<div class="fuss" id="fuss"></div>';
+    app.innerHTML=h;
+    document.getElementById('zur').onclick=function(){ zeigeBereich(lauf.lek.g); };
+    if(a.art==='tippen'){
+      var feld=document.getElementById('feld');
+      document.getElementById('fuss').innerHTML='<button class="weiter" id="p">Prüfen</button>';
+      document.getElementById('p').onclick=function(){ pruefe(a, schlicht(feld.value)===schlicht(a.loesung), feld); };
+      feld.addEventListener('keydown',function(e){ if(e.key==='Enter') pruefe(a, schlicht(feld.value)===schlicht(a.loesung), feld); });
+      setTimeout(function(){ try{feld.focus();}catch(e){} },50);
+    } else {
+      Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(b){
+        b.onclick=function(){
+          var ok=b.getAttribute('data-w')===a.loesung;
+          Array.prototype.forEach.call(app.querySelectorAll('#wahl button'),function(x){
+            x.disabled=true;
+            if(x.getAttribute('data-w')===a.loesung) x.className='ja';
+          });
+          if(!ok) b.className='nein';
+          pruefe(a, ok);
+        };
+      });
+    }
+  }
+
+  function pruefe(a, ok, feld){
+    if(ok) lauf.richtig++;
+    if(feld){ feld.disabled=true; feld.style.borderColor = ok?'var(--ja)':'var(--nein)'; }
+    var v=a.v;
+    document.getElementById('fuss').innerHTML =
+      '<div class="echo '+(ok?'ja':'nein')+'"><b>'+(ok?'Richtig':'Richtig wäre: '+esc(a.loesung))+'</b>'
+      + '<span>'+esc(v.w)+' — '+esc(v.b)+'</span>'
+      + '<span style="margin-top:4px">'+esc(v.s)+'</span></div>'
+      + '<button class="weiter" id="w">Weiter</button>';
+    document.getElementById('w').onclick=function(){ lauf.i++; zeigeAufgabe(); };
+  }
+
+  function zeigeEnde(){
+    stand.fertig[lauf.lek.id]=true; sichern();
+    var alle=lekVon(lauf.lek.g);
+    var naechste=alle.filter(function(l){ return !stand.fertig[l.id]; })[0]
+      || lektionen.filter(function(l){ return !stand.fertig[l.id]; })[0];
+    app.innerHTML = kopf()
+      + '<div class="ende"><h2>Lektion '+lauf.lek.nr+' geschafft</h2>'
+      + '<p class="quote">'+lauf.richtig+' von '+lauf.a.length+' richtig · '+esc(lauf.lek.g)+'</p>'
+      + (naechste ? '<button class="weiter" id="n">Weiter mit '+esc(naechste.g)+' · Lektion '+naechste.nr+'</button>' : '')
+      + '<button class="weiter still" id="zur" style="margin-top:9px">Zur Übersicht</button></div>';
+    document.getElementById('zur').onclick=zeigeStart;
+    if(naechste) document.getElementById('n').onclick=function(){ starte(naechste.id); };
+  }
+
+  zeigeStart();
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  }
+})();
+</script>
+</body>
+</html>
