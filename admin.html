@@ -97,6 +97,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
 .klcard.open{outline:2px solid var(--turq)!important;background:#F1FAF8!important}
 </style>
 <link rel="stylesheet" href="club-theme.css">
+<link rel="stylesheet" href="admin-stil.css?v=1">
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -115,8 +116,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
 
 <div class="wrap" id="app" style="display:none">
   <div class="adm-head" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-    <h1><img src="logo.PNG" class="adm-logo" onerror="this.style.display='none'">deutschoderwas club · Admin</h1>
-    <div><a class="btn btn-primary" href="admin-kurse.html">🎓 Kurse verwalten</a> <button class="btn btn-ghost" onclick="rundmailOeffnen()">✉️ Rundmail</button> <a class="btn btn-ghost" href="index.html">Zur Seite</a> <button class="btn btn-ghost" onclick="logout()">Abmelden</button></div>
+    <h1><img src="logo.PNG" class="adm-logo" onerror="this.style.display='none'">deutschoderwas club <span class="adm-rolle" id="admRolle">Admin</span></h1>
+    <div><a class="btn btn-primary" href="admin-kurse.html">Kurse verwalten</a> <button class="btn btn-ghost" onclick="rundmailOeffnen()">Rundmail</button> <a class="btn btn-ghost" href="index.html">Zur Seite</a> <button class="btn btn-ghost" onclick="logout()">Abmelden</button></div>
   </div>
 
   <!-- Einmalige Richtigstellung an die 27, die "8 LIVE-Stunden" in der
@@ -232,7 +233,7 @@ async function enter(u){
   /* Was eine Lehrkraft nicht sehen darf, steht als nurAdmin in BEREICHE und
      taucht deshalb gar nicht erst auf - es muss hier nichts mehr versteckt
      werden. */
-  if (!isAdminUser) document.querySelector('h1').textContent='deutschoderwas club · Lehrkraft';
+  if (!isAdminUser){ const _r=document.getElementById('admRolle'); if(_r) _r.textContent='Lehrkraft'; }
   show(isAdminUser ? 'start' : 'plan');
 }
 
@@ -344,10 +345,21 @@ async function ladeStart(){
 
   const leadsNeu = leads.filter(l => (l.status||'neu') === 'neu');
 
-  let html = '<div class="card" style="margin-bottom:14px"><h3 style="margin:0 0 3px">Guten Tag, ' + esc((window.profile && window.profile.name) || 'Julia') + '.</h3>'
-    + '<p class="muted" style="margin:0">' + ST_TAG.format(jetzt) + ' · '
-    + (heute.length ? (heute.length === 1 ? 'eine Stunde heute' : heute.length + ' Stunden heute') : 'heute keine Stunde')
-    + '</p></div>';
+  /* 20.11.2026: Begrüßung als Petrol-Bühne wie „Meine Stunden“ im
+     Schülerbereich. Die Chips führen direkt dorthin, wo etwas wartet. */
+  const _std = Number(new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'numeric',hour12:false}).format(jetzt));
+  const _gruss = _std < 11 ? 'Guten Morgen' : (_std < 18 ? 'Guten Tag' : 'Guten Abend');
+  const _chips = [];
+  _chips.push('<button class="chip" onclick="show(\'klassen\')">' + admIc('uhr') + (heute.length ? (heute.length === 1 ? '1 Stunde heute' : heute.length + ' Stunden heute') : 'Heute keine Stunde') + '</button>');
+  if (korrekturen.length) _chips.push('<button class="chip" onclick="location.href=\'admin-korrektur.html\'">' + admIc('stift') + korrekturen.length + ' ' + stWort(korrekturen.length, 'Korrektur', 'Korrekturen') + ' offen</button>');
+  if (isAdminUser && nachrichten.length) _chips.push('<button class="chip" onclick="show(\'nachrichten\')">' + admIc('post') + nachrichten.length + ' ' + stWort(nachrichten.length, 'Nachricht', 'Nachrichten') + ' ungelesen</button>');
+  const _held = '<div class="adm-held"><div>'
+    + '<div class="kick">' + esc(ST_TAG.format(jetzt)) + (isAdminUser ? ' · Team-Bereich' : ' · Lehrkraft') + '</div>'
+    + '<h2>' + _gruss + ', ' + esc((window.profile && window.profile.name) || 'Julia') + '.</h2>'
+    + '<p>' + (heute.length ? 'Die nächste Stunde beginnt um ' + ST_UHR.format(new Date(heute[0].starts_at)) + ' Uhr.' : 'Heute steht keine Stunde im Plan.') + '</p>'
+    + '<div class="chips">' + _chips.join('') + '</div></div>'
+    + '<img class="foto" src="bilder/bereich/adm-hero.webp" alt="" onerror="this.remove()"></div>';
+  let html = '';
 
   html += '<div class="st-karten">';
   html += stKarte(heute.length, heute.length === 1 ? 'Stunde heute' : 'Stunden heute',
@@ -388,7 +400,7 @@ async function ladeStart(){
       + (ohneNachb.length > 12 ? '<div class="muted" style="font-size:12px;padding-top:6px">… und ' + (ohneNachb.length-12) + ' weitere</div>' : '')
       + '</div>';
   }
-  host.innerHTML = '<div id="commKarte"></div>' + html;
+  host.innerHTML = _held + '<div id="commKarte"></div>' + html;
   setzeAbzeichen('leadsBdg', leadsNeu.length);
   setzeAbzeichen('korrBdg', korrekturen.length);
   ladeCommunityKarte();
@@ -463,9 +475,9 @@ async function ladeCommunityKarte(){
   }
 
   box.innerHTML =
-    '<div style="border:2px solid ' + ton.rand + ';background:' + ton.flaeche + ';border-radius:16px;padding:16px 18px;margin-bottom:16px">'
+    '<div style="border:1px solid #E7EBF0;border-left:4px solid ' + ton.rand + ';background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px">'
     + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">'
-    +   '<span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:' + ton.label + '">\u{1F4AC} Community-Chat</span>'
+    +   '<span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:' + ton.label + '">Community-Chat</span>'
     +   (seit.length ? '<span style="background:#D42A21;color:#fff;border-radius:20px;padding:1px 9px;font-size:11px;font-weight:800">'
           + seit.length + ' neu' + (mein ? ' seit deinem letzten Satz' : '') + '</span>' : '')
     + '</div>'
@@ -810,28 +822,28 @@ async function kontaktErledigt(email) {
    steht die ganze Navigation in EINER Tabelle: Bereich, Reiter, was beim
    Oeffnen geladen wird. Ein neuer Reiter ist eine neue Zeile. */
 const BEREICHE = [
-  { id:'start', name:'🏠 Start', reiter:[
+  { id:'start', name:'Start', reiter:[
       { id:'start', name:'\u00dcberblick', laden:function(){ ladeStart(); } } ] },
-  { id:'unterricht', name:'📅 Unterricht', reiter:[
+  { id:'unterricht', name:'Unterricht', reiter:[
       { id:'klassen', name:'Stunden & Anwesenheit', laden:function(){ loadKlassen(); } },
       { id:'plan',    name:'Lehrerplan',            laden:function(){ loadPlan(); } },
       { id:'neu',     name:'Stunde anlegen',        nurAdmin:true } ] },
-  { id:'menschen', name:'👥 Menschen', reiter:[
+  { id:'menschen', name:'Menschen', reiter:[
       { id:'schueler', name:'Sch\u00fcler', nurAdmin:true, laden:function(){ loadSchueler(); } },
       { id:'lehrer',   name:'Lehrkr\u00e4fte',         nurAdmin:true, laden:function(){ loadLehrer(); } },
-      { id:'leads',    name:'📋 Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } },
-      { id:'kontakt',  name:'📣 Angeschrieben?', nurAdmin:true, abzeichen:'kontaktBdg', laden:function(){ ladeKontakt(); } } ] },
-  { id:'inhalte', name:'📚 Inhalte', reiter:[
+      { id:'leads',    name:'Leads', nurAdmin:true, abzeichen:'leadsBdg', laden:function(){ loadLeads(); } },
+      { id:'kontakt',  name:'Angeschrieben?', nurAdmin:true, abzeichen:'kontaktBdg', laden:function(){ ladeKontakt(); } } ] },
+  { id:'inhalte', name:'Inhalte', reiter:[
       { id:'material', name:'Materialien', nurAdmin:true, laden:function(){ loadMaterial(); } },
-      { id:'korrektur', name:'\u270D\uFE0F Korrekturen', href:'admin-korrektur.html', abzeichen:'korrBdg' },
-      { id:'kurse',     name:'🎓 Kurse',        href:'admin-kurse.html', nurAdmin:true } ] },
-  { id:'austausch', name:'💬 Austausch', reiter:[
+      { id:'korrektur', name:'Korrekturen', href:'admin-korrektur.html', abzeichen:'korrBdg' },
+      { id:'kurse',     name:'Kurse',        href:'admin-kurse.html', nurAdmin:true } ] },
+  { id:'austausch', name:'Austausch', reiter:[
       /* Nur Julia: Nachrichten sind Post von ihr an eine einzelne Person,
          kein Gruppenchat. Die Leseregel in der Datenbank sagt dasselbe. */
       { id:'nachrichten', name:'Nachrichten', nurAdmin:true, laden:function(){ loadNachrichten(); } },
       { id:'community',   name:'Community',   abzeichen:'commBdg', laden:function(){ if(window.renderCommunity) window.renderCommunity(); } },
       { id:'bewertungen', name:'Bewertungen', nurAdmin:true, laden:function(){ loadBewertungen(); } },
-      { id:'kiteam',      name:'🤖 KI-Team',  nurAdmin:true, laden:function(){ ladeKiTeam(); } } ] }
+      { id:'kiteam',      name:'KI-Team',  nurAdmin:true, laden:function(){ ladeKiTeam(); } } ] }
 ];
 /* Alle Kaesten, die show() ein- und ausblendet - aus der Tabelle abgeleitet,
    damit hier nie einer fehlt. */
@@ -843,6 +855,19 @@ function bereichVon(id){
   return BEREICHE[0];
 }
 
+/* Lucide-Symbole für die Bereichsleiste und die Bühne (20.11.2026).
+   Emoji in der Navigation wirkten verspielt und je nach Gerät anders. */
+const ADM_IC = {
+  start:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  unterricht:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+  menschen:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  inhalte:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  austausch:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  uhr:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  stift:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  post:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'
+};
+function admIc(n){ return ADM_IC[n] ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ADM_IC[n] + '</svg>' : ''; }
 function zeichneBereiche(aktiv){
   const box = document.getElementById('bereiche'); if(!box) return;
   box.innerHTML = BEREICHE.filter(function(b){ return b.reiter.some(darfSehen); })
@@ -856,7 +881,7 @@ function zeichneBereiche(aktiv){
          wartet — sonst klickt dort niemand hinein. */
       const punkt = (b.id==='austausch' && (ABZEICHEN.commBdg||0) > 0)
         ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D42A21;margin-left:6px;vertical-align:middle"></span>' : '';
-      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + b.name + (nurLink ? ' \u2197' : '') + punkt + '</button>';
+      return '<button class="' + (b.id===aktiv.id?'active':'') + '" onclick="oeffneBereich(\'' + b.id + '\')">' + admIc(b.id) + b.name + (nurLink ? ' \u2197' : '') + punkt + '</button>';
     }).join('');
 }
 function zeichneReiter(bereich, aktivId){
@@ -1016,7 +1041,7 @@ function renderLeads(){
       <button class="btn btn-ghost" onclick="leadsCsv()">⬇️ Als CSV herunterladen</button>
       <button class="btn btn-ghost" onclick="loadLeads()">🔄 Neu laden</button>
       <button class="btn" style="background:#10627A;color:#fff;font-weight:800" onclick="erinnerungFenster()">✉️ Erinnerung an alle ohne Sprechclub</button>
-      <button class="btn" style="background:#DD0000;color:#fff;font-weight:800" onclick="rundmailLeadsFenster()">✉️ Eigene Mail an alle Leads</button>
+      <button class="btn btn-primary" onclick="rundmailLeadsFenster()">Eigene Mail an alle Leads</button>
     </div>
   </div>
   <div id="leadListe">${rows.length?rows.map(leadKarte).join(''):'<div class="card muted">Keine Leads in dieser Kategorie.</div>'}</div>`;
@@ -1056,7 +1081,7 @@ function leadKarte(l){
         ${LEAD_STATUS.map(o=>`<option value="${o[0]}"${o[0]===st?' selected':''}>${o[1]}</option>`).join('')}
       </select>
       <input id="ln_${l.id}" value="${esc(l.notiz||'')}" placeholder="Notiz (z.B. am 22.8. angeschrieben)" style="flex:1;min-width:200px;padding:7px 10px;border:1px solid #ccc;border-radius:8px">
-      <button class="btn btn-primary" onclick="leadSave('${l.id}')">💾 Speichern</button>
+      <button class="btn btn-primary" onclick="leadSave('${l.id}')">Speichern</button>
     </div>
     <!-- Julia, 18.10.2026: "WhatsApp geschickt oder nicht. Wenn ich
          selbst die WhatsApp geschickt habe, dann muss da ein Haken
@@ -1849,7 +1874,7 @@ async function loadPlan(){
         <span style="flex:1;min-width:130px"><b>${esc(c.title||'')}</b>${c.topic?` <span class="muted">· ${esc(c.topic)}</span>`:''}</span>
         ${teacherCell}
         <span class="muted" title="${names.join(', ')}">👥 ${p.length}/${c.capacity||0} ${freeHtml}${names.length?' · '+names.slice(0,3).join(', ')+(names.length>3?' …':''):''}</span>
-        <a class="btn" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener" style="padding:5px 12px;font-size:12px;text-decoration:none;background:#DD0000;color:#fff;font-weight:700;border:none">🔴 Unterricht starten</a>
+        <a class="btn" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener" style="padding:5px 12px;font-size:12px;text-decoration:none;background:#DD0000;color:#fff;font-weight:700;border:none">Unterricht starten</a>
         <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px" onclick="planAtt('${c.id}')">✅ Anwesenheit</button>
       </div>
       <div id="patt-${c.id}" style="display:none;margin:4px 0 0 4px"></div>
@@ -2039,7 +2064,7 @@ function renderKlassen(){
       </div>
 
       <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-        <a class="btn" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener" style="text-decoration:none;background:#DD0000;color:#fff;font-weight:800;border:none">🔴 Zum Unterricht</a>
+        <a class="btn" href="klassenraum.html?stunde=${c.id}&titel=${encodeURIComponent(c.title||'')}&niveau=${encodeURIComponent(c.level||'')}" target="_blank" rel="noopener" style="text-decoration:none;background:#DD0000;color:#fff;font-weight:800;border:none">Zum Unterricht</a>
         <button class="btn btn-ghost" onclick="toggleAtt('${c.id}')">✅ Anwesenheit eintragen</button>
         <a class="btn btn-ghost" href="tafel.html?id=${c.id}" target="_blank" rel="noopener">🖊️ Live-Tafel</a>
         <button class="btn btn-ghost" onclick="genMaterial('${c.id}')">${c._hasMat?'🔄 KI-Übungen neu':'✨ KI-Übungen erstellen'}</button>
@@ -2091,7 +2116,7 @@ function renderKlassen(){
     <button class="btn btn-ghost" onclick="klWeekNav(-1)">◀ Vorige</button>
     <b style="font-family:'Space Grotesk',sans-serif;font-size:16px">${rngFmt.format(ws)} – ${rngFmt.format(wEnd)}</b>
     <button class="btn btn-ghost" onclick="klWeekNav(1)">Nächste ▶</button>
-    <button class="btn btn-primary" onclick="klWeekNav(0)" style="padding:7px 14px">📅 Heute</button>
+    <button class="btn btn-primary" onclick="klWeekNav(0)" style="padding:7px 14px">Heute</button>
   </div>`;
 
   // ===== Wochen-Raster (Mo–So) =====
@@ -3892,7 +3917,7 @@ window.oeffneSchuelerKarteAusChat = async function(uid, name){
 if(typeof window.openStudentCard==='function'){var _osc2=window.openStudentCard;window.openStudentCard=function(id){window.__jkCardId=id;return _osc2.apply(this,arguments);};}try{var cardMO=new MutationObserver(function(){var ov=document.getElementById('cardOverlay');if(ov&&document.getElementById('cEmailLog')&&!document.getElementById('jkCardMsgs')&&window.__jkCardId){jkInjectCardMessages(window.__jkCardId);}});cardMO.observe(document.body,{childList:true,subtree:true});}catch(e){}
 var MAILS=[{t:'Erinnerung an deine Stunde',s:'deutschoderwas club',b:'Hallo NAME, kleine Erinnerung an deine gebuchte Stunde.'},{t:'Wochenplan fuer Lehrer',s:'deutschoderwas club',b:'Hallo, hier dein Unterricht fuer die kommende Woche.'},{t:'Deine Nachbereitung ist da',s:'deutschoderwas club',b:'Hallo NAME, die Nachbereitung ist online \u2013 Mitschrift, Vokabeln, Uebungen.'},{t:'Dein Niveautest-Ergebnis',s:'deutschoderwas',b:'Hallo NAME, hier dein Ergebnis inkl. Kurs-Empfehlung.'}];
 function mailModal(){var ov=document.createElement('div');ov.id='jkMailOv';ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 12px';ov.onclick=function(e){if(e.target===ov)ov.remove();};ov.innerHTML='<div style="background:#fff;max-width:640px;width:100%;border-radius:14px;padding:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-size:18px">\uD83D\uDCE7 Mail-Vorschau</b><button onclick="document.getElementById(&#39;jkMailOv&#39;).remove()" style="border:none;background:#eee;border-radius:8px;padding:4px 10px;cursor:pointer">Schliessen</button></div>'+MAILS.map(function(m){return '<div style="border:1px solid #eee;border-radius:10px;padding:10px 12px;margin-bottom:8px"><div style="font-size:12px;color:#888">Absender: '+esc3(m.s)+'</div><div style="font-weight:700;margin:2px 0">'+esc3(m.t)+'</div><div style="font-size:14px;color:#333">'+esc3(m.b)+'</div></div>';}).join('')+'</div>';document.body.appendChild(ov);}
-var fbtn=document.createElement('button');fbtn.textContent='\uD83D\uDCE7 Mail-Vorschau';fbtn.onclick=mailModal;fbtn.style.cssText='position:fixed;right:16px;bottom:16px;z-index:9999;background:#DD0000;color:#fff;border:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;font-weight:700';if(document.body)document.body.appendChild(fbtn);
+var fbtn=document.createElement('button');fbtn.textContent='Mail-Vorschau';fbtn.id='jkMailFab';fbtn.onclick=mailModal;fbtn.style.cssText='position:fixed;right:16px;bottom:16px;z-index:9999;background:#DD0000;color:#fff;border:none;border-radius:999px;padding:10px 16px;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer;font-weight:700';if(document.body)document.body.appendChild(fbtn);
 window.__jkMO=new MutationObserver(function(){var tbl=document.getElementById('schuelerTable');if(!tbl)return;if(!document.getElementById('jkBarHost')){inject();return;}if(QF!=='alle'||NF){if(tbl.style.display!=='none'){try{window.__jkMO.disconnect();}catch(e){}renderMyList();try{window.__jkMO.observe(document.body,{childList:true,subtree:true});}catch(e){}}}else{if(!tbl.querySelector('[data-jkbadge]')){try{window.__jkMO.disconnect();}catch(e){}decorate();try{window.__jkMO.observe(document.body,{childList:true,subtree:true});}catch(e){}}}});
 try{window.__jkMO.observe(document.body,{childList:true,subtree:true});}catch(e){}
 if(typeof window.show==='function'){var _sh=window.show;window.show=function(w){var rr=_sh.apply(this,arguments);if(w==='schueler'){setTimeout(inject,150);setTimeout(inject,700);}return rr;};}
