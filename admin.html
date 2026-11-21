@@ -97,7 +97,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--turq)}
 .klcard.open{outline:2px solid var(--turq)!important;background:#F1FAF8!important}
 </style>
 <link rel="stylesheet" href="club-theme.css">
-<link rel="stylesheet" href="admin-stil.css?v=3">
+<link rel="stylesheet" href="admin-stil.css?v=4">
 </head>
 <body>
 <div class="dow-flagbar"></div>
@@ -347,7 +347,9 @@ async function ladeStart(){
 
   /* 20.11.2026: Begrüßung als Petrol-Bühne wie „Meine Stunden“ im
      Schülerbereich. Die Chips führen direkt dorthin, wo etwas wartet. */
-  const _std = Number(new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'numeric',hour12:false}).format(jetzt));
+  /* formatToParts statt format: format() liefert "09 Uhr", Number() daraus
+     ist NaN, und dann stand morgens um neun "Guten Abend" da (live gesehen 21.11.). */
+  const _std = Number((new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'numeric',hour12:false}).formatToParts(jetzt).find(function(x){ return x.type==='hour'; })||{}).value);
   const _gruss = _std < 11 ? 'Guten Morgen' : (_std < 18 ? 'Guten Tag' : 'Guten Abend');
   const _chips = [];
   _chips.push('<button class="chip" onclick="show(\'klassen\')">' + admIc('uhr') + (heute.length ? (heute.length === 1 ? '1 Stunde heute' : heute.length + ' Stunden heute') : 'Heute keine Stunde') + '</button>');
@@ -356,7 +358,15 @@ async function ladeStart(){
   const _held = '<div class="adm-held"><div>'
     + '<div class="kick">' + esc(ST_TAG.format(jetzt)) + (isAdminUser ? ' · Team-Bereich' : ' · Lehrkraft') + '</div>'
     + '<h2>' + _gruss + ', ' + esc((window.profile && window.profile.name) || 'Julia') + '.</h2>'
-    + '<p>' + (heute.length ? 'Die nächste Stunde beginnt um ' + ST_UHR.format(new Date(heute[0].starts_at)) + ' Uhr.' : 'Heute steht keine Stunde im Plan.') + '</p>'
+    + '<p>' + (function(){
+        if (!heute.length) return 'Heute steht keine Stunde im Plan.';
+        /* Die nächste, die noch kommt — nicht die erste des Tages. Eine Stunde,
+           die gerade läuft (bis 60 Minuten nach Beginn), zählt als jetzt. */
+        const laeuft = heute.filter(function(c){ const t=new Date(c.starts_at).getTime(); return t<=jetzt.getTime() && jetzt.getTime()-t < 60*60000; })[0];
+        if (laeuft) return 'Gerade läuft: ' + esc(laeuft.title||'') + ' (seit ' + ST_UHR.format(new Date(laeuft.starts_at)) + ' Uhr).';
+        const naechste = heute.filter(function(c){ return new Date(c.starts_at) > jetzt; })[0];
+        return naechste ? 'Die nächste Stunde beginnt um ' + ST_UHR.format(new Date(naechste.starts_at)) + ' Uhr.' : 'Die Stunden für heute sind vorbei.';
+      })() + '</p>'
     + '<div class="chips">' + _chips.join('') + '</div></div>'
     + '<img class="foto" src="bilder/bereich/adm-hero.webp" alt="" onerror="this.remove()"></div>';
   let html = '';

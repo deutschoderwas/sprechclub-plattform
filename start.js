@@ -988,7 +988,21 @@
   /* Julias Podcast. Zeigt die angefangene Folge zum Weiterhören,
      sonst die neueste. Ist die neueste noch ungehört, sagt die Karte das
      mit einem kleinen Schild — mehr Aufhebens braucht es nicht. */
+  var _podK = null;
+  /* Live gesehen 21.11.: Die Karte entstand, bevor podcasts.js die echten
+     Folgen aus der Datenbank hatte, und blieb bei der festen Beispielfolge
+     stehen. Sobald die Liste da ist, wird sie an Ort und Stelle ersetzt. */
+  window.addEventListener('podcasts-geladen', function(){
+    try{
+      var html = podcastKarte(_podK); if(!html) return;
+      document.querySelectorAll('.st-pod').forEach(function(alt){
+        var box = document.createElement('div'); box.innerHTML = html;
+        if (box.firstElementChild) alt.replaceWith(box.firstElementChild);
+      });
+    }catch(e){}
+  });
   function podcastKarte(k){
+    if (k) _podK = k;
     var stufe = '';
     try{ stufe = String((k && k.profile && (k.profile.level || k.profile.stufe)) || '').toUpperCase().slice(0,2); }catch(e){}
     var st = null;
