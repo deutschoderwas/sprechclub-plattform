@@ -274,6 +274,53 @@
     return String(text).replace(re, '$1…');
   }
 
+
+  /* ---------- Wörter in den Vokabeltrainer ----------
+     Julia, 21.11.2026: „… mit der Möglichkeit, die Wörter in den
+     Vokabeltrainer hinzuzufügen“. vokabeltrainer.js hat dafür
+     window.vokMerken (Tabelle vokabel_eigene, beim Konto gespeichert,
+     auf jedem Gerät da). Hier nur der Knopf an Wortkarte und Rückmeldung. */
+  IC.plus = '<path d="M12 5v14M5 12h14"/>';
+  IC.buch = '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>';
+  function gemerkt() { return lGet('gemerkt', {}) || {}; }
+  function wortDaten(e) {
+    var w = String(e.w || '').trim(); if (!w || w.length > 40 || /\s{2,}|[.!?]$/.test(w)) return null;
+    var m = w.match(/^(der|die|das)\s+(.+)$/i);
+    return { wort: m ? m[2] : w, artikel: m ? m[1].toLowerCase() : '', art: m ? 'nomen' : 'wort',
+      bedeutung: String(e.info || '').slice(0, 140), bsp: String(e.satz || '').replace(/§/g, '').slice(0, 200),
+      em: e.emoji || '', niveau: String(e.level || '').slice(0, 2) || 'A2', thema: 'Aus dem Üben', voll: w };
+  }
+  function merkKnopf(e) {
+    var d = wortDaten(e); if (!d) return '';
+    var schon = !!gemerkt()[d.voll.toLowerCase()];
+    return '<button type="button" class="ubn-merk' + (schon ? ' drin' : '') + '" data-w="' + E(JSON.stringify(d)) + '" onclick="ubnMerk(this)">'
+      + ic(schon ? 'haken' : 'plus') + '<span>' + (schon ? 'Im Vokabeltrainer' : 'In den Vokabeltrainer') + '</span></button>';
+  }
+  window.ubnMerk = async function (btn) {
+    if (!btn || btn.classList.contains('drin') || btn.disabled) return;
+    var d = {}; try { d = JSON.parse(btn.getAttribute('data-w')); } catch (x) { return; }
+    btn.disabled = true; btn.querySelector('span').textContent = 'Wird gespeichert …';
+    var ok = false;
+    try { if (window.vokMerken) ok = await window.vokMerken(d); } catch (x) { ok = false; }
+    btn.disabled = false;
+    if (ok) {
+      var g = gemerkt(); g[d.voll.toLowerCase()] = Date.now(); lSet('gemerkt', g);
+      btn.classList.add('drin'); btn.innerHTML = ic('haken') + '<span>Im Vokabeltrainer</span>';
+      try { if (window.toast) window.toast('„' + d.voll + '“ ist jetzt in deinem Vokabeltrainer.'); } catch (x) {}
+    } else {
+      btn.innerHTML = ic('plus') + '<span>In den Vokabeltrainer</span>';
+      try { if (window.toast) window.toast('Das hat nicht geklappt. Bist du angemeldet? Bitte später noch einmal.'); } catch (x) {}
+    }
+  };
+  /* Die Lösung im Satz markieren: so sieht man, wo das Wort hingehört. */
+  function markiere(el, ziel) {
+    var z = String(ziel || '').replace(/^(der|die|das)\s+/i, '').trim(); if (!el || z.length < 2) return;
+    var re = new RegExp('(^|[^A-Za-zÄÖÜäöüß])(' + z.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=$|[^A-Za-zÄÖÜäöüß])', 'i');
+    var t = el.textContent; var m = t.match(re); if (!m) return;
+    var i = m.index + m[1].length;
+    el.innerHTML = E(t.slice(0, i)) + '<mark class="ubn-mark">' + E(t.slice(i, i + m[2].length)) + '</mark>' + E(t.slice(i + m[2].length));
+  }
+
   /* ---------- Aufgabenansicht ---------- */
   window.ubAnsicht = function (e, body, info) {
     css();
@@ -322,6 +369,11 @@
     var rec = body.querySelector('#ubRecBtn'); if (rec) rec.innerHTML = ic('sprechen') + E(ohneEmoji(rec.textContent));
     var opts = body.querySelector('#ubOpts');
     if (opts && !opts.querySelector('.ub-optbild')) opts.classList.add('ubn-opts');
+    if (e.type === 'karte' && !e.regel) {
+      var karte = body.querySelector('.ub-karte');
+      var kn = merkKnopf(e); if (karte && kn) karte.insertAdjacentHTML('beforeend', '<div class="ubn-merk-z">' + kn + '</div>');
+      var sb = body.querySelector('.ub-karte .ub-satzbox, .ub-karte .satz'); if (sb) sb.classList.add('ubn-satzmark');
+    }
   };
 
   /* ---------- Rückmeldung ---------- */
@@ -340,6 +392,12 @@
     html = html.replace(/^Richtig!\s*/, '');
     fb.innerHTML = kopf + '<div class="ubn-fbt">' + html + '</div>';
     fb.classList.add('ubn-fb');
+    /* Lösung im Satz markieren */
+    var loes = fb.querySelector('.ub-loes span');
+    var ziel = e.type === 'choice' && e.options ? e.options[e.answer] : (e.answer || e.w || '');
+    if (loes && e.type !== 'order' && e.type !== 'fehler') markiere(loes, ziel);
+    if (loes && e.type === 'fehler') markiere(loes, e.richtig);
+    if (e.type !== 'karte' && e.w) { var kn = merkKnopf(e); if (kn) fb.insertAdjacentHTML('beforeend', '<div class="ubn-merk-z">' + kn + '</div>'); }
   };
 
   /* ---------- Rundenende: was wann wiederkommt ---------- */
@@ -481,6 +539,15 @@
       '.ubn-lf-los:hover{background:#0A4E62}',
       '.ubn-lf-los .ubn-ic{width:18px;height:18px}',
       '.ubn-lf-check{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:#5F6B76;cursor:pointer}',
+      /* Vokabeltrainer-Knopf und Markierungen */
+      '#ubOv .ubn-merk-z{display:flex;justify-content:center;margin-top:12px}',
+      '#ubOv .ubn-fb .ubn-merk-z{justify-content:flex-start}',
+      '#ubOv .ubn-merk{display:inline-flex;align-items:center;gap:8px;border:1.5px dashed #E0A800;background:#FFFBEA;color:#6B4E00;border-radius:999px;padding:8px 15px 8px 12px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}',
+      '#ubOv .ubn-merk:hover{background:#FFF3C4}',
+      '#ubOv .ubn-merk .ubn-ic{width:16px;height:16px;color:#B8860B}',
+      '#ubOv .ubn-merk.drin{border-style:solid;border-color:#1B9BC0;background:#E1F3F9;color:#0A4E62;cursor:default}',
+      '#ubOv .ubn-merk.drin .ubn-ic{color:#0E6D85}',
+      '#ubOv mark.ubn-mark,#ubOv .ub-satzbox mark{background:linear-gradient(transparent 12%,#FFE58A 12%,#FFE58A 88%,transparent 88%)!important;color:#14181B!important;font-weight:800!important;padding:0 3px!important;border-radius:4px!important;box-shadow:inset 0 -2px 0 #E0A800}',
       /* ---------- Markenfarben: Schwarz, Rot, Gold, Türkis ---------- */
       '#ubOv .ubn-art{border:1px solid color-mix(in srgb,var(--ub,#1B9BC0) 35%,transparent)}',
       '#ubOv .ubn-art .ubn-ic{color:var(--ub,#1B9BC0)}',
