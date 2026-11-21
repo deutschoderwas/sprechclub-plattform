@@ -1,0 +1,416 @@
+<!DOCTYPE html><html lang="de" translate="no"><head>
+<meta charset="UTF-8"><meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Freie Sprechstunde · Gesundheit & Wohlbefinden (A2/B1 · B1/B2 · B2/C1) | deutschoderwas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--spch:#0E8C86;--spch-soft:#DFF4F2;--spch-dark:#0B6F6A;--cream:#F6F9FA;--cream-warm:#F2F6FB;--paper:#FFFFFF;--ink:#20242B;--ink-soft:#4E5663;--ink-mute:#808B9B;--red:#D42A21;--red-soft:#FCE5E3;--sand:#E3E8EF;--gelb:#E0A400;--gelb-soft:#FFF1C2;--blau:#2F72C9;--blau-soft:#E4EEFB;--gruen:#2E9E5B;--gruen-soft:#E4F6EC;--accent:var(--gelb);--accent-soft:var(--gelb-soft);}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{background:linear-gradient(180deg,#E7F3F1 0%,var(--cream) 16%,var(--cream) 100%);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh;}
+body[data-level=komplexer]{--accent:var(--blau);--accent-soft:var(--blau-soft);}
+body[data-level=schwierig]{--accent:var(--gruen);--accent-soft:var(--gruen-soft);}
+.wrap{max-width:1000px;margin:0 auto;padding:2rem 1.3rem 5rem;}
+h1,h2,h3,.sn,.rh,.qth,.title,.section-title{font-family:'Space Grotesk',sans-serif;}
+/* HERO */
+.eyebrow{text-align:center;font-size:.76rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--spch);margin-bottom:.7rem;}
+.title{text-align:center;font-weight:600;font-size:clamp(1.9rem,4.8vw,3.3rem);line-height:1.07;color:var(--ink);}
+.title .hl{position:relative;display:inline-block;font-style:italic;padding:.05em .35em;}
+.title .hl::before{content:'';position:absolute;inset:0;background:#BEE6E2;border-radius:12px;transform:rotate(-2deg);z-index:-1;}
+.subtitle{text-align:center;max-width:680px;margin:.85rem auto 0;font-size:1.05rem;color:var(--ink-soft);}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1.1rem auto 0;}
+.hero-tag{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.35rem .9rem;font-size:.84rem;font-weight:600;}
+.hero-tag b{color:var(--spch);}
+/* PHOTO placeholder */
+.photo{position:relative;border-radius:18px;overflow:hidden;border:3px solid var(--paper);box-shadow:0 10px 26px rgba(32,36,43,.12);background:linear-gradient(135deg,var(--spch-soft),#E8F1FB);display:grid;place-items:center;}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;}
+.photo .ph{z-index:1;text-align:center;color:var(--ink-mute);padding:1rem;}
+.photo .ph .em{font-size:2.4rem;display:block;}
+.photo .ph .lb{font-size:.78rem;font-weight:600;margin-top:.3rem;}
+.hero-photo{aspect-ratio:16/8;max-width:760px;margin:1.4rem auto 0;}
+/* NIVEAU sticky */
+.levelbar{position:sticky;top:0;z-index:60;display:flex;flex-direction:column;align-items:center;gap:.35rem;margin:1.4rem auto 0;padding:.7rem 0;background:linear-gradient(180deg,var(--cream) 72%,rgba(246,249,250,0));backdrop-filter:blur(6px);}
+.levelbar .lab{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);}
+.levelsw{display:inline-flex;gap:.4rem;background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.3rem;box-shadow:0 4px 14px rgba(32,36,43,.07);}
+.levelsw button{font-family:'Inter';font-weight:700;font-size:.9rem;border:none;background:transparent;color:var(--ink);padding:.45rem 1rem;border-radius:999px;cursor:pointer;transition:.18s;line-height:1.15;text-align:center;}
+.levelsw button small{display:block;font-weight:600;font-size:.68rem;color:var(--ink-mute);}
+.levelsw button.on[data-l=einfach]{background:var(--gelb);color:#5a3d00;}.levelsw button.on[data-l=einfach] small{color:#7a5a12;}
+.levelsw button.on[data-l=komplexer]{background:var(--blau);color:#fff;}.levelsw button.on[data-l=komplexer] small{color:#dce8fa;}
+.levelsw button.on[data-l=schwierig]{background:var(--gruen);color:#fff;}.levelsw button.on[data-l=schwierig] small{color:#dcf0e4;}
+/* TABS */
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;background:rgba(223,244,242,.7);border-radius:20px;padding:.5rem;margin:1rem auto 1.8rem;max-width:fit-content;}
+.tab{font-family:'Inter';font-size:.92rem;font-weight:600;border:2px solid transparent;background:var(--paper);color:var(--ink);padding:.5rem 1rem;border-radius:999px;cursor:pointer;transition:.15s;}
+.tab:hover{border-color:var(--ink);}
+.tab.active{background:var(--spch);color:#fff;border-color:var(--spch);}
+.section{display:none;animation:fade .3s ease;}.section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.section-title{text-align:center;font-weight:700;font-size:clamp(1.5rem,3.2vw,2.1rem);margin:1rem 0 .3rem;}
+.section-sub{text-align:center;color:var(--ink-soft);margin-bottom:1.2rem;}
+/* "So geht's" */
+.howto{display:flex;gap:.7rem;align-items:flex-start;background:var(--spch-soft);border:1.5px solid #abded9;border-radius:14px;padding:.8rem 1.1rem;margin:0 auto 1.3rem;max-width:760px;font-size:.96rem;}
+.howto .ht-ic{font-size:1.3rem;flex:0 0 auto;}
+.howto b{color:var(--spch-dark);}
+/* level blocks */
+.lv{display:none;}
+body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[data-lvl=komplexer],body[data-level=schwierig] .lv[data-lvl=schwierig]{display:block;}
+.lvtag{display:inline-block;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.12rem .55rem;margin-bottom:.7rem;}
+.lv[data-lvl=einfach] .lvtag{background:var(--gelb-soft);color:#8a6400;}
+.lv[data-lvl=komplexer] .lvtag{background:var(--blau-soft);color:#1e4f91;}
+.lv[data-lvl=schwierig] .lvtag{background:var(--gruen-soft);color:#1d6c3e;}
+/* cards & bits */
+.card{background:var(--paper);border:1.5px solid var(--sand);border-radius:16px;padding:1.1rem 1.3rem;margin:.8rem 0;box-shadow:0 4px 14px rgba(32,36,43,.05);}
+.card.acc{border-left:5px solid var(--accent);}
+mark,.mk{background:var(--gelb-soft);padding:.03em .3em;border-radius:5px;font-weight:700;font-style:normal;color:var(--ink);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}@media(max-width:680px){.grid2{grid-template-columns:1fr;}}
+.q-list{list-style:none;}.q-list li{background:var(--paper);border:1.5px solid var(--sand);border-left:4px solid var(--spch);border-radius:12px;padding:.6rem .9rem;margin:.5rem 0;font-family:'Space Grotesk';font-size:1.02rem;}
+.speakq{background:var(--spch-soft);border:1.5px solid #abded9;border-radius:12px;padding:.5rem .9rem;margin-top:.5rem;font-weight:600;color:var(--spch-dark);}
+.speakq::before{content:'🗣️ ';}
+/* Redemittel */
+.rm{border-radius:16px;padding:1rem 1.2rem;margin:.9rem 0;border:1.5px solid var(--sand);}
+.rm h3{font-size:1.08rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.rm.f1{background:var(--gelb-soft);border-color:#edd68a;}.rm.f2{background:var(--blau-soft);border-color:#bdd4f3;}.rm.f3{background:var(--gruen-soft);border-color:#b6e2c6;}.rm.f4{background:#F3E8FB;border-color:#dcc3ef;}
+.rm ul{list-style:none;display:grid;gap:.4rem;}.rm li{font-size:1.01rem;}
+.rm-photo{aspect-ratio:3/2;margin:.3rem 0 .8rem;}
+.say{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.05em .55em;margin-left:.3em;cursor:pointer;font-size:.8rem;}
+/* dialog reveal */
+.drow{background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:14px;padding:.8rem 1rem;margin:.6rem 0;}
+.drow .da{font-size:1rem;}
+.drow .rev{background:var(--spch);color:#fff;border:none;border-radius:999px;padding:.35rem .9rem;font-weight:700;cursor:pointer;font-size:.8rem;margin-top:.5rem;}
+.drow .sol{display:none;margin-top:.6rem;background:var(--paper);border:1.5px dashed var(--accent);border-radius:10px;padding:.6rem .8rem;font-family:'Space Grotesk';font-style:italic;}
+.drow.shown .sol{display:block;}.drow.shown .rev{display:none;}
+.dlg p{margin:.25rem 0;font-family:'Space Grotesk';}.dlg .sp{font-weight:700;color:var(--spch);margin-right:.25em;}
+/* quiz */
+.quiz{background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.2rem;margin:.7rem 0;}
+.quiz .qq{font-family:'Space Grotesk';font-size:1.03rem;margin-bottom:.6rem;}
+.opts{display:flex;flex-wrap:wrap;gap:.45rem;}
+.chip{background:var(--paper);border:2px solid var(--sand);font-weight:600;font-size:.95rem;color:var(--ink);padding:.4rem 1rem;border-radius:999px;cursor:pointer;}
+.chip:hover{border-color:var(--ink);}.chip.correct{background:var(--gruen-soft);border-color:var(--gruen);color:var(--gruen);}.chip.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);text-decoration:line-through;}
+.explain{display:none;margin-top:.6rem;font-size:.9rem;color:var(--gruen);background:var(--gruen-soft);padding:.5rem .8rem;border-radius:10px;}.explain.show{display:block;}
+/* puzzle */
+.puzzle{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}@media(max-width:600px){.puzzle{grid-template-columns:1fr;}}
+.pcol h4{font-family:'Space Grotesk';text-align:center;margin-bottom:.5rem;}
+.pitem{background:var(--paper);border:2px solid var(--sand);border-radius:12px;padding:.55rem .85rem;margin:.4rem 0;cursor:pointer;font-weight:600;font-size:.92rem;}
+.pitem:hover{border-color:var(--ink);}.pitem.sel{background:var(--gelb-soft);border-color:var(--gelb);}
+.pitem.done{background:var(--gruen-soft);border-color:var(--gruen);color:var(--gruen);pointer-events:none;}
+.pitem.bad{animation:shake .35s;}@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+/* wheel */
+.wheelwrap{text-align:center;}
+.wheelout{background:var(--paper);border:2px solid var(--accent);border-radius:16px;padding:1.1rem 1.2rem;font-family:'Space Grotesk';font-size:1.15rem;min-height:70px;display:flex;align-items:center;justify-content:center;max-width:560px;margin:.9rem auto;}
+.spinbtn{background:var(--spch);color:#fff;border:none;border-radius:999px;padding:.7rem 1.7rem;font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;cursor:pointer;box-shadow:0 6px 16px rgba(14,140,134,.3);}
+.spinbtn:disabled{opacity:.5;}
+/* rollenspiel */
+.rolle{background:var(--paper);border:1.5px solid var(--sand);border-radius:18px;padding:1.1rem 1.3rem;margin:1rem 0;box-shadow:0 4px 14px rgba(32,36,43,.05);}
+.rp-photo{aspect-ratio:16/9;margin-bottom:.8rem;}
+.rp-scene{background:var(--ink);color:#fff;border-radius:12px;padding:.6rem .9rem;font-size:.96rem;margin-bottom:.7rem;}.rp-scene b{color:#FFD24A;}
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.6rem 0;}@media(max-width:600px){.ab{grid-template-columns:1fr;}}
+.ro{border-radius:12px;padding:.7rem .9rem;border:1.5px solid var(--sand);}.ro.a{background:var(--blau-soft);}.ro.b{background:var(--gelb-soft);}
+.ro .rh{font-weight:700;margin-bottom:.3rem;}.ro ul{margin-left:1.05rem;}.ro li{font-size:.92rem;margin:.2rem 0;}
+.muss{font-size:.9rem;color:var(--ink-soft);margin-top:.5rem;}
+/* debatte */
+.these{background:var(--ink);color:#fff;border-radius:12px;padding:.7rem 1rem;font-size:1rem;margin:.6rem 0;}.these b{color:#FFD24A;}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.4rem 0 1rem;}@media(max-width:600px){.pc{grid-template-columns:1fr;}}
+.pc .col{border-radius:12px;padding:.7rem .9rem;}.pc .pro{background:var(--gruen-soft);}.pc .con{background:var(--red-soft);}.pc .col b{display:block;margin-bottom:.3rem;}
+/* 90 sek */
+.timer{font-family:'Space Grotesk';font-weight:800;font-size:3rem;color:var(--spch);text-align:center;margin:.3rem 0;cursor:pointer;}
+.timer.run{color:var(--gruen);}.timer.done{color:var(--red);}
+.t90{background:var(--accent-soft);border-radius:12px;padding:.8rem 1.1rem;font-family:'Space Grotesk';font-size:1.15rem;text-align:center;font-weight:700;min-height:1.5em;margin:.6rem auto;max-width:560px;}
+/* gap */
+.gap{font-family:'Space Grotesk';font-size:1.05rem;line-height:2;background:var(--paper);border:1.5px solid var(--sand);border-radius:14px;padding:1rem 1.2rem;}
+.gap select{font-family:'Inter';font-weight:600;color:var(--spch);background:var(--cream-warm);border:1.5px solid var(--sand);border-radius:8px;padding:.15rem .4rem;margin:0 .15em;}
+.gap select.right{background:var(--gruen-soft);color:var(--gruen);border-color:var(--gruen);}.gap select.bad{background:var(--red-soft);color:var(--red);border-color:var(--red);}
+.btn{background:var(--spch);color:#fff;border:none;border-radius:999px;padding:.5rem 1.3rem;font-weight:700;cursor:pointer;margin-top:.7rem;}
+footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1rem 1rem;}footer b{color:var(--ink);}
+</style></head>
+<body data-level="einfach">
+<div class="wrap">
+
+  <div class="eyebrow">Freie Sprechstunde · deutschoderwas</div>
+  <h1 class="title">Gesundheit &amp; <span class="hl">Wohlbefinden</span></h1>
+  <p class="subtitle">Über den Körper reden, zum Arzt gehen, gesund leben und über Stress sprechen — mit Redemitteln, Dialogen und Rollenspielen.</p>
+  <div class="photo hero-photo"><img src="bilder/sprechstunde/gesundheit-hero.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">🩺</span><span class="lb">Foto: Beim Arzt &amp; gesund leben</span></div></div>
+  <div class="hero-tags"><span class="hero-tag"><b>beim Arzt</b></span><span class="hero-tag"><b>Beschwerden</b></span><span class="hero-tag"><b>gesund leben</b></span><span class="hero-tag"><b>Stress &amp; Pause</b></span></div>
+
+  <div class="levelbar">
+    <span class="lab">Wähle dein Niveau</span>
+    <div class="levelsw">
+      <button class="on" data-l="einfach" onclick="setLevel('einfach')">A2/B1<small>einfach</small></button>
+      <button data-l="komplexer" onclick="setLevel('komplexer')">B1/B2<small>mittel</small></button>
+      <button data-l="schwierig" onclick="setLevel('schwierig')">B2/C1<small>fordernd</small></button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab(0,this)">🔥 Aufwärmen</button>
+    <button class="tab" onclick="showTab(1,this)">🗝️ Redemittel</button>
+    <button class="tab" onclick="showTab(2,this)">💬 Dialoge</button>
+    <button class="tab" onclick="showTab(3,this)">✅ Quiz</button>
+    <button class="tab" onclick="showTab(4,this)">🧩 Satz-Puzzle</button>
+    <button class="tab" onclick="showTab(5,this)">🎡 Drehrad</button>
+    <button class="tab" onclick="showTab(6,this)">🎭 Rollenspiel</button>
+    <button class="tab" onclick="showTab(7,this)">⚖️ Debatte</button>
+    <button class="tab" onclick="showTab(8,this)">⏱️ 90 Sek</button>
+    <button class="tab" onclick="showTab(9,this)">✍️ Lückentext</button>
+  </div>
+
+  <!-- 0 AUFWÄRMEN -->
+  <section class="section active" data-section="0">
+    <h2 class="section-title">🔥 Aufwärmen</h2>
+    <p class="section-sub">Kommt ins Thema — locker, ohne Druck.</p>
+    <div class="howto"><span class="ht-ic">👥</span><div><b>So geht's:</b> Lest die Fragen reihum vor. Jede:r antwortet in 1–2 Sätzen. Es gibt kein Richtig oder Falsch — einfach erzählen.</div></div>
+    <div class="lv" data-lvl="einfach"><span class="lvtag">A2/B1</span>
+      <ul class="q-list">
+        <li>Wie geht es dir heute — körperlich und vom Kopf her?</li>
+        <li>Was machst du, wenn du krank bist?</li>
+        <li>Treibst du Sport? Welchen?</li>
+        <li>Was isst du, wenn du gesund essen willst?</li>
+      </ul>
+    </div>
+    <div class="lv" data-lvl="komplexer"><span class="lvtag">B1/B2</span>
+      <ul class="q-list">
+        <li>Achtest du eher auf deinen Körper oder auf deine Psyche — oder auf beides?</li>
+        <li>Gehst du schnell zum Arzt oder wartest du lieber ab? Warum?</li>
+        <li>Welche Gewohnheit tut dir gut, welche eher nicht?</li>
+        <li>Wie merkst du, dass du eine Pause brauchst?</li>
+      </ul>
+    </div>
+    <div class="lv" data-lvl="schwierig"><span class="lvtag">B2/C1</span>
+      <ul class="q-list">
+        <li>„Gesundheit ist nicht alles, aber ohne Gesundheit ist alles nichts." Stimmst du zu?</li>
+        <li>Inwiefern ist Gesundheit auch eine Frage von Zeit und Geld?</li>
+        <li>Wo hört Selbstfürsorge auf und wo fängt Selbstoptimierung an?</li>
+        <li>Wie gut kümmert sich unsere Gesellschaft um die psychische Gesundheit?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 1 REDEMITTEL -->
+  <section class="section" data-section="1">
+    <h2 class="section-title">🗝️ Redemittel im Kontext</h2>
+    <p class="section-sub">Ganze Wendungen statt Einzelwörter — gleich anwendbar.</p>
+    <div class="howto"><span class="ht-ic">🎯</span><div><b>So geht's:</b> Lest die Wendungen laut. Der markierte Teil ist der Kern. Dann baut jede:r zu zweit <b>einen eigenen Satz</b> mit einer Wendung aus jeder Farbe.</div></div>
+
+    <div class="rm f1"><h3>🤒 Beschwerden beschreiben</h3>
+      <div class="photo rm-photo"><img src="bilder/sprechstunde/gesundheit-arzt.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">🤒</span><span class="lb">Foto: Patient beschreibt Beschwerden</span></div></div>
+      <ul>
+        <li>Mir <mark>tut der … weh</mark>. (Kopf, Hals, Rücken)</li>
+        <li>Ich <mark>habe seit … </mark>Halsschmerzen.</li>
+        <li>Ich <mark>fühle mich</mark> schlapp / müde / schwindelig.</li>
+        <li>Es <mark>ist schlimmer geworden</mark>.</li>
+      </ul>
+    </div>
+    <div class="rm f2"><h3>🩺 Beim Arzt / in der Apotheke</h3>
+      <div class="photo rm-photo"><img src="bilder/sprechstunde/gesundheit-apotheke.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">💊</span><span class="lb">Foto: Beratung in der Apotheke</span></div></div>
+      <ul>
+        <li>Ich <mark>hätte gern einen Termin</mark>.</li>
+        <li><mark>Haben Sie etwas gegen</mark> … (Husten, Kopfschmerzen)?</li>
+        <li>Wie oft soll ich das <mark>einnehmen</mark>?</li>
+        <li>Ich <mark>bin krankgeschrieben</mark> bis …</li>
+      </ul>
+    </div>
+    <div class="rm f3"><h3>🥗 Gesund leben</h3>
+      <div class="photo rm-photo"><img src="bilder/sprechstunde/gesundheit-sport.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">🥗</span><span class="lb">Foto: gesundes Essen &amp; Bewegung</span></div></div>
+      <ul>
+        <li>Ich <mark>versuche, mich … zu bewegen</mark>.</li>
+        <li>Ich <mark>achte auf</mark> meine Ernährung.</li>
+        <li>Mir <mark>tut es gut, wenn</mark> ich früh schlafe.</li>
+        <li>Ich <mark>nehme mir vor</mark>, weniger Zucker zu essen.</li>
+      </ul>
+    </div>
+    <div class="rm f4 lv" data-lvl="schwierig"><h3>🧠 Über Psyche &amp; Stress reden (B2/C1)</h3>
+      <ul>
+        <li>Ich <mark>komme gerade schwer zur Ruhe</mark>.</li>
+        <li>Ich <mark>merke, dass mir das zu viel wird</mark>.</li>
+        <li>Es <mark>tut gut, darüber zu reden</mark>.</li>
+        <li>Ich <mark>versuche, bewusst abzuschalten</mark>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2 DIALOGE -->
+  <section class="section" data-section="2">
+    <h2 class="section-title">💬 Beispieldialoge</h2>
+    <p class="section-sub">So klingt es im Alltag — der Kern ist markiert.</p>
+    <div class="howto"><span class="ht-ic">🎭</span><div><b>So geht's:</b> Lest den Dialog zu zweit mit verteilten Rollen laut. Dann tauscht die Rollen. Die markierten Wendungen dürft ihr gern übernehmen.</div></div>
+    <div class="card acc dlg">
+      <p><span class="sp">A:</span> Praxis Dr. Berg, guten Tag.</p>
+      <p><span class="sp">B:</span> Guten Tag, ich <mark>hätte gern einen Termin</mark>. Ich <mark>habe seit drei Tagen</mark> starke Halsschmerzen.</p>
+      <p><span class="sp">A:</span> Waren Sie schon mal bei uns? Können Sie heute um 15 Uhr?</p>
+      <p><span class="sp">B:</span> Ja, das passt. Soll ich etwas mitbringen?</p>
+      <p><span class="sp">A:</span> Nur Ihre Versichertenkarte. Bis später!</p>
+    </div>
+    <div class="card acc dlg lv" data-lvl="komplexer">
+      <p><span class="sp">A:</span> Und, wie geht's dir mit dem ganzen Stress gerade?</p>
+      <p><span class="sp">B:</span> Ehrlich? Ich <mark>merke, dass mir das zu viel wird</mark>. Ich <mark>komme abends kaum zur Ruhe</mark>.</p>
+      <p><span class="sp">A:</span> Das kenne ich. Was tut dir denn gut?</p>
+      <p><span class="sp">B:</span> Ein Spaziergang hilft. Ich <mark>nehme mir vor</mark>, öfter rauszugehen.</p>
+    </div>
+  </section>
+
+  <!-- 3 QUIZ -->
+  <section class="section" data-section="3">
+    <h2 class="section-title">✅ Quiz</h2>
+    <p class="section-sub">Welche Wendung passt? Tippt auf eure Antwort.</p>
+    <div class="howto"><span class="ht-ic">🧠</span><div><b>So geht's:</b> Löst jede Frage gemeinsam. Nach der Antwort kommt die Erklärung — und darunter eine Frage, die jede:r einmal beantwortet.</div></div>
+    <div id="quizbox"></div>
+  </section>
+
+  <!-- 4 PUZZLE -->
+  <section class="section" data-section="4">
+    <h2 class="section-title">🧩 Satz-Puzzle</h2>
+    <p class="section-sub">Finde die zwei Hälften, die zusammengehören.</p>
+    <div class="howto"><span class="ht-ic">🧩</span><div><b>So geht's:</b> Tippt links einen Satzanfang an, dann rechts das passende Ende. Richtig = grün. Sprecht danach jeden ganzen Satz einmal laut.</div></div>
+    <div id="puzzlebox" class="puzzle"></div>
+  </section>
+
+  <!-- 5 DREHRAD -->
+  <section class="section" data-section="5">
+    <h2 class="section-title">🎡 Drehrad</h2>
+    <p class="section-sub">Dreht, redet — mindestens 3 Sätze pro Frage.</p>
+    <div class="howto"><span class="ht-ic">🎡</span><div><b>So geht's:</b> Eine Person drückt „Drehen", liest die Frage vor und antwortet. Dann ist die nächste dran. Reihum.</div></div>
+    <div class="wheelwrap"><div class="wheelout" id="wheelout">Drück auf „Drehen" …</div><button class="spinbtn" id="spinbtn" onclick="spin()">🎡 Drehen</button></div>
+  </section>
+
+  <!-- 6 ROLLENSPIEL -->
+  <section class="section" data-section="6">
+    <h2 class="section-title">🎭 Rollenspiel</h2>
+    <p class="section-sub">Echte Situationen — erst selbst sprechen, dann Beispiel aufdecken.</p>
+    <div class="howto"><span class="ht-ic">🎭</span><div><b>So geht's:</b> Verteilt Rolle A und B. Spielt die Szene mit euren eigenen Worten (die Hilfswörter helfen). <b>Erst danach</b> deckt ihr den Beispiel-Dialog auf und vergleicht.</div></div>
+
+    <div class="rolle">
+      <div class="photo rp-photo"><img src="bilder/sprechstunde/gesundheit-rp-arzt.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">🩺</span><span class="lb">Foto: Im Sprechzimmer</span></div></div>
+      <div class="rp-scene"><b>Szene 1:</b> Beim Hausarzt — du bist seit einer Woche erkältet.</div>
+      <div class="ab">
+        <div class="ro a"><div class="rh">🧑‍⚕️ Rolle A — Ärztin/Arzt</div><ul><li>frag nach den Beschwerden</li><li>frag, seit wann</li><li>gib einen Rat + verschreib etwas</li></ul></div>
+        <div class="ro b"><div class="rh">🧑 Rolle B — Patient:in</div><ul><li>beschreib deine Beschwerden</li><li>sag, seit wann</li><li>frag, was du tun sollst</li></ul></div>
+      </div>
+      <p class="muss">Hilfswörter: der Husten · die Erkältung · sich ausruhen · verschreiben · krankschreiben</p>
+      <div class="drow"><button class="rev" onclick="this.parentNode.classList.add('shown')">👁️ Beispiel-Dialog aufdecken</button>
+        <div class="sol dlg"><p><span class="sp">A:</span> Was führt Sie zu mir?</p><p><span class="sp">B:</span> Ich bin seit einer Woche erkältet, und der Husten ist schlimmer geworden.</p><p><span class="sp">A:</span> Haben Sie Fieber? … Ruhen Sie sich aus, ich verschreibe Ihnen einen Hustensaft und schreibe Sie bis Freitag krank.</p></div>
+      </div>
+    </div>
+
+    <div class="rolle">
+      <div class="photo rp-photo"><img src="bilder/sprechstunde/gesundheit-rp-krankmeldung.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">📞</span><span class="lb">Foto: Krankmeldung am Telefon</span></div></div>
+      <div class="rp-scene"><b>Szene 2:</b> Du rufst morgens bei der Arbeit an und meldest dich krank.</div>
+      <div class="ab">
+        <div class="ro a"><div class="rh">🧑‍💼 Rolle A — Chef:in</div><ul><li>nimm den Anruf entgegen</li><li>frag, was los ist</li><li>wünsch gute Besserung</li></ul></div>
+        <div class="ro b"><div class="rh">🧑 Rolle B — Mitarbeiter:in</div><ul><li>meld dich krank</li><li>sag, wie lange ungefähr</li><li>frag, was mit der Übergabe ist</li></ul></div>
+      </div>
+      <p class="muss">Hilfswörter: sich krankmelden · die Krankmeldung · voraussichtlich · die Übergabe · gute Besserung</p>
+      <div class="drow"><button class="rev" onclick="this.parentNode.classList.add('shown')">👁️ Beispiel-Dialog aufdecken</button>
+        <div class="sol dlg"><p><span class="sp">B:</span> Guten Morgen, ich muss mich leider krankmelden — ich habe eine Magen-Darm-Grippe.</p><p><span class="sp">A:</span> Oh, das tut mir leid. Wie lange fallen Sie voraussichtlich aus?</p><p><span class="sp">B:</span> Wohl zwei Tage. Die Übergabe schicke ich per Mail. — Danke, gute Besserung!</p></div>
+      </div>
+    </div>
+
+    <div class="rolle lv" data-lvl="schwierig">
+      <div class="photo rp-photo"><img src="bilder/sprechstunde/gesundheit-rp-apotheke.webp" alt="" onerror="this.style.display='none'"><div class="ph"><span class="em">💊</span><span class="lb">Foto: Gespräch in der Apotheke</span></div></div>
+      <div class="rp-scene"><b>Szene 3 (B2/C1):</b> In der Apotheke — du willst ein Mittel, aber ohne gleich zu allem Ja zu sagen.</div>
+      <div class="ab">
+        <div class="ro a"><div class="rh">💊 Rolle A — Apotheker:in</div><ul><li>frag genau nach</li><li>empfiehl ein Mittel + Alternative</li><li>weise auf Nebenwirkungen hin</li></ul></div>
+        <div class="ro b"><div class="rh">🧑 Rolle B — Kund:in</div><ul><li>beschreib dein Problem</li><li>frag kritisch nach (nötig? Nebenwirkungen?)</li><li>entscheide dich begründet</li></ul></div>
+      </div>
+      <p class="muss">Hilfswörter: die Nebenwirkung · das rezeptfreie Mittel · abwägen · Ich bin mir nicht sicher, ob … · Gibt es eine sanftere Alternative?</p>
+      <div class="drow"><button class="rev" onclick="this.parentNode.classList.add('shown')">👁️ Beispiel-Dialog aufdecken</button>
+        <div class="sol dlg"><p><span class="sp">B:</span> Ich schlafe seit Tagen schlecht. Haben Sie etwas, das nicht gleich abhängig macht?</p><p><span class="sp">A:</span> Da würde ich erst etwas Pflanzliches empfehlen, zum Beispiel Baldrian.</p><p><span class="sp">B:</span> Gibt es da Nebenwirkungen? Ich bin mir nicht sicher, ob ich gleich etwas nehmen will.</p><p><span class="sp">A:</span> Verständlich. Probieren Sie es ein paar Tage — wenn es nicht hilft, reden wir weiter.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 DEBATTE -->
+  <section class="section" data-section="7">
+    <h2 class="section-title">⚖️ Debatte</h2>
+    <p class="section-sub">Pro oder Contra — sucht euch eine Seite.</p>
+    <div class="howto"><span class="ht-ic">⚖️</span><div><b>So geht's:</b> Eine:r ist Pro, eine:r Contra. Nehmt euch 2 Minuten, sammelt Argumente (unten als Hilfe) und diskutiert. Danach Seiten tauschen.</div></div>
+    <div class="these"><b>These 1:</b> Jeder sollte mehr für die eigene Gesundheit tun.</div>
+    <div class="pc"><div class="col pro"><b>Pro</b>Vorbeugen ist besser als heilen · entlastet das System · mehr Lebensqualität</div><div class="col con"><b>Contra</b>nicht alle haben Zeit/Geld · Druck &amp; schlechtes Gewissen · Gesundheit ist nicht nur Eigenverantwortung</div></div>
+    <div class="these lv" data-lvl="komplexer"><b>These 2:</b> Fast Food sollte höher besteuert werden.</div>
+    <div class="pc lv" data-lvl="komplexer"><div class="col pro"><b>Pro</b>lenkt zu gesünderem Essen · finanziert Prävention</div><div class="col con"><b>Contra</b>trifft Ärmere am stärksten · Bevormundung · wirkt oft wenig</div></div>
+    <div class="these lv" data-lvl="schwierig"><b>These 3 (B2/C1):</b> Psychische Gesundheit wird am Arbeitsplatz noch immer zu wenig ernst genommen.</div>
+    <div class="pc lv" data-lvl="schwierig"><div class="col pro"><b>Pro</b>Tabu &amp; Stigma · Burnout steigt · Prävention fehlt</div><div class="col con"><b>Contra</b>vieles hat sich gebessert · Grenze privat/beruflich · Gefahr der Überempfindlichkeit</div></div>
+  </section>
+
+  <!-- 8 90 SEK -->
+  <section class="section" data-section="8">
+    <h2 class="section-title">⏱️ 90 Sekunden</h2>
+    <p class="section-sub">Ein Thema, 90 Sekunden reden — ohne lange Pause.</p>
+    <div class="howto"><span class="ht-ic">⏱️</span><div><b>So geht's:</b> Eine Person bekommt ein Thema, tippt auf die Uhr und redet 90 Sekunden. Die anderen hören zu und stellen danach eine Frage.</div></div>
+    <div class="t90" id="t90">Tippe auf „Neues Thema"</div>
+    <div class="timer" id="timer" onclick="toggleTimer()">1:30</div>
+    <div style="text-align:center"><button class="btn" onclick="newTopic()">🎲 Neues Thema</button></div>
+  </section>
+
+  <!-- 9 LÜCKENTEXT -->
+  <section class="section" data-section="9">
+    <h2 class="section-title">✍️ Lückentext</h2>
+    <p class="section-sub">Wähl das richtige Wort — dann die Sprechfrage darunter.</p>
+    <div class="howto"><span class="ht-ic">✍️</span><div><b>So geht's:</b> Füllt die Lücken gemeinsam und drückt „Prüfen". Danach beantwortet <b>jede:r</b> die Sprechfrage mit Lücke.</div></div>
+    <div id="gapbox"></div>
+  </section>
+
+  <footer><b>deutschoderwas</b> · Freie Sprechstunde — Gesundheit &amp; Wohlbefinden</footer>
+</div>
+
+<script>
+/* ---- Tabs & Level ---- */
+function showTab(i,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelector('.section[data-section="'+i+'"]').classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');window.scrollTo({top:0,behavior:'instant'});}
+function setLevel(l){document.body.dataset.level=l;document.querySelectorAll('.levelsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));buildQuiz();buildPuzzle();buildWheel();buildGap();}
+/* ---- Speech ---- */
+function speak(t){try{var u=new SpeechSynthesisUtterance(t);u.lang='de-DE';speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+/* ---- DATA per level ---- */
+var DATA={
+ einfach:{
+  quiz:[
+   {q:'Du hast seit gestern Kopfschmerzen. Was sagst du?',o:['Mir tut der Kopf weh.','Ich habe einen Kopf.'],a:0,e:'„Mir tut der … weh" ist die normale Wendung für Schmerzen.'},
+   {q:'In der Apotheke willst du etwas gegen Husten. Du fragst:',o:['Haben Sie etwas gegen Husten?','Ich kaufe einen Husten.'],a:0,e:'„Haben Sie etwas gegen …?" fragt nach einem Mittel.'},
+   {q:'Du willst zum Arzt. Du sagst:',o:['Ich hätte gern einen Termin.','Ich will einen Doktor haben.'],a:0,e:'„Ich hätte gern einen Termin" ist höflich und üblich.'}],
+  speakq:'Wann warst du das letzte Mal krank — und was hat dir geholfen? „Zuletzt war ich krank, als ___."',
+  puzzle:[['Mir tut','der Rücken weh.'],['Ich hätte gern','einen Termin.'],['Haben Sie etwas','gegen Halsschmerzen?'],['Ich bin krank-','geschrieben bis Freitag.']],
+  wheel:['Wie oft gehst du zum Arzt?','Was isst du zum Frühstück?','Welchen Sport magst du?','Was machst du bei Erkältung?','Schläfst du genug?','Trinkst du genug Wasser?','Was tut dir nach einem langen Tag gut?','Gehst du gern spazieren?'],
+  t90:['Mein letzter Arztbesuch','Was ich esse, um gesund zu bleiben','Mein Lieblingssport','Was ich mache, wenn ich krank bin'],
+  gap:{text:'Ich ___1___ seit zwei Tagen Halsschmerzen. Heute ___2___ ich zum Arzt. Er ___3___ mir ein Medikament.',slots:[['habe','bin','mache'],['gehe','esse','spiele'],['verschreibt','kocht','fährt']],sol:[0,0,0],sq:'Was machst du, wenn du Halsschmerzen hast? „Wenn ich Halsschmerzen habe, ___."'}
+ },
+ komplexer:{
+  quiz:[
+   {q:'Du willst sagen, dass es dir zu viel wird. Natürlich klingt:',o:['Ich merke, dass mir das zu viel wird.','Ich habe zu viel.'],a:0,e:'„Mir wird das zu viel" drückt Belastung natürlich aus.'},
+   {q:'Welcher Satz zeigt einen Vorsatz?',o:['Ich nehme mir vor, früher schlafen zu gehen.','Ich schlafe immer spät.'],a:0,e:'„sich etwas vornehmen" = einen Plan fassen.'},
+   {q:'Beim Arzt beschreibst du eine Verschlechterung:',o:['Es ist schlimmer geworden.','Es ist sehr Schmerz.'],a:0,e:'„schlimmer geworden" (Komparativ + werden) zeigt Veränderung.'}],
+  speakq:'Welche Gewohnheit möchtest du ändern — und warum? „Ich nehme mir vor, ___, weil ___."',
+  puzzle:[['Ich komme abends','kaum zur Ruhe.'],['Mir tut es gut,','wenn ich rausgehe.'],['Ich achte','auf meine Ernährung.'],['Es ist','schlimmer geworden.']],
+  wheel:['Achtest du mehr auf Körper oder Psyche?','Wann brauchst du eine Pause?','Was stresst dich am meisten?','Wie schaltest du ab?','Gehst du schnell zum Arzt?','Was ist für dich „gesund leben"?','Welche Gewohnheit tut dir gut?','Wie wichtig ist Schlaf für dich?'],
+  t90:['Wie ich mit Stress umgehe','Ob ich gesund lebe','Eine Gewohnheit, die ich ändern will','Körper oder Psyche — was ich mehr pflege'],
+  gap:{text:'In letzter Zeit ___1___ mir alles zu viel. Ich ___2___ abends kaum zur Ruhe. Deshalb ___3___ ich mir vor, bewusst Pausen zu machen.',slots:[['wird','macht','geht'],['komme','gehe','nehme'],['nehme','habe','bin']],sol:[0,0,0],sq:'Woran merkst du, dass du eine Pause brauchst? „Ich merke es daran, dass ___."'}
+ },
+ schwierig:{
+  quiz:[
+   {q:'Welche Formulierung ist am treffendsten für „bewusst Abstand nehmen"?',o:['Ich versuche, bewusst abzuschalten.','Ich schalte den Fernseher aus.'],a:0,e:'„abschalten" im übertragenen Sinn = zur Ruhe kommen.'},
+   {q:'Du willst kritisch, aber höflich nachfragen:',o:['Ich bin mir nicht sicher, ob das nötig ist.','Das will ich nicht.'],a:0,e:'„Ich bin mir nicht sicher, ob …" wägt ab, ohne schroff zu sein.'},
+   {q:'Welcher Satz passt zu Prävention?',o:['Vorbeugen ist besser als heilen.','Heilen ist besser als Arzt.'],a:0,e:'Feste Redewendung zur Vorsorge.'}],
+  speakq:'Wo hört für dich Selbstfürsorge auf und wo fängt Selbstoptimierung an? „Für mich ist der Unterschied, dass ___."',
+  puzzle:[['Vorbeugen ist','besser als heilen.'],['Ich versuche,','bewusst abzuschalten.'],['Ich bin mir nicht sicher,','ob das wirklich nötig ist.'],['Es tut gut,','darüber zu reden.']],
+  wheel:['Ist Gesundheit auch eine Frage von Geld?','Selbstfürsorge oder Selbstoptimierung?','Kümmert sich die Gesellschaft genug um die Psyche?','Sollte man Fast Food besteuern?','Wie viel Eigenverantwortung ist fair?','Tabu psychische Gesundheit — stimmt das noch?','Was bedeutet „gesund" für dich wirklich?','Prävention vs. Behandlung — was ist wichtiger?'],
+  t90:['Gesundheit als Frage von Zeit und Geld','Selbstfürsorge vs. Selbstoptimierung','Psychische Gesundheit am Arbeitsplatz','Wie viel Eigenverantwortung ist fair?'],
+  gap:{text:'Prävention ___1___ oft billiger als Behandlung, aber nicht alle ___2___ sich gesundes Leben gleich gut leisten. Gesundheit ___3___ daher auch mit sozialer Gerechtigkeit zu tun.',slots:[['ist','macht','geht'],['können','wollen','dürfen'],['hat','ist','wird']],sol:[0,0,0],sq:'Inwiefern ist Gesundheit auch eine soziale Frage? „Meiner Meinung nach ___, weil ___."'}
+ }
+};
+function L(){return DATA[document.body.dataset.level];}
+/* ---- Quiz ---- */
+function buildQuiz(){var d=L(),box=document.getElementById('quizbox');box.innerHTML='';d.quiz.forEach(function(q){var el=document.createElement('div');el.className='quiz';var opts=q.o.map(function(o,i){return '<span class="chip" data-i="'+i+'">'+o+'</span>';}).join('');el.innerHTML='<div class="qq">'+q.q+'</div><div class="opts">'+opts+'</div><div class="explain">'+q.e+'</div>';el.querySelectorAll('.chip').forEach(function(c){c.onclick=function(){if(el.dataset.done)return;el.dataset.done=1;el.querySelectorAll('.chip').forEach(function(x,xi){if(xi===q.a)x.classList.add('correct');});if(+c.dataset.i!==q.a)c.classList.add('wrong');el.querySelector('.explain').classList.add('show');};});box.appendChild(el);});var sq=document.createElement('div');sq.className='speakq';sq.textContent=d.speakq;box.appendChild(sq);}
+/* ---- Puzzle ---- */
+var pSel=null;
+function buildPuzzle(){var d=L(),box=document.getElementById('puzzlebox');var left=d.puzzle.map(function(p,i){return '<div class="pitem" data-side="l" data-i="'+i+'">'+p[0]+' …</div>';}).join('');var order=d.puzzle.map(function(p,i){return i;}).sort(function(){return Math.random()-.5;});var right=order.map(function(i){return '<div class="pitem" data-side="r" data-i="'+i+'">… '+d.puzzle[i][1]+'</div>';}).join('');box.innerHTML='<div class="pcol"><h4>Anfang</h4>'+left+'</div><div class="pcol"><h4>Ende</h4>'+right+'</div>';pSel=null;box.querySelectorAll('.pitem').forEach(function(it){it.onclick=function(){if(it.classList.contains('done'))return;if(!pSel){pSel=it;it.classList.add('sel');return;}if(pSel===it){it.classList.remove('sel');pSel=null;return;}if(pSel.dataset.side===it.dataset.side){pSel.classList.remove('sel');pSel=it;it.classList.add('sel');return;}if(pSel.dataset.i===it.dataset.i){pSel.classList.remove('sel');pSel.classList.add('done');it.classList.add('done');pSel=null;}else{var bad=it;bad.classList.add('bad');pSel.classList.remove('sel');var ps=pSel;setTimeout(function(){bad.classList.remove('bad');},350);pSel=null;}};});}
+/* ---- Wheel ---- */
+function buildWheel(){document.getElementById('wheelout').textContent='Drück auf „Drehen" …';}
+function spin(){var d=L();var b=document.getElementById('spinbtn');b.disabled=true;var out=document.getElementById('wheelout');var n=0;var iv=setInterval(function(){out.textContent=d.wheel[Math.floor(Math.random()*d.wheel.length)];if(++n>12){clearInterval(iv);b.disabled=false;}},70);}
+/* ---- 90 sek ---- */
+var tSec=90,tItv=null;
+function fmt(s){return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+function newTopic(){var d=L();document.getElementById('t90').textContent=d.t90[Math.floor(Math.random()*d.t90.length)];resetTimer();}
+function resetTimer(){clearInterval(tItv);tItv=null;tSec=90;var t=document.getElementById('timer');t.textContent='1:30';t.className='timer';}
+function toggleTimer(){var t=document.getElementById('timer');if(tItv){clearInterval(tItv);tItv=null;t.classList.remove('run');return;}t.classList.add('run');tItv=setInterval(function(){tSec--;t.textContent=fmt(tSec);if(tSec<=0){clearInterval(tItv);tItv=null;t.className='timer done';t.textContent='Fertig!';}},1000);}
+/* ---- Gap ---- */
+function buildGap(){var d=L().gap,box=document.getElementById('gapbox');var parts=d.text.split(/___\d+___/);var html='<div class="gap">';parts.forEach(function(p,i){html+=p;if(i<d.slots.length){var opts=d.slots[i].map(function(o,oi){return '<option value="'+oi+'">'+o+'</option>';}).join('');html+='<select data-i="'+i+'"><option value="-1">—</option>'+opts+'</select>';}});html+='</div><button class="btn" onclick="checkGap()">Prüfen</button><div class="speakq" style="margin-top:1rem">'+d.sq+'</div>';box.innerHTML=html;}
+function checkGap(){var d=L().gap;document.querySelectorAll('#gapbox select').forEach(function(s){var i=+s.dataset.i;s.classList.remove('right','bad');if(+s.value===d.sol[i])s.classList.add('right');else s.classList.add('bad');});}
+/* init */
+setLevel('einfach');
+</script>
+</body></html>
