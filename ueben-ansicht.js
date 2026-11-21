@@ -364,13 +364,34 @@
     } catch (x) {}
   });
 
+
+  /* Übersicht: Fertigkeit und Stufe als Attribut, damit sie ihre Farbe bekommen. */
+  function markiere() {
+    var v = document.getElementById('v-ueben'); if (!v) return;
+    v.querySelectorAll('.ubx-tab:not([data-sk])').forEach(function (b) {
+      var m = String(b.getAttribute('onclick') || '').match(/ubSetSkill\('([^']+)'/); if (m) b.setAttribute('data-sk', m[1]);
+    });
+    v.querySelectorAll('.ubx-lv:not([data-lv]), .ubx-niv .lv:not([data-lv])').forEach(function (x) {
+      var t = String(x.textContent || '').trim().toUpperCase().slice(0, 2); if (/^[ABC][12]$/.test(t)) x.setAttribute('data-lv', t);
+    });
+  }
+  (function beobachte(n) {
+    var v = document.getElementById('v-ueben');
+    if (!v) { if (n < 60) setTimeout(function () { beobachte(n + 1); }, 250); return; }
+    css(); markiere();
+    new MutationObserver(function () { markiere(); }).observe(v, { childList: true, subtree: true });
+  })(0);
+
   /* ---------- Stil ---------- */
   function css() {
     if (document.getElementById('ubnCSS')) return;
     var s = document.createElement('style'); s.id = 'ubnCSS';
     s.textContent = [
       /* Farbfamilien der Lernschritte */
-      '.f-petrol{--uf:#0E6D85;--uh:#E3F2F6}.f-blau{--uf:#2563EB;--uh:#E6EEFE}.f-violett{--uf:#7C3AED;--uh:#F0E9FE}.f-orange{--uf:#C2570C;--uh:#FDF0E2}.f-gruen{--uf:#059669;--uh:#E1F5EE}',
+      /* 21.11.2026, Julia: „professionell farbiger, mehr Schwarz, Rot, Gold, Türkis, nicht nur Türkis“.
+         Die Lernschritte tragen die Markenfarben: Neues = Gold, Erkennen = Türkis,
+         Schreiben = Rot, Im Satz = Schwarz, Hören/Sprechen = Petrol. */
+      '.f-petrol{--uf:#8A6500;--uh:#FFF3C4;--ub:#E0A800}.f-blau{--uf:#0E6D85;--uh:#E1F3F9;--ub:#1B9BC0}.f-violett{--uf:#B3241C;--uh:#FDE9E7;--ub:#D42A21}.f-orange{--uf:#14181B;--uh:#ECEEF0;--ub:#14181B}.f-gruen{--uf:#0A4E62;--uh:#DDEFF3;--ub:#0E6D85}',
       '.ubn-ic{width:16px;height:16px;flex:0 0 auto}.ubn-ic-s{width:13px;height:13px;flex:0 0 auto}',
       /* Kopf der Aufgabe */
       '#ubOv .ubn-kopf{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}',
@@ -459,7 +480,53 @@
       '.ubn-lf-los{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:14px;background:#0E6D85;color:#fff;font:inherit;font-weight:800;font-size:16px;padding:14px;cursor:pointer}',
       '.ubn-lf-los:hover{background:#0A4E62}',
       '.ubn-lf-los .ubn-ic{width:18px;height:18px}',
-      '.ubn-lf-check{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:#5F6B76;cursor:pointer}'
+      '.ubn-lf-check{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:#5F6B76;cursor:pointer}',
+      /* ---------- Markenfarben: Schwarz, Rot, Gold, Türkis ---------- */
+      '#ubOv .ubn-art{border:1px solid color-mix(in srgb,var(--ub,#1B9BC0) 35%,transparent)}',
+      '#ubOv .ubn-art .ubn-ic{color:var(--ub,#1B9BC0)}',
+      '#ubOv .ubn-luecke{border-bottom-color:var(--ub,#D42A21)!important;background:color-mix(in srgb,var(--ub,#D42A21) 9%,transparent)!important}',
+      '#ubOv .ubn-satz{border-left:4px solid #E0A800}',
+      /* Antwort-Buchstaben in den vier Markenfarben */
+      '#ubOv .ubn-opts .ub-opt:nth-child(1)::before{background:#14181B;color:#fff}',
+      '#ubOv .ubn-opts .ub-opt:nth-child(2)::before{background:#D42A21;color:#fff}',
+      '#ubOv .ubn-opts .ub-opt:nth-child(3)::before{background:#E0A800;color:#14181B}',
+      '#ubOv .ubn-opts .ub-opt:nth-child(4)::before{background:#1B9BC0;color:#fff}',
+      '#ubOv .ubn-opts .ub-opt.sel{border-color:#14181B!important;background:#F7F7F5!important;box-shadow:0 0 0 3px rgba(224,168,0,.25)!important}',
+      /* Fortschrittsbalken als Flaggenband */
+      '#ubOv .ub-prog span{background:linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#E0A800 50% 75%,#1B9BC0 75% 100%)!important;background-size:100% 100%!important}',
+      '#ubOv .ubn-gesucht{border-color:#E8C65A!important;background:#FFFBEA!important}',
+      '#ubOv .ubn-gesucht span{color:#8A6500!important}',
+      /* Leitfaden */
+      '.ubn-lf-kopf{background:linear-gradient(135deg,#14181B 0%,#23303A 60%,#0E6D85 100%)!important}',
+      '.ubn-lf-kopf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#E0A800 50% 75%,#1B9BC0 75% 100%)}',
+      '.ubn-lf-lv{color:#FFD24A!important}',
+      '.ubn-lf-ziel{border-left-color:#E0A800!important}.ubn-lf-ziel .ubn-ic{color:#B8860B!important}',
+      '.ubn-lf-ablauf li:nth-child(5n+1) .nr{background:#FFF3C4;color:#8A6500}',
+      '.ubn-lf-ablauf li:nth-child(5n+2) .nr{background:#E1F3F9;color:#0E6D85}',
+      '.ubn-lf-ablauf li:nth-child(5n+3) .nr{background:#FDE9E7;color:#B3241C}',
+      '.ubn-lf-ablauf li:nth-child(5n+4) .nr{background:#ECEEF0;color:#14181B}',
+      '.ubn-lf-ablauf li:nth-child(5n+5) .nr{background:#DDEFF3;color:#0A4E62}',
+      '.ubn-lf-takt span.an{background:#D42A21!important}',
+      '.ubn-lf-stufen span.jetzt{background:#14181B!important;color:#FFD24A!important}',
+      '.ubn-lf-stufen span.fertig{background:#E1F3F9!important;color:#0E6D85!important}',
+      '.ubn-lf-los{background:#14181B!important}.ubn-lf-los:hover{background:#000!important}.ubn-lf-los .ubn-ic{color:#FFD24A}',
+      '.ubn-lf-woerter span{border:1px solid #EEE3B8;background:#FFFBEA!important}',
+      /* Üben-Übersicht: jede Fertigkeit ihre Farbe, jede Stufe ihre Farbe */
+      '#v-ueben .ubx-held{position:relative}',
+      '#v-ueben .ubx-held::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#E0A800 50% 75%,#1B9BC0 75% 100%)}',
+      '#v-ueben .ubx-tab[data-sk="wortschatz"]{--sf:#B8860B;--sh:#FFF3C4}',
+      '#v-ueben .ubx-tab[data-sk="grammatik"]{--sf:#D42A21;--sh:#FDE9E7}',
+      '#v-ueben .ubx-tab[data-sk="hoeren"]{--sf:#1B9BC0;--sh:#E1F3F9}',
+      '#v-ueben .ubx-tab[data-sk="aussprache"]{--sf:#14181B;--sh:#ECEEF0}',
+      '#v-ueben .ubx-tab[data-sk="lesen-schreiben"]{--sf:#0E6D85;--sh:#DDEFF3}',
+      '#v-ueben .ubx-tab[data-sk="shadowing"]{--sf:#B3241C;--sh:#FDE9E7}',
+      '#v-ueben .ubx-tab[data-sk] svg{color:var(--sf)!important}',
+      '#v-ueben .ubx-tab[data-sk].an{background:var(--sh)!important;color:#14181B!important;box-shadow:inset 0 -3px 0 var(--sf)!important}',
+      '#v-ueben [data-lv="A1"]{background:#1B9BC0!important;color:#fff!important}',
+      '#v-ueben [data-lv="A2"]{background:#0E6D85!important;color:#fff!important}',
+      '#v-ueben [data-lv="B1"]{background:#E0A800!important;color:#14181B!important}',
+      '#v-ueben [data-lv="B2"]{background:#D42A21!important;color:#fff!important}',
+      '#v-ueben [data-lv="C1"]{background:#14181B!important;color:#FFD24A!important}'
     ].join('\n');
     document.head.appendChild(s);
   }
