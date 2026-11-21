@@ -1513,6 +1513,8 @@
        sonst denkt man, man sei im falschen Thema gelandet. */
     if(e.__wdh) h='<span class="ub-wmark">🔁 Wiederholung'+(e.__vonTitel?': '+E(e.__vonTitel):'')+'</span>'+h;
     body.innerHTML=h; body.scrollTop=0;
+    /* 21.11.2026: Aufgabenart, saubere Anweisung, A–D (ueben-ansicht.js). */
+    try{ if(window.ubAnsicht) window.ubAnsicht(e, body, {idx:S.idx, n:S.items.length}); }catch(_a){}
     if(e.type==='gap'||e.type==='tippen'){ var g=document.getElementById('ubGap');
       g.addEventListener('input',function(){ btn.disabled=!g.value.trim(); });
       g.addEventListener('keydown',function(ev){ if(ev.key==='Enter'&&!btn.disabled) window.ubBtn(); });
@@ -1694,6 +1696,7 @@
     if(e.type==='choice' && e.img && /Welches Wort passt|gesucht:/.test(String(e.q||''))){
       fb.innerHTML+='<img class="ub-qimg" style="margin:10px 0 0" src="'+E(e.img)+'" alt="" onerror="this.remove()">';
     }
+    try{ if(window.ubAnsichtFb) window.ubAnsichtFb(e, ok, fb); }catch(_a){}
     btn.className='ub-btn'+((!ok&&!selfRated)?' no':''); btn.disabled=false;
     btn.textContent=(S.idx>=S.items.length-1)?'Abschließen':'Weiter';
     if(S.hearts<=0 && !selfRated && !ok){ btn.textContent='Runde beenden'; }
