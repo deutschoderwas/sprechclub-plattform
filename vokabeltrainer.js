@@ -36,12 +36,20 @@
   }
   function l1() { try { return localStorage.getItem('dow_l1') || ''; } catch (e) { return ''; } }
   function trRoh(id) { var m = (window.VOK_TR || {})[l1()]; return (m && m[id]) || null; }
+  /* 21.11.2026, Julia: „die Übersetzungen im Übungsteil sind meistens
+     falsch, lass sie einfach weg.“ trWort/trSatz liefern deshalb nichts
+     mehr. Alles, was daran hängt, prüft schon auf leer: die Zeile unter
+     der Wortkarte und unter dem Beispielsatz fällt weg, und die Spiele
+     „Übersetzung“ und „rückwärts“ werden gar nicht erst ausgewählt. */
+  var OHNE_TR = true;
   function trWort(v) {
+    if (OHNE_TR) return '';
     var a = trRoh(v.id); if (a && a[0]) return a[0];
     if (v.zwilling) { var b = trRoh(v.zwilling); if (b && b[0]) return b[0]; }
     return v.trDirekt || '';
   }
   function trSatz(v) {
+    if (OHNE_TR) return '';
     var a = trRoh(v.id); if (a && a[1]) return a[1];
     if (v.zwilling) { var b = trRoh(v.zwilling); if (b && b[1]) return b[1]; }
     return '';

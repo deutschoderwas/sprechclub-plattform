@@ -1311,6 +1311,12 @@
     }catch(e){ return null; }
   }
   function uebersetzungHtml(wort){
+    /* 21.11.2026, Julia: „die Übersetzungen im Übungsteil sind meistens
+       falsch, lass sie einfach weg.“ Die Zeile in der eigenen Sprache
+       erscheint deshalb nicht mehr. Die Funktion bleibt, damit die
+       Aufrufe unten nichts ändern müssen; die Daten in
+       woerter-sprachen.js bleiben ebenfalls liegen. */
+    return '';
     if(!wort || !window.wortUebersetzung) return '';
     var k = meineSprache(); if(!k) return '';
     var u = window.wortUebersetzung(wort, k); if(!u || !u.w) return '';
