@@ -262,6 +262,18 @@
     e.answer = a.replace(/\s+/g, ' ').replace(/\s+([.,!?;:])/g, '$1').trim();
   };
 
+  /* Ein Hinweis darf die Lösung nicht verraten. „keinen ___ haben“ mit dem
+     Hinweis „keinen Bock haben = keine Lust haben“ war geschenkt. Steht die
+     Lösung als ganzes Wort im Hinweis, wird sie dort zu „…“. Eine Grundform
+     („verzichten“ bei „verzichte“) bleibt stehen — die zu beugen ist die
+     Aufgabe. */
+  function maskiere(text, loesung) {
+    var l = String(loesung || '').replace(/^(der|die|das)\s+/i, '').trim();
+    if (!text || l.length < 3) return text;
+    var re = new RegExp('(^|[^A-Za-zÄÖÜäöüß])(' + l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?=$|[^A-Za-zÄÖÜäöüß])', 'gi');
+    return String(text).replace(re, '$1…');
+  }
+
   /* ---------- Aufgabenansicht ---------- */
   window.ubAnsicht = function (e, body, info) {
     css();
@@ -292,6 +304,7 @@
       } else {
         q.textContent = roh;
       }
+      if (gesucht && e.options && typeof e.answer === 'number') gesucht = maskiere(gesucht, e.options[e.answer]);
       if (gesucht) {
         var g = document.createElement('div'); g.className = 'ubn-gesucht';
         g.innerHTML = '<span>Gesucht</span>' + E(gesucht);
@@ -302,6 +315,7 @@
     body.querySelectorAll('.ub-tip').forEach(function (t) {
       if (t.dataset.ubn) return; t.dataset.ubn = '1';
       var tx = ohneEmoji(t.textContent).trim(); if (!tx) return;
+      if (e.type === 'gap' && e.answer) tx = maskiere(tx, e.answer);
       t.textContent = tx; t.classList.add('ubn-tip');
     });
     var mic = body.querySelector('#ubMic'); if (mic) mic.innerHTML = ic('sprechen') + E(ohneEmoji(mic.textContent));

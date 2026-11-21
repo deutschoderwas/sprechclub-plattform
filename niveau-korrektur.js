@@ -124,6 +124,10 @@
       (t.exercises || []).forEach(function (e) {
         FELDER.forEach(function (f) {
           if (typeof e[f] !== 'string') return;
+          /* 21.11.2026: Beim Fehler-Finden ist der falsche Satz Absicht —
+             „Es tut mir Leid“ zu verbessern machte die Aufgabe unlösbar
+             (das falsche Wort stand nicht mehr im Satz). */
+          if (e.type === 'fehler' && f === 'satz') return;
           for (var i = 0; i < ERSATZ.length; i++) if (e[f] === ERSATZ[i][0]) e[f] = ERSATZ[i][1];
         });
       });
