@@ -82,6 +82,17 @@ export const AKTION_BIS = Date.parse('2026-12-01T00:00:00+01:00');
 export const AKTION_PREIS = 97;    // Premium im Monat waehrend der Aktion (= 30 % unter 139)
 export const AKTION_ALT   = 139;   // regulaer
 
+/* Julia, 21.11.2026: "wir brauchen noch ein 6 Monatsabo (50 % Rabatt)
+   30% rabatt auf den Monatspreis und 50 % auf den Halbjahrespreis."
+
+   Einen Halbjahrespreis gab es bis dahin nicht. Regulaer sind es sechs
+   Monate zu 139 EUR, also 834 EUR. In der Aktionswoche kostet das
+   halbe Jahr 399 EUR - das sind 66,50 EUR im Monat und 52 Prozent
+   weniger. Wir werben trotzdem mit "50 %": die Aussage stimmt dann
+   und ist sogar leicht untertrieben. */
+export const AKTION_PREIS_6M = 399;   // halbes Jahr waehrend der Aktion
+export const AKTION_ALT_6M   = 834;   // regulaer: 6 x 139
+
 export const aktionLaeuft = (jetzt = Date.now()) =>
   jetzt >= AKTION_VON && jetzt < AKTION_BIS;
 

@@ -999,7 +999,21 @@ export default async function handler(req, res) {
              (testpass, gelegenheitspass, allinclusive, sparpass) haben
              kein tier und bekommen ihre Stunden wie bisher. */
           const istAbo = /premium/.test(String(tier || ''));
-          await grant(userId, istAbo ? 0 : stunden, 'abo:' + plan, 'inv_' + inv.id, 31 + tageBis(abPrem));
+          /* Wie lange gilt der Pass? Frueher immer 31 Tage. Das stimmt
+             beim Monatsabo und ist beim Halbjahresabo falsch: wer fuer
+             sechs Monate bezahlt hat, haette nach einem Monat einen
+             abgelaufenen pass_until. Der Zugang haengt zwar am tier und
+             nicht am Pass, aber eine Zahl, die nicht stimmt, wandert
+             frueher oder spaeter in eine Anzeige oder eine Mail.
+             Darum nehmen wir die Periode, die Stripe selbst nennt. */
+          const periodeEnde = sub && (sub.current_period_end
+            || (sub.items && sub.items.data && sub.items.data[0] && sub.items.data[0].current_period_end));
+          const passTage = (() => {
+            if (!periodeEnde) return 31;
+            const t = Math.ceil((periodeEnde * 1000 - Date.now()) / 86400000);
+            return t > 31 ? t + 1 : 31;
+          })();
+          await grant(userId, istAbo ? 0 : stunden, 'abo:' + plan, 'inv_' + inv.id, passTage + tageBis(abPrem));
           /* Premium beim ersten Mal: die gewohnte Stunden-Mail. Ab der ersten
              Verlaengerung stattdessen die Zahlungsbestaetigung mit dem Hinweis,
              sich im Wochenplan eine Stunde auszusuchen. Alte Paesse behalten

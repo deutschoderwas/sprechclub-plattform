@@ -4,7 +4,7 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS } from './_tueren.js';
+import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS, AKTION_PREIS_6M } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -74,6 +74,14 @@ const PLANS = {
      Die Richtigstellung liegt in api/korrektur-premium-mail.js. */
   premium_month:   { abo: true, interval:'month', stunden: 8, preis: 49,  tier:'premium', label: 'Sprechclub',
     desc: 'Alles aus dem Lernclub + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, unbegrenzt. Monatlich kündbar.' },
+  /* Das halbe Jahr: EINE Zahlung alle sechs Monate, danach verlaengert
+     es sich zum selben Preis. Darum interval 'month' mit
+     intervallAnzahl 6 und nicht etwa monate: 6 - das waere eine
+     Mindestlaufzeit, die das Kuendigen ausblendet. Wer ein halbes Jahr
+     im Voraus bezahlt hat, soll die Verlaengerung jederzeit abstellen
+     koennen; der bezahlte Zeitraum bleibt ihr ohnehin. */
+  premium_6m:      { abo: true, interval:'month', intervallAnzahl: 6, stunden: 8, preis: 834, tier:'premium', label: 'Sprechclub · 6 Monate',
+    desc: 'Alles aus dem Lernclub + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, unbegrenzt. Eine Zahlung für sechs Monate, danach verlängert es sich automatisch — jederzeit kündbar.' },
   premium_year:    { alt: true, abo: true, interval:'year',  stunden: 8, preis: 468, tier:'premium', label: 'Sprechclub',
     desc: 'Alles aus dem Lernclub + Sprechclub: täglich von Montag bis Sonntag mit echten Menschen Deutsch sprechen, zu spannenden Themen. Jahresmitgliedschaft (12 Monate, 39 € pro Monat).' },
   premium:         { abo: true, interval:'month', stunden: 8, preis: 149, tier:'premium',  label: 'Sprechclub',
@@ -126,6 +134,11 @@ function aktuellerPlan(id){
      dauerhaft fuer alle, die in der Aktionswoche kaufen. */
   if (p && id === 'premium_month' && aktionLaeuft()) {
     return Object.assign({}, p, { preis: AKTION_PREIS });
+  }
+  /* Dasselbe fuers halbe Jahr: 399 statt 834. Auch dieser Preis haengt
+     hier und nicht im Browser. */
+  if (p && id === 'premium_6m' && aktionLaeuft()) {
+    return Object.assign({}, p, { preis: AKTION_PREIS_6M });
   }
   const r = PREMIUM_REGULAER[id];
   if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;
@@ -424,7 +437,11 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'eur',
             unit_amount: plan.preis * 100,
-            recurring: { interval: plan.interval || 'month' },
+            /* intervallAnzahl: ohne sie macht Stripe aus jedem Plan
+               einen Monatstakt - aus dem Halbjahr fuer 399 EUR waere
+               ein Monatsabo fuer 399 EUR geworden. */
+            recurring: { interval: plan.interval || 'month',
+                         interval_count: plan.intervallAnzahl || 1 },
             product_data: { name: `deutschoderwas Club – ${plan.label}`, description: abodesc, images: [MARKENBILD] },
           },
         }],
