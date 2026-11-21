@@ -168,7 +168,11 @@
     else if (e.type === 'choice' && e.q && e.options && typeof e.answer === 'number'
       && String(e.q).indexOf('___') >= 0) { roh = e.q; loesung = e.options[e.answer]; }
     if (!roh || !loesung) return null;
-    var t = eng(txt(roh).replace(/\([^)]*\)\s*$/, ''));
+    /* 21.11.2026: Klammern auch mitten im Satz entfernen („Sie (= Frau
+       Weber) ___ Lehrerin“) und eine vorangestellte Anweisung („Im
+       Perfekt: …“). Sonst landeten „(=“ und „Perfekt:“ als Kacheln im
+       Satzbau. */
+    var t = eng(txt(roh).replace(/\s*\([^)]*\)/g, '').replace(/^[A-ZÄÖÜ][^.!?:_]{1,30}:\s+/, ''));
     if (t.indexOf('___') < 0) return null;
     return eng(t.replace(/_+/g, txt(loesung)));
   }
@@ -448,7 +452,41 @@
         });
       }
       if (e.type !== 'gap') return;
-      var mgl3 = moeglichkeiten(e.answer, ablenker(loesungen, i, 8), 3);
+      /* 21.11.2026, Inhaltsprüfung: Die Ablenker kamen aus allen
+         Lösungen des Themas. Bei „Wir suchen ___ Wohnung. (eine/einen)“
+         stand dann „Die“ daneben — auch richtig. Darum:
+         1. Nennt der Satz die Auswahl selbst „(a/b)“, gibt es genau die.
+         2. Artikel nur gegen Artikel derselben Sorte (bestimmt gegen
+            bestimmt, unbestimmt gegen unbestimmt).
+         3. Groß/klein wie die Lösung — sonst verrät der erste Buchstabe sie. */
+      var wahl = String(e.text).match(/\(([^()]+\/[^()]+)\)\s*$/);
+      var mgl3 = null;
+      if (wahl) {
+        var liste = wahl[1].split('/').map(function (x) { return eng(x); }).filter(Boolean);
+        if (liste.some(function (x) { return x.toLowerCase() === eng(e.answer).toLowerCase(); }) && liste.length >= 2)
+          mgl3 = moeglichkeiten(e.answer, liste, liste.length - 1);
+      }
+      if (!mgl3) {
+        var BEST = /^(der|die|das|den|dem|des)$/i, UNB = /^(ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner)$/i;
+        var a0 = eng(e.answer), gross = /^[A-ZÄÖÜ]/.test(a0);
+        /* „ein“ kann auch eine Vorsilbe sein („Wir kaufen … ein.“) — Artikel
+           ist es nur, wenn nach der Lücke ein Wort folgt. */
+        var nach = String(e.text).split(/_+/)[1] || '';
+        if (!/^\s*[A-Za-zÄÖÜäöüß]/.test(nach)) { BEST = /^$/; UNB = /^$/; }
+        var kand = ablenker(loesungen, i, 12).filter(function (x) {
+          if (BEST.test(a0)) return BEST.test(x);
+          if (UNB.test(a0)) return UNB.test(x);
+          return true;
+        }).map(function (x) {
+          x = eng(x); if (!x) return x;
+          return gross ? x.charAt(0).toUpperCase() + x.slice(1) : (/^(Der|Die|Das|Den|Dem|Des|Ein|Eine|Einen|Einem|Einer|Eines|Kein|Keine|Keinen)$/.test(x) ? x.toLowerCase() : x);
+        });
+        if (BEST.test(a0) || UNB.test(a0)) {
+          var alle = BEST.test(a0) ? ['der', 'die', 'das', 'den', 'dem'] : ['ein', 'eine', 'einen', 'einem', 'einer'];
+          alle.forEach(function (x) { kand.push(gross ? x.charAt(0).toUpperCase() + x.slice(1) : x); });
+        }
+        mgl3 = moeglichkeiten(e.answer, kand, 3);
+      }
       if (mgl3) {
         neu.push({
           type: 'choice',
@@ -562,6 +600,18 @@
     if (!t || t.__viel) return 0;
     t.__viel = 1;
     if (sk.id === 'aussprache') t.__aussprache = 1;
+    /* 21.11.2026: Satzbau-Aufgaben von Hand säubern. „Im Perfekt: Ich bin …“
+       oder „Sie (= Frau Weber) ist …“ ergaben Kacheln wie „Perfekt:“ und
+       „(=“. Die Anweisung und die Klammer wandern in den Hinweis. */
+    (t.exercises || []).forEach(function (e) {
+      if (e.type !== 'order' || !e.answer) return;
+      var a = String(e.answer);
+      var m = a.match(/^([A-ZÄÖÜ][^.!?:_]{1,30}):\s+(.+)$/);
+      if (m) { if (!e.hint || e.hint.indexOf(m[1].split(' ')[0]) >= 0) e.hint = m[1]; a = m[2]; }
+      var kl = a.match(/\s*\(([^)]*)\)/);
+      if (kl) { e.hint = (e.hint ? e.hint + ' · ' : '') + kl[1].replace(/^=\s*/, ''); a = a.replace(/\s*\([^)]*\)/g, ''); }
+      e.answer = eng(a);
+    });
     var neu = [];
     if (sk.id === 'grammatik') ausGrammatik(t, neu);
     if (sk.id === 'hoeren') ausTranskripten(t, neu);

@@ -246,6 +246,22 @@
   });
   (function warten(n) { if (installieren() || n > 80) return; setTimeout(function () { warten(n + 1); }, 150); })(0);
 
+  /* ---------- Satzbau säubern ----------
+     Manche Satzbau-Aufgaben trugen eine Anweisung oder Klammer im Satz:
+     „Im Perfekt: Ich bin …“, „Sie (= Frau Weber) ist …“. Daraus wurden
+     Kacheln wie „Perfekt:“ und „(=“. ueben.js ruft das vor dem Zeichnen
+     auf; Anweisung und Klammer wandern in den Hinweis. */
+  window.ubSatzSauber = function (e) {
+    if (!e || e.type !== 'order' || !e.answer || e.__sauber) return;
+    e.__sauber = 1;
+    var a = String(e.answer);
+    var m = a.match(/^([A-ZÄÖÜ][^.!?:_]{1,30}):\s+(.+)$/);
+    if (m) { if (!e.hint || e.hint.indexOf(m[1].split(' ')[0]) >= 0) e.hint = m[1]; a = m[2]; }
+    var kl = a.match(/\s*\(([^)]*)\)/);
+    if (kl) { e.hint = (e.hint ? e.hint + ' · ' : '') + kl[1].replace(/^=\s*/, ''); a = a.replace(/\s*\([^)]*\)/g, ''); }
+    e.answer = a.replace(/\s+/g, ' ').replace(/\s+([.,!?;:])/g, '$1').trim();
+  };
+
   /* ---------- Aufgabenansicht ---------- */
   window.ubAnsicht = function (e, body, info) {
     css();
