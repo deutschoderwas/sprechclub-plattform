@@ -349,16 +349,19 @@
     return (re && re.test(v.bsp)) ? re : null;
   }
   var TYP_INFO = {
-    kennenlernen: { f: 'Neues Wort', farbe: '#1B9BC0', ic: '✨' },
-    uebersetzung: { f: 'Was heißt das?', farbe: '#1B9BC0', ic: '💬' },
-    rueckwaerts: { f: 'Welches deutsche Wort ist das?', farbe: '#2F6FD0', ic: '🔁' },
-    bild: { f: 'Welches Bild passt?', farbe: '#E0A020', ic: '🖼️' },
-    artikel: { f: 'der, die oder das?', farbe: '#8B4FC7', ic: '🎯' },
-    luecke: { f: 'Welches Wort fehlt im Satz?', farbe: '#E07B39', ic: '🧩' },
-    hoeren: { f: 'Hör genau hin', farbe: '#3E5FCC', ic: '🎧' },
-    tippen: { f: 'Schreib das Wort auf Deutsch', farbe: '#14708B', ic: '⌨️' },
-    satzbau: { f: 'Bau den Satz', farbe: '#C7457F', ic: '🧱' },
-    satzhoeren: { f: 'Hör den Satz — welches Wort fehlt?', farbe: '#3E5FCC', ic: '👂' }
+    /* 21.11.2026: Markenfarben statt Regenbogen. Gold = neu, Türkis =
+       erkennen und hören, Rot = selbst schreiben, Schwarz = im Satz,
+       Petrol = Bedeutung. Die Gruppe heißt im Kopf der Karte mit. */
+    kennenlernen: { f: 'Neues Wort', g: 'Kennenlernen', farbe: '#8A6500', ic: '' },
+    uebersetzung: { f: 'Was heißt das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
+    rueckwaerts: { f: 'Welches deutsche Wort ist das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
+    bild: { f: 'Welches Bild passt?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
+    artikel: { f: 'der, die oder das?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
+    luecke: { f: 'Welches Wort fehlt im Satz?', g: 'Im Satz', farbe: '#14181B', ic: '' },
+    hoeren: { f: 'Hör genau hin', g: 'Hören', farbe: '#0E7FA0', ic: '' },
+    tippen: { f: 'Schreib das Wort auf Deutsch', g: 'Schreiben', farbe: '#D42A21', ic: '' },
+    satzbau: { f: 'Bau den Satz', g: 'Im Satz', farbe: '#14181B', ic: '' },
+    satzhoeren: { f: 'Hör den Satz: Welches Wort fehlt?', g: 'Hören', farbe: '#0E7FA0', ic: '' }
   };
 
   function typFuer(v) {
@@ -400,7 +403,17 @@
     var nah = basis.filter(function (x) { return x.niveau === v.niveau && x.art === v.art; });
     var mit = basis.filter(function (x) { return x.art === v.art; });
     var quelle = nah.length >= n ? nah : (mit.length >= n ? mit : basis);
-    return mische(quelle).slice(0, n);
+    /* Ein Text darf nur einmal vorkommen, und nie so wie die Lösung:
+       im Pool steht dasselbe Wort manchmal unter zwei ids. */
+    var gesehen = {}; gesehen[normal(v.de)] = 1; gesehen[normal(v.wort || v.de)] = 1;
+    var aus = [];
+    mische(quelle).concat(mische(basis)).some(function (x) {
+      var k1 = normal(x.de), k2 = normal(x.wort || x.de);
+      if (gesehen[k1] || gesehen[k2]) return false;
+      gesehen[k1] = 1; gesehen[k2] = 1; aus.push(x);
+      return aus.length >= n;
+    });
+    return aus;
   }
 
   /* ================= Stil ================= */
@@ -775,6 +788,140 @@
     return n + ' ' + (n === 1 ? wort1 : wort2);
   }
 
+  /* ============================================================
+     21.11.2026 Ausbau, Julia: „richtig schön professionell, bildlich,
+     mit Markierungen … der Vokabeltrainer muss richtig gut ausgebaut
+     werden“. Dazu kommen: der Lernweg eines Wortes als Leitfaden,
+     „Meine Wörter“ (aus vokabel_eigene, also auch alles, was jemand im
+     Üben mit einem Tipp hinzugefügt hat), eine Suche über alle Wörter
+     mit Markierung, ein Steckbrief beim neuen Wort und in der
+     Rückmeldung die Wanderung von Kasten zu Kasten.
+     Farben je Kasten: Schwarz, Rot, Gold, Türkis, Petrol.
+     ============================================================ */
+  var K_FARBE = ['#14181B', '#D42A21', '#E0A800', '#1B9BC0', '#0E6D85'];
+  var LV_FARBE = { A1: '#1B9BC0', A2: '#0E6D85', B1: '#E0A800', B2: '#D42A21', C1: '#14181B', C2: '#14181B' };
+  var ART_NAME = { nomen: 'Nomen', verb: 'Verb', adjektiv: 'Adjektiv', adverb: 'Adverb', ausdruck: 'Ausdruck', wendung: 'Wendung' };
+  var SUCHE = [], MEINE = [], MEINE_ALLE = false;
+
+  function kastenAusStufe(st) {
+    for (var i = KAESTEN.length - 1; i >= 0; i--) { if (st >= KAESTEN[i].von && st <= KAESTEN[i].bis) return i; }
+    return 0;
+  }
+  function kastenPill(v) {
+    var i = kastenVon(v);
+    return '<span class="vbx-kp" style="--kf:' + K_FARBE[i] + '">' + esc(KAESTEN[i].nm)
+      + (istFaellig(v) ? ' · fällig' : '') + '</span>';
+  }
+  function steckbrief(v) {
+    var t = [];
+    if (v.niveau) t.push('<span class="lv" style="--lf:' + (LV_FARBE[v.niveau] || '#0E6D85') + '">' + esc(v.niveau) + '</span>');
+    var a = ART_NAME[String(v.art || '').toLowerCase()];
+    if (!a && v.artikel) a = 'Nomen';
+    if (a) t.push('<span>' + a + '</span>');
+    if (v.thema) t.push('<span>' + esc(v.thema) + '</span>');
+    return t.length ? '<div class="vbx-steck">' + t.join('') + '</div>' : '';
+  }
+  function wanderung(alt, neu) {
+    var a = kastenAusStufe(Math.max(0, alt)), b = kastenAusStufe(Math.max(0, neu));
+    var pfeil = b > a ? 'hoch' : b < a ? 'runter' : 'bleibt';
+    return '<div class="vbx-wander ' + pfeil + '">'
+      + KAESTEN.map(function (k, i) {
+        return '<span class="' + (i === b ? 'ziel' : i === a ? 'start' : '') + '" style="--kf:' + K_FARBE[i] + '">' + esc(k.nm) + '</span>';
+      }).join('') + '</div>';
+  }
+  function markTreffer(t, such) {
+    t = String(t || '');
+    var i = t.toLowerCase().indexOf(String(such || '').toLowerCase());
+    if (!such || i < 0) return esc(t);
+    return esc(t.slice(0, i)) + '<mark class="vbx-such">' + esc(t.slice(i, i + such.length)) + '</mark>' + esc(t.slice(i + such.length));
+  }
+  function wortZeile(v, such) {
+    var w = (v.wort || v.de || '').trim();
+    return '<div class="vbx-wz">' + bildEmoji(v, 'mini')
+      /* Artikel nur bei Nomen: im Pool tragen auch Wendungen wie „passt mir gut.“ einen */
+      + '<div class="tx"><b>' + (/^[A-ZÄÖÜ]/.test(w) ? artikelChip(v.artikel) : '') + '<span class="w">' + (such ? markTreffer(w, such) : esc(w)) + '</span></b>'
+      + (v.bedeutung ? '<span class="bed">' + (such ? markTreffer(v.bedeutung, such) : esc(v.bedeutung)) + '</span>' : '')
+      + (v.bsp ? '<span class="bsp">' + satzMarkiert(v.bsp, w) + '</span>' : '')
+      + '</div><div class="re">' + kastenPill(v) + lauts(v.de || w, 1) + '</div></div>';
+  }
+
+  function lernweg(offen) {
+    var schritte = [
+      ['#E0A800', 'Kennenlernen', 'Bild, Bedeutung und ein Satz aus dem Alltag. Das Wort ist im Satz markiert.'],
+      ['#1B9BC0', 'Erkennen', 'Hören, das passende Bild finden, der, die oder das wählen.'],
+      ['#D42A21', 'Anwenden', 'Das Wort in die Lücke setzen, den Satz bauen, es selbst schreiben.'],
+      ['#0E6D85', 'Wiederholen', 'Morgen, dann nach 3, 7, 16, 35 und 75 Tagen. Genau dann, wenn du es sonst vergessen würdest.']
+    ];
+    return '<section class="vp-teil"><details class="vbx-weg"' + (offen ? ' open' : '') + '><summary>'
+      + '<span><b>So lernst du ein Wort</b><i>Vier Schritte, der Trainer plant die Wiederholungen für dich</i></span></summary>'
+      + '<ol class="vbx-schritte">' + schritte.map(function (x, i) {
+        return '<li style="--sf:' + x[0] + '"><span class="nr">' + (i + 1) + '</span><b>' + x[1] + '</b><span>' + x[2] + '</span></li>';
+      }).join('') + '</ol>'
+      + '<p class="vbx-weg-fuss">Pro Tag kommen alle fälligen Wörter und höchstens fünf neue dazu. '
+      + 'Ein Fehler schickt das Wort einen Kasten zurück, am Ende der Runde kommt es gleich noch einmal.</p>'
+      + '</details></section>';
+  }
+
+  function meineWoerter(alle) {
+    MEINE = alle.filter(function (v) { return v.eigen; }).reverse();
+    var h = '<section class="vp-teil vbx-meine"><header><h3>Meine Wörter</h3>'
+      + '<p>Wörter, die du dir selbst gemerkt hast: im Üben mit einem Tipp auf „In den Vokabeltrainer“ oder aus einem Gespräch.</p></header>';
+    if (!MEINE.length) {
+      return h + '<div class="vbx-leerkarte"><span class="ic">+</span><div><b>Noch leer</b>'
+        + '<span>Im Bereich Üben steht bei neuen Wörtern der Knopf „In den Vokabeltrainer“. Ein Tipp, und das Wort steht hier und kommt in deine Wiederholungen.</span></div>'
+        + '<a class="vbx-b hell" href="#ueben">Zum Üben</a></div></section>';
+    }
+    var zeig = MEINE_ALLE ? MEINE : MEINE.slice(0, 6);
+    h += '<div class="vbx-liste" id="vbxMeine">' + zeig.map(function (v) { return wortZeile(v); }).join('') + '</div>'
+      + '<div class="vbx-knoepfe"><button class="vbx-b" type="button" onclick="__vtEigene()">'
+      + vpZahl(Math.min(MEINE.length, 20), 'Wort üben', 'Wörter üben') + '</button>'
+      + (MEINE.length > 6 && !MEINE_ALLE ? '<button class="vbx-b hell" type="button" onclick="__vtEigeneAlle()">Alle ' + MEINE.length + ' zeigen</button>' : '')
+      + '</div></section>';
+    return h;
+  }
+
+  function nachschlagen() {
+    return '<section class="vp-teil vbx-nach"><header><h3>Wort nachschlagen</h3>'
+      + '<p>Such ein Wort oder eine Bedeutung. Du siehst den Beispielsatz und wie gut das Wort schon sitzt.</p></header>'
+      + '<label class="vbx-suche"><span aria-hidden="true">&#9906;</span>'
+      + '<input type="search" id="vbxSuche" placeholder="z. B. Termin, Wohnung, sich bewerben" autocomplete="off" oninput="__vtSuche(this)"></label>'
+      + '<div id="vbxTreffer" class="vbx-liste"></div></section>';
+  }
+
+  function runde(w) {
+    if (!w || !w.length) return;
+    SERIE = {}; RUNDE = baueRundeAus(w.slice(0, 20)); POS = 0; ERG = []; LAEUFT = true;
+    if (!RUNDE.length) { LAEUFT = false; return; }
+    zeichne();
+  }
+  window.__vtEigene = function () {
+    runde(MEINE.slice().sort(function (a, b) { return stufeVon(a) - stufeVon(b); }));
+  };
+  window.__vtEigeneAlle = function () {
+    MEINE_ALLE = true;
+    var el = document.getElementById('vbxMeine');
+    if (el) el.innerHTML = MEINE.map(function (v) { return wortZeile(v); }).join('');
+    var b = document.querySelector('.vbx-meine .vbx-b.hell'); if (b) b.remove();
+  };
+  window.__vtSuche = function (inp) {
+    var such = String((inp && inp.value) || '').trim();
+    var box = document.getElementById('vbxTreffer'); if (!box) return;
+    if (such.length < 2) { SUCHE = []; box.innerHTML = ''; return; }
+    var n = normal(such), alle = alleWoerter();
+    var vorn = alle.filter(function (v) { return normal(v.wort || v.de).indexOf(n) === 0; });
+    var drin = {}; vorn.forEach(function (v) { drin[v.id] = 1; });
+    var sonst = alle.filter(function (v) {
+      return !drin[v.id] && (normal(v.de).indexOf(n) > -1 || normal(v.bedeutung).indexOf(n) > -1);
+    });
+    SUCHE = vorn.concat(sonst).slice(0, 12);
+    box.innerHTML = SUCHE.length
+      ? SUCHE.map(function (v) { return wortZeile(v, such); }).join('')
+        + '<div class="vbx-knoepfe"><button class="vbx-b" type="button" onclick="__vtSucheUeben()">'
+        + (SUCHE.length === 1 ? 'Dieses Wort üben' : 'Diese ' + SUCHE.length + ' Wörter üben') + '</button></div>'
+      : '<p class="vbx-nichts">Kein Wort gefunden. Versuch es mit dem Wortanfang.</p>';
+  };
+  window.__vtSucheUeben = function () { runde(SUCHE); };
+
   function startbild() {
     var plan = tagesplan();
     var heute = STAND.heute || 0, serie = STAND.serie || 0;
@@ -797,12 +944,12 @@
     if (fertig) {
       h += '<h2>Fertig für heute</h2>'
         + '<p>' + (plan.neuDa
-          ? 'Wenn du magst, häng noch eine Runde an — es warten noch ' + vpZahl(plan.neuDa, 'neues Wort', 'neue Wörter') + '.'
+          ? 'Wenn du magst, häng noch eine Runde an. Es warten noch ' + vpZahl(plan.neuDa, 'neues Wort', 'neue Wörter') + '.'
           : 'Alles wiederholt. Neue Wörter kommen automatisch aus deiner nächsten Stunde.') + '</p>'
         + (plan.neuDa ? '<button class="vp-los" onclick="__vtStart()">Noch eine Runde</button>' : '');
     } else if (ersterTag) {
       h += '<h2>Deine ersten Wörter warten</h2>'
-        + '<p>' + vpZahl(plan.gesamt, 'Wort', 'Wörter') + ' für den Anfang — etwa ' + plan.minuten + ' Minuten. '
+        + '<p>' + vpZahl(plan.gesamt, 'Wort', 'Wörter') + ' für den Anfang, etwa ' + plan.minuten + ' Minuten. '
         + 'In drei Tagen siehst du hier unten, was schon sitzt.</p>'
         + '<button class="vp-los" onclick="__vtStart()">Losgehen</button>';
     } else {
@@ -821,18 +968,23 @@
 
     /* ---------- 2  Die fuenf Kaesten ---------- */
     h += '<section class="vp-teil"><header><h3>Deine Wortkästen</h3>'
-      + '<p>Ein Wort wandert nach rechts, wenn du es konntest — und fällt zurück, wenn nicht.</p></header>'
+      + '<p>Ein Wort wandert nach rechts, wenn du es konntest, und fällt zurück, wenn nicht. Tipp auf einen Kasten, um nur diese Wörter zu üben.</p></header>'
       + '<div class="vp-kaesten">';
+    var faelligK = KAESTEN.map(function () { return 0; });
+    alle.forEach(function (v) { if (istFaellig(v)) faelligK[kastenVon(v)]++; });
     KAESTEN.forEach(function (k, i) {
       var n = zaehl[i];
-      h += '<button class="vp-kasten' + (n ? '' : ' leer') + '" type="button"'
+      h += '<button class="vp-kasten' + (n ? '' : ' leer') + '" type="button" style="--kf:' + K_FARBE[i] + '"'
         + (n ? ' onclick="__vtKasten(' + i + ')"' : ' disabled')
-        + '><span class="nr">' + (i + 1) + '</span>'
+        + '>' + (faelligK[i] ? '<span class="vbx-faellig">' + faelligK[i] + ' fällig</span>' : '')
+        + '<span class="nr">' + (i + 1) + '</span>'
         + '<b>' + esc(k.nm) + '</b>'
         + '<span class="v">' + n + '</span>'
         + '<span class="w">' + esc(k.wann) + '</span></button>';
     });
     h += '</div></section>';
+
+    h += lernweg(ersterTag) + meineWoerter(alle) + nachschlagen();
 
     /* ---------- 3  Die aergern dich ---------- */
     if (aerger.length >= 3) {
@@ -852,13 +1004,13 @@
     var niv = niveauZaehlung();
     if (THEMEN.length) {
       h += '<section class="vp-teil"><header><h3>Üb, was du willst</h3>'
-        + '<p>Such dir ein Thema aus — zu jedem Wort gibt es einen Beispielsatz. '
+        + '<p>Such dir ein Thema aus. Zu jedem Wort gibt es einen Beispielsatz. '
         + 'Du kannst ein Thema so oft wiederholen, wie du magst.</p></header>';
 
       h += '<div class="vp-niv">'
         + '<button type="button" class="vp-nchip' + (NIVEAU_FILTER ? '' : ' an') + '" onclick="__vtNiveau(\'\')">Alle</button>';
       niv.forEach(function (x) {
-        h += '<button type="button" class="vp-nchip' + (NIVEAU_FILTER === x.n ? ' an' : '') + '"'
+        h += '<button type="button" data-lv="' + x.n + '" class="vp-nchip' + (NIVEAU_FILTER === x.n ? ' an' : '') + '"'
           + ' onclick="__vtNiveau(\'' + x.n + '\')">' + x.n + ' <i>' + x.anzahl + '</i></button>';
       });
       h += '</div>';
@@ -903,10 +1055,6 @@
         + '</section>';
     }
 
-    if (!l1()) {
-      h += '<div class="vp-hinweis">Trag im Profil deine Muttersprache ein — dann steht zu jedem Wort '
-        + 'und jedem Beispielsatz die Übersetzung dabei.</div>';
-    }
 
     h += '</div>';
     return h;
@@ -965,7 +1113,7 @@
   }
   function etikett(typ) {
     var i = TYP_INFO[typ] || TYP_INFO.uebersetzung;
-    return '<div class="vt-etikett" style="--tf:' + i.farbe + '"><span class="ic">' + i.ic + '</span>' + i.f + '</div>';
+    return '<div class="vt-etikett" style="--tf:' + i.farbe + '">' + (i.g ? '<span class="gr">' + i.g + '</span>' : '') + i.f + '</div>';
   }
   function tasteN(i) { return '<span class="taste">' + (i + 1) + '</span>'; }
 
@@ -988,10 +1136,11 @@
       h += bild(v, 'gr')
         + '<h2 class="vt-gross mitte">' + artikelChip(v.artikel) + esc(v.wort || v.de) + lauts(v.de) + '</h2>'
         + (ue ? '<p class="vt-unter' + rtlK() + '" style="text-align:center">' + esc(ue) + '</p>' : '')
+        + steckbrief(v)
         + (v.bedeutung ? '<div class="vt-bed"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
         + (v.bsp ? '<div class="vt-satzbox' + (v.bedeutung ? ' mitlabel' : '') + '"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
           + (trSatz(v) ? '<div class="vt-satz-tr' + rtlK() + '">' + esc(trSatz(v)) + '</div>' : '') + '</div>' : '')
-        + '<button class="vt-pruefen" onclick="__vtWeiterNeu()">Verstanden — weiter</button>';
+        + '<button class="vt-pruefen" onclick="__vtWeiterNeu()">Verstanden, weiter</button>';
 
     } else if (typ === 'uebersetzung') {
       var r1 = trWort(v);
@@ -1046,7 +1195,7 @@
 
     } else if (typ === 'satzhoeren') {
       var w2 = (v.wort || v.de).trim();
-      var satz2 = esc(v.bsp).replace(luecken(v), '$1<mark class="vt-mark" style="background:none;border-bottom:4px solid #3E5FCC;color:#3E5FCC;letter-spacing:2px">•••</mark>');
+      var satz2 = esc(v.bsp).replace(luecken(v), '$1<mark class="vt-mark" style="background:none;border-bottom:4px solid #0E6D85;color:#0E6D85;letter-spacing:2px">•••</mark>');
       var o5 = mische(ablenker(v, 3, 'einzel').map(function (x) { return (x.wort || x.de).trim(); }).concat([w2]));
       h += '<button class="vt-hoerknopf" onclick="__vtSprich(\'' + esc(v.bsp).replace(/'/g, "\\'") + '\',0.88,this)">🔊</button>'
         + '<button class="vt-langsam" onclick="__vtSprich(\'' + esc(v.bsp).replace(/'/g, "\\'") + '\',0.5,this)">🐢 langsamer abspielen</button>'
@@ -1227,12 +1376,12 @@
       + '<b>' + (richtig ? '<span>✅</span>' + zufall(['Richtig!', 'Sitzt!', 'Genau so.', 'Sehr gut!', 'Perfekt.'])
         : '<span>💡</span>Noch nicht. So ist es richtig') + '</b>'
       + '<div class="lsg"><em>' + artikelChip(v.artikel) + esc(v.wort || v.de) + '</em>'
-      + (ue ? ' — ' + esc(ue) : '') + ' ' + lauts(v.de, 1) + '</div>'
+      + (ue ? ', ' + esc(ue) : '') + ' ' + lauts(v.de, 1) + '</div>'
       + (v.bedeutung ? '<div class="bedz">' + esc(v.bedeutung) + '</div>' : '')
       + (v.bsp ? '<div class="bspz">' + satzMarkiert(v.bsp, v.wort || v.de, richtig ? 'gruen' : 'rot')
         + (trSatz(v) ? '<i class="' + (rtl() ? 'vt-rtl' : '') + '">' + esc(trSatz(v)) + '</i>' : '') + '</div>' : '')
-      + (a.letzte ? '<div class="wieder">🔁 Dieses Wort kommt ' + naechsterAbstand(neuStufe) + '.</div>'
-                  : '<div class="wieder">➡️ Gleich noch eine Übung zu diesem Wort.</div>')
+      + (a.letzte ? wanderung(st, neuStufe) + '<div class="wieder">Dieses Wort kommt ' + naechsterAbstand(neuStufe) + '.</div>'
+                  : '<div class="wieder">Gleich noch eine Übung zu diesem Wort.</div>')
       + '</div>'
       + '<button class="vt-weiter' + (richtig ? '' : ' rot') + '" onclick="__vtAntwort()">'
       + (POS + 1 >= RUNDE.length ? 'Runde abschließen' : 'Weiter') + ' →</button></div>';
@@ -1276,7 +1425,7 @@
 
   /* ================= Abschluss ================= */
   function konfetti() {
-    var farben = ['#1B9BC0', '#2CC0AE', '#E0A020', '#C7457F', '#3E5FCC', '#8B4FC7'];
+    var farben = ['#14181B', '#D42A21', '#E0A800', '#1B9BC0', '#0E6D85'];
     var d = document.createElement('div'); d.className = 'vt-konfetti';
     var h = '';
     for (var i = 0; i < 70; i++) {
@@ -1312,15 +1461,15 @@
       + '<p>' + (schlecht === 0
         ? 'Alles richtig. Die Wörter kommen genau dann zurück, wenn es Zeit zum Auffrischen ist.'
         : schlecht + (schlecht === 1
-          ? ' Wort siehst du bald wieder — genau dann, wenn du es sonst vergessen würdest.'
-          : ' Wörter siehst du bald wieder — genau dann, wenn du sie sonst vergessen würdest.'))
+          ? ' Wort siehst du bald wieder, genau dann, wenn du es sonst vergessen würdest.'
+          : ' Wörter siehst du bald wieder, genau dann, wenn du sie sonst vergessen würdest.'))
       + '</p>'
       + '<div class="vt-ergz">'
       + '<div><b>' + gut + '</b><span>richtig</span></div>'
       + '<div><b>' + schlecht + '</b><span>zum Üben</span></div>'
       + '<div><b>' + quote + '%</b><span>Trefferquote</span></div></div>'
       + '<div class="vt-liste">' + liste + '</div>'
-      + '<button class="vt-los" style="background:linear-gradient(135deg,#14708B,#1B9BC0);color:#fff" onclick="__vtStart()">Noch eine Runde →</button>'
+      + '<button class="vt-los" style="background:#14181B;color:#fff" onclick="__vtStart()">Noch eine Runde →</button>'
       + '<div style="margin-top:14px"><button class="vt-langsam" style="display:inline-block" onclick="__vtAbbruch()">Für heute reicht\'s</button></div>'
       + '</div>';
     if (quote >= 70) konfetti();
@@ -1546,13 +1695,128 @@
     document.head.appendChild(st);
   }
 
+  function vbxStil() {
+    if (document.getElementById('vbx-stil')) return;
+    var st = document.createElement('style'); st.id = 'vbx-stil';
+    var V = '#v-vokabeln .vp ';
+    st.textContent = [
+      /* Bühne: Schwarz nach Petrol, Flaggenstreifen unten */
+      V + '.vp-heute.vpx-held{position:relative;overflow:hidden;background:linear-gradient(135deg,#14181B 0%,#123844 55%,#0E6D85 100%)}',
+      V + '.vp-heute.vpx-held::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;z-index:3;background:linear-gradient(90deg,#14181B 0 33.3%,#D42A21 33.3% 66.6%,#E0A800 66.6%)}',
+      V + '.vpx-bild::before{background:linear-gradient(90deg,#123844 0%,rgba(18,56,68,0) 40%)}',
+      V + '.vpx-held .vp-zuruf{color:#E0A800}',
+      V + '.vpx-held .vp-los{background:#fff;color:#14181B}',
+      /* Kästen mit Farbstreifen */
+      V + '.vp-kasten{position:relative;border-top:4px solid var(--kf)!important}',
+      V + '.vp-kasten .v{color:var(--kf)!important}',
+      V + '.vp-kasten[style*="#E0A800"] .v{color:#8A6500!important}',
+      V + '.vp-kasten:disabled .v{color:#9AA6AD!important}',
+      V + '.vbx-faellig{position:absolute;right:10px;bottom:12px;font-size:11px;font-weight:800;color:#fff;background:#D42A21;border-radius:999px;padding:2px 8px}',
+      /* Niveau-Leiter */
+      V + '.vp-nchip[data-lv]::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--lf)}',
+      V + '.vp-nchip[data-lv="A1"]{--lf:#1B9BC0}' + V + '.vp-nchip[data-lv="A2"]{--lf:#0E6D85}' + V + '.vp-nchip[data-lv="B1"]{--lf:#E0A800}'
+        + V + '.vp-nchip[data-lv="B2"]{--lf:#D42A21}' + V + '.vp-nchip[data-lv="C1"],' + V + '.vp-nchip[data-lv="C2"]{--lf:#14181B}',
+      V + '.vp-nchip[data-lv].an{box-shadow:inset 0 -3px 0 var(--lf),0 2px 8px -3px rgba(18,24,31,.25)}',
+      V + '.vp-thema .bal i,' + V + '.vp-regal .bal i{background:linear-gradient(90deg,#0E6D85,#1B9BC0)}',
+      /* Lernweg */
+      V + '.vbx-weg{background:#fff;border:1px solid #E7EBF0;border-radius:18px;padding:0;overflow:hidden}',
+      V + '.vbx-weg summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px}',
+      V + '.vbx-weg summary::-webkit-details-marker{display:none}',
+      V + '.vbx-weg summary::after{content:"";width:9px;height:9px;border-right:2px solid #5F6B76;border-bottom:2px solid #5F6B76;transform:rotate(45deg);transition:transform .2s;flex:0 0 auto}',
+      V + '.vbx-weg[open] summary::after{transform:rotate(-135deg)}',
+      V + '.vbx-weg summary b{display:block;font-family:"Space Grotesk",Inter,sans-serif;font-size:18px;color:#14181B}',
+      V + '.vbx-weg summary i{display:block;font-style:normal;font-size:13.5px;color:#5F6B76;margin-top:2px}',
+      V + '.vbx-schritte{list-style:none;margin:0;padding:4px 20px 6px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}',
+      V + '.vbx-schritte li{border-top:4px solid var(--sf);background:#F8FAFB;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:5px}',
+      V + '.vbx-schritte .nr{width:26px;height:26px;border-radius:50%;background:var(--sf);color:#fff;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center}',
+      V + '.vbx-schritte li[style*="#E0A800"] .nr{color:#14181B}',
+      V + '.vbx-schritte b{font-size:15px;color:#14181B}',
+      V + '.vbx-schritte span:last-child{font-size:13.5px;line-height:1.5;color:#4B5763}',
+      V + '.vbx-weg-fuss{margin:8px 20px 18px;font-size:13.5px;color:#5F6B76;line-height:1.55}',
+      /* Wortlisten */
+      V + '.vbx-liste{display:grid;gap:8px}',
+      V + '.vbx-wz{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;background:#fff;border:1px solid #E7EBF0;border-radius:16px;padding:12px 14px}',
+      V + '.vbx-wz .vt-bild.mini{width:52px;height:52px;border-radius:12px;margin:0}',
+      V + '.vbx-wz .tx{display:flex;flex-direction:column;gap:3px;min-width:0}',
+      V + '.vbx-wz .tx b{font-size:16.5px;color:#14181B;display:flex;align-items:center;gap:7px;flex-wrap:wrap}',
+      V + '.vbx-wz .bed{font-size:13.5px;color:#4B5763}',
+      V + '.vbx-wz .bsp{font-size:14px;color:#2A2F33;line-height:1.5}',
+      V + '.vbx-wz .re{display:flex;flex-direction:column;align-items:flex-end;gap:8px}',
+      V + '.vbx-kp{font-size:11.5px;font-weight:800;white-space:nowrap;color:var(--kf);background:#fff;border:1.5px solid var(--kf);border-radius:999px;padding:2px 9px}',
+      V + '.vbx-kp[style*="#E0A800"]{color:#8A6500}',
+      V + '.vbx-such{background:#FFF3C4;color:inherit;border-bottom:2px solid #E0A800;padding:0 1px}',
+      V + '.vbx-knoepfe{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}',
+      V + '.vbx-b{border:0;border-radius:12px;background:#14181B;color:#fff;font:700 14.5px Inter,system-ui,sans-serif;padding:12px 18px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}',
+      V + '.vbx-b:hover{background:#000}',
+      V + '.vbx-b.hell{background:#fff;color:#14181B;border:1px solid #D5DCE3}',
+      V + '.vbx-leerkarte{display:flex;gap:14px;align-items:center;background:#FFFBEA;border:1px dashed #E0A800;border-radius:16px;padding:16px 18px}',
+      V + '.vbx-leerkarte .ic{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:#E0A800;color:#14181B;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center}',
+      V + '.vbx-leerkarte div{flex:1;display:flex;flex-direction:column;gap:3px}',
+      V + '.vbx-leerkarte div span{font-size:14px;color:#4B5763;line-height:1.5}',
+      V + '.vbx-suche{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #D5DCE3;border-radius:14px;padding:4px 14px;margin-bottom:12px}',
+      V + '.vbx-suche:focus-within{border-color:#0E6D85;box-shadow:0 0 0 3px rgba(14,109,133,.12)}',
+      V + '.vbx-suche span{font-size:18px;color:#5F6B76;transform:rotate(-45deg)}',
+      V + '.vbx-suche input{flex:1;border:0;outline:0;font:500 16px Inter,system-ui,sans-serif;padding:11px 0;background:transparent;min-width:0}',
+      V + '.vbx-nichts{color:#5F6B76;font-size:14px}',
+      /* Übungskarten */
+      'html #vtVoll .vt-bar>i{background:linear-gradient(90deg,#14181B,#D42A21 55%,#E0A800)!important}',
+      '#vtVoll .vt-hoerknopf{background:linear-gradient(135deg,#0E6D85,#1B9BC0);box-shadow:0 14px 30px -12px rgba(14,109,133,.55)}',
+      '#vtVoll .vt-langsam:hover{border-color:#0E6D85;color:#0E6D85}',
+      '#vtVoll .vt-etikett{background:#fff;color:var(--tf);border:1.5px solid var(--tf);box-shadow:none;font-weight:800}',
+      '#vtVoll .vt-etikett .gr{background:var(--tf);color:#fff;border-radius:999px;padding:2px 9px;margin:-2px 4px -2px -8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}',
+      '#vtVoll .vt-etikett[style*="#8A6500"] .gr{background:#E0A800;color:#14181B}',
+      '#vtVoll .vt-pruefen{background:#14181B!important;color:#fff!important;box-shadow:none!important}',
+      '#vtVoll .vt-weiter:not(.rot){background:#14181B!important;color:#fff!important;box-shadow:none!important}',
+      '#vtVoll .vt-weiter.rot{background:#D42A21!important;box-shadow:none!important}',
+      '#vtVoll .vt-o:hover:not(:disabled){border-color:#0E6D85;box-shadow:0 4px 0 #CFE3EA}',
+      '#vtVoll .vt-o.richtig{border-color:#0E6D85;background:#E8F4F7;color:#0A4E62;box-shadow:0 3px 0 #BFDDE6}',
+      '#vtVoll .vt-o.falsch{border-color:#D42A21;background:#FDF0EF;color:#9E1F18;box-shadow:0 3px 0 #F3C0BC}',
+      '#vtVoll .vt-o .taste{color:#fff;border:0;background:#14181B;border-radius:5px;padding:0 5px;font-size:10px;line-height:16px;left:7px;top:7px}',
+      '#vtVoll .vt-opt>.vt-o:nth-child(2) .taste{background:#D42A21}',
+      '#vtVoll .vt-opt>.vt-o:nth-child(3) .taste{background:#E0A800;color:#14181B}',
+      '#vtVoll .vt-opt>.vt-o:nth-child(4) .taste{background:#1B9BC0}',
+      '#vtVoll .vt-mark{background:#FFF3C4;border-bottom:3px solid #E0A800;border-radius:4px;padding:0 4px}',
+      '#vtVoll .vt-mark.gruen{background:#E3F2F6;border-bottom-color:#0E6D85}',
+      '#vtVoll .vt-mark.rot{background:#FDE8E6;border-bottom-color:#D42A21}',
+      '#vtVoll .vt-fuss.gut{background:#F1F8FA;border-top-color:#0E6D85}',
+      '#vtVoll .vt-fuss.gut b{color:#0A4E62}',
+      '#vtVoll .vt-fuss.schlecht{background:#FDF5F4;border-top-color:#D42A21}',
+      '#vtVoll .vt-fuss.schlecht b{color:#9E1F18}',
+      '#vtVoll .vt-bed span{color:#0E6D85}',
+      '#vtVoll .vbx-steck{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:4px 0 14px}',
+      '#vtVoll .vbx-steck span{font-size:12.5px;font-weight:700;color:#4B5763;background:#F1F4F7;border-radius:999px;padding:3px 11px}',
+      '#vtVoll .vbx-steck .lv{background:var(--lf);color:#fff}',
+      '#vtVoll .vbx-steck .lv[style*="#E0A800"]{color:#14181B}',
+      '#vtVoll .vbx-wander{display:flex;gap:4px;margin:8px 0 4px;flex-wrap:wrap}',
+      '#vtVoll .vbx-wander span{font-size:11.5px;font-weight:700;color:#9AA6AD;border:1px solid #E1E6EA;border-radius:999px;padding:2px 9px;background:#fff}',
+      '#vtVoll .vbx-wander span.start{color:#5F6B76;border-style:dashed;border-color:#9AA6AD}',
+      '#vtVoll .vbx-wander span.ziel{background:var(--kf);border-color:var(--kf);color:#fff}',
+      '#vtVoll .vbx-wander span.ziel[style*="#E0A800"]{color:#14181B}',
+      '#vtVoll .vt-ende .vt-ergz b{color:#14181B}',
+      '@media(max-width:760px){',
+      '  ' + V + '.vbx-schritte{grid-template-columns:1fr 1fr;padding:4px 14px 6px;gap:8px}',
+      '  ' + V + '.vbx-schritte li{padding:12px}',
+      '  ' + V + '.vbx-weg summary{padding:14px 16px}',
+      '  ' + V + '.vbx-weg-fuss{margin:8px 16px 16px}',
+      '  ' + V + '.vbx-wz{grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px}',
+      '  ' + V + '.vbx-wz .vt-bild.mini{width:44px;height:44px}',
+      '  ' + V + '.vbx-wz .re{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}',
+      '  ' + V + '.vbx-faellig{position:static;margin-top:4px;font-size:10px;padding:1px 6px}',
+      '  ' + V + '.vbx-leerkarte{flex-wrap:wrap}',
+      '  ' + V + '.vbx-leerkarte .vbx-b{width:100%;justify-content:center}',
+      '  ' + V + '.vbx-knoepfe .vbx-b{flex:1;justify-content:center}',
+      '}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
   window.renderVokabeln = async function () {
     /* Ohne Zugang wird hier nicht gezeichnet. Die Seite hat an dieser
        Stelle schon die Sperrseite stehen; frueher hat der Trainer sie
        ueberschrieben, sobald er geladen war, und ein Konto ohne Zugang
        sah die Woerter trotzdem. */
     if (window.zugangGesperrt && window.zugangGesperrt('vokabeln')) return;
-    stil(); vpxStil();
+    stil(); vpxStil(); vbxStil();
     var ziel = document.getElementById('v-vokabeln');
     if (!ziel) return;
     if (!(window.VOK_POOL && window.VOK_POOL.length)) {
