@@ -881,7 +881,7 @@ function einstiegMalen(){
   } else if(i===3){
     h = punkte + '<div class="ein-in">'
       + '<h2>Welche Sprache sprichst du?</h2>'
-      + '<p>Übersetzungen zeige ich dir dann in dieser Sprache.</p>'
+      + '<p>So weiß ich, woher du kommst. Geübt wird ganz auf Deutsch, mit Bildern.</p>'
       + '<div class="ein-gitter">' + EIN_SPRACHEN.map(function(s){
           return '<button class="ein-sp'+(EIN.l1===s[0]?' an':'')+'" onclick="EIN.l1=\''+s[0]+'\';einstiegMalen()">'+s[1]+'</button>';
         }).join('') + '</div>'
@@ -1082,10 +1082,16 @@ async function poolLaden(){
   await inhaltLaden('vok-bild/index.js', function(){ return !!window.VOK_BILD; });
   if(!POOL.length) POOL = NOTPOOL.slice();     // Vorschau ohne Plattformdateien
 }
+/* 21.11.2026, Julia: die Übersetzungen sind laut den Schülern zu 90 %
+   falsch — weglassen. Beide Funktionen liefern nichts mehr; wo eine
+   Übersetzung gebraucht wurde, nimmt die App schon Bild/Emoji/Wort. */
+var OHNE_TR = true;
 function uebersetzung(v){
+  if(OHNE_TR) return '';
   try{ var m=window.VOK_TR && window.VOK_TR[L1] && window.VOK_TR[L1][v.id]; return m? m[0]:''; }catch(e){ return ''; }
 }
 function bspUebersetzung(v){
+  if(OHNE_TR) return '';
   try{ var m=window.VOK_TR && window.VOK_TR[L1] && window.VOK_TR[L1][v.id]; return m? m[1]:''; }catch(e){ return ''; }
 }
 function bild(v){

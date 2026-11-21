@@ -44,7 +44,7 @@ var SPRACHEN=[
  {id:'es', t:'Español',    s:'Spanisch'},
  {id:'it', t:'Italiano',   s:'Italienisch'},
  {id:'fa', t:'فارسی',      s:'Persisch'},
- {id:'de', t:'Deutsch',    s:'ich brauche keine Übersetzung'}
+ {id:'de', t:'Deutsch',    s:'meine Muttersprache'}
 ];
 
 var LZ = window.LZ = { data:null, offen:false, SPRACHEN:SPRACHEN };
@@ -235,7 +235,9 @@ function esc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,
 function pSprache(){
   return '<div class="lz-k">Deine Sprache</div>'
    +'<h1 class="lz-h">Welche Sprache sprichst du am besten?</h1>'
-   +'<p class="lz-p">In den Lektionen steht dann unter jedem neuen Wort und unter jedem Dialogsatz eine kleine Übersetzung. Du musst nie raten, was etwas heißt — und nie das Handy zum Nachschlagen aus der Hand legen.</p>'
+   /* 21.11.2026: Übersetzungen gibt es nicht mehr (zu oft falsch). Der Satz
+      versprach sie unter jedem Wort und Dialogsatz — jetzt ehrlich. */
+   +'<p class="lz-p">So wissen wir, woher du kommst. Die Lektionen selbst sind ganz auf Deutsch: mit Bildern, Beispielen und einfachen Erklärungen.</p>'
    +'<div class="lz-chips">'+SPRACHEN.map(function(l){
       return '<button class="lz-c'+(st.sprache===l.id?' on':'')+'" onclick="LZ.setSprache(\''+l.id+'\')">'
         +'<span style="font-weight:700">'+l.t+'</span>'
@@ -374,9 +376,6 @@ function pFertig(){
    +(t!==null?'<li>'+I('clock',17)+'<span><b>'+t+' Tage</b> bis zum '+new Date(st.termin).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'})+'</span></li>'
              :'<li>'+I('clock',17)+'<span>In deinem Tempo — ohne Termin</span></li>')
    +'<li>'+I('spark',17)+'<span><b>'+st.minuten+' Minuten</b> am Tag · rund '+proWoche+' Stunden pro Woche</span></li>'
-   +(st.sprache&&st.sprache!=='de'
-      ? '<li>'+I('book',17)+'<span>Übersetzungen auf <b>'+esc((SPRACHEN.filter(function(x){return x.id===st.sprache;})[0]||{}).t||'')+'</b> unter jedem neuen Wort</span></li>'
-      : '')
    +'<li>'+I('chat',17)+'<span>Julia liest deine Texte persönlich — und die Community ist immer da</span></li>'
    +'</ul></div>'
    +'<div class="lz-row"><button class="lz-btn p" id="lzSave" onclick="LZ.speichern()">'
