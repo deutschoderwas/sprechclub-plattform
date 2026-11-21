@@ -263,7 +263,23 @@
       if (!A.laeuft() && !A.vorlaufLaeuft()) { bar.remove(); return; }
       var l = bar.querySelector('.akt-lauf');
       if (l) l.innerHTML = teil() + teil();
-      if (warVorlauf && A.laeuft()) { warVorlauf = false; nachsetzen(); }
+      if (warVorlauf && A.laeuft()) {
+        warVorlauf = false;
+        /* Mitternacht. Die Tueren gehen auf - auch in einem Fenster,
+           das seit gestern Abend offen liegt. Beide Riegel stehen dort
+           noch auf "zu", und sie werden erst beim Klick gelesen, also
+           reicht es, sie hier umzulegen. Liegt die Seite im
+           Hintergrund, laden wir sie lieber ganz neu: dann stimmt
+           auch alles andere, was beim Laden entschieden wurde. */
+        try {
+          window.PREMIUM_PAUSIERT = false;
+          window.TUEREN_AUF = A.von;
+        } catch (e) {}
+        nachsetzen();
+        if (document.visibilityState === 'hidden') {
+          try { location.reload(); } catch (e) {}
+        }
+      }
     }, 300000);
   }
 
