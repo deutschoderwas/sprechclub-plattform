@@ -114,7 +114,7 @@
      Jetzt werden beide Teile markiert: der Verbstamm und die Vorsilbe am
      Satzende. Starke Verben mit anderem Stammvokal (nehmen – nimmt) findet
      das nicht, dann bleibt es wie vorher ohne Markierung. */
-  var VORSILBEN = ['zusammen', 'zurück', 'weiter', 'vorbei', 'heraus', 'herein', 'hinaus', 'kennen',
+  var VORSILBEN = ['dagegen', 'zusammen', 'zurück', 'hinein', 'runter', 'gegen', 'hoch', 'klein', 'weiter', 'vorbei', 'heraus', 'herein', 'hinaus', 'kennen',
     'statt', 'fest', 'fort', 'frei', 'teil', 'auf', 'aus', 'ein', 'mit', 'nach', 'vor', 'weg', 'los',
     'her', 'hin', 'dar', 'ab', 'an', 'bei', 'zu', 'um'];
   function trennbar(w) {
@@ -134,23 +134,148 @@
     return st.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/a(?!u)/, '[aä]').replace(/o/, '[oö]').replace(/u/, '[uü]');
   }
-  function satzMarkiert(satz, wort, klasse) {
+  /* 22.11.2026: Wendungen. „Ich hätte gern …“, „Sehr geehrter Herr … /
+     Sehr geehrte Frau …“, „sich ärgern über“: erst ohne Satzzeichen und
+     Auslassung, jede Variante einzeln; klappt das nicht, werden die
+     tragenden Wörter einzeln markiert, wenn mindestens die Hälfte im Satz
+     steht. Nachsilben („-itis“) und Vorsilben („hyper-“) markieren das
+     ganze Wort, in dem sie stecken. */
+  var M_AN = String.fromCharCode(1), M_AUS = String.fromCharCode(2);
+  var FUELL = { sich: 1, etwas: 1, jemand: 1, jemandem: 1, jemanden: 1, einen: 1, einem: 1, einer: 1, eine: 1,
+    ein: 1, der: 1, die: 1, das: 1, den: 1, dem: 1, des: 1, und: 1, sein: 1 };
+  function wendungMarkiert(s, wort, k) {
+    var roh = String(wort || '').replace(/[…?!.:;"„“”»«()]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!roh) return null;
+    var varianten = roh.split(/\s*\/\s*/).map(function (x) { return x.trim(); }).filter(Boolean);
+    var mk = function (x) { return x.split(M_AN).join('<mark class="' + k + '">').split(M_AUS).join('</mark>'); };
+    for (var i = 0; i < varianten.length; i++) {
+      var vv = varianten[i].replace(/^sich\s+/i, '');
+      if (/^-\S+$/.test(vv)) {
+        var reN = new RegExp('([A-Za-zÄÖÜäöüß]+' + vv.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![a-zäöüß])', 'i');
+        if (reN.test(s)) return mk(s.replace(reN, M_AN + '$1' + M_AUS));
+        continue;
+      }
+      if (/^\S+-$/.test(vv)) {
+        var reV = new RegExp('(^|[\\s(„"\'])(' + vv.slice(0, -1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zäöüß]+)', 'i');
+        if (reV.test(s)) return mk(s.replace(reV, '$1' + M_AN + '$2' + M_AUS));
+        continue;
+      }
+      var re1 = wortRegex(vv);
+      if (re1 && re1.test(s)) return mk(s.replace(re1, '$1' + M_AN + '$2' + M_AUS));
+    }
+    var teile = varianten[0].split(' ').filter(function (t) { return t.length >= 3 && !FUELL[t.toLowerCase()]; });
+    if (teile.length < 2) return null;
+    var neu = s, treffer = 0;
+    teile.forEach(function (t) {
+      var reT = wortRegex(t);
+      if (reT && reT.test(neu)) { neu = neu.replace(reT, '$1' + M_AN + '$2' + M_AUS); treffer++; }
+    });
+    return treffer >= Math.ceil(teile.length / 2) ? mk(neu) : null;
+  }
+  function satzMarkiertAlt(satz, wort, klasse) {
     var s = esc(satz || '');
     var k = 'vt-mark' + (klasse ? ' ' + klasse : '');
     var re = wortRegex(wort);
     if (re && re.test(s)) return s.replace(re, '$1<mark class="' + k + '">$2</mark>');
+    /* Verbformen: Partizip („buchen“ → „gebucht“, „hochladen“ →
+       „hochgeladen“) und Umlaut im Präsens („gefallen“ → „gefällt“). */
+    var wl = String(wort || '').trim();
+    if (/^[a-zäöüß]+(e|el|er)?n$/.test(wl) && wl.length >= 5) {
+      var stv = wl.replace(/(en|n)$/, ''), tv = trennbar(wl);
+      var grenz = '(?=[\\s.,!?;:)"„\']|$)';
+      var muster = [umlautKlasse(tv ? tv.vs + 'ge' + tv.stamm : 'ge' + stv) + '(?:e?t|en)[a-zäöüß]{0,2}'];
+      if (!/^(be|ver|er|ent|zer|ge|emp|miss)/.test(wl) || true) muster.push(umlautKlasse(stv) + '[a-zäöüß]{0,3}');
+      for (var mi = 0; mi < muster.length; mi++) {
+        var reF = new RegExp('(^|[\\s(„"\'])(' + muster[mi] + ')' + grenz, 'i');
+        if (reF.test(s)) return s.replace(reF, '$1<mark class="' + k + '">$2</mark>');
+      }
+    }
     var t = trennbar(wort);
-    if (!t) return s;
+    if (!t) { var w2 = wendungMarkiert(s, wort, k); return w2 || s; }
     var reV = new RegExp('(^|[\\s(„"\'])(' + umlautKlasse(t.stamm) + '[a-zäöüß]{0,3})(?=[\\s.,!?;:)"„\']|$)', 'i');
     var m = reV.exec(s);
-    if (!m) return s;
+    if (!m) return wendungMarkiert(s, wort, k) || s;
     var nach = m.index + m[0].length;
     var reP = new RegExp('(\\s)(' + t.vs + ')(?=[\\s.,!?;:)"„\']|$)', 'i');
     var rest = s.slice(nach), m2 = reP.exec(rest);
-    if (!m2) return s;
+    if (!m2) return wendungMarkiert(s, wort, k) || s;
     var vorn = s.slice(0, m.index) + m[1] + '<mark class="' + k + '">' + m[2] + '</mark>';
     var hinten = rest.slice(0, m2.index) + m2[1] + '<mark class="' + k + '">' + m2[2] + '</mark>' + rest.slice(m2.index + m2[0].length);
     return vorn + hinten;
+  }
+
+  /* Markierung, Fassung 3 (22.11.2026). Ein Baustein findet ein einzelnes
+     Wort in allen üblichen Formen: wie geschrieben (mit Endung), als
+     Verb mit Umlaut („gefällt“), als Partizip („gebucht“, „eingelebt“),
+     als zu-Infinitiv („kleinzureden“) und geteilt („gehen … aus“).
+     Wendungen werden in ihre tragenden Wörter zerlegt; jedes läuft durch
+     denselben Baustein. Zeichen 1 und 2 sind Platzhalter für <mark>,
+     damit ein zweites Wort nicht in einem schon gesetzten Tag landet. */
+  var GRENZE = '(?=[\\s.,!?;:)"„“\']|$)', VORN = '(^|[\\s(„"\'])';
+  function einzelMarkiert(s, w, an, aus) {
+    w = String(w || '').trim().replace(/^sich\s+/i, '');
+    if (!w || /\s/.test(w)) return null;
+    var re = wortRegex(w);
+    if (re && re.test(s)) return s.replace(re, '$1' + an + '$2' + aus);
+    var wl = w.toLowerCase();
+    if (!/^[a-zäöüß]+(e|el|er)?n$/.test(wl) || wl.length < 5) return null;
+    var tv = trennbar(wl), stv = wl.replace(/(en|n)$/, '');
+    var muster = [umlautKlasse(tv ? tv.vs + 'ge' + tv.stamm : 'ge' + stv) + '(?:e?t|en)[a-zäöüß]{0,2}'];
+    if (tv) muster.push(umlautKlasse(tv.vs + 'zu' + tv.stamm) + 'en');
+    if (!tv) muster.push(umlautKlasse(stv) + '[a-zäöüß]{0,3}');
+    for (var i = 0; i < muster.length; i++) {
+      var reF = new RegExp(VORN + '(' + muster[i] + ')' + GRENZE, 'i');
+      if (reF.test(s)) return s.replace(reF, '$1' + an + '$2' + aus);
+    }
+    if (!tv) return null;
+    var reV = new RegExp(VORN + '(' + umlautKlasse(tv.stamm) + '[a-zäöüß]{0,3})' + GRENZE, 'i');
+    var m = reV.exec(s);
+    if (!m) return null;
+    var nach = m.index + m[0].length, rest = s.slice(nach);
+    var m2 = new RegExp('(\\s)(' + tv.vs + ')' + GRENZE, 'i').exec(rest);
+    if (!m2) return null;
+    return s.slice(0, m.index) + m[1] + an + m[2] + aus
+      + rest.slice(0, m2.index) + m2[1] + an + m2[2] + aus + rest.slice(m2.index + m2[0].length);
+  }
+  function satzMarkiert(satz, wort, klasse) {
+    var s = esc(satz || '');
+    var k = 'vt-mark' + (klasse ? ' ' + klasse : '');
+    var fertig = function (x) { return x.split(M_AN).join('<mark class="' + k + '">').split(M_AUS).join('</mark>'); };
+    var ganz = einzelMarkiert(s, wort, M_AN, M_AUS);
+    if (ganz) return fertig(ganz);
+    var re0 = wortRegex(String(wort || '').trim());
+    if (re0 && re0.test(s)) return fertig(s.replace(re0, '$1' + M_AN + '$2' + M_AUS));
+    var roh = String(wort || '').replace(/[…?!.:;"„“”»«()]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!roh) return s;
+    var varianten = roh.split(/\s*\/\s*/).map(function (x) { return x.trim(); }).filter(Boolean);
+    for (var i = 0; i < varianten.length; i++) {
+      var vv = varianten[i].replace(/^sich\s+/i, '');
+      /* „sich bewerben bei / als“: die zweite Hälfte ist nur ein kleines Wort */
+      if (i > 0 && vv.length < 4) continue;
+      if (/^-\S+$/.test(vv)) {
+        var reN = new RegExp('([A-Za-zÄÖÜäöüß]+' + vv.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![a-zäöüß])', 'i');
+        if (reN.test(s)) return fertig(s.replace(reN, M_AN + '$1' + M_AUS));
+        continue;
+      }
+      if (/^\S+-$/.test(vv)) {
+        var reP = new RegExp(VORN + '(' + vv.slice(0, -1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zäöüß]+)', 'i');
+        if (reP.test(s)) return fertig(s.replace(reP, '$1' + M_AN + '$2' + M_AUS));
+        continue;
+      }
+      var e1 = einzelMarkiert(s, vv, M_AN, M_AUS);
+      if (e1) return fertig(e1);
+      var re1 = wortRegex(vv);
+      if (re1 && re1.test(s)) return fertig(s.replace(re1, '$1' + M_AN + '$2' + M_AUS));
+    }
+    var teile = varianten[0].split(' ').filter(function (t) { return t.length >= 2 && !FUELL[t.toLowerCase()]; });
+    if (!teile.length) return s;
+    var neu = s, treffer = 0, tragend = 0;
+    teile.forEach(function (t) {
+      var x = einzelMarkiert(neu, t, M_AN, M_AUS);
+      if (x) { neu = x; treffer++; if (t.length >= 4) tragend++; }
+    });
+    /* Nur kleine Wörter wie „auf“ gefunden: lieber gar nichts markieren */
+    return (tragend && treffer >= Math.ceil(teile.length / 2)) ? fertig(neu) : s;
   }
 
   /* 22.11.2026: Gut 270 Einträge haben im Feld bsp keinen ganzen Satz,
@@ -406,7 +531,7 @@
   // Zweite, schwerere Übung — möglichst eine andere Form
   function schwererTyp(v, nicht) {
     var m = [];
-    if (v.artikel) m.push('artikel');
+    if (artikelFrage(v)) m.push('artikel');
     if (luecken(v)) m.push('luecke');
     var kurz = (v.wort || v.de).trim();
     if (!/\s/.test(kurz) && kurz.length <= 13) m.push('buchstaben');
@@ -454,13 +579,13 @@
     if (st <= 1) { m = hatTr ? ['uebersetzung'] : []; if (hatBild(v)) m.push('bild'); if (!m.length) m = ['hoeren']; }
     else if (st === 2) {
       m = ['rueckwaerts', 'hoeren'];
-      if (v.artikel) m.push('artikel');
+      if (artikelFrage(v)) m.push('artikel');
       if (kannL) m.push('luecke');
     } else if (st === 3) {
       m = ['hoeren'];
       if (!lang) m.push('tippen');
       if (kannL) { m.push('luecke'); m.push('satzhoeren'); }
-      if (v.artikel) m.push('artikel');
+      if (artikelFrage(v)) m.push('artikel');
     } else {
       m = ['hoeren'];
       if (!lang) m.push('tippen');
@@ -1254,6 +1379,7 @@
         + (v.bedeutung ? '<div class="vt-bed"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
         + (v.bsp ? '<div class="vt-satzbox' + (v.bedeutung ? ' mitlabel' : '') + bspKlasse(v) + '"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
           + (trSatz(v) ? '<div class="vt-satz-tr' + rtlK() + '">' + esc(trSatz(v)) + '</div>' : '') + '</div>' : '')
+        + (v.hinweis ? '<div class="vbx-gut"><span>Gut zu wissen</span>' + esc(v.hinweis) + '</div>' : '')
         + '<button class="vt-pruefen" onclick="__vtWeiterNeu()">Verstanden, weiter</button>';
 
     } else if (typ === 'uebersetzung') {
@@ -1697,10 +1823,38 @@
     });
   }
   var poolLauf = null;
+  /* 22.11.2026: Zwei Korrekturen an den Daten, einmal beim Laden.
+     1) 15 Sätze wie „Das tut mir leid.“ waren in Artikel „das“ und Wort
+        „tut mir leid.“ zerlegt. Dann fragte „der, die oder das?“ nach
+        „passt mir gut.“. Jetzt ist der ganze Satz das Wort, ohne Artikel.
+     2) Wo im Feld bsp nur ein Hinweis stand, kommt der neue Beispielsatz
+        aus vok-beispielsaetze.js; der Hinweis bleibt als „Gut zu wissen“. */
+  function pflege(pool) {
+    var neu = window.VOK_BSP_NEU || {};
+    pool.forEach(function (v) {
+      if (v._gepflegt) return;
+      v._gepflegt = 1;
+      if (v.artikel && /^(Der|Die|Das) /.test(v.de || '')) {
+        v.wort = v.de; v.artikel = ''; v.art = 'wendung';
+      }
+      var satz = neu[v.id];
+      if (satz && satz !== v.bsp) {
+        if (v.bsp) v.hinweis = v.bsp;
+        v.bsp = satz;
+      }
+    });
+  }
+  /* Der/die/das-Frage nur bei einem einzelnen Nomen. Bei „Quelle angeben“
+     oder „Kind / die Kinder“ ist sie keine sinnvolle Aufgabe. */
+  function artikelFrage(v) {
+    var w = String(v.wort || '').trim();
+    return !!v.artikel && v.art === 'nomen' && !/\s/.test(w) && /^[A-ZÄÖÜ]/.test(w);
+  }
+
   function ladePool() {
     if (window.VOK_POOL && window.VOK_POOL.length) return Promise.resolve(true);
     if (poolLauf) return poolLauf;
-    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js?v=2')]);
+    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js?v=2'), ladeSkript('vok-beispielsaetze.js?v=1')]);
     return poolLauf;
   }
   /* ---------- Eigene Wörter ----------
@@ -1920,6 +2074,8 @@
       '#vtVoll .vt-bed span{color:#0E6D85}',
       '#vtVoll .vt-satzbox.mitlabel.hinweis::before{content:"So benutzt man es"}',
       '#vtVoll .vt-satzbox.mitlabel.zumwort::before{content:"Zum Wort"}',
+      '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
+      '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
       '#vtVoll .vbx-erkl{position:relative;padding-top:34px;border-color:#BFDDE6;background:#F3F9FB}',
       '#vtVoll .vbx-erkl-k{position:absolute;top:11px;left:18px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#0E6D85}',
@@ -1975,6 +2131,7 @@
     }
     await ladeEigene();
     POOL = window.VOK_POOL || [];
+    pflege(POOL);
     if (!POOL.length) {
       ziel.innerHTML = '<div class="vt-leer">Die Wortliste konnte nicht geladen werden. Lade die Seite bitte neu.</div>';
       return;
