@@ -445,6 +445,14 @@
     if (document.getElementById('ubnCSS')) return;
     var s = document.createElement('style'); s.id = 'ubnCSS';
     s.textContent = [
+      /* 22.11.2026: „Tagesziel geschafft“ kam als Fenster mitten über die
+         aktuelle Frage. Jetzt ein schmaler Hinweis oben, der nichts verdeckt
+         und durch den man weitertippen kann. */
+      '.ub-cele{background:transparent!important;align-items:flex-start!important;pointer-events:none;padding:max(12px,env(safe-area-inset-top)) 12px 0}',
+      '.ub-cele .box{pointer-events:auto;display:flex!important;align-items:center;gap:12px;text-align:left!important;padding:12px 16px!important;max-width:360px!important;border-radius:16px!important;border:1px solid #E7EBF0!important;border-top:4px solid #E0A800!important;box-shadow:0 12px 30px -10px rgba(20,24,27,.35)!important}',
+      '.ub-cele .box .ubx-endic{width:40px;height:40px;flex:0 0 auto;margin:0}',
+      '.ub-cele .box h3{font-size:16px!important;margin:0!important}',
+      '.ub-cele .box p{margin:2px 0 0!important;font-size:13px}',
       /* Farbfamilien der Lernschritte */
       /* 21.11.2026, Julia: „professionell farbiger, mehr Schwarz, Rot, Gold, Türkis, nicht nur Türkis“.
          Die Lernschritte tragen die Markenfarben: Neues = Gold, Erkennen = Türkis,

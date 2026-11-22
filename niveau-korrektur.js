@@ -112,6 +112,30 @@
 ];
   var RAUS = [["wortschatz|typisch-deutsch", "doch"], ["hoeren|typisch-deutsch", "doch"], ["wortschatz|gesundheit", "die Überweisungspflicht"], ["wortschatz|bildung", "der Streber"]];
   var FELDER = ['q', 'text', 'satz', 'answer', 'richtig', 'prompt', 'explain'];
+  /* 22.11.2026: Auswahlfragen, bei denen ein „falscher“ Vorschlag auch
+     stimmte. „Dort kauft man Lebensmittel“: Supermarkt UND Markt.
+     „Womit man bezahlt“: Geld, aber auch Karte und Kleingeld. Der
+     doppeldeutige Vorschlag wird durch ein Wort aus demselben Thema
+     ersetzt, das sicher nicht passt (bei „Mein ___“ ein männliches oder
+     sächliches, damit der Artikel nichts verrät). */
+  var OPTIONEN = [
+    ['wortschatz|a1-stadt', 'dort kauft man Lebensmittel', 'der Markt', 'die Post'],
+    ['wortschatz|einkaufen', 'Welches Wort passt: „Münzen“', 'das Geld', 'die Quittung'],
+    ['wortschatz|einkaufen', 'womit man bezahlt', 'das Kleingeld', 'der Rabatt'],
+    ['wortschatz|einkaufen', 'womit man bezahlt', 'die Karte', 'die Tüte'],
+    ['wortschatz|a1-begruessung', 'Mein ___ ist Ana Silva', 'Vorname', 'Beruf'],
+    ['wortschatz|a1-begruessung', 'Mein ___ ist Ana Silva', 'Nachname', 'Gruß'],
+    ['wortschatz|sprachkurs-neu', 'Mein Sohn macht seine ___', 'Aufgabe', 'Ausnahme']
+  ];
+  function optionenRichten(k, e) {
+    if (!Array.isArray(e.options) || typeof e.q !== 'string') return;
+    OPTIONEN.forEach(function (o) {
+      if (o[0] !== k || e.q.indexOf(o[1]) < 0) return;
+      var i = e.options.indexOf(o[2]);
+      if (i < 0 || i === e.answer || e.options.indexOf(o[3]) > -1) return;
+      e.options[i] = o[3];
+    });
+  }
   function lauf() {
   var geaendert = 0;
   U.skills.forEach(function (sk) {
@@ -122,6 +146,7 @@
       var weg = RAUS.filter(function (r) { return r[0] === k; }).map(function (r) { return r[1]; });
       if (weg.length) t.exercises = (t.exercises || []).filter(function (e) { return weg.indexOf(e.w || e.word || '') < 0; });
       (t.exercises || []).forEach(function (e) {
+        optionenRichten(k, e);
         FELDER.forEach(function (f) {
           if (typeof e[f] !== 'string') return;
           /* 21.11.2026: Beim Fehler-Finden ist der falsche Satz Absicht —
