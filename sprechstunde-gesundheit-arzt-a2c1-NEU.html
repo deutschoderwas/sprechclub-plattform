@@ -111,7 +111,10 @@ body[data-level=einfach] .lv[data-lvl=einfach],body[data-level=komplexer] .lv[da
 .rolle.shown .sol{display:block;}.rolle.shown .rev{display:none;}
 .sol p{margin:.25rem 0;font-family:'Space Grotesk';}.sol .sp{font-weight:700;color:var(--spch-dark);margin-right:.25em;}
 /* 90 sek */
-.t90{background:var(--accent-soft);border-radius:14px;padding:.9rem 1.1rem;font-size:1.2rem;text-align:center;font-weight:700;min-height:1.6em;margin:.6rem auto;max-width:560px;}
+.t90{background:var(--accent-soft);border-radius:14px;padding:.9rem 1.1rem;font-size:1.2rem;text-align:center;font-weight:700;min-height:1.6em;margin:.6rem auto .3rem;max-width:560px;}
+.t90help{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin:.1rem auto .6rem;max-width:560px;}
+.t90help .hl-label{width:100%;text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.1rem;}
+.t90help span.hw{background:var(--paper);border:1.5px solid var(--sand);border-radius:999px;padding:.25rem .75rem;font-size:.88rem;font-weight:600;color:var(--spch-dark);}
 .timer{font-family:'Space Grotesk';font-weight:800;font-size:3.2rem;text-align:center;color:var(--spch);cursor:pointer;margin:.2rem 0;}
 .timer.run{color:var(--gruen);}.timer.done{color:var(--red);}
 .btn{background:var(--spch);color:#fff;border:none;border-radius:999px;padding:.55rem 1.4rem;font-weight:700;cursor:pointer;box-shadow:0 4px 0 var(--spch-dark);font-family:'Space Grotesk';}
@@ -281,6 +284,7 @@ footer{text-align:center;color:var(--ink-mute);font-size:.85rem;padding:3rem 1re
     <div class="sh"><div class="ico">⏱️</div><div><div class="step">Station 8</div><h2>90 Sekunden</h2></div></div>
     <div class="howline"><b>Ein Thema, 90 Sekunden reden</b> — ohne lange Pause. Die anderen hören zu &amp; fragen nach.</div>
     <div class="t90" id="t90">Tippe auf „Neues Thema"</div>
+    <div class="t90help" id="t90help"></div>
     <div class="timer" id="timer" onclick="toggleTimer()">1:30</div>
     <div style="text-align:center"><button class="btn" onclick="newTopic()">🎲 Neues Thema</button></div>
   </section>
@@ -312,9 +316,9 @@ var DATA={
         {q:'Du willst einen Termin. Höflich:',o:['Ich hätte gern einen Termin.','Gib mir Termin.'],a:0,e:'„Ich hätte gern …" ist höflich.'}],
   speakq:'Was tut dir gerade weh oder hat zuletzt weh getan? „Mir tut/tat ___ weh."',
   puzzle:[['Ich habe seit drei Tagen','Halsschmerzen.'],['Mir tut','der Kopf weh.'],['Es ist','schlimmer geworden.'],['Ich hätte gern','einen Termin.']],
-  wheel:['Was fehlt dir heute?','Wann warst du zuletzt krank?','Was machst du bei Erkältung?','Gehst du schnell zum Arzt?','Wo tut es dir oft weh?','Hast du Angst vor dem Arzt?','Welches Hausmittel magst du?','Nimmst du schnell Tabletten?'],
-  t90:['Mein letzter Arztbesuch','Was ich bei Erkältung mache','Wie ich mich fühle, wenn ich krank bin','Mein Weg zum Arzt'],
-  gap:{text:'Guten Tag, ich ___1___ seit zwei Tagen Halsschmerzen. Es ___2___ schlimmer geworden. Ich ___3___ gern einen Termin.',slots:[['habe','bin','mache'],['ist','hat','war'],['hätte','habe','bin']],sol:[0,0,0],sq:'Sag dem Arzt in einem Satz, was dir fehlt: „Ich habe seit ___ ."'}
+  wheel:['Wann warst du das letzte Mal beim Arzt und warum?','Gehst du lieber gleich zum Arzt oder wartest du erst ab?','Was machst du, wenn du eine Erkältung hast?','Welche Hausmittel kennst du gegen Husten oder Halsschmerzen?','Erzähl von einer Krankheit, die du als Kind hattest.','Woran erkennst du einen guten Arzt?','Was nimmst du mit, wenn du zum Arzt gehst?','Wie fühlst du dich normalerweise im Wartezimmer?'],
+  t90:[{t:'Mein letzter Arztbesuch',h:['beim Arzt','einen Termin machen','seit … Tagen','wehtun']},{t:'Was ich bei Erkältung mache',h:['Tee trinken','sich ausruhen','Hustensaft','im Bett bleiben']},{t:'Wie ich mich fühle, wenn ich krank bin',h:['schlapp','der Kopf tut weh','müde','kein Appetit']},{t:'Mein Weg zum Arzt',h:['Termin','Wartezimmer','Versichertenkarte','warten']}],
+  gap:{items:[{text:'Guten Tag, ich ___1___ seit zwei Tagen Halsschmerzen. Es ___2___ schlimmer geworden. Ich ___3___ gern einen Termin.',slots:[['habe','bin','mache'],['ist','hat','war'],['hätte','habe','bin']],sol:[0,0,0]},{text:'Der Arzt fragt: „Was ___1___ Ihnen?" Ich sage: „Mir ___2___ der Kopf weh, und ich ___3___ mich sehr müde."',slots:[['fehlt','macht','geht'],['tut','ist','hat'],['fühle','habe','bin']],sol:[0,0,0]}],sq:'Sag dem Arzt in einem Satz, was dir fehlt: „Ich habe seit ___ ."'}
  },
  komplexer:{
   flip:[{em:'📍',sit:'Wo genau es weh tut',say:'Es tut im unteren Rücken weh.'},
@@ -328,9 +332,9 @@ var DATA={
         {q:'Höflich um Rat fragen:',o:['Was würden Sie mir raten?','Sagen Sie was.'],a:0,e:'Konjunktiv „würden" wirkt höflich.'}],
   speakq:'Beschreib eine Beschwerde genau: wo, seit wann, wann schlimmer. „Ich habe ___ seit ___, und es wird schlimmer, wenn ___."',
   puzzle:[['Der Schmerz ist eher','dumpf als stechend.'],['Es wird schlimmer,','wenn ich lange sitze.'],['Ich habe das','seit etwa einer Woche.'],['Was würden','Sie mir raten?']],
-  wheel:['Beschreib einen Schmerz genau.','Stechend oder dumpf — Beispiele?','Wann nimmst du Schmerzmittel?','Erklärst du dem Arzt gern genau?','Was fragst du den Arzt immer?','Wann wird es bei dir schlimmer?','Vertraust du Ärzten schnell?','Was tust du gegen Rückenschmerzen?'],
-  t90:['Wie ich eine Beschwerde genau beschreibe','Eine Krankheit, die ich mal hatte','Ob ich Ärzten schnell vertraue','Mein Umgang mit Schmerzen'],
-  gap:{text:'Ich habe ___1___ etwa einer Woche Rückenschmerzen. Der Schmerz ist eher ___2___. Es wird schlimmer, ___3___ ich lange sitze.',slots:[['seit','vor','ab'],['dumpf','laut','schnell'],['wenn','dass','ob']],sol:[0,0,0],sq:'Beschreib eine Beschwerde mit „wenn": „Es wird schlimmer, wenn ___."'}
+  wheel:['Wie beschreibst du dem Arzt am besten, was dir fehlt?','Vertraust du einer Diagnose sofort oder holst du eine zweite Meinung?','Wann nimmst du Schmerzmittel und wann lieber nicht?','Was war deine unangenehmste Erfahrung beim Arzt?','Wie gehst du mit längeren Schmerzen um?','Redest du offen über gesundheitliche Probleme?','Was erwartest du von einem guten Arztgespräch?','Googelst du Symptome, bevor du zum Arzt gehst?'],
+  t90:[{t:'Wie ich eine Beschwerde genau beschreibe',h:['wo genau','seit wann','stechend/dumpf','wann es schlimmer wird']},{t:'Eine Krankheit, die ich mal hatte',h:['damals','die Symptome','die Behandlung','wie lange']},{t:'Ob ich Ärzten schnell vertraue',h:['Erfahrung','Zweitmeinung','Bauchgefühl','kommt drauf an']},{t:'Mein Umgang mit Schmerzen',h:['aushalten','Schmerzmittel','zum Arzt gehen','ignorieren']}],
+  gap:{items:[{text:'Ich habe ___1___ etwa einer Woche Rückenschmerzen. Der Schmerz ist eher ___2___. Es wird schlimmer, ___3___ ich lange sitze.',slots:[['seit','vor','ab'],['dumpf','laut','schnell'],['wenn','dass','ob']],sol:[0,0,0]},{text:'Können Sie den Schmerz genauer ___1___? — Er ist eher dumpf als stechend, und morgens ___2___ es besonders. Ich würde das gern ___3___ lassen.',slots:[['beschreiben','bestellen','besuchen'],['zieht','fährt','kauft'],['untersuchen','abholen','absagen']],sol:[0,0,0]}],sq:'Beschreib eine Beschwerde mit „wenn": „Es wird schlimmer, wenn ___."'}
  },
  schwierig:{
   flip:[{em:'🗣️',sit:'In Ruhe schildern',say:'Ich schildere Ihnen mal, was ich beobachtet habe.'},
@@ -344,9 +348,9 @@ var DATA={
         {q:'Kritisch, aber höflich nachfragen:',o:['Gibt es eine sanftere Alternative?','Das nehme ich nicht.'],a:0,e:'Offene Frage lässt dem Arzt Raum.'}],
   speakq:'Schildere eine diffuse Beschwerde so, dass sie ernst genommen wird: „Seit ___ habe ich ___, obwohl ___. Ich würde das gern ___ ."',
   puzzle:[['Dazu kommen noch','Konzentrationsprobleme.'],['Ich mache mir','langsam Sorgen.'],['Könnten wir das','genauer abklären lassen?'],['Seit Wochen bin ich','ständig erschöpft.']],
-  wheel:['Wie beschreibt man diffuse Symptome?','Wird man ernster genommen, wenn man präzise ist?','Wie fragst du kritisch nach?','Vertraust du einer Diagnose sofort?','Zweitmeinung — ja oder nein?','Wie viel Eigenrecherche ist sinnvoll?','Was, wenn der Arzt dich nicht ernst nimmt?','Erschöpfung — Körper oder Kopf?'],
-  t90:['Wie man ernst genommen wird beim Arzt','Symptome googeln — Fluch oder Segen','Eine schwierige Diagnose-Situation','Vertrauen in Ärzte'],
-  gap:{text:'Seit Wochen bin ich ständig erschöpft, ___1___ ich genug schlafe. Dazu ___2___ Konzentrationsprobleme. Ich würde das gern genauer ___3___ lassen.',slots:[['obwohl','weil','damit'],['kommen','gehen','machen'],['abklären','abholen','absagen']],sol:[0,0,0],sq:'Schildere eine Beschwerde mit „obwohl": „Ich bin ___, obwohl ___."'}
+  wheel:['Wie sorgst du dafür, dass dich der Arzt ernst nimmt?','Ist es sinnvoll, Symptome vorher zu googeln?','Wann ist eine Zweitmeinung wirklich nötig?','Wie viel Eigenverantwortung sollte man für die eigene Gesundheit tragen?','Wie gehst du mit einer unsicheren Diagnose um?','Was macht für dich ein gutes Vertrauensverhältnis zum Arzt aus?','Sollte man bei diffusen Beschwerden sofort zum Arzt?','Wie ehrlich bist du beim Arzt über deinen Lebensstil?'],
+  t90:[{t:'Wie man beim Arzt ernst genommen wird',h:['präzise schildern','nachhaken','Begleiterscheinungen','abklären lassen']},{t:'Symptome googeln — Fluch oder Segen',h:['Panik','informiert sein','Fehldiagnose','Eigenrecherche']},{t:'Eine schwierige Diagnose-Situation',h:['Unsicherheit','Zweitmeinung','Geduld','Vertrauen']},{t:'Vertrauen in Ärzte',h:['Zeitdruck','Kompetenz','Beziehung','Skepsis']}],
+  gap:{items:[{text:'Seit Wochen bin ich ständig erschöpft, ___1___ ich genug schlafe. Dazu ___2___ Konzentrationsprobleme. Ich würde das gern genauer ___3___ lassen.',slots:[['obwohl','weil','damit'],['kommen','gehen','machen'],['abklären','abholen','absagen']],sol:[0,0,0]},{text:'Ich möchte, dass meine Beschwerden ernst ___1___ werden. Gibt es eine ___2___ Alternative, oder sollten wir das lieber gründlich ___3___?',slots:[['genommen','gemacht','gekauft'],['sanftere','lautere','teurere'],['untersuchen','abholen','absagen']],sol:[0,0,0]}],sq:'Schildere eine Beschwerde mit „obwohl": „Ich bin ___, obwohl ___."'}
  }
 };
 function L(){return DATA[document.body.dataset.level];}
@@ -366,11 +370,11 @@ function spin(){var d=L(),n=d.wheel.length,b=document.getElementById('spinbtn');
 /* 90 SEK */
 var tSec=90,tItv=null;
 function fmt(s){return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
-function newTopic(){var d=L();document.getElementById('t90').textContent=d.t90[Math.floor(Math.random()*d.t90.length)];clearInterval(tItv);tItv=null;tSec=90;var t=document.getElementById('timer');t.textContent='1:30';t.className='timer';}
+function newTopic(){var arr=L().t90,o=arr[Math.floor(Math.random()*arr.length)];document.getElementById('t90').textContent=o.t;document.getElementById('t90help').innerHTML='<span class="hl-label">Hilfswörter</span>'+o.h.map(function(w){return '<span class="hw">'+w+'</span>';}).join('');clearInterval(tItv);tItv=null;tSec=90;var t=document.getElementById('timer');t.textContent='1:30';t.className='timer';}
 function toggleTimer(){var t=document.getElementById('timer');if(tItv){clearInterval(tItv);tItv=null;t.classList.remove('run');return;}t.classList.add('run');tItv=setInterval(function(){tSec--;t.textContent=fmt(tSec);if(tSec<=0){clearInterval(tItv);tItv=null;t.className='timer done';t.textContent='Fertig!';}},1000);}
 /* GAP */
-function buildGap(){var d=L().gap,box=document.getElementById('gapbox');var parts=d.text.split(/___\d+___/);var html='<div class="gap">';parts.forEach(function(p,i){html+=p;if(i<d.slots.length){html+='<select data-i="'+i+'"><option value="-1">—</option>'+d.slots[i].map(function(o,oi){return '<option value="'+oi+'">'+o+'</option>';}).join('')+'</select>';}});html+='</div><button class="btn" style="margin-top:.7rem" onclick="checkGap()">Prüfen</button><div class="speakq" style="margin-top:1rem">'+d.sq+'</div>';box.innerHTML=html;}
-function checkGap(){var d=L().gap;document.querySelectorAll('#gapbox select').forEach(function(s){var i=+s.dataset.i;s.classList.remove('right','bad');if(+s.value===d.sol[i])s.classList.add('right');else s.classList.add('bad');});}
+function buildGap(){var g=L().gap,box=document.getElementById('gapbox');var html='';g.items.forEach(function(d,gi){var parts=d.text.split(/___\d+___/);html+='<div class="gap" style="margin-bottom:.7rem">';parts.forEach(function(p,i){html+=p;if(i<d.slots.length){html+='<select data-g="'+gi+'" data-i="'+i+'"><option value="-1">—</option>'+d.slots[i].map(function(o,oi){return '<option value="'+oi+'">'+o+'</option>';}).join('')+'</select>';}});html+='</div>';});html+='<button class="btn" style="margin-top:.4rem" onclick="checkGap()">Prüfen</button><div class="speakq" style="margin-top:1rem">'+g.sq+'</div>';box.innerHTML=html;}
+function checkGap(){var g=L().gap;document.querySelectorAll('#gapbox select').forEach(function(s){var gi=+s.dataset.g,i=+s.dataset.i;s.classList.remove('right','bad');if(+s.value===g.items[gi].sol[i])s.classList.add('right');else s.classList.add('bad');});}
 setLevel('einfach');
 </script>
 </body></html>
