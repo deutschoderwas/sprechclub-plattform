@@ -469,10 +469,19 @@ export default async function handler(req, res) {
            nicht weiter als Premium dastehen. Was bleibt: die
            Materialien und das Material der gebuchten Stunden (RLS,
            siehe ist_altschueler()).
-           Frueher stand hier 'gekuendigt'. Der naechtliche Lauf sieht
-           Archivierte weiterhin an (die zweite Abfrage oben), eine
-           durchgegangene Nachzahlung macht also weiterhin von allein
-           wieder auf. */
+           Vom 4.11. bis zum 22.11.2026 stand hier 'archiv'. Julia,
+           22.11.2026: "diese Schueler werden dann nur unter gekuendigt
+           angezeigt und verschwinden auch von der Liste bei den Aktiven
+           und Premium und haben auch keinen Zugang bis sie EIN NEUES
+           Abo haben". Also wieder 'gekuendigt'.
+
+           Am Zugang aendert das nichts - has_full_access sperrt beide
+           Zustaende gleich. Es geht darum, wo sie im Admin-Bereich
+           stehen: 'gekuendigt' ist dort eine eigene Gruppe, 'archiv'
+           landet unter "beendet", zwischen Leuten, die nie ein Abo
+           hatten. Der naechtliche Lauf sieht beide weiterhin an (die
+           zweite Abfrage oben), eine durchgegangene Nachzahlung macht
+           also weiterhin von allein wieder auf. */
         if (!trocken) {
           /* Der Fehler wird jetzt angesehen. supabase-js wirft nicht,
              es gibt { error } zurueck — und das stand hier nirgends.
@@ -484,21 +493,21 @@ export default async function handler(req, res) {
              protokolliert — stattdessen steht sie im Bericht unter
              'fehler'. */
           const { error: sperrErr } = await sb.from('profiles')
-            .update({ status: 'archiv', tier: null, tier_ab: null })
+            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
             .eq('id', p.id);
           if (sperrErr) {
             bericht.fehler.push({
               name: p.name || p.email,
-              fehler: 'konnte nicht archivieren: ' + sperrErr.message,
+              fehler: 'konnte nicht auf gekuendigt setzen: ' + sperrErr.message,
             });
             continue;
           }
           await sb.from('zugang_log').insert({
-            user_id: p.id, email: p.email, aktion: 'archiviert',
+            user_id: p.id, email: p.email, aktion: 'gekuendigt',
             grund: 'Abo abgelaufen, kein laufendes Abo bei Stripe mehr'
               + (abo.abo_ende ? ' (lief bis ' + String(abo.abo_ende).slice(0, 10) + ')' : ''),
             vorher:  { status: p.status, tier: p.tier },
-            nachher: { status: 'archiv', tier: null },
+            nachher: { status: 'gekuendigt', tier: null },
           });
           /* Und die Stunden, die nach dem Ende noch gebucht sind, weg.
 
@@ -844,20 +853,22 @@ export default async function handler(req, res) {
 
         if (!trocken) {
           /* Dieselbe Regel wie bei den Stripe-Abos: nach dem Ablauf
-             ins Archiv, nicht nur auf 'gekuendigt'. */
+             auf 'gekuendigt' - siehe den Kommentar dort. Julia,
+             22.11.2026 ueber Rosaria Smeraldi: "bitte am 30.11.2026
+             den Zugang entziehen auf gekuendigt setzen". */
           const { error: zuErr } = await sb.from('profiles')
-            .update({ status: 'archiv', tier: null, tier_ab: null })
+            .update({ status: 'gekuendigt', tier: null, tier_ab: null })
             .eq('id', h.id);
           if (zuErr) {
-            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, konnte nicht archivieren: ' + zuErr.message });
+            bericht.fehler.push({ name: h.name || h.email, fehler: 'von Hand, konnte nicht auf gekuendigt setzen: ' + zuErr.message });
             continue;
           }
           await sb.from('zugang_log').insert({
-            user_id: h.id, email: h.email, aktion: 'archiviert',
+            user_id: h.id, email: h.email, aktion: 'gekuendigt',
             grund: 'von Hand gesetzte Mitgliedschaft abgelaufen (lief bis '
               + String(h.abo_ende).slice(0, 10) + ')',
             vorher:  { status: h.status, tier: h.tier },
-            nachher: { status: 'archiv', tier: null },
+            nachher: { status: 'gekuendigt', tier: null },
           });
           /* Dieselbe Regel wie bei der Kuendigung: was nach dem Ende
              gebucht ist, faellt weg. Sonst steht jemand in der
