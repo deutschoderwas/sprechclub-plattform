@@ -25,7 +25,7 @@
      Klick nur eine Nummer uebergeben muss und kein Thema mit
      Anfuehrungszeichen durch ein onclick-Attribut gefaedelt wird. */
   var NIVEAU_FILTER = '', THEMEN = [], NIVEAU_VOREINGESTELLT = false;
-  var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false, SERIE = {};
+  var RUNDE = [], POS = 0, ERG = [], LAEUFT = false, GEPRUEFT = false, SERIE = {}; TRAIN_TYP = '';
   var ZIEL_VORGABE = [10, 15, 25, 40];
 
   /* ================= Grundlagen ================= */
@@ -560,6 +560,8 @@
     erklaerung: { f: 'Welches Wort passt zur Erklärung?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
     bedeutung: { f: 'Was bedeutet das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
     buchstaben: { f: 'Setz das Wort zusammen', g: 'Schreiben', farbe: '#D42A21', ic: '' },
+    karte: { f: 'Karteikarte', g: 'Wiederholen', farbe: '#8A6500', ic: '' },
+    diktat: { f: 'Hör zu und schreib das Wort', g: 'Diktat', farbe: '#D42A21', ic: '' },
     bild: { f: 'Welches Bild passt?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
     artikel: { f: 'der, die oder das?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
     luecke: { f: 'Welches Wort fehlt im Satz?', g: 'Im Satz', farbe: '#14181B', ic: '' },
@@ -1071,6 +1073,116 @@
       + '</div><div class="re">' + kastenPill(v) + lauts(v.de || w, 1) + '</div></div>';
   }
 
+  /* ============================================================
+     22.11.2026, Julia: „den Vokabeltrainer auch übungstechnisch so
+     gestalten, dass die Wörter durch verschiedene Übungen trainiert
+     werden können“. Neben der Tagesrunde (gemischt, nach Plan) gibt es
+     jetzt jede Übungsart einzeln: 13 Arten, jeweils 10 Wörter aus der
+     gewählten Quelle (schon gelernte Wörter, Meine Wörter oder ein
+     Niveau). Fällige Wörter kommen zuerst. Jede Antwort zählt für den
+     Wiederholungsplan wie in der Tagesrunde.
+     ============================================================ */
+  var TRAIN_TYP = '', TRAIN_QUELLE = 'gelernt';
+  function einzelnesWort(v) { return !/\s/.test(String(v.wort || v.de || '').trim()); }
+  function satzbauOk(v) {
+    if (!v.bsp || !istSatz(v) || !bspMitWort(v)) return false;
+    var n = v.bsp.trim().split(/\s+/).length;
+    return n >= 4 && n <= 10;
+  }
+  var TRAINING = [
+    { typ: 'karte', nm: 'Karteikarten', tx: 'Wort ansehen, Karte umdrehen, ehrlich bewerten.', f: '#E0A800', ok: function () { return true; } },
+    { typ: 'bild', nm: 'Bild zuordnen', tx: 'Zum Wort das passende Foto finden.', f: '#1B9BC0', ok: function (v) { return hatBild(v); } },
+    { typ: 'erklaerung', nm: 'Erklärung zum Wort', tx: 'Eine Erklärung lesen und das passende Wort wählen.', f: '#0E6D85', ok: function (v) { return erklaerungOk(v); } },
+    { typ: 'bedeutung', nm: 'Was bedeutet das?', tx: 'Zum Wort die richtige Erklärung finden.', f: '#0E6D85', ok: function (v) { return erklaerungOk(v); } },
+    { typ: 'artikel', nm: 'der, die, das', tx: 'Bei jedem Nomen den Artikel wählen.', f: '#1B9BC0', ok: function (v) { return artikelFrage(v); } },
+    { typ: 'hoeren', nm: 'Hören', tx: 'Wort hören und richtig antippen.', f: '#1B9BC0', ok: function () { return true; } },
+    { typ: 'diktat', nm: 'Diktat', tx: 'Wort hören und selbst schreiben.', f: '#D42A21', ok: function (v) { return einzelnesWort(v); } },
+    { typ: 'tippen', nm: 'Schreiben', tx: 'Mit Foto und Erklärung das Wort schreiben.', f: '#D42A21', ok: function (v) { return einzelnesWort(v) && (erklaerungOk(v) || hatBild(v)); } },
+    { typ: 'buchstaben', nm: 'Buchstabensalat', tx: 'Das Wort aus seinen Buchstaben bauen.', f: '#D42A21', ok: function (v) { var w = String(v.wort || v.de || '').trim(); return einzelnesWort(v) && w.length <= 13; } },
+    { typ: 'luecke', nm: 'Lückensätze', tx: 'Das fehlende Wort im Satz finden.', f: '#14181B', ok: function (v) { return !!luecken(v); } },
+    { typ: 'satzhoeren', nm: 'Satz hören', tx: 'Den Satz hören und die Lücke füllen.', f: '#14181B', ok: function (v) { return !!luecken(v); } },
+    { typ: 'satzbau', nm: 'Sätze bauen', tx: 'Den Beispielsatz in die richtige Reihenfolge bringen.', f: '#14181B', ok: satzbauOk },
+    { typ: 'paare', nm: 'Paare finden', tx: 'Wörter und Fotos verbinden, je vier auf einmal.', f: '#D42A21', ok: function (v) { return hatBild(v) && v.art === 'nomen' && artikelFrage(v); } }
+  ];
+  var QUELLEN = [
+    { id: 'gelernt', nm: 'Schon gelernt' },
+    { id: 'meine', nm: 'Meine Wörter' },
+    { id: 'niveau', nm: 'Mein Niveau' }
+  ];
+  function trainPool() {
+    var alle = alleWoerter(), pool;
+    if (TRAIN_QUELLE === 'meine') pool = alle.filter(function (v) { return v.eigen; });
+    else if (TRAIN_QUELLE === 'gelernt') pool = alle.filter(function (v) { return !!BEKANNT[v.id]; });
+    else pool = NIVEAU_FILTER ? alle.filter(function (v) { return v.niveau === NIVEAU_FILTER; }) : alle;
+    return pool;
+  }
+  function trainingHtml() {
+    var pool = trainPool();
+    var h = '<header><h3>Üben nach Übungsart</h3>'
+      + '<p>Trainiere deine Wörter gezielt mit einer Übung. Jede Runde hat bis zu 10 Wörter, die fälligen zuerst, und zählt für deinen Wiederholungsplan.</p></header>'
+      + '<div class="vbx-quellen" role="tablist">' + QUELLEN.map(function (q) {
+        var n = q.id === TRAIN_QUELLE ? pool.length : null;
+        return '<button type="button" class="vp-nchip' + (q.id === TRAIN_QUELLE ? ' an' : '') + '" onclick="__vtQuelle(\'' + q.id + '\')">'
+          + esc(q.id === 'niveau' && NIVEAU_FILTER ? 'Niveau ' + NIVEAU_FILTER : q.nm) + (n != null ? ' <i>' + n + '</i>' : '') + '</button>';
+      }).join('') + '</div>';
+    if (pool.length < 4) {
+      h += '<div class="vbx-leerkarte"><span class="ic">i</span><div><b>Hier sind noch zu wenige Wörter</b><span>'
+        + (TRAIN_QUELLE === 'gelernt' ? 'Mach erst ein paar Tagesrunden. Sobald du Wörter kennengelernt hast, kannst du sie hier mit jeder Übung trainieren.'
+          : TRAIN_QUELLE === 'meine' ? 'Füg im Bereich Üben Wörter mit „In den Vokabeltrainer“ hinzu.'
+          : 'Wähl oben bei den Themen ein anderes Niveau.')
+        + '</span></div></div>';
+      return h;
+    }
+    h += '<div class="vbx-tr">' + TRAINING.map(function (t) {
+      var n = pool.filter(t.ok).length;
+      var geht = t.typ === 'paare' ? n >= 4 : n >= 3;
+      return '<button type="button" class="vbx-trk" style="--tf:' + t.f + '"' + (geht ? ' onclick="__vtTraining(\'' + t.typ + '\')"' : ' disabled') + '>'
+        + '<b>' + esc(t.nm) + '</b><span>' + esc(t.tx) + '</span>'
+        + '<i>' + (geht ? vpZahl(n, 'Wort', 'Wörter') : 'zu wenige Wörter') + '</i></button>';
+    }).join('') + '</div>';
+    return h;
+  }
+  window.__vtQuelle = function (q) {
+    TRAIN_QUELLE = q;
+    var el = document.getElementById('vbxTraining');
+    if (el) el.innerHTML = trainingHtml();
+  };
+  window.__vtTraining = function (typ) {
+    var t = TRAINING.filter(function (x) { return x.typ === typ; })[0];
+    if (!t) return;
+    var w = trainPool().filter(t.ok);
+    if (!w.length) return;
+    /* fällig zuerst, dann was am wenigsten sitzt, sonst zufällig */
+    w = mische(w).sort(function (a, b) {
+      return ((istFaellig(b) ? 1 : 0) - (istFaellig(a) ? 1 : 0)) || (stufeVon(a) - stufeVon(b));
+    });
+    SERIE = {}; POS = 0; ERG = []; LAEUFT = true;
+    if (typ === 'paare') {
+      RUNDE = [];
+      for (var i = 0; i + 4 <= Math.min(w.length, 12); i += 4) RUNDE.push({ spiel: 'paare', bild: true, woerter: w.slice(i, i + 4) });
+    } else {
+      RUNDE = w.slice(0, 10).map(function (v) { return { v: v, typ: typ, letzte: true }; });
+    }
+    TRAIN_TYP = typ;
+    if (!RUNDE.length) { LAEUFT = false; return; }
+    zeichne();
+  };
+
+  /* Karteikarte: umdrehen, dann selbst bewerten */
+  window.__vtDrehen = function () {
+    var h = document.querySelector('#vtKarte .vbx-hinten'); if (h) h.hidden = false;
+    var b = document.getElementById('vbxDreh'); if (b) b.style.display = 'none';
+    var s2 = document.getElementById('vbxSelbst'); if (s2) s2.hidden = false;
+    try { var a = RUNDE[POS]; if (a && a.v && a.v.bsp) sprich(a.v.bsp, 0.9); } catch (e) {}
+  };
+  window.__vtSelbst = function (ok) {
+    if (GEPRUEFT) return; GEPRUEFT = true;
+    var a = RUNDE[POS]; if (!a) return;
+    if (!ok) SERIE[a.v.id] = true;
+    if (a.letzte) ERG.push({ v: a.v, richtig: ok });
+    window.__vtAntwort();
+  };
+
   function lernweg(offen) {
     var schritte = [
       ['#E0A800', 'Kennenlernen', 'Bild, Bedeutung und ein Satz aus dem Alltag. Das Wort ist im Satz markiert.'],
@@ -1116,7 +1228,7 @@
 
   function runde(w) {
     if (!w || !w.length) return;
-    SERIE = {}; RUNDE = baueRundeAus(w.slice(0, 20)); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; RUNDE = baueRundeAus(w.slice(0, 20)); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) { LAEUFT = false; return; }
     zeichne();
   }
@@ -1151,7 +1263,7 @@
   window.__vtProbe = function (typ, id) {
     var v = alleWoerter().filter(function (x) { return x.id === id; })[0];
     if (!v) return false;
-    SERIE = {}; POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; POS = 0; ERG = []; LAEUFT = true;
     RUNDE = typ === 'paare'
       ? [{ spiel: 'paare', bild: true, woerter: alleWoerter().filter(function (x) { return hatBild(x) && x.art === 'nomen' && x.id !== v.id; }).slice(0, 3).concat([v]) }]
       : [{ v: v, typ: typ, letzte: true }];
@@ -1223,7 +1335,8 @@
     });
     h += '</div></section>';
 
-    h += lernweg(ersterTag) + meineWoerter(alle) + nachschlagen();
+    h += lernweg(ersterTag) + '<section class="vp-teil" id="vbxTraining">' + trainingHtml() + '</section>'
+      + meineWoerter(alle) + nachschlagen();
 
     /* ---------- 3  Die aergern dich ---------- */
     if (aerger.length >= 3) {
@@ -1397,6 +1510,30 @@
           return '<button class="vt-o" onclick="__vtWahl(this,' + (o === v.de) + ')">' + tasteN(i) + esc(o) + '</button>';
         }).join('') + '</div>';
 
+    } else if (typ === 'karte') {
+      var wk = (v.wort || v.de || '').trim();
+      h += '<div class="vbx-karte">' + bild(v, 'gr')
+        + '<h2 class="vt-gross mitte">' + artikelChip(v.artikel) + esc(wk) + lauts(v.de) + '</h2>'
+        + '<p class="vbx-tipp">Was bedeutet das Wort? Überleg kurz, dann dreh die Karte um.</p>'
+        + '<div class="vbx-hinten" hidden>'
+        + (v.bedeutung ? '<div class="vt-bed"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
+        + (v.bsp ? '<div class="vt-satzbox"><p class="vt-satz">' + satzMarkiert(v.bsp, wk) + ' ' + lauts(v.bsp, 1) + '</p></div>' : '')
+        + (v.hinweis ? '<div class="vbx-gut"><span>Gut zu wissen</span>' + esc(v.hinweis) + '</div>' : '')
+        + '</div></div>'
+        + '<button class="vt-pruefen" id="vbxDreh" onclick="__vtDrehen()">Karte umdrehen</button>'
+        + '<div class="vbx-selbst" id="vbxSelbst" hidden>'
+        + '<button class="nein" onclick="__vtSelbst(false)">Noch nicht</button>'
+        + '<button class="ja" onclick="__vtSelbst(true)">Wusste ich</button></div>';
+
+    } else if (typ === 'diktat') {
+      var dk = esc(v.de).replace(/'/g, "\\'");
+      h += '<button class="vt-hoerknopf" onclick="__vtSprich(\'' + dk + '\',0.85,this)">🔊</button>'
+        + '<button class="vt-langsam" onclick="__vtSprich(\'' + dk + '\',0.5,this)">🐢 langsamer abspielen</button>'
+        + '<input class="vt-eingabe" id="vtIn" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Was hörst du?">'
+        + '<p class="vbx-tipp">' + (v.artikel ? 'Schreib das Wort, den Artikel kannst du dazuschreiben.' : 'Schreib das Wort genau so, wie du es hörst.') + '</p>'
+        + '<button class="vt-pruefen" onclick="__vtTippen()">Prüfen</button>';
+      setTimeout(function () { sprich(v.de, 0.85); }, 300);
+
     } else if (typ === 'erklaerung') {
       var oE = mische(ablenker(v, 3, 'de').map(function (x) { return x.de; }).concat([v.de]));
       h += '<div class="vt-satzbox vbx-erkl"><span class="vbx-erkl-k">Erklärung</span><p class="vt-satz">' + esc(v.bedeutung) + '</p></div>'
@@ -1509,7 +1646,7 @@
     document.getElementById('vtKarte').innerHTML =
       '<div class="vt-etikett" style="--tf:#D42A21"><span class="gr">Spiel</span>Finde die Paare</div>'
       + '<p class="vt-unter">' + (a.bild ? 'Tippe ein Wort an und dann das passende Foto.' : 'Tippe ein deutsches Wort an und dann seine Übersetzung.') + '</p>'
-      + '<div class="vt-paare">'
+      + '<div class="vt-paare' + (a.bild ? ' vbx-bildpaare' : '') + '">'
       + '<div class="vt-sp">' + links.map(function (v) {
         return '<button class="vt-pk" data-id="' + esc(v.id) + '" data-seite="l" onclick="__vtPaar(this)">'
           + (v.em && !a.bild ? '<span class="e">' + v.em + '</span>' : '') + '<span>' + esc(v.de) + '</span></button>';
@@ -1673,7 +1810,7 @@
       // Nicht gekonnt? Dann kommt das Wort am Ende der Runde noch einmal.
       if (!ok && !a.wieder && RUNDE.length < 42) {
         SERIE[a.v.id] = false;
-        RUNDE.push({ v: a.v, typ: leichterTyp(a.v), letzte: true, wieder: true });
+        RUNDE.push({ v: a.v, typ: TRAIN_TYP ? a.typ : leichterTyp(a.v), letzte: true, wieder: true });
       }
     }
     weiter();
@@ -1730,7 +1867,9 @@
       + '<div><b>' + schlecht + '</b><span>zum Üben</span></div>'
       + '<div><b>' + quote + '%</b><span>Trefferquote</span></div></div>'
       + '<div class="vt-liste">' + liste + '</div>'
-      + '<button class="vt-los" style="background:#14181B;color:#fff" onclick="__vtStart()">Noch eine Runde →</button>'
+      + (TRAIN_TYP
+        ? '<button class="vt-los" style="background:#14181B;color:#fff" onclick="__vtTraining(\'' + TRAIN_TYP + '\')">Noch eine Runde: ' + esc((TRAINING.filter(function (t) { return t.typ === TRAIN_TYP; })[0] || {}).nm || '') + '</button>'
+        : '<button class="vt-los" style="background:#14181B;color:#fff" onclick="__vtStart()">Noch eine Runde →</button>')
       + '<div style="margin-top:14px"><button class="vt-langsam" style="display:inline-block" onclick="__vtAbbruch()">Für heute reicht\'s</button></div>'
       + '</div>';
     if (quote >= 70) konfetti();
@@ -1739,7 +1878,7 @@
 
   /* ================= Steuerung ================= */
   window.__vtStart = function () {
-    SERIE = {}; RUNDE = baueRunde(tagesplan().gesamt || 8); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; RUNDE = baueRunde(tagesplan().gesamt || 8); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) {
       vollZu();
       document.getElementById('v-vokabeln').innerHTML =
@@ -1756,7 +1895,7 @@
     var w = alleWoerter().filter(function (v) { return kastenVon(v) === i; });
     w.sort(function (a, b) { return (istFaellig(b) ? 1 : 0) - (istFaellig(a) ? 1 : 0); });
     if (!w.length) return;
-    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) return;
     zeichne();
   };
@@ -1781,7 +1920,7 @@
     /* Was noch nicht sitzt, zuerst — sonst uebt man beim zweiten
        Durchgang wieder die Woerter, die man laengst kann. */
     var w = t.woerter.slice().sort(function (a, b) { return stufeVon(a) - stufeVon(b); });
-    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) return;
     zeichne();
   };
@@ -1789,7 +1928,7 @@
   window.__vtAerger = function () {
     var w = alleWoerter().filter(aergertMich);
     if (!w.length) return;
-    SERIE = {}; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
+    SERIE = {}; TRAIN_TYP = ''; RUNDE = baueRundeAus(w); POS = 0; ERG = []; LAEUFT = true;
     if (!RUNDE.length) return;
     zeichne();
   };
@@ -2074,6 +2213,26 @@
       '#vtVoll .vt-bed span{color:#0E6D85}',
       '#vtVoll .vt-satzbox.mitlabel.hinweis::before{content:"So benutzt man es"}',
       '#vtVoll .vt-satzbox.mitlabel.zumwort::before{content:"Zum Wort"}',
+      V + '.vbx-quellen{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:#F1F4F7;border:1px solid #E7EBF0;border-radius:14px;margin-bottom:14px;max-width:100%;overflow-x:auto;scrollbar-width:none}',
+      V + '.vbx-quellen i{font-style:normal;color:#5F6B76;font-weight:700;margin-left:4px}',
+      V + '.vbx-tr{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}',
+      V + '.vbx-trk{position:relative;text-align:left;display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E7EBF0;border-top:4px solid var(--tf);border-radius:14px;padding:14px 14px 12px;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s}',
+      V + '.vbx-trk:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 22px -14px rgba(16,24,40,.35)}',
+      V + '.vbx-trk b{font-size:15.5px;color:#14181B}',
+      V + '.vbx-trk span{font-size:13px;line-height:1.45;color:#4B5763}',
+      V + '.vbx-trk i{font-style:normal;font-size:12px;font-weight:800;color:var(--tf);margin-top:4px}',
+      V + '.vbx-trk[style*="#E0A800"] i{color:#8A6500}',
+      V + '.vbx-trk:disabled{opacity:.5;cursor:default}',
+      '#vtVoll .vbx-karte .vbx-hinten{animation:vbxAuf .25s ease-out}',
+      '@keyframes vbxAuf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}',
+      '#vtVoll .vbx-selbst{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}',
+      '#vtVoll .vbx-selbst[hidden]{display:none}',
+      '#vtVoll .vbx-bildpaare .vt-pk{min-height:88px;justify-content:center;text-align:center}',
+      '#vtVoll .vbx-bildpaare .vt-sp{gap:10px}',
+      '#vtVoll .vbx-selbst button{border-radius:16px;padding:18px;font:800 17px Inter,system-ui,sans-serif;cursor:pointer}',
+      '#vtVoll .vbx-selbst .nein{background:#fff;color:#D42A21;border:2px solid #D42A21}',
+      '#vtVoll .vbx-selbst .ja{background:#0E6D85;color:#fff;border:2px solid #0E6D85}',
+      '@media(max-width:760px){' + V + '.vbx-tr{grid-template-columns:1fr 1fr;gap:8px}' + V + '.vbx-trk{padding:12px 11px 10px}' + V + '.vbx-trk span{font-size:12.5px}}',
       '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
       '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
