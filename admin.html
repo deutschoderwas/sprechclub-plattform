@@ -3034,7 +3034,13 @@ function aboBlock(p){
        von_hand steht nur drin, damit der nächtliche Abgleich ihn nicht
        noch einmal zumacht. Julia: "Was schreibst du da...." — zu
        Recht. Wer eine Kundennummer hat, zahlt über Stripe. */
-    if (p.abo_stripe_status === 'von_hand' && p.stripe_customer_id){
+    /* ...es sei denn, es steht ein Hinweis von Hand dabei. Wen Shan
+       Huang, 22.11.2026: sie hat den Jahresbetrag ueberwiesen und ihr
+       Monatsabo gekuendigt - die Kundennummer von damals steht aber
+       weiter im Profil. Ohne diese Bedingung behauptet die Karte
+       "laeuft ueber Stripe, naechste Abbuchung am 30.11.2027",
+       waehrend direkt darueber steht, dass sie ueberwiesen hat. */
+    if (p.abo_stripe_status === 'von_hand' && p.stripe_customer_id && !p.bezahlt_hinweis){
       txt = p.abo_ende
         ? 'läuft über Stripe · nächste Abbuchung am ' + dt(p.abo_ende)
           + ' — vom nächtlichen Abgleich ausgenommen'
