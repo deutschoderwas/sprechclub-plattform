@@ -429,6 +429,11 @@
      wird ein Satz zum Bauen und eine Wahlfrage — die falschen
      Möglichkeiten sind die Lösungen der Nachbaraufgaben und damit
      immer aus derselben Grammatik. */
+  var GLEICHE = [['trotzdem', 'dennoch', 'gleichwohl', 'nichtsdestotrotz'], ['deshalb', 'deswegen', 'daher', 'darum'],
+    ['weil', 'da'], ['obwohl', 'obgleich', 'wenngleich', 'obschon'], ['kann', 'könnte'], ['muss', 'müsste']];
+  function gleichbedeutend(a, b) {
+    return a !== b && GLEICHE.some(function (g) { return g.indexOf(a) > -1 && g.indexOf(b) > -1; });
+  }
   function ausGrammatik(t, neu) {
     var luecken = (t.exercises || []).filter(function (e) {
       return e.type === 'gap' && e.text && e.answer && String(e.text).indexOf('___') >= 0;
@@ -479,12 +484,22 @@
           return true;
         }).map(function (x) {
           x = eng(x); if (!x) return x;
+          if (!gross && /^(Darum|Deshalb|Deswegen|Daher|Trotzdem|Dennoch|Außerdem|Sodass|Wohingegen|Weil|Da|Obwohl|Dass|Ob|Wenn|Als|Bevor|Nachdem|Während|Seitdem|Sobald|Damit|Falls|Indem|Aber|Denn|Oder|Und|Sondern|Doch|Jedoch|Zwar|Allerdings|Stattdessen|Sonst|Also|Dann|Danach|Deshalb|Insofern|Sofern|Wenngleich|Gleichwohl|Zudem|Folglich)$/.test(x)) return x.toLowerCase();
           return gross ? x.charAt(0).toUpperCase() + x.slice(1) : (/^(Der|Die|Das|Den|Dem|Des|Ein|Eine|Einen|Einem|Einer|Eines|Kein|Keine|Keinen)$/.test(x) ? x.toLowerCase() : x);
         });
         if (BEST.test(a0) || UNB.test(a0)) {
           var alle = BEST.test(a0) ? ['der', 'die', 'das', 'den', 'dem'] : ['ein', 'eine', 'einen', 'einem', 'einer'];
           alle.forEach(function (x) { kand.push(gross ? x.charAt(0).toUpperCase() + x.slice(1) : x); });
         }
+        /* 22.11.2026: Eine Lücke mit mehreren richtigen Lösungen (alts:
+           „Trotzdem“ und „Dennoch“) bekam die zweite als Ablenker — zwei
+           richtige Antworten. Erlaubte Lösungen und gleichbedeutende
+           Wörter fallen deshalb aus den Ablenkern heraus. */
+        var erlaubt = (e.alts || []).concat([e.answer]).map(function (x) { return eng(x).toLowerCase(); });
+        kand = kand.filter(function (x) {
+          var xl = eng(x).toLowerCase();
+          return erlaubt.indexOf(xl) < 0 && !gleichbedeutend(a0.toLowerCase(), xl);
+        });
         mgl3 = moeglichkeiten(e.answer, kand, 3);
       }
       if (mgl3) {

@@ -127,7 +127,41 @@
     ['wortschatz|a1-begruessung', 'Mein ___ ist Ana Silva', 'Nachname', 'Gruß'],
     ['wortschatz|sprachkurs-neu', 'Mein Sohn macht seine ___', 'Aufgabe', 'Ausnahme']
   ];
+  /* 22.11.2026: In den Grammatik-Auswahlfragen standen gleichbedeutende
+     Wörter nebeneinander, beide richtig: „Es regnete. ___ sind wir
+     spazieren gegangen.“ mit Trotzdem UND Dennoch (zehn Aufgaben in
+     „Gegensatz-Konnektoren“), „Das ___ stimmen, ich bin mir nicht
+     sicher“ mit kann UND könnte. Steht neben der Lösung ein Wort aus
+     derselben Gruppe, wird es durch eins ersetzt, das grammatisch an die
+     Stelle passt, aber inhaltlich falsch ist (trotzdem → deshalb). */
+  var GLEICH = [
+    [['trotzdem', 'dennoch', 'gleichwohl', 'nichtsdestotrotz'], ['deshalb', 'deswegen', 'außerdem']],
+    [['deshalb', 'deswegen', 'daher', 'darum'], ['trotzdem', 'dennoch', 'außerdem']],
+    [['weil', 'da'], ['obwohl', 'damit']],
+    [['obwohl', 'obgleich', 'wenngleich', 'obschon'], ['weil', 'damit']],
+    [['kann', 'könnte'], ['will', 'darf', 'muss']],
+    [['muss', 'müsste'], ['darf', 'will']]
+  ];
+  function grossWie(vorbild, wort) {
+    return /^[A-ZÄÖÜ]/.test(vorbild) ? wort.charAt(0).toUpperCase() + wort.slice(1) : wort;
+  }
+  function gleicheEntzerren(e) {
+    if (e.type !== 'choice' || !Array.isArray(e.options) || typeof e.answer !== 'number') return;
+    var klein = e.options.map(function (o) { return String(o).trim().toLowerCase(); });
+    var loes = klein[e.answer];
+    GLEICH.forEach(function (g) {
+      if (g[0].indexOf(loes) < 0) return;
+      klein.forEach(function (o, i) {
+        if (i === e.answer || g[0].indexOf(o) < 0) return;
+        var ers = g[1].filter(function (x) { return klein.indexOf(x) < 0; })[0];
+        if (!ers) return;
+        e.options[i] = grossWie(String(e.options[i]), ers);
+        klein[i] = ers;
+      });
+    });
+  }
   function optionenRichten(k, e) {
+    if (k.indexOf('grammatik|') === 0) gleicheEntzerren(e);
     if (!Array.isArray(e.options) || typeof e.q !== 'string') return;
     OPTIONEN.forEach(function (o) {
       if (o[0] !== k || e.q.indexOf(o[1]) < 0) return;
