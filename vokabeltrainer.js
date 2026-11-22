@@ -1175,6 +1175,7 @@
   }
   window.__vtQuelle = function (q) {
     TRAIN_QUELLE = q;
+    var vz = document.getElementById('v-vokabeln'); if (vz) vz.__vbxHtml = null;
     var el = document.getElementById('vbxTraining');
     if (el) el.innerHTML = trainingHtml();
   };
@@ -1358,6 +1359,12 @@
     BEKANNT[id] = { stufe: st }; var t = typFuer(v); if (alt) BEKANNT[id] = alt; else delete BEKANNT[id]; return t; } };
 
   function startbild() {
+    /* Beim ersten Öffnen auf der eigenen Stufe (fuer-dich.js). Erst wenn
+       ICH da ist, gilt es als erledigt, sonst bliebe es für immer auf „Alle“. */
+    if (!NIVEAU_VOREINGESTELLT && window.ICH) {
+      NIVEAU_VOREINGESTELLT = true;
+      try { var meine = window.ICH.niveau(); if (themenNach(meine).length) NIVEAU_FILTER = meine; } catch (e) {}
+    }
     var plan = tagesplan();
     var heute = STAND.heute || 0, serie = STAND.serie || 0;
     var alle = alleWoerter();
@@ -1368,7 +1375,7 @@
     var geuebt = alle.length - zaehl[0];
     var ersterTag = geuebt === 0;
 
-    var h = '<div class="vp">';
+    var h = '<div class="vp" lang="de">';
 
     /* ---------- 1  Heute ---------- */
     h += '<div class="vp-heute vpx-held' + (fertig ? ' fertig' : '') + '">'
@@ -1432,10 +1439,7 @@
 
     /* ---------- 3b  Nach Thema und Niveau ---------- */
     /* Beim ersten Öffnen auf der eigenen Stufe (fuer-dich.js), "Alle" bleibt ein Klick */
-    if (!NIVEAU_VOREINGESTELLT) {
-      NIVEAU_VOREINGESTELLT = true;
-      try { if (window.ICH) { var meine = window.ICH.niveau(); if (themenNach(meine).length) NIVEAU_FILTER = meine; } } catch (e) {}
-    }
+
     THEMEN = themenNach(NIVEAU_FILTER);
     var niv = niveauZaehlung();
     if (THEMEN.length) {
@@ -1500,7 +1504,7 @@
   function voll() {
     var d = document.getElementById('vtVoll');
     if (d) return d;
-    d = document.createElement('div'); d.id = 'vtVoll';
+    d = document.createElement('div'); d.id = 'vtVoll'; d.setAttribute('lang', 'de');
     d.innerHTML = '<div class="vt-top"></div><div class="vt-buehne"><div class="vt-karte" id="vtKarte"></div></div>'
       + '<div class="vt-fuss" id="vtFuss"></div>';
     document.body.appendChild(d);
@@ -2350,6 +2354,15 @@
       '#vbxSheet .vt-lauts{width:38px;height:38px;border-radius:12px;font-size:16px}',
       '#vbxSheet .vt-lauts.klein{width:30px;height:30px;font-size:13px;vertical-align:middle}',
       '@media(max-width:760px){#vbxSheet .vbx-sh-kopf .vt-bild.gr{width:84px;height:84px}#vbxSheet .vbx-sh-kopf h2{font-size:22px}}',
+      '#vtVoll{overflow-x:hidden;overscroll-behavior:contain}',
+      '#vtVoll .vt-buehne{overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}',
+      '#vtVoll .vt-karte{max-width:100%;box-sizing:border-box}',
+      '#vtVoll .vt-o,#vtVoll .vt-pk,#vtVoll .vt-satz{overflow-wrap:break-word;word-break:normal;hyphens:auto;-webkit-hyphens:auto}',
+      '#vtVoll .vt-gross{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}',
+      '#vtVoll img{max-width:100%}',
+      '#v-vokabeln .vp{overflow-x:clip}',
+      '#v-vokabeln .vbx-wz .tx b,#v-vokabeln .vbx-wz .bsp,#v-vokabeln .vbx-wz .bed{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}',
+      '@media(max-width:360px){#vtVoll .vt-pk{font-size:13px;padding:10px 8px}#vtVoll .vbx-bildpaare .vbx-pkb .vt-bild.mini{width:60px;height:60px}}',
       '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
       '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
@@ -2392,7 +2405,26 @@
     document.head.appendChild(st);
   }
 
-  window.renderVokabeln = async function () {
+  /* 22.11.2026, Julia: „in der mobilen Version robust, damit die Seite
+     nicht hin und her springt“. Gemessen in der Vorschau am iPhone: die
+     Startseite wurde beim Öffnen viermal neu geschrieben (Platzhalter,
+     „wird geladen“, Seite, und nach dem Nachladen der Lernbereich-Dateien
+     noch einmal ganz). Jedes Mal luden die Bilder neu und die Höhe
+     änderte sich. Jetzt:
+     - läuft schon ein Zeichnen, wartet ein zweiter Aufruf darauf,
+     - steht schon dieselbe Seite da, wird nichts ersetzt,
+     - wird doch ersetzt, bleibt die Scrollposition und die Suche stehen,
+     - „wird geladen“ erscheint nur, wenn noch gar nichts dasteht. */
+  var ZEICHNEN = null, NOCHMAL = false;
+  window.renderVokabeln = function () {
+    if (ZEICHNEN) { NOCHMAL = true; return ZEICHNEN; }
+    ZEICHNEN = zeichneStart().catch(function () {}).then(function () {
+      ZEICHNEN = null;
+      if (NOCHMAL) { NOCHMAL = false; return window.renderVokabeln(); }
+    });
+    return ZEICHNEN;
+  };
+  async function zeichneStart() {
     /* Ohne Zugang wird hier nicht gezeichnet. Die Seite hat an dieser
        Stelle schon die Sperrseite stehen; frueher hat der Trainer sie
        ueberschrieben, sobald er geladen war, und ein Konto ohne Zugang
@@ -2402,7 +2434,7 @@
     var ziel = document.getElementById('v-vokabeln');
     if (!ziel) return;
     if (!(window.VOK_POOL && window.VOK_POOL.length)) {
-      ziel.innerHTML = '<div class="vt-leer">Deine Wörter werden geladen …</div>';
+      if (!ziel.innerHTML.trim()) ziel.innerHTML = '<div class="vt-leer">Deine Wörter werden geladen …</div>';
       await ladePool();
     }
     await ladeEigene();
@@ -2415,8 +2447,21 @@
     await ladeSprache();
     await ladeStand();
     if (LAEUFT) return;
-    ziel.innerHTML = startbild();
-  };
+    var html = startbild();
+    if (ziel.__vbxHtml === html && ziel.querySelector('.vp')) return;
+    var warDa = !!ziel.querySelector('.vp');
+    var y = window.scrollY || 0;
+    var such = document.getElementById('vbxSuche');
+    var suchWert = such ? such.value : '';
+    var suchFokus = such && document.activeElement === such;
+    ziel.innerHTML = html;
+    ziel.__vbxHtml = html;
+    if (suchWert) {
+      var neu = document.getElementById('vbxSuche');
+      if (neu) { neu.value = suchWert; window.__vtSuche(neu); if (suchFokus) { try { neu.focus({ preventScroll: true }); } catch (e) {} } }
+    }
+    if (warDa && y) { try { window.scrollTo(0, y); } catch (e) {} }
+  }
 
   window.VokTrainer = { neu: function () { return window.renderVokabeln(); } };
 

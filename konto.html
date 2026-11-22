@@ -2026,7 +2026,16 @@ function show(v){
         + '<b style="font-size:17px">Einen Moment …</b>'
         + '<p class="muted" style="margin:6px 0 0">Die Übungen werden geladen.</p></div>';
     }
-    window.spaetLaden().then(function(){ show(v); });
+    /* 22.11.2026: Wenn die Lernbereich-Dateien nachgeladen sind, wird die
+       Ansicht neu gezeichnet. Vorher sprang die Seite dabei nach oben,
+       auch wenn man schon gescrollt hatte, und holte einen sogar zurück,
+       wenn man inzwischen woanders hingetippt hatte. */
+    window.spaetLaden().then(function(){
+      var _jetzt = (location.hash || '').replace('#', '').split('?')[0];
+      if (_jetzt && _jetzt !== v) return;
+      window.__ZEICHNEN_OHNE_SPRUNG = true;
+      try { show(v); } finally { window.__ZEICHNEN_OHNE_SPRUNG = false; }
+    });
     return;
   }
   try{updateTopbar(v);}catch(e){}
@@ -2052,7 +2061,7 @@ function show(v){
     || function(){})();
   if(v==='community') markCommRead();
   if(v==='dashboard') setTimeout(mcStatus,60);   // Community geöffnet -> Nachrichten gelesen, Badge weg
-  window.scrollTo(0,0);
+  if(!window.__ZEICHNEN_OHNE_SPRUNG) window.scrollTo(0,0);
 }
 const LOCK_LABELS={fuerdich:'Für dich',kalender:'Wochenplan',szenen:'Sprachspiele',pruefung:'Prüfungstraining',amandasprechen:'Mit Amanda sprechen',weg:'Mein Kurs',sprechen:'Sprechen',medien:'Podcast & Hören',dm:'Nachrichten',fehler:'Meine Fehler',buddy:'Sprech-Tandem',fertigkeit:'Fertigkeiten',dashboard:'Start',lernen:'Lernbereich',bereiche:'Freizeit & Beruf',kurs:'Dein Kurs',schreiben:'Schreibtrainer',kurse:'Kursbibliothek',ueben:'Üben',community:'Community-Chat',lernpfad:'Mein Lernplan',stunden:'Meine Stunden',materialien:'Material',vokabeln:'Vokabeln',fortschritt:'Fortschritt',nachrichten:'Nachrichten',amanda:'Amanda'};
 /* ============================================================
@@ -5747,7 +5756,7 @@ window.addEventListener('resize',function(){ clearTimeout(_mhT); _mhT=setTimeout
 <script src="vokabeln.js"></script>
 <!-- MUSS nach vokabeln.js stehen: beide setzen window.renderVokabeln,
      und der letzte gewinnt. Der ausgebaute Trainer soll gewinnen. -->
-<script src="vokabeltrainer.js?v=15"></script>
+<script src="vokabeltrainer.js?v=16"></script>
 <script src="niveau.js"></script>
 <!-- Der Kurs- und Pruefungsstapel (a1.js bis pruefung-bereich.js,
      32 Dateien, rund 1,5 MB) laedt spaeter — die Liste steht weiter
