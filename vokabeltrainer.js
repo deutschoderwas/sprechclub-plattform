@@ -109,11 +109,78 @@
     if (stamm.length < 3) stamm = w;
     return new RegExp('(^|[\\s(„"\'])(' + stamm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[a-zäöüß]{0,4})(?=[\\s.,!?;:)"„\']|$)', 'i');
   }
+  /* 22.11.2026: Trennbare Verben. „ausgehen“ steht im Satz als „Wir gehen
+     heute Abend aus.“ – vorher war dann gar nichts markiert (gut 100 Wörter).
+     Jetzt werden beide Teile markiert: der Verbstamm und die Vorsilbe am
+     Satzende. Starke Verben mit anderem Stammvokal (nehmen – nimmt) findet
+     das nicht, dann bleibt es wie vorher ohne Markierung. */
+  var VORSILBEN = ['zusammen', 'zurück', 'weiter', 'vorbei', 'heraus', 'herein', 'hinaus', 'kennen',
+    'statt', 'fest', 'fort', 'frei', 'teil', 'auf', 'aus', 'ein', 'mit', 'nach', 'vor', 'weg', 'los',
+    'her', 'hin', 'dar', 'ab', 'an', 'bei', 'zu', 'um'];
+  function trennbar(w) {
+    w = String(w || '').trim().toLowerCase().replace(/^sich\s+/, '');
+    if (/\s/.test(w) || !/(e|el|er)?n$/.test(w)) return null;
+    for (var i = 0; i < VORSILBEN.length; i++) {
+      var vs = VORSILBEN[i];
+      if (w.indexOf(vs) === 0 && w.length - vs.length >= 4) {
+        var rest = w.slice(vs.length).replace(/(en|n)$/, '');
+        if (rest.length < 2) return null;
+        return { vs: vs, stamm: rest };
+      }
+    }
+    return null;
+  }
+  function umlautKlasse(st) {
+    return st.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      .replace(/a(?!u)/, '[aä]').replace(/o/, '[oö]').replace(/u/, '[uü]');
+  }
   function satzMarkiert(satz, wort, klasse) {
     var s = esc(satz || '');
+    var k = 'vt-mark' + (klasse ? ' ' + klasse : '');
     var re = wortRegex(wort);
-    if (!re) return s;
-    return s.replace(re, '$1<mark class="vt-mark' + (klasse ? ' ' + klasse : '') + '">$2</mark>');
+    if (re && re.test(s)) return s.replace(re, '$1<mark class="' + k + '">$2</mark>');
+    var t = trennbar(wort);
+    if (!t) return s;
+    var reV = new RegExp('(^|[\\s(„"\'])(' + umlautKlasse(t.stamm) + '[a-zäöüß]{0,3})(?=[\\s.,!?;:)"„\']|$)', 'i');
+    var m = reV.exec(s);
+    if (!m) return s;
+    var nach = m.index + m[0].length;
+    var reP = new RegExp('(\\s)(' + t.vs + ')(?=[\\s.,!?;:)"„\']|$)', 'i');
+    var rest = s.slice(nach), m2 = reP.exec(rest);
+    if (!m2) return s;
+    var vorn = s.slice(0, m.index) + m[1] + '<mark class="' + k + '">' + m[2] + '</mark>';
+    var hinten = rest.slice(0, m2.index) + m2[1] + '<mark class="' + k + '">' + m2[2] + '</mark>' + rest.slice(m2.index + m2[0].length);
+    return vorn + hinten;
+  }
+
+  /* 22.11.2026: Gut 270 Einträge haben im Feld bsp keinen ganzen Satz,
+     sondern einen Hinweis („zum Abschied“, „10“, „zwei Liter Milch“).
+     Die stehen jetzt als „So benutzt man es“ da statt als „Beispiel aus
+     dem Alltag“, und aus ihnen wird kein Satz zum Bauen gemacht. */
+  function istSatz(v) {
+    var b = String((v && v.bsp) || '').trim();
+    return /^[A-ZÄÖÜ„"0-9]/.test(b) && /[.!?…]["“”»]?$/.test(b) && b.split(/\s+/).length >= 3;
+  }
+  /* Etikett über dem Beispiel: ganzer Satz mit dem Wort = „Beispiel aus
+     dem Alltag“, Wortverbindung mit dem Wort = „So benutzt man es“,
+     Wort kommt gar nicht vor (Merksatz, Zahl, Erläuterung) = „Zum Wort“. */
+  function bspMitWort(v) { return /<mark/.test(satzMarkiert(v.bsp, v.wort || v.de)); }
+  function bspKlasse(v) {
+    if (!bspMitWort(v)) return ' zumwort';
+    return istSatz(v) ? '' : ' hinweis';
+  }
+  /* Ob die Erklärung das Wort schon verrät („kürzen – etwas kürzer
+     machen“). Dann taugt sie nicht als Frage. */
+  function erklaerungOk(v) {
+    var b = String((v && v.bedeutung) || '').toLowerCase();
+    if (b.length < 8) return false;
+    var teile = String(v.wort || v.de || '').toLowerCase().replace(/[^a-zäöüß\s]/g, ' ').split(/\s+/);
+    return !teile.some(function (t) {
+      if (t.length < 4) return false;
+      var st = t.replace(/(en|er|es|em|e|n|s)$/, '');
+      if (st.length < 4) st = t;
+      return b.indexOf(st) > -1;
+    });
   }
 
   /* ================= Bild ================= */
@@ -313,9 +380,16 @@
 
     // Ein Spiel in die Mitte, wenn genug Wörter mit Übersetzung da sind
     var mitTr = woerter.filter(function (v) { return !!trWort(v); });
+    /* Nur Nomen: bei Grüßen oder Wendungen sehen die Fotos sich zu ähnlich */
+    var mitFoto = woerter.filter(function (v) { return hatBild(v) && v.art === 'nomen'; });
     if (mitTr.length >= 5) {
       var pos = Math.min(alle.length, Math.max(3, Math.round(alle.length / 3)));
       alle.splice(pos, 0, { spiel: 'paare', woerter: mische(mitTr).slice(0, 5) });
+    } else if (mitFoto.length >= 4) {
+      /* Ohne Übersetzung: Wort zum Foto. Erst nach der Hälfte der Runde,
+         damit die neuen Wörter schon einmal gesehen wurden. */
+      var pos2 = Math.min(alle.length, Math.max(4, Math.round(alle.length / 2)));
+      alle.splice(pos2, 0, { spiel: 'paare', bild: true, woerter: mische(mitFoto).slice(0, 4) });
     }
     return alle;
   }
@@ -325,6 +399,7 @@
     var m = [];
     if (trWort(v)) m.push('uebersetzung');
     if (hatBild(v)) m.push('bild');
+    if (erklaerungOk(v)) m.push('erklaerung');
     m.push('hoeren');
     return zufall(m);
   }
@@ -333,8 +408,10 @@
     var m = [];
     if (v.artikel) m.push('artikel');
     if (luecken(v)) m.push('luecke');
-    if (!/\s/.test((v.wort || v.de).trim())) m.push('buchstaben');
+    var kurz = (v.wort || v.de).trim();
+    if (!/\s/.test(kurz) && kurz.length <= 13) m.push('buchstaben');
     if (trWort(v)) m.push('rueckwaerts');
+    if (erklaerungOk(v)) m.push('bedeutung');
     m.push('hoeren');
     m = m.filter(function (t) { return t !== nicht; });
     return m.length ? zufall(m) : 'hoeren';
@@ -355,6 +432,9 @@
     kennenlernen: { f: 'Neues Wort', g: 'Kennenlernen', farbe: '#8A6500', ic: '' },
     uebersetzung: { f: 'Was heißt das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
     rueckwaerts: { f: 'Welches deutsche Wort ist das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
+    erklaerung: { f: 'Welches Wort passt zur Erklärung?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
+    bedeutung: { f: 'Was bedeutet das?', g: 'Bedeutung', farbe: '#0E6D85', ic: '' },
+    buchstaben: { f: 'Setz das Wort zusammen', g: 'Schreiben', farbe: '#D42A21', ic: '' },
     bild: { f: 'Welches Bild passt?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
     artikel: { f: 'der, die oder das?', g: 'Erkennen', farbe: '#0E7FA0', ic: '' },
     luecke: { f: 'Welches Wort fehlt im Satz?', g: 'Im Satz', farbe: '#14181B', ic: '' },
@@ -385,11 +465,25 @@
       m = ['hoeren'];
       if (!lang) m.push('tippen');
       if (kannL) m.push('satzhoeren');
-      var wz = hatBsp ? v.bsp.split(/\s+/).length : 0;
+      var wz = hatBsp && istSatz(v) && bspMitWort(v) ? v.bsp.split(/\s+/).length : 0;
       if (wz >= 4 && wz <= 9) m.push('satzbau');
     }
-    if (!hatTr) m = m.filter(function (t) { return t !== 'rueckwaerts' && t !== 'uebersetzung' && t !== 'tippen'; });
-    if (!m.length) m = hatTr ? ['rueckwaerts'] : ['bild'];
+    /* Ohne Übersetzung (seit 21.11. abgeschaltet) übernimmt die deutsche
+       Erklärung: „Was bedeutet das?“ statt Übersetzung, „Welches Wort
+       passt zur Erklärung?“ statt rückwärts, und Schreiben mit Bild und
+       Erklärung als Vorlage. Vorher blieben nur Hören und Bild übrig. */
+    if (!hatTr) {
+      var eOk = erklaerungOk(v);
+      m = m.map(function (t) {
+        if (t === 'uebersetzung') return eOk ? 'bedeutung' : null;
+        if (t === 'rueckwaerts') return eOk ? 'erklaerung' : null;
+        if (t === 'tippen') return (eOk || hatBild(v)) ? 'tippen' : null;
+        return t;
+      }).filter(Boolean);
+      if (st <= 1 && eOk) m.push('erklaerung');
+      if (st >= 2 && eOk) m.push('bedeutung');
+    }
+    if (!m.length) m = hatBild(v) ? ['bild'] : ['hoeren'];
     return zufall(m);
   }
 
@@ -398,6 +492,7 @@
       if (x.id === v.id) return false;
       if (art === 'tr' && !trWort(x)) return false;
       if (art === 'einzel' && /\s/.test((x.wort || x.de).trim())) return false;
+      if (art === 'bed' && (!x.bedeutung || normal(x.bedeutung) === normal(v.bedeutung))) return false;
       return true;
     });
     var nah = basis.filter(function (x) { return x.niveau === v.niveau && x.art === v.art; });
@@ -406,8 +501,14 @@
     /* Ein Text darf nur einmal vorkommen, und nie so wie die Lösung:
        im Pool steht dasselbe Wort manchmal unter zwei ids. */
     var gesehen = {}; gesehen[normal(v.de)] = 1; gesehen[normal(v.wort || v.de)] = 1;
+    if (art === 'bed') gesehen['b:' + normal(v.bedeutung)] = 1;
     var aus = [];
     mische(quelle).concat(mische(basis)).some(function (x) {
+      if (art === 'bed') {
+        var kb = 'b:' + normal(x.bedeutung);
+        if (gesehen[kb]) return false;
+        gesehen[kb] = 1;
+      }
       var k1 = normal(x.de), k2 = normal(x.wort || x.de);
       if (gesehen[k1] || gesehen[k2]) return false;
       gesehen[k1] = 1; gesehen[k2] = 1; aus.push(x);
@@ -921,6 +1022,19 @@
       : '<p class="vbx-nichts">Kein Wort gefunden. Versuch es mit dem Wortanfang.</p>';
   };
   window.__vtSucheUeben = function () { runde(SUCHE); };
+  /* Nur zum Prüfen (Vorschau-Skripte): eine Aufgabenart zu einem Wort. */
+  window.__vtProbe = function (typ, id) {
+    var v = alleWoerter().filter(function (x) { return x.id === id; })[0];
+    if (!v) return false;
+    SERIE = {}; POS = 0; ERG = []; LAEUFT = true;
+    RUNDE = typ === 'paare'
+      ? [{ spiel: 'paare', bild: true, woerter: alleWoerter().filter(function (x) { return hatBild(x) && x.art === 'nomen' && x.id !== v.id; }).slice(0, 3).concat([v]) }]
+      : [{ v: v, typ: typ, letzte: true }];
+    zeichne(); return true;
+  };
+  window.__vtTest = { satzMarkiert: satzMarkiert, istSatz: istSatz, erklaerungOk: erklaerungOk, typFuer: function (id, st) {
+    var v = alleWoerter().filter(function (x) { return x.id === id; })[0]; var alt = BEKANNT[id];
+    BEKANNT[id] = { stufe: st }; var t = typFuer(v); if (alt) BEKANNT[id] = alt; else delete BEKANNT[id]; return t; } };
 
   function startbild() {
     var plan = tagesplan();
@@ -1138,7 +1252,7 @@
         + (ue ? '<p class="vt-unter' + rtlK() + '" style="text-align:center">' + esc(ue) + '</p>' : '')
         + steckbrief(v)
         + (v.bedeutung ? '<div class="vt-bed"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
-        + (v.bsp ? '<div class="vt-satzbox' + (v.bedeutung ? ' mitlabel' : '') + '"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
+        + (v.bsp ? '<div class="vt-satzbox' + (v.bedeutung ? ' mitlabel' : '') + bspKlasse(v) + '"><p class="vt-satz">' + satzMarkiert(v.bsp, v.wort || v.de) + ' ' + lauts(v.bsp, 1) + '</p>'
           + (trSatz(v) ? '<div class="vt-satz-tr' + rtlK() + '">' + esc(trSatz(v)) + '</div>' : '') + '</div>' : '')
         + '<button class="vt-pruefen" onclick="__vtWeiterNeu()">Verstanden, weiter</button>';
 
@@ -1155,6 +1269,21 @@
       h += '<h2 class="vt-gross' + rtlK() + '">' + esc(trWort(v)) + '</h2>'
         + '<div class="vt-opt">' + o2.map(function (o, i) {
           return '<button class="vt-o" onclick="__vtWahl(this,' + (o === v.de) + ')">' + tasteN(i) + esc(o) + '</button>';
+        }).join('') + '</div>';
+
+    } else if (typ === 'erklaerung') {
+      var oE = mische(ablenker(v, 3, 'de').map(function (x) { return x.de; }).concat([v.de]));
+      h += '<div class="vt-satzbox vbx-erkl"><span class="vbx-erkl-k">Erklärung</span><p class="vt-satz">' + esc(v.bedeutung) + '</p></div>'
+        + '<div class="vt-opt zwei">' + oE.map(function (o, i) {
+          return '<button class="vt-o" onclick="__vtWahl(this,' + (o === v.de) + ')">' + tasteN(i) + esc(o) + '</button>';
+        }).join('') + '</div>';
+
+    } else if (typ === 'bedeutung') {
+      var andere = ablenker(v, 3, 'bed').map(function (x) { return x.bedeutung; });
+      var oB = mische(andere.concat([v.bedeutung]));
+      h += '<h2 class="vt-gross mitte">' + artikelChip(v.artikel) + esc(v.wort || v.de) + lauts(v.de) + '</h2>'
+        + '<div class="vt-opt">' + oB.map(function (o, i) {
+          return '<button class="vt-o vbx-lang" onclick="__vtWahl(this,' + (o === v.bedeutung) + ')">' + tasteN(i) + esc(o) + '</button>';
         }).join('') + '</div>';
 
     } else if (typ === 'bild') {
@@ -1206,17 +1335,21 @@
       setTimeout(function () { sprich(v.bsp, 0.88); }, 300);
 
     } else if (typ === 'tippen') {
+      var vorlage = trWort(v) || (erklaerungOk(v) ? v.bedeutung : '');
+      var anf = (v.wort || v.de).trim().charAt(0);
       h += bild(v, '')
-        + '<h2 class="vt-gross mitte' + rtlK() + '" style="font-size:clamp(26px,3.6vw,38px)">' + esc(trWort(v)) + '</h2>'
+        + (vorlage ? '<h2 class="vt-gross mitte' + rtlK() + '" style="font-size:clamp(20px,2.8vw,28px);line-height:1.35">' + esc(vorlage) + '</h2>' : '')
+        + '<p class="vbx-tipp">Das Wort beginnt mit <b>' + esc(anf) + '</b> und hat ' + (v.wort || v.de).trim().length + ' Zeichen'
+        + (v.artikel ? ', den Artikel kannst du dazuschreiben' : '') + '.</p>'
         + '<input class="vt-eingabe" id="vtIn" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" '
-        + 'placeholder="' + (v.artikel ? 'mit Artikel, z. B. der Tisch' : 'auf Deutsch schreiben …') + '">'
+        + 'placeholder="' + (v.artikel ? 'z. B. der Tisch' : 'auf Deutsch schreiben …') + '">'
         + '<button class="vt-pruefen" onclick="__vtTippen()">Prüfen</button>';
 
     } else if (typ === 'buchstaben') {
       var ziel = (v.wort || v.de).trim();
       var buchst = mische(ziel.split(''));
       h += bild(v, '')
-        + (trWort(v) ? '<h2 class="vt-gross mitte' + rtlK() + '" style="font-size:clamp(22px,3vw,32px)">' + esc(trWort(v)) + '</h2>' : '')
+        + ((trWort(v) || erklaerungOk(v)) ? '<h2 class="vt-gross mitte' + rtlK() + '" style="font-size:clamp(20px,2.8vw,28px);line-height:1.35">' + esc(trWort(v) || v.bedeutung) + '</h2>' : '')
         + '<div class="vt-bau vt-buch" id="vtBau"></div>'
         + '<div class="vt-teile" id="vtTeile">' + buchst.map(function (c) {
           return '<button class="vt-teil vt-bt" onclick="__vtBau(this)">' + esc(c) + '</button>';
@@ -1248,14 +1381,16 @@
     var links = mische(a.woerter.slice());
     var rechts = mische(a.woerter.slice());
     document.getElementById('vtKarte').innerHTML =
-      '<div class="vt-etikett" style="--tf:#C7457F"><span class="ic">🎴</span>Finde die Paare</div>'
-      + '<p class="vt-unter">Tippe ein deutsches Wort an und dann seine Übersetzung.</p>'
+      '<div class="vt-etikett" style="--tf:#D42A21"><span class="gr">Spiel</span>Finde die Paare</div>'
+      + '<p class="vt-unter">' + (a.bild ? 'Tippe ein Wort an und dann das passende Foto.' : 'Tippe ein deutsches Wort an und dann seine Übersetzung.') + '</p>'
       + '<div class="vt-paare">'
       + '<div class="vt-sp">' + links.map(function (v) {
         return '<button class="vt-pk" data-id="' + esc(v.id) + '" data-seite="l" onclick="__vtPaar(this)">'
-          + (v.em ? '<span class="e">' + v.em + '</span>' : '') + '<span>' + esc(v.de) + '</span></button>';
+          + (v.em && !a.bild ? '<span class="e">' + v.em + '</span>' : '') + '<span>' + esc(v.de) + '</span></button>';
       }).join('') + '</div>'
       + '<div class="vt-sp">' + rechts.map(function (v) {
+        if (a.bild) return '<button class="vt-pk vbx-pkb" data-id="' + esc(v.id) + '" data-seite="r" onclick="__vtPaar(this)" aria-label="Foto">'
+          + bild(v, 'mini') + '</button>';
         return '<button class="vt-pk' + rtlK() + '" data-id="' + esc(v.id) + '" data-seite="r" onclick="__vtPaar(this)">'
           + '<span>' + esc(trWort(v)) + '</span></button>';
       }).join('') + '</div>'
@@ -1297,7 +1432,7 @@
     var gut = PAAR.fehler === 0;
     f.className = 'vt-fuss an ' + (gut ? 'gut' : 'schlecht');
     f.innerHTML = '<div class="vt-fuss-in"><div class="vt-fuss-tx">'
-      + '<b>' + (gut ? '<span>🎴</span>Alle Paare auf Anhieb!' : '<span>🎴</span>Geschafft — mit ' + PAAR.fehler + ' Fehlversuch' + (PAAR.fehler === 1 ? '' : 'en')) + '</b>'
+      + '<b>' + (gut ? 'Alle Paare auf Anhieb!' : 'Geschafft, mit ' + PAAR.fehler + ' Fehlversuch' + (PAAR.fehler === 1 ? '' : 'en')) + '</b>'
       + '<div class="lsg">' + PAAR.gesamt + ' Wörter zugeordnet.</div></div>'
       + '<button class="vt-weiter" onclick="__vtAntwort()">Weiter →</button></div>';
   }
@@ -1783,6 +1918,21 @@
       '#vtVoll .vt-fuss.schlecht{background:#FDF5F4;border-top-color:#D42A21}',
       '#vtVoll .vt-fuss.schlecht b{color:#9E1F18}',
       '#vtVoll .vt-bed span{color:#0E6D85}',
+      '#vtVoll .vt-satzbox.mitlabel.hinweis::before{content:"So benutzt man es"}',
+      '#vtVoll .vt-satzbox.mitlabel.zumwort::before{content:"Zum Wort"}',
+      '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
+      '#vtVoll .vbx-erkl{position:relative;padding-top:34px;border-color:#BFDDE6;background:#F3F9FB}',
+      '#vtVoll .vbx-erkl-k{position:absolute;top:11px;left:18px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#0E6D85}',
+      '#vtVoll .vbx-erkl .vt-satz{font-size:clamp(19px,2.6vw,26px);line-height:1.45}',
+      '#vtVoll .vt-o.vbx-lang{font-size:16px;font-weight:600;line-height:1.45;padding:18px 22px 18px 34px;text-align:left}',
+      '#vtVoll .vbx-tipp{text-align:center;color:#5F6B76;font-size:15px;margin:-4px 0 14px}',
+      '#vtVoll .vbx-tipp b{display:inline-block;min-width:26px;padding:1px 7px;border-radius:7px;background:#FFF3C4;color:#14181B;border-bottom:2px solid #E0A800}',
+      '#vtVoll .vbx-pkb{justify-content:center;padding:6px}',
+      '#vtVoll .vbx-pkb .vt-bild.mini{width:72px;height:72px;border-radius:12px;margin:0}',
+      '#vtVoll .vt-pk:hover{border-color:#0E6D85}',
+      '#vtVoll .vt-pk.gewaehlt{border-color:#14181B;background:#F1F4F7;box-shadow:0 3px 0 #C9D1D8}',
+      '#vtVoll .vt-pk.fertig{border-color:#0E6D85;background:#E8F4F7;color:#0A4E62;box-shadow:0 3px 0 #BFDDE6}',
+      '#vtVoll .vt-pk.daneben{border-color:#D42A21;background:#FDF0EF}',
       '#vtVoll .vbx-steck{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:4px 0 14px}',
       '#vtVoll .vbx-steck span{font-size:12.5px;font-weight:700;color:#4B5763;background:#F1F4F7;border-radius:999px;padding:3px 11px}',
       '#vtVoll .vbx-steck .lv{background:var(--lf);color:#fff}',
