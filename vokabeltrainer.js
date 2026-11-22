@@ -620,11 +620,42 @@
       if (art === 'tr' && !trWort(x)) return false;
       if (art === 'einzel' && /\s/.test((x.wort || x.de).trim())) return false;
       if (art === 'bed' && (!x.bedeutung || normal(x.bedeutung) === normal(v.bedeutung))) return false;
+      /* Keine Wortteile („-stomie“) und keine Doppelformen als Auswahl,
+         keine Zahlwörter neben Nicht-Zahlen („Zwanzig Stellen …“ passt sonst auch) */
+      var xw0 = String(x.wort || x.de || '').trim();
+      if (art !== 'bed' && /^-|-$|\/|…/.test(xw0)) return false;
+      if (art !== 'bed' && /Zahlen/.test(x.thema || '') && !/Zahlen/.test(v.thema || '')) return false;
       return true;
     });
     var nah = basis.filter(function (x) { return x.niveau === v.niveau && x.art === v.art; });
     var mit = basis.filter(function (x) { return x.art === v.art; });
     var quelle = nah.length >= n ? nah : (mit.length >= n ? mit : basis);
+    /* 22.11.2026: Bei Lücke und Hören konnte ein falscher Vorschlag auch
+       passen („Ich schicke meine Meldung per E-Mail“ statt „Bewerbung“).
+       Deshalb: Ablenker aus einem anderen Thema, bei Nomen mit demselben
+       Artikel (damit nicht die Grammatik die Lösung verrät), und nie ein
+       Wort, das ohnehin im Satz steht. */
+    if (art === 'einzel' || art === 'de') {
+      var satzKlein = String(v.bsp || '').toLowerCase();
+      var fremdOk = function (x) {
+        if ((x.thema || '') === (v.thema || '')) return false;
+        var xw = String(x.wort || x.de || '').trim().toLowerCase();
+        return !(art === 'einzel' && xw && satzKlein.indexOf(xw) > -1);
+      };
+      /* Am besten aus einem anderen Kurs (Alltag A1, Büro, Medizin …),
+         sonst aus einem anderen Thema. Zwei Wörter aus demselben Bereich
+         passen sonst zu leicht beide („Ich hätte gern die Suppe / Milch“). */
+      var kurs = function (x) { return String((x.quellen || [])[0] || x.kurs || '').split('-')[0]; };
+      var vk = kurs(v);
+      var anderswo = function (x) { return fremdOk(x) && (!vk || kurs(x) !== vk); };
+      var f0 = mit.filter(anderswo), f1 = nah.filter(fremdOk), f2 = mit.filter(fremdOk);
+      if (art === 'einzel' && f0.length >= n) quelle = f0;
+      else if (f1.length >= n) quelle = f1; else if (f2.length >= n) quelle = f2;
+      if (art === 'einzel' && v.artikel) {
+        var gleich = quelle.filter(function (x) { return x.artikel === v.artikel; });
+        if (gleich.length >= n) quelle = gleich;
+      }
+    }
     /* Ein Text darf nur einmal vorkommen, und nie so wie die Lösung:
        im Pool steht dasselbe Wort manchmal unter zwei ids. */
     var gesehen = {}; gesehen[normal(v.de)] = 1; gesehen[normal(v.wort || v.de)] = 1;
@@ -1065,7 +1096,7 @@
   }
   function wortZeile(v, such) {
     var w = (v.wort || v.de || '').trim();
-    return '<div class="vbx-wz">' + bildEmoji(v, 'mini')
+    return '<div class="vbx-wz" role="button" tabindex="0" data-id="' + esc(v.id) + '" onclick="__vtWortkarte(event,this)">' + bildEmoji(v, 'mini')
       /* Artikel nur bei Nomen: im Pool tragen auch Wendungen wie „passt mir gut.“ einen */
       + '<div class="tx"><b>' + (/^[A-ZÄÖÜ]/.test(w) ? artikelChip(v.artikel) : '') + '<span class="w">' + (such ? markTreffer(w, such) : esc(w)) + '</span></b>'
       + (v.bedeutung ? '<span class="bed">' + (such ? markTreffer(v.bedeutung, such) : esc(v.bedeutung)) + '</span>' : '')
@@ -1183,6 +1214,59 @@
     window.__vtAntwort();
   };
 
+  /* 22.11.2026: Jedes Wort in „Meine Wörter“ und in der Suche öffnet eine
+     Wortkarte: großes Bild, Bedeutung, markierter Satz, „Gut zu wissen“,
+     in welchem Kasten es liegt und wann es wiederkommt. Von dort lässt
+     sich genau dieses Wort üben. */
+  function wiederWann(v) {
+    var b = BEKANNT[v.id];
+    if (!b) return 'Noch nicht geübt. In der Tagesrunde lernst du es kennen.';
+    if (istFaellig(v)) return 'Heute fällig.';
+    if (b.faellig) {
+      var d = new Date(b.faellig + 'T12:00:00');
+      if (!isNaN(d)) return 'Kommt wieder am ' + d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' }) + '.';
+    }
+    return 'Kommt wieder, wenn es Zeit zum Auffrischen ist.';
+  }
+  window.__vtWortkarte = function (ev, el) {
+    if (ev && ev.target && ev.target.closest && ev.target.closest('.vt-lauts')) return;
+    var id = el && el.getAttribute('data-id');
+    var v = alleWoerter().filter(function (x) { return x.id === id; })[0];
+    if (!v) return;
+    var w = (v.wort || v.de || '').trim(), k = kastenVon(v);
+    var alt = document.getElementById('vbxSheet'); if (alt) alt.remove();
+    var d = document.createElement('div');
+    d.id = 'vbxSheet'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    d.innerHTML = '<div class="vbx-sh-bg" onclick="__vtWortkarteZu()"></div><div class="vbx-sh">'
+      + '<button class="vbx-sh-x" onclick="__vtWortkarteZu()" aria-label="Schließen">×</button>'
+      + '<div class="vbx-sh-kopf">' + bildEmoji(v, 'gr')
+      + '<div><h2>' + (/^[A-ZÄÖÜ]/.test(w) ? artikelChip(v.artikel) : '') + esc(w) + ' ' + lauts(v.de || w) + '</h2>' + steckbrief(v) + '</div></div>'
+      + (v.bedeutung ? '<div class="vbx-sh-b"><span>Bedeutung</span><p>' + esc(v.bedeutung) + '</p></div>' : '')
+      + (v.bsp ? '<div class="vbx-sh-b satz"><span>Beispiel</span><p>' + satzMarkiert(v.bsp, w) + ' ' + lauts(v.bsp, 1) + '</p></div>' : '')
+      + (v.hinweis ? '<div class="vbx-sh-b gut"><span>Gut zu wissen</span><p>' + esc(v.hinweis) + '</p></div>' : '')
+      + '<div class="vbx-sh-stand">' + wanderungStatisch(k) + '<p>' + esc(wiederWann(v)) + '</p></div>'
+      + '<div class="vbx-knoepfe"><button class="vbx-b" type="button" onclick="__vtWortUeben(\'' + esc(v.id).replace(/'/g, '') + '\')">Dieses Wort üben</button>'
+      + '<button class="vbx-b hell" type="button" onclick="__vtWortkarteZu()">Schließen</button></div>'
+      + '</div>';
+    document.body.appendChild(d);
+    document.addEventListener('keydown', wortkarteTaste);
+  };
+  function wortkarteTaste(e) { if (e.key === 'Escape') window.__vtWortkarteZu(); }
+  window.__vtWortkarteZu = function () {
+    var d = document.getElementById('vbxSheet'); if (d) d.remove();
+    document.removeEventListener('keydown', wortkarteTaste);
+  };
+  window.__vtWortUeben = function (id) {
+    window.__vtWortkarteZu();
+    var v = alleWoerter().filter(function (x) { return x.id === id; })[0];
+    if (v) runde([v]);
+  };
+  function wanderungStatisch(k) {
+    return '<div class="vbx-sh-kaesten">' + KAESTEN.map(function (x, i) {
+      return '<span class="' + (i === k ? 'hier' : '') + '" style="--kf:' + K_FARBE[i] + '">' + esc(x.nm) + '</span>';
+    }).join('') + '</div>';
+  }
+
   function lernweg(offen) {
     var schritte = [
       ['#E0A800', 'Kennenlernen', 'Bild, Bedeutung und ein Satz aus dem Alltag. Das Wort ist im Satz markiert.'],
@@ -1269,7 +1353,7 @@
       : [{ v: v, typ: typ, letzte: true }];
     zeichne(); return true;
   };
-  window.__vtTest = { satzMarkiert: satzMarkiert, istSatz: istSatz, erklaerungOk: erklaerungOk, typFuer: function (id, st) {
+  window.__vtTest = { luecke: function (v) { return !!luecken(v); }, satzMarkiert: satzMarkiert, istSatz: istSatz, erklaerungOk: erklaerungOk, typFuer: function (id, st) {
     var v = alleWoerter().filter(function (x) { return x.id === id; })[0]; var alt = BEKANNT[id];
     BEKANNT[id] = { stufe: st }; var t = typFuer(v); if (alt) BEKANNT[id] = alt; else delete BEKANNT[id]; return t; } };
 
@@ -2163,6 +2247,8 @@
       V + '.vbx-weg-fuss{margin:8px 20px 18px;font-size:13.5px;color:#5F6B76;line-height:1.55}',
       /* Wortlisten */
       V + '.vbx-liste{display:grid;gap:8px}',
+      V + '.vbx-wz{cursor:pointer;transition:border-color .15s,box-shadow .15s}',
+      V + '.vbx-wz:hover{border-color:#BFDDE6;box-shadow:0 6px 16px -12px rgba(16,24,40,.4)}',
       V + '.vbx-wz{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;background:#fff;border:1px solid #E7EBF0;border-radius:16px;padding:12px 14px}',
       V + '.vbx-wz .vt-bild.mini{width:52px;height:52px;border-radius:12px;margin:0}',
       V + '.vbx-wz .tx{display:flex;flex-direction:column;gap:3px;min-width:0}',
@@ -2233,6 +2319,37 @@
       '#vtVoll .vbx-selbst .nein{background:#fff;color:#D42A21;border:2px solid #D42A21}',
       '#vtVoll .vbx-selbst .ja{background:#0E6D85;color:#fff;border:2px solid #0E6D85}',
       '@media(max-width:760px){' + V + '.vbx-tr{grid-template-columns:1fr 1fr;gap:8px}' + V + '.vbx-trk{padding:12px 11px 10px}' + V + '.vbx-trk span{font-size:12.5px}}',
+      '#vbxSheet{position:fixed;inset:0;z-index:10050;display:flex;align-items:flex-end;justify-content:center}',
+      '#vbxSheet .vbx-sh-bg{position:absolute;inset:0;background:rgba(20,24,27,.55)}',
+      '#vbxSheet .vbx-sh{position:relative;width:min(560px,100%);max-height:92vh;overflow:auto;background:linear-gradient(90deg,#14181B 0 33.3%,#D42A21 33.3% 66.6%,#E0A800 66.6%) top/100% 5px no-repeat,#fff;border-radius:22px 22px 0 0;padding:26px 20px 24px;box-shadow:0 -10px 40px rgba(0,0,0,.25);animation:vbxAuf .22s ease-out}',
+      '@media(min-width:761px){#vbxSheet{align-items:center}#vbxSheet .vbx-sh{border-radius:22px}}',
+      '#vbxSheet .vbx-sh-x{position:absolute;top:10px;right:12px;width:36px;height:36px;border:0;border-radius:50%;background:#F1F4F7;font-size:22px;cursor:pointer;color:#14181B}',
+      '#vbxSheet .vbx-sh-kopf{display:flex;gap:16px;align-items:center;margin-bottom:14px;padding-right:36px}',
+      '#vbxSheet .vbx-sh-kopf .vt-bild.gr{width:110px;height:110px;border-radius:18px;margin:0;flex:0 0 auto}',
+      '#vbxSheet .vbx-sh-kopf h2{font:700 26px/1.2 "Space Grotesk",Inter,sans-serif;margin:0 0 8px;color:#14181B;display:flex;align-items:center;gap:8px;flex-wrap:wrap}',
+      '#vbxSheet .vbx-steck{display:flex;flex-wrap:wrap;gap:6px}',
+      '#vbxSheet .vbx-steck span{font-size:12px;font-weight:700;color:#4B5763;background:#F1F4F7;border-radius:999px;padding:3px 10px}',
+      '#vbxSheet .vbx-steck .lv{background:var(--lf);color:#fff}',
+      '#vbxSheet .vbx-steck .lv[style*="#E0A800"]{color:#14181B}',
+      '#vbxSheet .vbx-sh-b{margin:0 0 12px}',
+      '#vbxSheet .vbx-sh-b span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#0E6D85;margin-bottom:3px}',
+      '#vbxSheet .vbx-sh-b p{margin:0;font-size:16px;line-height:1.55;color:#2A2F33}',
+      '#vbxSheet .vbx-sh-b.satz p{font-size:18px;background:#F8FAFB;border-radius:12px;padding:10px 12px}',
+      '#vbxSheet .vbx-sh-b.gut{border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;padding:8px 12px}',
+      '#vbxSheet .vbx-sh-b.gut span{color:#8A6500}',
+      '#vbxSheet .vt-mark{background:#FFF3C4;border-bottom:3px solid #E0A800;border-radius:4px;padding:0 3px;font-weight:700}',
+      '#vbxSheet .vbx-sh-stand{border-top:1px solid #EEF2F5;padding-top:12px;margin-top:4px}',
+      '#vbxSheet .vbx-sh-stand p{margin:6px 0 0;font-size:14px;color:#4B5763}',
+      '#vbxSheet .vbx-sh-kaesten{display:flex;gap:4px;flex-wrap:wrap}',
+      '#vbxSheet .vbx-sh-kaesten span{font-size:12px;font-weight:700;color:#9AA6AD;border:1px solid #E1E6EA;border-radius:999px;padding:2px 10px}',
+      '#vbxSheet .vbx-sh-kaesten span.hier{background:var(--kf);border-color:var(--kf);color:#fff}',
+      '#vbxSheet .vbx-sh-kaesten span.hier[style*="#E0A800"]{color:#14181B}',
+      '#vbxSheet .vbx-knoepfe{display:flex;gap:10px;margin-top:16px}',
+      '#vbxSheet .vbx-b{flex:1;justify-content:center;white-space:nowrap;border:0;border-radius:12px;background:#14181B;color:#fff;font:700 15px Inter,system-ui,sans-serif;padding:13px 16px;cursor:pointer;display:inline-flex}',
+      '#vbxSheet .vbx-b.hell{background:#fff;color:#14181B;border:1px solid #D5DCE3}',
+      '#vbxSheet .vt-lauts{width:38px;height:38px;border-radius:12px;font-size:16px}',
+      '#vbxSheet .vt-lauts.klein{width:30px;height:30px;font-size:13px;vertical-align:middle}',
+      '@media(max-width:760px){#vbxSheet .vbx-sh-kopf .vt-bild.gr{width:84px;height:84px}#vbxSheet .vbx-sh-kopf h2{font-size:22px}}',
       '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
       '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
