@@ -1358,6 +1358,31 @@
     var v = alleWoerter().filter(function (x) { return x.id === id; })[0]; var alt = BEKANNT[id];
     BEKANNT[id] = { stufe: st }; var t = typFuer(v); if (alt) BEKANNT[id] = alt; else delete BEKANNT[id]; return t; } };
 
+  /* 22.11.2026: Das Tagesziel gab es in der Datenbank schon (vok_stand:
+     heute/ziel/serie, Standard 15 Wörter), sichtbar war es nirgends.
+     Jetzt steht es auf der Bühne: wie viele Wörter heute geschafft sind,
+     ein Balken und die Wahl 10, 15, 25 oder 40. Die Tage am Stück zählen
+     nur Tage mit erreichtem Ziel. vok_ziel gilt in der Datenbank nur für
+     heute, deshalb merkt sich das Gerät den Wunsch und stellt ihn an
+     jedem neuen Tag wieder ein. */
+  var ZIELE = [10, 15, 25, 40];
+  function zielWunsch() { try { var z = parseInt(localStorage.getItem('vok_ziel_wunsch'), 10); return ZIELE.indexOf(z) > -1 ? z : 0; } catch (e) { return 0; } }
+  function zielHtml(heute, ziel) {
+    var p = ziel ? Math.min(100, Math.round((heute / ziel) * 100)) : 0;
+    var fertig = heute >= ziel;
+    return '<div class="vbx-ziel' + (fertig ? ' fertig' : '') + '">'
+      + '<div class="kopf"><span>Tagesziel</span><b>' + (fertig ? 'Geschafft: ' : '') + heute + ' von ' + ziel + ' Wörtern</b></div>'
+      + '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + ziel + '" aria-valuenow="' + heute + '"><i style="width:' + p + '%"></i></div>'
+      + '<div class="wahl" role="group" aria-label="Tagesziel wählen">' + ZIELE.map(function (z) {
+        return '<button type="button" class="' + (z === ziel ? 'an' : '') + '" onclick="__vtZielWahl(' + z + ')">' + z + '</button>';
+      }).join('') + '</div></div>';
+  }
+  window.__vtZielWahl = function (z) {
+    try { localStorage.setItem('vok_ziel_wunsch', String(z)); } catch (e) {}
+    var vz = document.getElementById('v-vokabeln'); if (vz) vz.__vbxHtml = null;
+    return window.__vtZiel(z);
+  };
+
   function startbild() {
     /* Beim ersten Öffnen auf der eigenen Stufe (fuer-dich.js). Erst wenn
        ICH da ist, gilt es als erledigt, sonst bliebe es für immer auf „Alle“. */
@@ -1405,6 +1430,7 @@
     /* 14.11.2026: Foto statt Amanda-Zeichnung, wie in den anderen
        Bereichen. Fehlt es, kommt Amanda wie vorher. */
     var amandaBild = (window.AmandaBild ? window.AmandaBild(fertig ? 'pokal' : 'lesen') : 'amanda/a-lesen.webp');
+    h += zielHtml(heute, STAND.ziel || 15);
     h += '</div><span class="vpx-bild"><img src="bilder/bereich/vk-hero.webp" alt="" '
       + 'onerror="if(this.dataset.f){this.parentNode.remove()}else{this.dataset.f=1;this.parentNode.className=\'vpx-bild amanda\';this.src=\'' + amandaBild + '\'}"></span></div>';
 
@@ -2029,6 +2055,10 @@
   async function ladeStand() {
     var c = sb(); if (!c) return;
     try { var a = await c.rpc('vok_stand'); STAND = (a && a.data) || {}; } catch (e) { STAND = {}; }
+    var wunsch = zielWunsch();
+    if (wunsch && STAND.ziel && STAND.ziel !== wunsch) {
+      try { await c.rpc('vok_ziel', { p_ziel: wunsch }); STAND.ziel = wunsch; } catch (e) {}
+    }
     try { window.VOKABEL_STAND = STAND; } catch (e) { }
     try {
       var b = await c.rpc('vok_bekannt');
@@ -2363,6 +2393,16 @@
       '#v-vokabeln .vp{overflow-x:clip}',
       '#v-vokabeln .vbx-wz .tx b,#v-vokabeln .vbx-wz .bsp,#v-vokabeln .vbx-wz .bed{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}',
       '@media(max-width:360px){#vtVoll .vt-pk{font-size:13px;padding:10px 8px}#vtVoll .vbx-bildpaare .vbx-pkb .vt-bild.mini{width:60px;height:60px}}',
+      V + '.vbx-ziel{margin-top:18px;width:100%;max-width:420px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:12px 14px}',
+      V + '.vbx-ziel .kopf{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}',
+      V + '.vbx-ziel .kopf span{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#E0A800}',
+      V + '.vbx-ziel .kopf b{font-size:14px;color:#fff}',
+      V + '.vbx-ziel .bar{height:8px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden}',
+      V + '.vbx-ziel .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#D42A21,#E0A800);transition:width .4s}',
+      V + '.vbx-ziel.fertig .bar i{background:#E0A800}',
+      V + '.vbx-ziel .wahl{display:flex;gap:6px;margin-top:10px}',
+      V + '.vbx-ziel .wahl button{flex:1;min-height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:700 13px Inter,system-ui,sans-serif;cursor:pointer}',
+      V + '.vbx-ziel .wahl button.an{background:#fff;color:#14181B;border-color:#fff}',
       '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
       '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
