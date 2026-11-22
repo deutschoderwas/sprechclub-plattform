@@ -125,7 +125,9 @@
     ['wortschatz|einkaufen', 'womit man bezahlt', 'die Karte', 'die Tüte'],
     ['wortschatz|a1-begruessung', 'Mein ___ ist Ana Silva', 'Vorname', 'Beruf'],
     ['wortschatz|a1-begruessung', 'Mein ___ ist Ana Silva', 'Nachname', 'Gruß'],
-    ['wortschatz|sprachkurs-neu', 'Mein Sohn macht seine ___', 'Aufgabe', 'Ausnahme']
+    ['wortschatz|sprachkurs-neu', 'Mein Sohn macht seine ___', 'Aufgabe', 'Ausnahme'],
+    /* „am Himmel“: Wolke ist gemeint, aber die Sonne steht auch am Himmel */
+    ['wortschatz|natur', 'Welches Wort passt: „am Himmel“', 'die Sonne', 'der Baum']
   ];
   /* 22.11.2026: In den Grammatik-Auswahlfragen standen gleichbedeutende
      Wörter nebeneinander, beide richtig: „Es regnete. ___ sind wir
