@@ -173,6 +173,44 @@ export default async function handler(req, res) {
 
   const bericht = { geprueft: 0, gesperrt: [], entsperrt: [], gekuendigt_laeuft_aus: [], kundennummer_ergaenzt: [], kundennummer_gewechselt: [], stripe_bild: [], userid_nachgetragen: [], stunden_entfernt: [], unklar: [], ohne_stripe: [], von_hand: [], nachgetragen: [], abschied_gesendet: [], fehler: [] };
 
+  /* ------------------------------------------------------------
+     Wer geht, landet auf der Leadliste
+
+     Julia, 23.11.2026: "vermerke auf der Leadseite ... dass diese
+     Leute ab dem 01.12 auf der Leadliste auf der Admin Seite sind."
+
+     Gemeint sind die, deren Abo ausgelaufen ist. Sie kennen den Club,
+     sie haben bezahlt, sie sind der naheliegendste Grund fuer eine
+     Nachricht - und standen bisher nach dem letzten Tag nirgends mehr,
+     ausser in der Schuelerliste unter "gekuendigt".
+
+     Angelegt wird nur, was es noch nicht gibt: Wer schon als Lead
+     drinsteht (etwa aus der Warteliste), bekommt keinen zweiten
+     Eintrag. Ein Fehler hier darf den Lauf nicht anhalten - der
+     Zugang ist das Wichtige, die Leadliste ist die Kuer. */
+  async function alsLeadVermerken(prof, liefBis) {
+    const mail = String((prof && prof.email) || '').trim().toLowerCase();
+    if (!mail) return;
+    try {
+      const { data: da } = await sb.from('leads').select('id').ilike('email', mail).limit(1);
+      if (da && da.length) return;
+      const bis = liefBis ? String(liefBis).slice(0, 10).split('-').reverse().join('.') : null;
+      await sb.from('leads').insert({
+        name: prof.name || null,
+        email: mail,
+        quelle: 'gekuendigt',
+        status: 'neu',
+        notiz: 'War ' + (prof.tier === 'community' ? 'im Lernclub' : 'im Sprechclub')
+             + (bis ? ', Zugang lief bis ' + bis : '') + '. Abo beendet.',
+      });
+      (bericht.als_lead_vermerkt = bericht.als_lead_vermerkt || [])
+        .push({ name: prof.name || mail, email: mail, lief_bis: bis });
+    } catch (e) {
+      bericht.fehler.push({ name: (prof && (prof.name || prof.email)) || '?',
+        fehler: 'Leadliste: ' + String((e && e.message) || e).slice(0, 120) });
+    }
+  }
+
   const abschiedListe = [];
   /* Wer bald auslaeuft, weil gekuendigt wurde, soll das vorher
      erfahren — nicht erst, wenn die Tuer schon zu ist. */
@@ -509,6 +547,7 @@ export default async function handler(req, res) {
             vorher:  { status: p.status, tier: p.tier },
             nachher: { status: 'gekuendigt', tier: null },
           });
+          await alsLeadVermerken(p, abo.abo_ende);
           /* Und die Stunden, die nach dem Ende noch gebucht sind, weg.
 
              Julia, 4.11.2026: "sie koennen zwar vorbuchen, aber SOBALD
@@ -870,6 +909,7 @@ export default async function handler(req, res) {
             vorher:  { status: h.status, tier: h.tier },
             nachher: { status: 'gekuendigt', tier: null },
           });
+          await alsLeadVermerken(h, h.abo_ende);
           /* Dieselbe Regel wie bei der Kuendigung: was nach dem Ende
              gebucht ist, faellt weg. Sonst steht jemand in der
              Teilnehmerliste, der nicht mehr hineinkommt. */
@@ -1208,6 +1248,7 @@ export default async function handler(req, res) {
     || bericht.gesperrt.length || bericht.entsperrt.length || bericht.archiviert.length
     || bericht.fehler.length || (bericht.nachgetragen || []).length || (bericht.bald_faellig || []).length
     || (bericht.von_hand_zahlt_doch || []).length
+    || (bericht.als_lead_vermerkt || []).length
     || (bericht.zahlt_ohne_konto || []).length
     || (bericht.webhook && bericht.webhook.lebt === false);
   if (wichtig && !trocken && process.env.BREVO_API_KEY) {
@@ -1225,6 +1266,7 @@ export default async function handler(req, res) {
       (bericht.archiviert.length ? `<p><b>Ins Archiv verschoben (alter Schüler ohne Guthaben):</b></p><ul>${bericht.archiviert.map(x => `<li>${x.name} (${x.email}) — letzte Guthaben-Bewegung: ${x.letzte_bewegung}</li>`).join('')}</ul>` : '') +
       (bericht.abschied_gesendet.length ? `<p style="color:#666">„Schade, dass du gehst" ist rausgegangen an: ${bericht.abschied_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.gekuendigt_laeuft_aus || []).length ? `<p><b>Gekündigt — der Zugang läuft noch:</b></p><ul>${bericht.gekuendigt_laeuft_aus.map(x => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.tier ? ' — ' + x.tier : ''}${x.gekuendigt_am ? ' — gekündigt am ' + x.gekuendigt_am : ''} — Zugang bis <b>${x.bis}</b>, Erinnerung am ${x.erinnerung_am}, Verabschiedung am ${x.verabschiedung_am}</li>`).join('')}</ul>` : '') +
+      ((bericht.als_lead_vermerkt || []).length ? `<p><b>Auf die Leadliste gesetzt (Abo beendet):</b></p><ul>${bericht.als_lead_vermerkt.map(x => `<li>${x.name}${x.email ? ' (' + x.email + ')' : ''}${x.lief_bis ? ' \u2014 Zugang lief bis ' + x.lief_bis : ''}</li>`).join('')}</ul>` : '') +
       ((bericht.vorwarnung_gesendet || []).length ? `<p style="color:#666">„Dein Zugang läuft aus" ist rausgegangen an: ${bericht.vorwarnung_gesendet.map(x => x.name).join(', ')}.</p>` : '') +
       ((bericht.nachgetragen || []).length ? `<p><b>Bezahlt, hatte aber keine Mitgliedschaft — jetzt nachgetragen:</b></p><ul>${bericht.nachgetragen.map(x => `<li>${x.name} (${x.email}) — ${x.tier}, ${x.takt}${x.preis ? ', ' + x.preis : ''}${x.naechste_zahlung ? ', nächste Zahlung ' + x.naechste_zahlung : ''}</li>`).join('')}</ul>` : '') +
       ((bericht.bald_faellig || []).length ? `<p><b>Von Hand bezahlt und läuft bald ab — bitte selbst nachhalten:</b></p><ul>${bericht.bald_faellig.map(x => `<li>${x.name} (${x.email}) — bis ${x.bis}, noch ${x.tage_rest} Tage. ${x.hinweis}</li>`).join('')}</ul>` : '') +
