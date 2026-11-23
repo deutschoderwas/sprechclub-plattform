@@ -26,6 +26,9 @@
 // ============================================================
 
 const GUELTIG = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+/* Dieselbe Schriftfolge wie in den anderen Mails (Wochenplan,
+   Buchungsanleitung). Keine Webfonts: die laedt kein Postfach. */
+const FF = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 export const MAX = 400;
 
 function esc(s) {
@@ -94,14 +97,28 @@ export function textZuHtml(text) {
          Als Tabelle gebaut und ohne Hintergrundbild, weil Outlook
          alles andere verschluckt. Dunkle Schrift auf Tuerkis, wie auf
          der Seite: weiss auf Tuerkis ist zu kontrastarm. */
+      /* Ein Absatz, der mit ! anfaengt, wird ein gelber Kasten - fuer
+         den einen Satz, der nicht uebersehen werden darf. Gold ist in
+         unseren Mails die Farbe fuer "merk dir das". */
+      if (/^!\s*\S/.test(roh)) {
+        return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+          + 'style="background:#FFF8E0;border:1px solid #FFCE00;border-radius:14px;margin:0 0 16px">'
+          + '<tr><td style="padding:14px 18px;font-family:' + FF + ';font-size:16px;line-height:1.55;'
+          + 'font-weight:700;color:#1A1A1A">' + esc(roh.replace(/^!\s*/, '')).replace(/\n/g, '<br>')
+          + '</td></tr></table>';
+      }
+
       const knopf = roh.match(/^\[([^\]]{1,60})\]\((https?:\/\/[^\s)]+)\)$/);
       if (knopf) {
-        return '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 18px">'
-          + '<tr><td align="center" bgcolor="#2DD4BF" style="border-radius:999px">'
+        return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 20px">'
+          + '<tr><td align="center">'
+          + '<table role="presentation" cellpadding="0" cellspacing="0"><tr>'
+          + '<td align="center" bgcolor="#2DD4BF" style="border-radius:999px">'
           + '<a href="' + esc(knopf[2]) + '" '
-          + 'style="display:inline-block;padding:14px 28px;font-family:\'Space Grotesk\',\'Segoe UI\',sans-serif;'
-          + 'font-size:16px;font-weight:700;color:#06403A;text-decoration:none;border-radius:999px">'
-          + esc(knopf[1]) + '</a></td></tr></table>';
+          + 'style="display:inline-block;padding:15px 32px;font-family:' + FF + ';'
+          + 'font-size:16.5px;font-weight:800;color:#06403A;text-decoration:none;border-radius:999px">'
+          + esc(knopf[1]) + '</a></td></tr></table>'
+          + '</td></tr></table>';
       }
 
       /* Eine Zeile, die mit - oder * anfaengt, wird ein Punkt mit
@@ -110,8 +127,8 @@ export function textZuHtml(text) {
       if (zeilen.length && zeilen.every((z) => /^\s*[-*\u2022]\s+/.test(z))) {
         return '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 14px">'
           + zeilen.map((z) => '<tr>'
-              + '<td valign="top" style="padding:0 9px 7px 0;font-size:16px;line-height:1.5;color:#14B8A6">\u2713</td>'
-              + '<td valign="top" style="padding:0 0 7px;font-size:16px;line-height:1.5">'
+              + '<td valign="top" style="padding:0 9px 7px 0;font-family:' + FF + ';font-size:17px;line-height:1.5;color:#14B8A6">\u2713</td>'
+              + '<td valign="top" style="padding:0 0 7px;font-family:' + FF + ';font-size:16px;line-height:1.5;color:#1A1A1A">'
               + esc(z.replace(/^\s*[-*\u2022]\s+/, '')) + '</td></tr>').join('')
           + '</table>';
       }
@@ -119,7 +136,8 @@ export function textZuHtml(text) {
       const inhalt = esc(roh).replace(/\n/g, '<br>')
         .replace(/(https?:\/\/[^\s<]+)/g,
           '<a href="$1" style="color:#0F766E;font-weight:600">$1</a>');
-      return '<p style="font-size:16px;line-height:1.65;margin:0 0 14px">' + inhalt + '</p>';
+      return '<p style="font-family:' + FF + ';font-size:16px;line-height:1.65;margin:0 0 14px;color:#1A1A1A">'
+        + inhalt + '</p>';
     }).join('\n');
 }
 
@@ -129,25 +147,36 @@ export function textZuHtml(text) {
 export function rundmailHtml(betreff, text, anrede) {
   const titel = esc(betreff || 'Nachricht von deutschoderwas');
   const gruss = anrede
-    ? '<p style="font-size:16px;line-height:1.65;margin:0 0 14px">Hallo ' + esc(anrede) + ',</p>'
+    ? '<p style="font-family:' + FF + ';font-size:16px;line-height:1.65;margin:0 0 14px;color:#1A1A1A">Hallo '
+      + esc(anrede) + ',</p>'
     : '';
   return `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${titel}</title></head>
-<body style="margin:0;padding:0;background:#FFF8E0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#1A1A1A">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 12px"><tr><td align="center">
-<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
-  <tr><td style="padding:24px 30px 0">
-    <span style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:20px">deutsch<span style="color:#14B8A6">oderwas</span></span>
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
+<title>${titel}</title></head>
+<body style="margin:0;padding:0;background:#FFF8E0">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E0;padding:26px 14px"><tr><td align="center">
+<table role="presentation" width="580" cellpadding="0" cellspacing="0" style="max-width:580px;width:100%;background:#FFFCF5;border:1px solid #F0E5D8;border-radius:20px;overflow:hidden">
+
+  <tr><td style="height:6px;background:#1A1A1A;line-height:6px;font-size:0">&nbsp;</td></tr>
+  <tr><td style="height:6px;background:#DD0000;line-height:6px;font-size:0">&nbsp;</td></tr>
+  <tr><td style="height:6px;background:#FFCE00;line-height:6px;font-size:0">&nbsp;</td></tr>
+
+  <tr><td align="center" style="padding:22px 30px 2px">
+    <div style="font-family:${FF};font-weight:800;font-size:16px;letter-spacing:.04em;color:#1A1A1A">deutschoderwas <span style="color:#DD0000">club</span></div>
   </td></tr>
-  <tr><td style="padding:18px 30px 6px">
+
+  <tr><td style="padding:16px 30px 0">
+    <h1 style="font-family:${FF};font-weight:800;font-size:25px;line-height:1.25;margin:0 0 14px;color:#1A1A1A">${titel}</h1>
     ${gruss}
     ${textZuHtml(text)}
   </td></tr>
-  <tr><td style="padding:6px 30px 26px">
-    <p style="font-size:16px;line-height:1.65;margin:0">Liebe Gr&uuml;&szlig;e<br>Julia</p>
+
+  <tr><td style="padding:6px 30px 24px">
+    <p style="font-family:${FF};font-size:16px;line-height:1.65;margin:0;color:#1A1A1A">Liebe Gr&uuml;&szlig;e<br>Julia</p>
   </td></tr>
+
   <tr><td style="padding:0 30px 24px">
-    <div style="border-top:1px solid #F0E5D8;padding-top:14px;font-size:12px;line-height:1.6;color:#6B7280">
+    <div style="border-top:1px solid #F0E5D8;padding-top:14px;font-family:${FF};font-size:12px;line-height:1.6;color:#6B7280">
       Du bekommst diese E-Mail, weil du dich in die Warteliste von deutschoderwas eingetragen hast.
       Wenn du keine Nachrichten mehr m&ouml;chtest, antworte kurz mit &bdquo;Abmelden&ldquo; &mdash; dann trage ich dich aus.<br><br>
       deutschoderwas &middot; Julia Karackov &middot; Wiesenstra&szlig;e 38, 58119 Hagen, Deutschland &middot;
