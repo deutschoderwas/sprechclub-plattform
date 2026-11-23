@@ -37,7 +37,19 @@
      Satz vor („What is your name?“). Die Plattform ist seit dem 21.11.
      ganz auf Deutsch (Julia: „die Übersetzungen lass einfach weg“), also
      fallen diese 28 Aufgaben aus der Übungsrunde und aus den Zählern. */
-  function uebDe(l){ return ((l && l.ueb) || []).filter(function(u){ return u && u.typ !== 'uebersetzen'; }); }
+  /* 23.11.2026: Statt sie nur auszublenden, werden die 28 Aufgaben zu
+     deutschen Satzbau-Aufgaben: eine kurze Situation auf Deutsch, dazu
+     die Wörter des Lösungssatzes zum Ordnen. Ohne passende Situation
+     fällt die Aufgabe weg. */
+  var SITUATION = {"Wie heißen Sie?": "Du fragst eine fremde Person höflich nach ihrem Namen.", "Wie alt ist dein Sohn?": "Du fragst eine Freundin, wie alt ihr Sohn ist.", "Was kostet das?": "Du bist im Laden und willst den Preis wissen.", "Die Küche ist klein, aber hell.": "Du beschreibst deine Küche: Sie ist nicht groß, aber es gibt viel Licht.", "Wann fängt der Kurs an?": "Du willst wissen, um wie viel Uhr der Kurs beginnt.", "Ich möchte einen Kaffee, bitte.": "Du bestellst im Café einen Kaffee.", "Ich möchte einen Termin mit der Lehrerin machen.": "Du möchtest mit der Lehrerin sprechen und brauchst einen Termin.", "Ich arbeite seit zwei Jahren hier.": "Jemand fragt, wie lange du schon hier arbeitest. Es sind zwei Jahre.", "Können Sie mir bitte helfen? Ich verstehe den Brief nicht.": "Du hast einen Brief bekommen und verstehst ihn nicht. Du bittest am Schalter um Hilfe.", "Ich habe seit zwei Tagen Kopfschmerzen.": "Beim Arzt: Dein Kopf tut schon zwei Tage weh.", "Ich fahre mit dem Fahrrad zur Arbeit.": "Jemand fragt, wie du zur Arbeit kommst. Du nimmst das Fahrrad.", "Ich würde gern meinen Vertrag kündigen.": "Du willst deinen Vertrag beenden und sagst es höflich.", "Die blaue Jacke gefällt mir. Sie passt mir.": "Im Geschäft: Du findest die blaue Jacke schön, und die Größe stimmt.", "Herzlichen Glückwunsch zum Geburtstag! Alles Gute!": "Deine Kollegin hat heute Geburtstag. Du gratulierst ihr.", "Entschuldigen Sie die Störung, darf ich Sie kurz etwas fragen?": "Du klingelst bei deiner Nachbarin, die du siezt, und möchtest etwas fragen.", "Gibt es einen Aufzug im Haus?": "Du besichtigst eine Wohnung und fragst den Vermieter nach einem Aufzug.", "Machen Sie bitte die Haustür zu.": "Ein Nachbar, den du siezt, lässt die Haustür offen. Du bittest ihn höflich.", "Ich möchte mich auf die Stelle bewerben.": "Du rufst bei einer Firma an, weil du die Stelle aus der Anzeige möchtest.", "Ich weiß nicht, ob die Schicht um sechs oder um sieben anfängt.": "Du sagst einem Kollegen, dass du die Anfangszeit der Schicht nicht genau kennst: sechs oder sieben Uhr.", "Könnten Sie mir sagen, bis wann ich den Antrag abgeben muss?": "Auf dem Amt fragst du höflich nach der Frist für deinen Antrag.", "Ich kann heute leider nicht zur Arbeit kommen, ich melde mich krank.": "Du bist krank und rufst morgens deinen Chef an.", "Ich möchte meinen Vertrag kündigen. Wie lange ist die Kündigungsfrist?": "Am Schalter willst du deinen Vertrag beenden und fragst nach der Frist.", "Ich finde, dass meine Tochter in Mathe mehr Hilfe braucht.": "Im Elterngespräch sagst du der Lehrerin deine Meinung: Deine Tochter braucht in Mathe mehr Unterstützung.", "Entschuldigung, wie komme ich zum Bahnhof?": "Du fragst eine fremde Person auf der Straße nach dem Weg zum Bahnhof.", "Hast du Lust auf einen Kaffee?": "Du lädst eine Freundin spontan zu einem Kaffee ein.", "Wenn du dein Passwort vergisst, kannst du ein neues bestellen.": "Du erklärst einem Freund: Ein vergessenes Passwort ist kein Problem, man kann ein neues bestellen.", "Ich hätte gern ein Glas Wasser und ein Stück Kuchen, bitte.": "Im Café bestellst du höflich Wasser und Kuchen.", "Ich würde gern eine Weiterbildung machen. Was raten Sie mir?": "In der Beratungsstelle sagst du, dass du eine Weiterbildung machen möchtest, und bittest um einen Rat."};
+  function uebDe(l){
+    return ((l && l.ueb) || []).map(function(u){
+      if (!u || u.typ !== 'uebersetzen') return u;
+      var sit = SITUATION[u.l]; if (!sit) return null;
+      var teile = String(u.l).replace(/[.,!?;:]/g, ' ').split(/\s+/).filter(Boolean);
+      return { typ:'bausteine', f:sit + ' Was sagst du?', l:u.l, teile:teile, e:u.e };
+    }).filter(Boolean);
+  }
 
   /* Stimme: nutzt stimmen.js, sonst der Browser direkt */
   function sprich(text,opt){
@@ -1090,7 +1102,7 @@
       f=pruefKnopf();
     }
     else if(a.typ==='bausteine'){
-      h=kopf+'<div class="ku2-frage">Bau daraus einen richtigen Satz.</div>'
+      h=kopf+'<div class="ku2-frage">'+(a.f ? E(a.f)+'<br><small style="font-weight:600;opacity:.75">Bau den Satz aus den Wörtern.</small>' : 'Bau daraus einen richtigen Satz.')+'</div>'
         +'<div class="ku2-bau" id="ku2Bau"></div><div class="ku2-teile" id="ku2Teile"></div>';
       f=pruefKnopf();
     }
