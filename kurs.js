@@ -585,7 +585,124 @@
 '.ku-sw:hover .ku-swbild img{transform:scale(1.04)}',
 '.ku-swkoerper{display:flex;flex-direction:column;gap:8px;flex:1}',
 '.ku-sw.mitbild .ku-swkoerper{padding:13px 16px 15px}',
-'@media(max-width:520px){.ku-swbild{aspect-ratio:2/1}}'
+'@media(max-width:520px){.ku-swbild{aspect-ratio:2/1}}',
+
+/* ==== 23.11.2026: Markenfarben und Bewegung ====
+   Julia: „visuell toll, nicht statisch, in unseren Farben (Schwarz, Rot,
+   Gold, Türkis), robust, professionell“. Der Stufenkurs war noch Blau und
+   Grün. Jetzt wie Vokabeltrainer und Üben: Bühne Schwarz nach Petrol mit
+   Flaggenstreifen, Fortschritt Petrol, fertig Gold, richtig Petrol, falsch
+   Rot. Bewegung nur über opacity/transform, kein Layout-Springen;
+   „Bewegung reduzieren“ im System schaltet alles ab. */
+'@keyframes kuEin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}',
+'@keyframes kuFluss{0%{background-position:0% 50%}100%{background-position:100% 50%}}',
+'@keyframes kuGlanz{0%{background-position:-40% 0,0 0}60%,100%{background-position:140% 0,0 0}}',
+'@keyframes kuStreif{from{transform:translateX(-100%)}to{transform:translateX(260%)}}',
+'@keyframes kuRichtig{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}',
+'@keyframes kuWackel{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}',
+/* Knöpfe */
+'.ku-btn.blau{background:#14181B;box-shadow:0 4px 0 #000}',
+'.ku-btn.blau:active{box-shadow:0 1px 0 #000}',
+'.ku-btn.gruen{background:#0E6D85;box-shadow:0 4px 0 #0A4E62}',
+'.ku-btn.gruen:active{box-shadow:0 1px 0 #0A4E62}',
+'.ku-btn.hell{background:#F1F4F7;color:#14181B;border-color:#D5DCE3}',
+'.ku-zurueck{color:#0E6D85}',
+/* Zahlen im Kopf: auf dem Handy umbrechen statt abschneiden */
+'@media(max-width:760px){html .ku .ku-zahlen{flex-wrap:wrap!important;overflow:visible!important}html .ku .ku-z{flex:1 1 auto;min-width:0}}',
+/* Niveau-Karten */
+'.ku-nv.jetzt{border-color:#0E6D85;box-shadow:0 10px 28px -12px rgba(14,109,133,.45)}',
+'.ku-nv .stufe{background:linear-gradient(140deg,#14181B,#0E6D85)}',
+'.ku-nv .kann li::before{color:#0E6D85}',
+'.ku-pill{background:#E1F3F9;color:#0A4E62}',
+'.ku-pill.gelb{background:#FFF3C4;color:#8A6500}',
+'.ku-nv .hinweis{background:#FFFBEA;border-color:#EEDB9A;color:#6B4E00}',
+'.ku-nv{transition:transform .18s,box-shadow .18s}',
+'.ku-nv:hover{transform:translateY(-2px)}',
+/* Balken */
+'.ku-bar i{background:linear-gradient(90deg,#0E6D85,#1B9BC0);position:relative;overflow:hidden}',
+'.ku-bar.voll i{background:#E0A800}',
+/* Lernweg */
+'.ku-lek .nr{background:#E1F3F9;color:#0E6D85}',
+'.ku-lek.fertig .nr{background:#0E6D85}',
+'.ku-lek:hover{border-color:#BFDDE6}',
+'.ku-lek .bild .marke{background:rgba(20,24,27,.9)}',
+'.ku-lek.fertig .bild .marke{background:#0E6D85}',
+'.ku-lek:hover .pf{color:#0E6D85}',
+'.ku-lek .pf{transition:transform .18s,color .18s}',
+'.ku-lek:hover .pf{transform:translateX(3px)}',
+/* Lektions-Bühne */
+'.ku-hero,.ku-lkopf{background:linear-gradient(118deg,#14181B 0%,#123844 55%,#0E6D85 100%);background-size:220% 220%;animation:kuFluss 16s ease-in-out infinite alternate}',
+'.ku-hero::after,.ku-lkopf::before{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;z-index:4;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0)) -40% 0/28% 100% no-repeat,linear-gradient(90deg,#14181B 0 33.3%,#D42A21 33.3% 66.6%,#E0A800 66.6%) 0 0/100% 100% no-repeat;animation:kuGlanz 5s ease-in-out 1s infinite}',
+'.ku-lkopf::after{background:rgba(224,168,0,.14)}',
+'.ku-hero-bild::before{background:linear-gradient(90deg,rgba(18,56,68,.95),rgba(18,56,68,0))}',
+'@media(max-width:820px){.ku-hero-bild::before{background:linear-gradient(0deg,rgba(18,56,68,.9),rgba(18,56,68,0))}}',
+'.ku-hero .nr,.ku-lkopf .nr{color:#FFD24A}',
+'.ku-ring{background:conic-gradient(#E0A800 var(--p,0%),rgba(255,255,255,.55) 0)}',
+'.ku-ring i{color:#14181B}',
+/* Kapitel, Abschnitte, Karten */
+'.ku-kap button{color:#14181B}',
+'.ku-kap button .pu{background:#E0A800}',
+'.ku-kap button.fertig{background:#E8F4F7;border-color:#BFDDE6;color:#0A4E62}',
+'.ku-kap button.fertig .pu{background:#0E6D85}',
+'.ku-kap button:hover{border-color:#BFDDE6}',
+'.ku-abkopf .em{background:#FFF3C4;color:#8A6500}',
+'.ku-abkopf .ok{color:#0E6D85}',
+'.ku-kw .bsp,.ku-gr .bsp{background:#FFFBEA;border-left-color:#E0A800;color:#14181B}',
+'.ku-gr .bsp button,.ku-rund{color:#0E6D85}',
+'.ku-karte{background:linear-gradient(135deg,#14181B,#0E6D85)}',
+'.ku-punkte i.durch{background:#9FD3E3}',
+'.ku-punkte i.jetzt{background:#0E6D85}',
+'.ku-aus{background:#FFFBEA;border-color:#EEDB9A}',
+/* Übungsrunde */
+'.ku2-art{color:#0E6D85}',
+'.ku2-satz{border-left:4px solid #E0A800}',
+'.ku2-satz .lk{border-bottom-color:#D42A21;color:#0E6D85}',
+'.ku2-o{transition:transform .12s,border-color .15s,background .15s,box-shadow .15s}',
+'.ku2-o:hover:not([disabled]){border-color:#0E6D85;background:#F5FAFB}',
+'.ku2-o:active:not([disabled]){transform:translateY(2px)}',
+'.ku2-o.gut{border-color:#0E6D85;background:#E8F4F7;color:#0A4E62;box-shadow:0 0 0 4px rgba(27,155,192,.18);animation:kuRichtig .38s ease-out both}',
+'.ku2-o.schlecht{border-color:#D42A21;background:#FDF0EF;color:#9E1F18;animation:kuWackel .38s ease both}',
+'.ku2-eing:focus,.sw-feld:focus{border-color:#0E6D85;box-shadow:0 0 0 3px rgba(14,109,133,.12)}',
+'.ku2-bau{border-color:#BFDDE6}',
+'.ku2-t{background:#F1F4F7;border-color:#D5DCE3;color:#14181B;transition:transform .12s,background .15s}',
+'.ku2-t:hover{background:#E8F4F7}',
+'.ku2-t:active{transform:scale(.95)}',
+'.ku2-bau .ku2-t{background:#14181B;border-color:#14181B;color:#fff}',
+'.ku2-p:hover{border-color:#0E6D85}',
+'.ku2-p.an{border-color:#14181B;background:#F1F4F7}',
+'.ku2-p.fest{border-color:#0E6D85;background:#E8F4F7;color:#0A4E62;animation:kuRichtig .35s ease-out}',
+'.ku2-p.daneben{animation:kuWackel .35s ease}',
+'.ku2-z .p{background:#0E6D85}',
+'.ku2-z.offen{background:#F1F4F7;border-color:#D5DCE3}',
+'.ku2-z:hover{border-color:#0E6D85}',
+'.ku2-leerfeld{border-color:#BFDDE6}',
+'.ku2-ziel{background:#F1F8FA;border-color:#BFDDE6}',
+'.ku2-rueck{animation:kuEin .3s ease-out both}',
+'.ku2-rueck.gut{background:#F1F8FA;border-color:#BFDDE6}',
+'.ku2-rueck.gut b.kopf{color:#0A4E62}',
+'.ku2-rueck.schlecht{background:#FDF5F4;border-color:#F3C0BC}',
+'.ku2-rueck.schlecht b.kopf{color:#9E1F18}',
+'.ku2-kopf .ku-bar i::after{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.5),rgba(255,255,255,0));animation:kuStreif 2.8s ease-in-out infinite}',
+/* Schreibtrainer */
+'.sw-liste li.ok::before{color:#0E6D85}',
+'.sw-krit.an .box{background:#0E6D85;border-color:#0E6D85}',
+'.sw-vorgabe,.sw-h,.sw-ki{background:#F1F8FA;border-color:#BFDDE6;color:#0A4E62}',
+'.sw-h:hover{background:#E1F3F9}',
+'.sw-muster{background:#FFFBEA;border-color:#EEDB9A}',
+'.sw-zaehler.gut{background:#E8F4F7;color:#0A4E62}',
+'.ku-sw .angefangen{color:#0E6D85}',
+/* Bewegung beim Öffnen einer Ansicht (pro Seitenwechsel neu gezeichnet) */
+'.ku>*{animation:kuEin .45s cubic-bezier(.2,.7,.2,1) both}',
+'.ku>.ku-hero,.ku>.ku-lkopf{animation:kuEin .45s cubic-bezier(.2,.7,.2,1) both,kuFluss 16s ease-in-out .45s infinite alternate}',
+'.ku>*:nth-child(2){animation-delay:.06s}.ku>*:nth-child(3){animation-delay:.12s}.ku>*:nth-child(n+4){animation-delay:.18s}',
+'.ku-nvliste>.ku-nv,.ku-weg>.ku-lek{animation:kuEin .45s cubic-bezier(.2,.7,.2,1) both}',
+'.ku-nvliste>.ku-nv:nth-child(2),.ku-weg>.ku-lek:nth-child(2){animation-delay:.08s}.ku-nvliste>.ku-nv:nth-child(3),.ku-weg>.ku-lek:nth-child(3){animation-delay:.14s}.ku-nvliste>.ku-nv:nth-child(4),.ku-weg>.ku-lek:nth-child(4){animation-delay:.2s}.ku-nvliste>.ku-nv:nth-child(n+5),.ku-weg>.ku-lek:nth-child(n+5){animation-delay:.26s}',
+'#ku2Innen>*{animation:kuEin .35s cubic-bezier(.2,.7,.2,1) both}',
+'#ku2Innen .ku2-opt>.ku2-o{animation:kuEin .35s cubic-bezier(.2,.7,.2,1) both}',
+'#ku2Innen .ku2-opt>.ku2-o:nth-child(1){animation-delay:.08s}#ku2Innen .ku2-opt>.ku2-o:nth-child(2){animation-delay:.13s}#ku2Innen .ku2-opt>.ku2-o:nth-child(3){animation-delay:.18s}#ku2Innen .ku2-opt>.ku2-o:nth-child(n+4){animation-delay:.23s}',
+'#ku2Innen .ku2-opt>.ku2-o.gut{animation:kuRichtig .38s ease-out both}',
+'#ku2Innen .ku2-opt>.ku2-o.schlecht{animation:kuWackel .38s ease both}',
+'@media (prefers-reduced-motion: reduce){.ku *,.ku *::before,.ku *::after,.ku>*,.ku2-ov *,.ku2-ov *::after,.sw-ov *{animation:none!important;transition:none!important}}'
 
     ].join('\n');
     document.head.appendChild(s);
@@ -764,7 +881,7 @@
       +kopf
       +'<h3 class="ku-h3">Dein Weg durch '+E(id)+'</h3>'
       +weg
-      +'<div class="ku-leer" style="text-align:left;background:#F5F8FD;border-style:solid;border-color:#D6E2F3;color:#12408F">'
+      +'<div class="ku-leer" style="text-align:left;background:#F1F8FA;border-style:solid;border-color:#BFDDE6;color:#0A4E62">'
       +'Eine Lektion dauert etwa 25 Minuten. Du musst sie nicht am Stück machen — '
       +'was du geschafft hast, bleibt gespeichert.</div>';
     hoch();
