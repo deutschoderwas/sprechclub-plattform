@@ -287,7 +287,7 @@
     var w = String(e.w || '').trim(); if (!w || w.length > 40 || /\s{2,}|[.!?]$/.test(w)) return null;
     var m = w.match(/^(der|die|das)\s+(.+)$/i);
     return { wort: m ? m[2] : w, artikel: m ? m[1].toLowerCase() : '', art: m ? 'nomen' : 'wort',
-      bedeutung: String(e.info || '').slice(0, 140), bsp: String(e.satz || '').replace(/§/g, '').slice(0, 200),
+      bedeutung: String(e.info || '').slice(0, 300), bsp: String(e.satz || '').replace(/§/g, '').slice(0, 300),
       em: e.emoji || '', niveau: String(e.level || '').slice(0, 2) || 'A2', thema: 'Aus dem Üben', voll: w };
   }
   function merkKnopf(e) {

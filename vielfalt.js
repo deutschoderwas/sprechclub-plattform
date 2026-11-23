@@ -429,6 +429,19 @@
      wird ein Satz zum Bauen und eine Wahlfrage — die falschen
      Möglichkeiten sind die Lösungen der Nachbaraufgaben und damit
      immer aus derselben Grammatik. */
+  /* 23.11.2026: Hinweise wurden nach 90 Zeichen mitten im Wort
+     abgeschnitten („Auch neutrum: das Mädche“, „Es hält der Präpositio“).
+     Jetzt: ganzer Hinweis, wenn er kurz genug ist, sonst bis zum letzten
+     Satzende, sonst bis zum letzten Leerzeichen mit „…“. */
+  function kuerzen(text, max) {
+    var t = String(text || '').replace(/\s+/g, ' ').trim();
+    if (t.length <= max) return t;
+    var teil = t.slice(0, max);
+    var ende = Math.max(teil.lastIndexOf('. '), teil.lastIndexOf('! '), teil.lastIndexOf('? '));
+    if (ende > max * 0.4) return teil.slice(0, ende + 1);
+    var leer = teil.lastIndexOf(' ');
+    return (leer > 20 ? teil.slice(0, leer) : teil).replace(/[,;:\u2014\-\s]+$/, '') + ' …';
+  }
   var GLEICHE = [['trotzdem', 'dennoch', 'gleichwohl', 'nichtsdestotrotz'], ['deshalb', 'deswegen', 'daher', 'darum'],
     ['weil', 'da'], ['obwohl', 'obgleich', 'wenngleich', 'obschon'], ['kann', 'könnte'], ['muss', 'müsste']];
   function gleichbedeutend(a, b) {
@@ -452,7 +465,7 @@
       if (kurz) {
         neu.push({
           type: 'order', answer: kurz,
-          hint: e.explain ? String(e.explain).slice(0, 90) : 'Achte auf die Endung.',
+          hint: e.explain ? kuerzen(e.explain, 140) : 'Achte auf die Endung.',
           level: t.level
         });
       }
