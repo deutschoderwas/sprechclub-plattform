@@ -112,6 +112,23 @@
 ];
   var RAUS = [["wortschatz|typisch-deutsch", "doch"], ["hoeren|typisch-deutsch", "doch"], ["wortschatz|gesundheit", "die Überweisungspflicht"], ["wortschatz|bildung", "der Streber"]];
   var FELDER = ['q', 'text', 'satz', 'answer', 'richtig', 'prompt', 'explain'];
+  /* 23.11.2026: Hörtexte, die herausfallen (mit allen Fragen dazu).
+     typisch-deutsch (B2): vier A1-Durchsagen (Bäckerei, Termin um zehn,
+     Mülltrennung, Sportverein) mit Antworten wie „Pizza, Reis, Suppe“ —
+     A1-Niveau in einem B2-Thema; A1/A2 haben eigene Hörthemen dazu.
+     b2-amt-widerspruch, Aufnahme 1: sagt, die Widerspruchsfrist laufe ab
+     dem Datum auf dem Bescheid. Das stimmt nicht (maßgeblich ist der
+     Zugang, bei Post der vierte Tag) und widerspricht dem C1-Lesetext.
+     Die Aufnahme lässt sich nicht ändern, also fällt sie heraus. */
+  var RAUS_TON = {
+    'hoeren|typisch-deutsch': [
+      'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141721_3bcf9a6b-0c5c-4824-8a20-07a2ff3ac773.mp3',
+      'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141724_9aa8e987-51cc-425f-b614-9dc0fd2f9396.mp3',
+      'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141725_8711b62e-1758-4bcb-b892-99fcefaba601.mp3',
+      'https://csadlwsuisbyawrgdrca.supabase.co/storage/v1/object/public/hoeren/hf_20260620_141727_29bb824c-d51a-419a-a20a-6e73e7bdb0ea.mp3'
+    ],
+    'hoeren|b2-amt-widerspruch': ['ton/hoeren-b2/b2-amt-widerspruch-1.mp3']
+  };
   /* 22.11.2026: Auswahlfragen, bei denen ein „falscher“ Vorschlag auch
      stimmte. „Dort kauft man Lebensmittel“: Supermarkt UND Markt.
      „Womit man bezahlt“: Geld, aber auch Karte und Kleingeld. Der
@@ -179,6 +196,7 @@
       var k = sk.id + '|' + t.id;
       if (STUFE[k]) { if (!t.levelAlt) t.levelAlt = t.level; t.level = STUFE[k]; geaendert++;
         (t.exercises || []).forEach(function (e) { if (e.level) e.level = STUFE[k]; }); }
+      if (RAUS_TON[k]) t.exercises = (t.exercises || []).filter(function (e) { return RAUS_TON[k].indexOf(e.audioUrl || '') < 0; });
       var weg = RAUS.filter(function (r) { return r[0] === k; }).map(function (r) { return r[1]; });
       if (weg.length) t.exercises = (t.exercises || []).filter(function (e) { return weg.indexOf(e.w || e.word || '') < 0; });
       (t.exercises || []).forEach(function (e) {
