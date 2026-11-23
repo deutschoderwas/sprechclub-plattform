@@ -275,15 +275,28 @@ function fotoFinden(folge, schon) {
 function coverSvg(level, titel, tag) {
   const [a, b] = FARBE[level] || FARBE.A2;
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  // Titel auf höchstens drei Zeilen umbrechen.
-  const w = [], zeilen = [];
+  /* Titel auf hoechstens drei Zeilen umbrechen.
+
+     Vorher brach die Schleife ab, sobald zwei Zeilen voll waren - der
+     Rest des Titels fiel einfach weg. Auf der Kachel vom 20.11.2026
+     stand deshalb "Auf Raten kaufen - aber mit" und das Wort "Regeln"
+     nirgends. Ein halber Satz sieht nicht nach Absicht aus, sondern
+     nach kaputt.
+
+     Jetzt werden erst alle Zeilen gebaut; passt der Titel nicht in
+     drei, endet die dritte mit einem Auslassungszeichen. */
+  const zeilen = [];
+  let z = '';
   for (const wort of String(titel).split(/\s+/)) {
-    if ((w.join(' ') + ' ' + wort).trim().length > 15 && w.length) { zeilen.push(w.join(' ')); w.length = 0; }
-    w.push(wort);
-    if (zeilen.length === 2) break;
+    const probe = (z ? z + ' ' : '') + wort;
+    if (probe.length > 16 && z) { zeilen.push(z); z = wort; } else z = probe;
   }
-  if (w.length) zeilen.push(w.join(' '));
-  const text = zeilen.slice(0, 3).map((z, i) =>
+  if (z) zeilen.push(z);
+  const sichtbar = zeilen.slice(0, 3);
+  if (zeilen.length > 3 && sichtbar.length === 3) {
+    sichtbar[2] = sichtbar[2].replace(/[\s\u2013\u2014-]+$/, '') + ' \u2026';
+  }
+  const text = sichtbar.map((z, i) =>
     `<text x="46" y="${372 + i * 54}" font-family="Verdana,DejaVu Sans,sans-serif" font-size="44" font-weight="700" fill="#fff">${esc(z)}</text>`
   ).join('');
 
@@ -466,7 +479,10 @@ export default async function handler(req, res) {
       bild: foto || url(cPfad),
       transkript,
       dauer_sek: sek,
-      dauer: Math.floor(sek / 60) + ':' + String(Math.round(sek % 60)).padStart(2, '0'),
+      /* Erst runden, dann teilen. Andersherum wurden aus 359,6
+         Sekunden "5:60" statt "6:00" - gesehen am 23.11.2026 auf der
+         Podcast-Seite. */
+      dauer: Math.floor(Math.round(sek) / 60) + ':' + String(Math.round(sek) % 60).padStart(2, '0'),
       stimme: STIMME,
       status: 'live',
       fehler: null
