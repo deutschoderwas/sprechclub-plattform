@@ -33,6 +33,11 @@
   function el(id){ return document.getElementById(id); }
   function mix(a){ a=(a||[]).slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;} return a; }
   function zahl(n){ return n<10?'0'+n:''+n; }
+  /* 23.11.2026: Aufgaben vom Typ „uebersetzen“ gaben einen englischen
+     Satz vor („What is your name?“). Die Plattform ist seit dem 21.11.
+     ganz auf Deutsch (Julia: „die Übersetzungen lass einfach weg“), also
+     fallen diese 28 Aufgaben aus der Übungsrunde und aus den Zählern. */
+  function uebDe(l){ return ((l && l.ueb) || []).filter(function(u){ return u && u.typ !== 'uebersetzen'; }); }
 
   /* Stimme: nutzt stimmen.js, sonst der Browser direkt */
   function sprich(text,opt){
@@ -732,7 +737,7 @@
     var weg='<div class="ku-weg">'+L.map(function(l){
       var lp=lekProzent(l.nr,id), teile=[];
       if((l.chunks||[]).length) teile.push((l.chunks||[]).length+' Wörter');
-      if((l.ueb||[]).length)    teile.push((l.ueb||[]).length+' Übungen');
+      if(uebDe(l).length)    teile.push(uebDe(l).length+' Übungen');
       if(l.dialog)              teile.push('1 Gespräch');
       return '<button class="ku-lek'+(lp>=100?' fertig':'')+'" onclick="kursLektion('+l.nr+')">'
         +'<span class="bild">'+bildTag(lekBild(l,true,id),lekBildErsatz(l,true,id))
@@ -771,7 +776,7 @@
     var mess=[];
     if((l.chunks||[]).length) mess.push('🧠 '+l.chunks.length+' Wendungen');
     if((l.gram||[]).length)   mess.push('🧩 '+l.gram.length+' Regeln');
-    if((l.ueb||[]).length)    mess.push('✏️ '+l.ueb.length+' Aufgaben');
+    if(uebDe(l).length)    mess.push('✏️ '+uebDe(l).length+' Aufgaben');
     if(l.dialog&&(l.dialog.schritte||[]).length) mess.push('💬 Gespräch');
     if(l.schreiben)           mess.push('✉️ Schreiben');
     mess.push('⏱ etwa 25 Minuten');
@@ -792,7 +797,7 @@
     var kap=[];
     if((l.chunks||[]).length) kap.push(['kuAbWoerter','Wörter',!!st.woerter]);
     if((l.gram||[]).length)   kap.push(['kuAbGram','Grammatik',!!st.gram]);
-    if((l.ueb||[]).length)    kap.push(['kuAbUeben','Üben',(st.ueb||0)>=100]);
+    if(uebDe(l).length)    kap.push(['kuAbUeben','Üben',(st.ueb||0)>=100]);
     if(l.dialog&&(l.dialog.schritte||[]).length) kap.push(['kuAbSprechen','Sprechen',!!st.dialog]);
     if(l.schreiben)           kap.push(['kuAbSchreiben','Schreiben',!!st.schreiben]);
     if(l.aus)                 kap.push(['kuAbAus','Aussprache',!!st.aus]);
@@ -835,9 +840,9 @@
     }
 
     /* 3 — Üben */
-    if((l.ueb||[]).length){
+    if(uebDe(l).length){
       teile.push('<section class="ku-ab" id="kuAbUeben">'
-        +abKopf('✏️','Üben',l.ueb.length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100,'#F6F9FA')
+        +abKopf('✏️','Üben',uebDe(l).length+' Aufgaben, gemischt — genau das hält am längsten',(st.ueb||0)>=100,'#F6F9FA')
         +'<span class="ku-bar'+((st.ueb||0)>=100?' voll':'')+'" style="margin:0 0 13px"><i style="width:'+(st.ueb||0)+'%"></i></span>'
         +'<button class="ku-btn blau breit" onclick="kuUebenStarten()">'
         +((st.ueb||0)>0?'Weiter üben →':'Übungsrunde starten →')+'</button>'
@@ -952,7 +957,7 @@
   window.kuUebenStarten=function(){
     var l=K.lek; if(!l) return;
     var nr=l.nr;
-    window.kursUeben(l.ueb, 'Lektion '+zahl(nr)+' · '+l.t, function(erg){
+    window.kursUeben(uebDe(l), 'Lektion '+zahl(nr)+' · '+l.t, function(erg){
       var alt=(lekStand(nr).ueb)||0;
       var neu=erg&&erg.ges?Math.round(erg.richtig/erg.ges*100):alt;
       lekMerken(nr,{ueb:Math.max(alt,neu)});
