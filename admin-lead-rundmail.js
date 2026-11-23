@@ -41,6 +41,7 @@
         text: (el('rm-text') || {}).value || '',
         mitAnrede: !!(el('rm-anrede') || {}).checked,
         premiumUeberspringen: !!(el('rm-ohnepremium') || {}).checked,
+        seit: (el('rm-ab') || {}).value || '',
       }),
     });
     return await r.json().catch(function () { return {}; });
@@ -96,8 +97,12 @@
       +       '<input type="checkbox" id="rm-anrede" checked> Mit Anrede („Hallo Maria,“)</label>'
       +     '<label style="display:flex;align-items:center;gap:6px;cursor:pointer">'
       +       '<input type="checkbox" id="rm-ohnepremium"> Premium-Mitglieder überspringen</label>'
+      +     '<label style="display:flex;align-items:center;gap:6px">'
+      +       'Nur Leads ab <input type="date" id="rm-ab" '
+      +         'style="padding:5px 8px;border:1px solid #ccc;border-radius:8px;font:inherit;font-size:13px"></label>'
       +   '</div>'
       +   '<div class="muted" style="font-size:12.5px;margin-bottom:14px">'
+      +     'Ohne Datum gehen alle Leads an. Mit Datum nur die, die sich seitdem eingetragen haben. '
       +     'Abgemeldete bekommen nie etwas. Doppelte Adressen zählen einmal. '
       +     'Grußformel, Impressum und der Abmelde-Hinweis kommen automatisch darunter.</div>'
       +   '<div style="display:flex;gap:8px;flex-wrap:wrap">'

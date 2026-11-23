@@ -41,6 +41,7 @@ export default async function handler(req, res) {
     max: Number(body.max) || undefined,
     mitAnrede: body.mitAnrede !== false,
     premiumUeberspringen: !!body.premiumUeberspringen,
+    seit: body.seit || '',
   });
   return res.status(200).json(bericht);
 }

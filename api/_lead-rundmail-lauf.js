@@ -130,7 +130,7 @@ export function rundmailHtml(betreff, text, anrede) {
    senden = false liefert nur die Bilanz und schickt nichts. */
 export async function rundmailLauf(sb, {
   betreff = '', text = '', senden = false, max = MAX,
-  mitAnrede = true, premiumUeberspringen = false,
+  mitAnrede = true, premiumUeberspringen = false, seit = '',
 } = {}) {
   const b = String(betreff || '').trim();
   const t = String(text || '').trim();
@@ -139,9 +139,17 @@ export async function rundmailLauf(sb, {
 
   const KENN = kennung(b, t);
 
-  /* 1. Leads mit zustellbarer Adresse, Doppelte zusammengefasst */
-  const { data: leads, error } = await sb.from('leads')
-    .select('id,name,email').not('email', 'is', null).limit(2000);
+  /* 1. Leads mit zustellbarer Adresse, Doppelte zusammengefasst
+
+        Julia, 23.11.2026: "alle LEADS die neu dazugekommen sind ab dem
+        01.11.2026 die muessen eine Email erhalten, dass die Tueren
+        jetzt offen sind." Darum 'seit': ohne Datum gehen alle Leads
+        an, mit Datum nur die, die sich seitdem eingetragen haben. Wer
+        im Oktober dabei war, hat die Oktober-Mails schon bekommen. */
+  let frage = sb.from('leads')
+    .select('id,name,email,created_at').not('email', 'is', null);
+  if (seit) frage = frage.gte('created_at', new Date(seit).toISOString());
+  const { data: leads, error } = await frage.limit(2000);
   if (error) return { ok: false, grund: 'leads_nicht_lesbar' };
 
   const nach = new Map();
@@ -187,6 +195,7 @@ export async function rundmailLauf(sb, {
   const offen = [...nach.values()].slice(0, grenze);
   const bilanz = {
     kennung: KENN,
+    nur_ab: seit || null,
     gefunden: (leads || []).length,
     adresse_unbrauchbar: unbrauchbar,
     doppelt_zusammengefasst: doppelt,
