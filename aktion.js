@@ -211,7 +211,11 @@
   function teil() {
     var p = (A.laeuft() ? [
       '🖤 <b>' + A.name + '</b> im Sprechclub',
-      '<b>' + A.prozent + ' % Rabatt</b> auf Premium',
+      /* Julia, 23.11.2026: "Wir muessen in der Leiste ueberall
+         Sprechclub hinschreiben und nicht Premium, weil es sonst
+         Verwirrung gibt" - auf der Preisseite heisst der Tarif
+         Sprechclub, "Premium" kennt nur der Code. */
+      '<b>' + A.prozent + ' % Rabatt</b> auf den Sprechclub',
       'nur <b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
       'du sparst <b>' + A.spart + ' € jeden Monat</b>',
       'der Preis bleibt dir <b>dauerhaft</b>',
@@ -219,7 +223,7 @@
     ] : [
       '🖤 <b>' + A.name + '</b> im Sprechclub',
       'die T\u00fcren gehen auf: <b>Montag, 23. November</b>',
-      '<b>' + A.prozent + ' % Rabatt</b> auf Premium',
+      '<b>' + A.prozent + ' % Rabatt</b> auf den Sprechclub',
       '<b>' + A.preis + ' € statt ' + A.alt + ' €</b> im Monat',
       'der Preis bleibt dir <b>dauerhaft</b>',
       bisAuf()
@@ -241,8 +245,8 @@
     bar.id = 'akt-leiste';
     bar.setAttribute('role', 'region');
     bar.setAttribute('aria-label', A.laeuft()
-      ? A.name + ': Premium ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat'
-      : A.name + ' ab Montag, 23. November: Premium ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat');
+      ? A.name + ': Sprechclub ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat'
+      : A.name + ' ab Montag, 23. November: Sprechclub ' + A.preis + ' Euro statt ' + A.alt + ' Euro im Monat');
     /* Zweimal derselbe Block: so laeuft der Text nahtlos weiter,
        statt am Ende eine Luecke zu zeigen. */
     bar.innerHTML = '<div class="akt-lauf">' + teil() + teil() + '</div>'

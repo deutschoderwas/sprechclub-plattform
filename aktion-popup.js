@@ -63,8 +63,8 @@
     var ms = A.bis - Date.now();
     var tage = Math.floor(ms / 86400000);
     var std  = Math.floor((ms % 86400000) / 3600000);
-    if (tage > 0) return 'Noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') + ', dann kostet Premium wieder ' + A.alt + ' €.';
-    if (std > 0)  return 'Nur noch ' + std + (std === 1 ? ' Stunde' : ' Stunden') + ', dann kostet Premium wieder ' + A.alt + ' €.';
+    if (tage > 0) return 'Noch ' + tage + (tage === 1 ? ' Tag' : ' Tage') + ', dann kostet der Sprechclub wieder ' + A.alt + ' €.';
+    if (std > 0)  return 'Nur noch ' + std + (std === 1 ? ' Stunde' : ' Stunden') + ', dann kostet der Sprechclub wieder ' + A.alt + ' €.';
     return 'Heute ist der letzte Tag.';
   }
 
