@@ -181,6 +181,14 @@
     + '#akt-leiste .akt-zu{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;'
     + 'border:0;color:#fff;opacity:.55;font-size:19px;line-height:1;cursor:pointer;padding:6px 10px}'
     + '#akt-leiste .akt-zu:hover{opacity:1}'
+    /* Die ganze Leiste ist anklickbar. Julia, 23.11.2026: "die Leiste
+       die oben laeuft, da kann man draufklicken sowohl mobil als auch
+       desktop und direkt zu den Preisen gelangen, wichtig." Sie wirbt
+       mit einem Preis - dann muss sie auch dorthin fuehren. Das
+       Kreuzchen zum Schliessen behaelt seinen eigenen Klick. */
+    + '#akt-leiste{cursor:pointer}'
+    + '#akt-leiste:hover .akt-pkt{opacity:.92}'
+    + '#akt-leiste:focus-visible{outline:3px solid #FFCE00;outline-offset:-3px}'
     + '@keyframes akt-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}'
     + '@media (prefers-reduced-motion:reduce){#akt-leiste .akt-lauf{animation:none;justify-content:center;width:100%}'
     + '#akt-leiste .akt-teil:nth-child(2){display:none}}';
@@ -251,10 +259,27 @@
        statt am Ende eine Luecke zu zeigen. */
     bar.innerHTML = '<div class="akt-lauf">' + teil() + teil() + '</div>'
       + '<button class="akt-zu" type="button" aria-label="Hinweis schliessen">&times;</button>';
-    bar.querySelector('.akt-zu').onclick = function () {
+    bar.querySelector('.akt-zu').onclick = function (e) {
+      e.stopPropagation();          /* nicht auch noch zu den Preisen */
       bar.remove();
-      try { sessionStorage.setItem('dow_akt_leiste_zu', '1'); } catch (e) {}
+      try { sessionStorage.setItem('dow_akt_leiste_zu', '1'); } catch (e2) {}
     };
+
+    /* Zu den Preisen. Auf der Startseite gibt es dafuer ein Fenster,
+       sonst die Preisseite. */
+    function zuDenPreisen() {
+      try {
+        if (typeof window.openPreise === 'function') return window.openPreise();
+        if (typeof window.zuPreisen === 'function') return window.zuPreisen();
+      } catch (e) {}
+      location.href = '/preise';
+    }
+    bar.addEventListener('click', zuDenPreisen);
+    bar.setAttribute('role', 'button');
+    bar.setAttribute('tabindex', '0');
+    bar.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zuDenPreisen(); }
+    });
     document.body.insertBefore(bar, document.body.firstChild);
 
     /* Regelmaessig auffrischen, damit die Zeitangabe stimmt, wenn

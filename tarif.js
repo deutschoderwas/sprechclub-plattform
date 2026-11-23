@@ -114,13 +114,23 @@
     var einheit = document.querySelector('#preisP + .np-unit');
     if (einheit) einheit.textContent = halb ? '/ 6 Monate' : '/ Monat';
 
-    /* Die Klebeleiste unten und das Etikett im Hero */
-    setz($('raPreis'), p);
-    setz($('kbxText'), halb
-      ? HALB.prozent + ' % Rabatt · ' + p + ' statt ' + alt + ' für 6 Monate'
-      : A.prozent + ' % Rabatt · ' + p + ' statt ' + alt + ' im Monat');
+    /* Die Klebeleiste unten und das Etikett im Hero zeigen IMMER den
+       Monatspreis.
+
+       Julia, 23.11.2026: "in der mobilen Version unten ... 'für 399
+       Euro dabei sein' aendern auf Monatsabo, das Halbjahresabo nicht
+       so stark bewerben, nur Monatsabo erstmal."
+
+       Die Leiste laeuft auf dem Handy ueber die ganze Seite mit. Wer
+       dort 399 Euro liest, sieht den hoechsten Betrag, bevor er
+       ueberhaupt weiss, wofuer er ist - und die 97 Euro, mit denen wir
+       werben, stehen daneben nirgends. Das halbe Jahr bleibt im
+       Umschalter an der Preiskarte, wo der Vergleich danebensteht. */
+    var mp = euro(MONAT.preis), malt = euro(MONAT.alt);
+    setz($('raPreis'), mp);
+    setz($('kbxText'), A.prozent + ' % Rabatt · ' + mp + ' statt ' + malt + ' im Monat');
     var kn = $('kbxKnopf');
-    if (kn) kn.textContent = 'Für ' + p + ' dabei sein';
+    if (kn) kn.textContent = 'Für ' + mp + ' dabei sein';
   }
 
   /* ---------- Der Umschalter ---------- */
