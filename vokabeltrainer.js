@@ -316,11 +316,18 @@
     return '<span class="vt-bild ' + (gr || '') + ' vt-typo" style="--tk:' + f + '">'
       + '<span class="vt-typo-b">' + esc(buch) + '</span></span>';
   }
+  /* 23.11.2026: 17 Fotos wurden ersetzt (keine Kinder mehr im Bild).
+     Steht im Index eine Zahl über 1, hängt sie als ?v= am Pfad, damit
+     Browser und CDN nicht das alte Foto aus dem Cache zeigen. */
+  function bildPfad(id) {
+    var n = window.VOK_BILD && window.VOK_BILD[id];
+    return 'vok-bild/' + encodeURIComponent(id) + '.webp' + (n > 1 ? '?v=' + n : '');
+  }
   function bild(v, gr) {
     var id = v.zwilling || v.id;
     if (!v.em && !v.zwilling && v.quelle === 'live') return wortKarte(v, gr);
     return '<span class="vt-bild ' + (gr || '') + '">'
-      + '<img src="vok-bild/' + encodeURIComponent(id) + '.webp" alt="" loading="lazy" '
+      + '<img src="' + bildPfad(id) + '" alt="" loading="lazy" '
       + 'onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
       + '<span class="vt-em" style="display:none">' + (v.em || '🔤') + '</span></span>';
   }
@@ -1203,6 +1210,7 @@
   /* Karteikarte: umdrehen, dann selbst bewerten */
   window.__vtDrehen = function () {
     var h = document.querySelector('#vtKarte .vbx-hinten'); if (h) h.hidden = false;
+    var k = document.querySelector('#vtKarte .vbx-karte'); if (k) k.classList.add('gedreht');
     var b = document.getElementById('vbxDreh'); if (b) b.style.display = 'none';
     var s2 = document.getElementById('vbxSelbst'); if (s2) s2.hidden = false;
     try { var a = RUNDE[POS]; if (a && a.v && a.v.bsp) sprich(a.v.bsp, 0.9); } catch (e) {}
@@ -1485,7 +1493,7 @@
       THEMEN.forEach(function (t, i) {
         var pr = t.n ? Math.round((t.sitzt / t.n) * 100) : 0;
         var mitFoto = t.woerter.filter(hatBild).slice(0, 3);
-        var titel = TH_BILD[t.nm] || (mitFoto[0] ? 'vok-bild/' + encodeURIComponent(mitFoto[0].zwilling && window.VOK_BILD[mitFoto[0].zwilling] ? mitFoto[0].zwilling : mitFoto[0].id) + '.webp' : '');
+        var titel = TH_BILD[t.nm] || (mitFoto[0] ? bildPfad(mitFoto[0].zwilling && window.VOK_BILD[mitFoto[0].zwilling] ? mitFoto[0].zwilling : mitFoto[0].id) : '');
         h += '<button class="vp-thema" type="button" onclick="__vtThema(' + i + ')">'
           + (titel ? '<span class="vp-tbild"><img src="' + titel + '" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>' : '')
           + '<span class="vp-tkoerper">'
@@ -2111,7 +2119,7 @@
   function ladePool() {
     if (window.VOK_POOL && window.VOK_POOL.length) return Promise.resolve(true);
     if (poolLauf) return poolLauf;
-    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js?v=2'), ladeSkript('vok-beispielsaetze.js?v=1')]);
+    poolLauf = Promise.all([ladeSkript('vokabeln-pool.js'), ladeSkript('vok-bild/index.js?v=3'), ladeSkript('vok-beispielsaetze.js?v=1')]);
     return poolLauf;
   }
   /* ---------- Eigene Wörter ----------
@@ -2239,6 +2247,33 @@
       '}'
     ].join('\n');
     document.head.appendChild(st);
+  }
+
+  /* 23.11.2026: Die Seite soll leben, ohne zu springen. Deshalb bewegt
+     sich nur beim ersten Öffnen etwas (Abschnitte blenden gestaffelt ein,
+     Zahlen zählen hoch, Balken füllen sich). Spätere Neuzeichnungen, etwa
+     nach dem Laden des Stands, bleiben ruhig. Alles läuft über opacity und
+     transform, verschiebt also kein Layout. Wer in den Systemeinstellungen
+     „Bewegung reduzieren“ gewählt hat, bekommt die Seite ohne Animation. */
+  function ruhig() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  function einblenden(ziel) {
+    var vp = ziel.querySelector('.vp'); if (!vp || ruhig()) return;
+    vp.classList.add('vbx-ein');
+    setTimeout(function () { vp.classList.remove('vbx-ein'); }, 1600);
+    var zahlen = vp.querySelectorAll('.vp-kasten .v');
+    Array.prototype.forEach.call(zahlen, function (el, i) {
+      var end = parseInt(el.textContent, 10);
+      if (!(end > 1)) return;
+      var t0 = 0, dauer = 700 + i * 90;
+      el.textContent = '0';
+      function schritt(t) {
+        if (!t0) t0 = t;
+        var x = Math.min(1, (t - t0) / dauer), e = 1 - Math.pow(1 - x, 3);
+        el.textContent = String(Math.round(end * e));
+        if (x < 1) requestAnimationFrame(schritt); else el.textContent = String(end);
+      }
+      requestAnimationFrame(schritt);
+    });
   }
 
   function vbxStil() {
@@ -2403,6 +2438,78 @@
       V + '.vbx-ziel .wahl{display:flex;gap:6px;margin-top:10px}',
       V + '.vbx-ziel .wahl button{flex:1;min-height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:700 13px Inter,system-ui,sans-serif;cursor:pointer}',
       V + '.vbx-ziel .wahl button.an{background:#fff;color:#14181B;border-color:#fff}',
+      /* ---- Bewegung (23.11.2026), nur opacity/transform ---- */
+      '@keyframes vbxEin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}',
+      '@keyframes vbxFuell{from{transform:scaleX(0)}to{transform:scaleX(1)}}',
+      '@keyframes vbxFluss{0%{background-position:0% 50%}100%{background-position:100% 50%}}',
+      '@keyframes vbxGlanz{0%{background-position:-40% 0,0 0}60%,100%{background-position:140% 0,0 0}}',
+      '@keyframes vbxStreif{from{transform:translateX(-100%)}to{transform:translateX(250%)}}',
+      '@keyframes vbxPuls{0%{box-shadow:0 0 0 0 rgba(212,42,33,.55)}70%{box-shadow:0 0 0 8px rgba(212,42,33,0)}100%{box-shadow:0 0 0 0 rgba(212,42,33,0)}}',
+      '@keyframes vbxGold{0%,100%{box-shadow:0 0 0 0 rgba(224,168,0,0)}50%{box-shadow:0 0 0 4px rgba(224,168,0,.28)}}',
+      '@keyframes vbxRichtig{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}',
+      '@keyframes vbxDreh{0%{transform:perspective(900px) rotateY(0)}50%{transform:perspective(900px) rotateY(88deg)}100%{transform:perspective(900px) rotateY(0)}}',
+      '@keyframes vbxSchweb{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}',
+      /* erstes Öffnen: Abschnitte gestaffelt */
+      '#v-vokabeln .vp.vbx-ein>*{animation:vbxEin .55s cubic-bezier(.2,.7,.2,1) both}',
+      '#v-vokabeln .vp.vbx-ein>*:nth-child(2){animation-delay:.08s}' + '#v-vokabeln .vp.vbx-ein>*:nth-child(3){animation-delay:.16s}'
+        + '#v-vokabeln .vp.vbx-ein>*:nth-child(4){animation-delay:.24s}' + '#v-vokabeln .vp.vbx-ein>*:nth-child(5){animation-delay:.32s}'
+        + '#v-vokabeln .vp.vbx-ein>*:nth-child(n+6){animation-delay:.4s}',
+      '#v-vokabeln .vp.vbx-ein .vp-kasten{animation:vbxEin .5s cubic-bezier(.2,.7,.2,1) both}',
+      '#v-vokabeln .vp.vbx-ein .vp-kasten:nth-child(2){animation-delay:.3s}' + '#v-vokabeln .vp.vbx-ein .vp-kasten:nth-child(3){animation-delay:.36s}'
+        + '#v-vokabeln .vp.vbx-ein .vp-kasten:nth-child(4){animation-delay:.42s}' + '#v-vokabeln .vp.vbx-ein .vp-kasten:nth-child(5){animation-delay:.48s}',
+      '#v-vokabeln .vp.vbx-ein .vbx-ziel .bar i,' + '#v-vokabeln .vp.vbx-ein .vp-thema .bal i,' + '#v-vokabeln .vp.vbx-ein .vp-regal .bal i{transform-origin:left center;animation:vbxFuell .9s .35s cubic-bezier(.2,.7,.2,1) both}',
+      /* Bühne: Verlauf zieht langsam, Flaggenstreifen mit Glanz */
+      V + '.vp-heute.vpx-held{background-size:220% 220%;animation:vbxFluss 16s ease-in-out infinite alternate}',
+      '#v-vokabeln .vp.vbx-ein>.vp-heute.vpx-held{animation:vbxEin .55s cubic-bezier(.2,.7,.2,1) both,vbxFluss 16s ease-in-out infinite alternate}',
+      V + '.vp-heute.vpx-held::after{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0)) -40% 0/28% 100% no-repeat,linear-gradient(90deg,#14181B 0 33.3%,#D42A21 33.3% 66.6%,#E0A800 66.6%) 0 0/100% 100% no-repeat;animation:vbxGlanz 5s ease-in-out 1s infinite}',
+      V + '.vpx-held .vp-los{position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}',
+      V + '.vpx-held .vp-los:hover{transform:translateY(-2px);box-shadow:0 14px 26px -12px rgba(0,0,0,.55)}',
+      V + '.vpx-held .vp-los:active{transform:translateY(1px)}',
+      V + '.vpx-held .vp-los::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,rgba(224,168,0,0),rgba(224,168,0,.28),rgba(224,168,0,0));transform:translateX(-100%);animation:vbxStreif 3.2s ease-in-out 1.4s infinite}',
+      /* Tagesziel: Balken mit wanderndem Licht, geschafft = goldener Puls */
+      V + '.vbx-ziel .bar i{position:relative;overflow:hidden}',
+      V + '.vbx-ziel .bar i::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));animation:vbxStreif 2.4s ease-in-out infinite}',
+      V + '.vbx-ziel.fertig{animation:vbxGold 2.6s ease-in-out infinite;border-color:rgba(224,168,0,.55)}',
+      V + '.vbx-ziel .wahl button{transition:background .15s,color .15s,transform .12s}',
+      V + '.vbx-ziel .wahl button:hover:not(.an){background:rgba(255,255,255,.12)}',
+      V + '.vbx-ziel .wahl button:active{transform:scale(.95)}',
+      /* Kästen und Karten heben sich an */
+      V + '.vp-kasten{transition:transform .18s ease,box-shadow .18s ease}',
+      V + '.vp-kasten:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 14px 26px -16px var(--kf)}',
+      V + '.vp-kasten:not(:disabled):active{transform:translateY(0)}',
+      V + '.vbx-faellig{animation:vbxPuls 2.2s ease-out infinite}',
+      V + '.vbx-trk{transition:transform .18s ease,box-shadow .18s ease,border-color .18s}',
+      V + '.vbx-trk:not(:disabled):active{transform:translateY(0) scale(.98)}',
+      V + '.vp-thema,' + V + '.vp-regal>*{transition:transform .18s ease,box-shadow .18s ease}',
+      V + '.vp-thema:hover{transform:translateY(-2px);box-shadow:0 12px 24px -16px rgba(14,109,133,.6)}',
+      V + '.vbx-wz:hover{transform:translateX(2px)}',
+      V + '.vbx-wz{transition:border-color .15s,box-shadow .15s,transform .15s}',
+      V + '.vpx-bild.amanda img{animation:vbxSchweb 5s ease-in-out infinite}',
+      /* Übungen: Druck, richtig = petrol Leuchten, falsch = Wackeln */
+      '#vtVoll .vt-o{transition:transform .12s ease,border-color .15s,background .15s,box-shadow .15s}',
+      '#vtVoll .vt-o:active:not(:disabled){transform:translateY(2px)}',
+      '#vtVoll .vt-o.richtig{animation:vbxRichtig .38s ease-out;box-shadow:0 3px 0 #BFDDE6,0 0 0 4px rgba(27,155,192,.18)}',
+      '#vtVoll .vt-o.falsch{animation:vtWackel .32s ease}',
+      '#vtVoll input.richtig{animation:vbxRichtig .38s ease-out}',
+      '#vtVoll input.falsch{animation:vtWackel .32s ease}',
+      '#vtVoll .vt-pk{transition:transform .12s,border-color .15s,background .15s}',
+      '#vtVoll .vt-pk:active{transform:scale(.97)}',
+      '#vtVoll .vt-pk.fertig{animation:vbxRichtig .35s ease-out}',
+      '#vtVoll .vt-bar>i::before{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;z-index:1;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.35),rgba(255,255,255,0));animation:vbxStreif 2.8s ease-in-out infinite}',
+      '#vtVoll .vt-fuss.gut,#vtVoll .vt-fuss.schlecht{animation:vbxEin .28s ease-out}',
+      '#vtVoll .vt-pruefen,#vtVoll .vt-weiter{transition:transform .12s,filter .15s}',
+      '#vtVoll .vt-pruefen:active,#vtVoll .vt-weiter:active{transform:translateY(2px)}',
+      '#vtVoll .vt-hoerknopf{transition:transform .15s}',
+      '#vtVoll .vt-hoerknopf:hover{transform:scale(1.05)}',
+      '#vtVoll .vt-hoerknopf:active{transform:scale(.96)}',
+      '#vtVoll .vbx-karte.gedreht .vt-bild.gr{animation:vbxDreh .5s ease-in-out}',
+      '#vtVoll .vbx-selbst:not([hidden]){animation:vbxEin .3s ease-out}',
+      '#vtVoll .vbx-selbst button{transition:transform .12s}',
+      '#vtVoll .vbx-selbst button:active{transform:scale(.97)}',
+      '#vbxSheet .vbx-sh{animation:vbxEin .3s cubic-bezier(.2,.7,.2,1)}',
+      '#vbxSheet .vbx-sh-bg{animation:vtAuf .2s ease}',
+      /* Bewegung reduzieren: alles still */
+      '@media (prefers-reduced-motion: reduce){#v-vokabeln .vp *,#v-vokabeln .vp *::before,#v-vokabeln .vp *::after,#vtVoll *,#vtVoll *::before,#vtVoll *::after,#vbxSheet *{animation:none!important;transition:none!important}}',
       '#vtVoll .vbx-gut{margin:-14px 0 22px;padding:10px 14px;border-left:4px solid #E0A800;background:#FFFBEA;border-radius:0 12px 12px 0;font-size:15px;color:#2A2F33;line-height:1.5}',
       '#vtVoll .vbx-gut span{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8A6500;margin-bottom:2px}',
       '#vtVoll .vt-satzbox.hinweis .vt-satz,#vtVoll .vt-satzbox.zumwort .vt-satz{font-size:clamp(18px,2.4vw,24px)}',
@@ -2496,6 +2603,7 @@
     var suchFokus = such && document.activeElement === such;
     ziel.innerHTML = html;
     ziel.__vbxHtml = html;
+    if (!warDa) einblenden(ziel);
     if (suchWert) {
       var neu = document.getElementById('vbxSuche');
       if (neu) { neu.value = suchWert; window.__vtSuche(neu); if (suchFokus) { try { neu.focus({ preventScroll: true }); } catch (e) {} } }
