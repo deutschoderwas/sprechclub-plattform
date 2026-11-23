@@ -1865,7 +1865,7 @@
       + '<div class="sf-vier">'
       +   (guthabenZeigen(k)
            ? feld(T('sn_zguth','Guthaben'), c, T('sn_zguthd','Stunden frei'))
-           : feld(T('sf_club','Sprechclub'), T('sf_unbegrenzt','unbegrenzt'), T('sf_impremium','im Premium enthalten'), true))
+           : feld(T('sf_club','Sprechclub'), T('sf_taeglich','täglich'), T('sf_einestunde','eine Stunde am Tag'), true))
       +   (function(){
            /* Die Lernserie zaehlte Wochen mit gebuchter Live-Stunde.
               Im Selbstlernbereich, der vor dem Sprechclub startet,

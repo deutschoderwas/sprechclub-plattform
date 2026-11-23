@@ -318,7 +318,7 @@ async function sendPaymentMail(sub, inv) {
           <tr><td style="padding:16px 18px">
             <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${laeuftSchon ? '&#128483;&#65039; Du kannst sofort buchen' : '&#128197; Dein Unterricht startet am ' + abDatum}</div>
             <div style="font-size:15px;line-height:1.55;color:#06403A">${laeuftSchon
-              ? 'Der Sprechclub l&auml;uft t&auml;glich von Montag bis Sonntag. Such dir im Stundenplan eine Stunde aus &ndash; die erste kann heute sein. So viele, wie du willst, ohne Guthaben, ohne Limit.'
+              ? 'Der Sprechclub l&auml;uft t&auml;glich von Montag bis Sonntag &ndash; <b>jeden Tag eine Stunde</b>. Such dir im Stundenplan eine aus; die erste kann heute sein. Die ganze Lernplattform ist inklusive.'
               : 'Ab dann buchst du so viele Stunden, wie du willst &ndash; ohne Guthaben, ohne Limit. Deine Pl&auml;tze kannst du dir <b>schon jetzt</b> im Stundenplan reservieren.'}</div>
             ${naechsteAbbuchung ? `<div style="font-size:15px;line-height:1.55;color:#06403A;margin-top:10px;padding-top:10px;border-top:1px solid rgba(6,64,58,.18)">Bezahlt hast du schon &ndash; das n&auml;chste Mal erst am <b>${naechsteAbbuchung}</b>.${laeuftSchon ? '' : ' <b>Im November wird nichts abgebucht.</b>'}</div>` : ''}
           </td></tr></table>`
@@ -374,7 +374,7 @@ async function sendPaymentMail(sub, inv) {
 
   <tr><td style="padding:0 30px 10px">
     <p style="font-size:13.5px;line-height:1.6;color:#6B7280;margin:0">
-      <b>Dein Tarif:</b> ${label} &middot; ${abo ? (laeuftSchon ? 'unbegrenzt buchen, ab sofort' : 'unbegrenzt buchen ab ' + abDatum) : (community ? 'Lernplattform, ohne Live-Stunden' : stunden + ' LIVE-Stunden / Monat')}<br>
+      <b>Dein Tarif:</b> ${label} &middot; ${abo ? (laeuftSchon ? 'jeden Tag eine Stunde, ab sofort' : 'jeden Tag eine Stunde ab ' + abDatum) : (community ? 'Lernplattform, ohne Live-Stunden' : stunden + ' LIVE-Stunden / Monat')}<br>
       Dein Abo verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#0F766E">Abo verwalten</a>
     </p>
   </td></tr>

@@ -149,7 +149,7 @@
       + '<span class="ap-spar">Du sparst ' + A.spart + ' € — jeden Monat, solange du dabei bist</span>'
       + '<ul class="ap-liste">'
       +   '<li><span class="h">✓</span><span>Jeden Tag sprechen, <b>Montag bis Sonntag</b></span></li>'
-      +   '<li><span class="h">✓</span><span><b>Unbegrenzter Zugang</b> — so oft du willst, ohne Stundenpaket</span></li>'
+      +   '<li><span class="h">✓</span><span><b>Jeden Tag eine Stunde</b> — kein Stundenpaket, keine Abrechnung</span></li>'
       +   '<li><span class="h">✓</span><span>Die ganze Lernplattform, <b>A1 bis C1</b></span></li>'
       +   '<li><span class="h">✓</span><span>Monatlich kündbar — <b>der Preis bleibt dir</b></span></li>'
       + '</ul>'

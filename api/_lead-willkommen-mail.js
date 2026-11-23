@@ -143,7 +143,7 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
         <div style="font-size:15px;line-height:1.55;color:#06403A">${zu
           ? '<b>Wir sagen dir rechtzeitig Bescheid</b>, damit du deinen Platz sicher bekommst &ndash; und zwar mit einem sch&ouml;nen Rabatt. Du musst nichts weiter tun.'
           : aktion
-          ? 'In kleinen Gruppen, mit echten Menschen. Du suchst dir aus, wann du kommst &ndash; <b>unbegrenzt</b>, kein Stundenpaket. Buchen kannst du direkt nach der Anmeldung.'
+          ? 'In kleinen Gruppen, mit echten Menschen. <b>Jeden Tag eine Stunde</b> &ndash; du suchst dir aus, wann du kommst. Buchen kannst du direkt nach der Anmeldung.'
           : 'Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.'}</div>
       </td></tr>
     </table>
