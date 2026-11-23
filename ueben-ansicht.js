@@ -601,7 +601,64 @@
       '#v-ueben [data-lv="A2"]{background:#0E6D85!important;color:#fff!important}',
       '#v-ueben [data-lv="B1"]{background:#E0A800!important;color:#14181B!important}',
       '#v-ueben [data-lv="B2"]{background:#D42A21!important;color:#fff!important}',
-      '#v-ueben [data-lv="C1"]{background:#14181B!important;color:#FFD24A!important}'
+      '#v-ueben [data-lv="C1"]{background:#14181B!important;color:#FFD24A!important}',
+      /* ---------- Bewegung (23.11.2026) ----------
+         Julia: „visuell toll, nicht statisch, in unseren Farben, robust“.
+         Wie im Vokabeltrainer: nur opacity und transform, nichts verschiebt
+         das Layout. Jede neue Aufgabe gleitet herein (das Innere von #ubBody
+         wird pro Aufgabe neu gesetzt, deshalb startet die Animation genau
+         dann), Antworten erscheinen gestaffelt, richtig leuchtet petrol auf,
+         falsch wackelt rot. Richtig/falsch jetzt in Markenfarben statt
+         Grün/Rot vom Standard, passend zum Vokabeltrainer.
+         „Bewegung reduzieren“ im System schaltet alle Animationen ab. */
+      '@keyframes ubnEin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}',
+      '@keyframes ubnFuell{from{transform:scaleX(0)}to{transform:scaleX(1)}}',
+      '@keyframes ubnFluss{0%{background-position:0% 50%}100%{background-position:100% 50%}}',
+      '@keyframes ubnGlanz{0%{background-position:-40% 0,0 0}60%,100%{background-position:140% 0,0 0}}',
+      '@keyframes ubnStreif{from{transform:translateX(-100%)}to{transform:translateX(260%)}}',
+      '@keyframes ubnRichtig{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}',
+      '@keyframes ubnWackel{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}',
+      /* Übersicht */
+      '#v-ueben .ubx-held{background:linear-gradient(135deg,#14181B 0%,#123844 55%,#0E6D85 100%)!important;background-size:220% 220%!important;animation:ubnEin .5s cubic-bezier(.2,.7,.2,1) both,ubnFluss 16s ease-in-out .5s infinite alternate}',
+      '#v-ueben .ubx-held::after{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0)) -40% 0/28% 100% no-repeat,linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#E0A800 50% 75%,#1B9BC0 75% 100%) 0 0/100% 100% no-repeat!important;animation:ubnGlanz 5s ease-in-out 1s infinite}',
+      '#v-ueben .ubx-grid>.ubx-k{animation:ubnEin .45s cubic-bezier(.2,.7,.2,1) both}',
+      '#v-ueben .ubx-grid>.ubx-k:nth-child(2){animation-delay:.05s}#v-ueben .ubx-grid>.ubx-k:nth-child(3){animation-delay:.1s}#v-ueben .ubx-grid>.ubx-k:nth-child(4){animation-delay:.15s}#v-ueben .ubx-grid>.ubx-k:nth-child(5){animation-delay:.2s}#v-ueben .ubx-grid>.ubx-k:nth-child(n+6){animation-delay:.25s}',
+      '#v-ueben .ubx-bar i{background:linear-gradient(90deg,#0E6D85,#1B9BC0)!important;transform-origin:left center;animation:ubnFuell .8s .25s cubic-bezier(.2,.7,.2,1) both}',
+      '#v-ueben .ubx-k.fertig .ubx-bar i{background:#E0A800!important}',
+      '#v-ueben .ubx-k:hover{box-shadow:0 16px 30px -18px rgba(14,109,133,.55)!important;transform:translateY(-3px)!important}',
+      '#v-ueben .ubx-los{position:relative;overflow:hidden;transition:background .15s,transform .12s}',
+      '#v-ueben .ubx-los:active{transform:scale(.97)}',
+      '#v-ueben .ubx-los::after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,rgba(224,168,0,0),rgba(224,168,0,.35),rgba(224,168,0,0));transform:translateX(-100%)}',
+      '#v-ueben .ubx-los:hover::after{animation:ubnStreif .9s ease-out}',
+      '#v-ueben .ubx-tab{transition:background .15s,box-shadow .2s,transform .12s}',
+      '#v-ueben .ubx-tab:active{transform:scale(.97)}',
+      /* Aufgabe */
+      '#ubOv #ubBody>*{animation:ubnEin .35s cubic-bezier(.2,.7,.2,1) both}',
+      '#ubOv #ubBody>.ub-fb{animation:none}',
+      '#ubOv .ubn-opts .ub-opt{animation:ubnEin .35s cubic-bezier(.2,.7,.2,1) both;transition:transform .12s,border-color .15s,background .15s,box-shadow .15s}',
+      '#ubOv .ubn-opts .ub-opt:nth-child(1){animation-delay:.08s}#ubOv .ubn-opts .ub-opt:nth-child(2){animation-delay:.13s}#ubOv .ubn-opts .ub-opt:nth-child(3){animation-delay:.18s}#ubOv .ubn-opts .ub-opt:nth-child(n+4){animation-delay:.23s}',
+      '#ubOv .ubn-opts .ub-opt:active:not([disabled]){transform:translateY(2px)!important}',
+      '#ubOv .ubn-opts .ub-opt.right{border-color:#0E6D85!important;background:#E8F4F7!important;color:#0A4E62!important;box-shadow:0 0 0 4px rgba(27,155,192,.18)!important;animation:ubnRichtig .38s ease-out both}',
+      '#ubOv .ubn-opts .ub-opt.right::before{background:#0E6D85!important;color:#fff!important}',
+      '#ubOv .ubn-opts .ub-opt.wrong{border-color:#D42A21!important;background:#FDF0EF!important;color:#9E1F18!important;animation:ubnWackel .38s ease both}',
+      '#ubOv .ubn-opts .ub-opt.wrong::before{background:#D42A21!important;color:#fff!important}',
+      '#ubOv .ub-fb.ubn-fb.ok{background:#F1F8FA!important;border-color:#BFDDE6!important;color:#0A4E62!important;animation:ubnEin .3s ease-out both}',
+      '#ubOv .ub-fb.ubn-fb.no{background:#FDF5F4!important;border-color:#F3C0BC!important;color:#9E1F18!important;animation:ubnEin .3s ease-out both}',
+      '#ubOv .ubn-fbk.gut .ubn-ic{background:#0E6D85!important}#ubOv .ubn-fbk.nein .ubn-ic{background:#D42A21!important}',
+      '#ubOv .ub-prog{position:relative}',
+      '#ubOv .ub-prog span{position:relative;overflow:hidden;transition:width .45s cubic-bezier(.3,.9,.3,1)!important}',
+      '#ubOv .ub-prog span::after{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.5),rgba(255,255,255,0));animation:ubnStreif 2.8s ease-in-out infinite}',
+      '#ubOv .ub-fw{transition:transform .12s,border-color .15s,background .15s}',
+      '#ubOv .ub-fw:active{transform:scale(.95)}',
+      '#ubOv .ubn-merk{transition:transform .12s,background .15s}',
+      '#ubOv .ubn-merk:active{transform:scale(.96)}',
+      '#ubOv .ubn-merk.drin{animation:ubnRichtig .35s ease-out}',
+      '.ubn-lf.auf .ubn-lf-karte{animation:ubnEin .32s cubic-bezier(.2,.7,.2,1) both}',
+      '.ubn-lf.auf .ubn-lf-ablauf li{animation:ubnEin .35s cubic-bezier(.2,.7,.2,1) both}',
+      '.ubn-lf.auf .ubn-lf-ablauf li:nth-child(2){animation-delay:.06s}.ubn-lf.auf .ubn-lf-ablauf li:nth-child(3){animation-delay:.12s}.ubn-lf.auf .ubn-lf-ablauf li:nth-child(4){animation-delay:.18s}.ubn-lf.auf .ubn-lf-ablauf li:nth-child(n+5){animation-delay:.24s}',
+      '.ubn-lf-kopf::after{background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0)) -40% 0/28% 100% no-repeat,linear-gradient(90deg,#14181B 0 25%,#D42A21 25% 50%,#E0A800 50% 75%,#1B9BC0 75% 100%) 0 0/100% 100% no-repeat!important;animation:ubnGlanz 5s ease-in-out .8s infinite}',
+      '.ub-cele .box{animation:ubnEin .35s cubic-bezier(.2,.7,.2,1) both}',
+      '@media (prefers-reduced-motion: reduce){#v-ueben *,#v-ueben *::before,#v-ueben *::after,#ubOv *,#ubOv *::before,#ubOv *::after,.ubn-lf *,.ubn-lf *::after,.ub-cele *{animation:none!important;transition:none!important}}'
     ].join('\n');
     document.head.appendChild(s);
   }
