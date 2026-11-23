@@ -89,6 +89,30 @@
     else el.textContent = text;
   }
   function zeig(el, an) { if (el) el.style.display = an ? '' : 'none'; }
+
+  /* Zu den Preisen. Auf der Startseite gibt es dafuer ein Fenster,
+     sonst die Preisseite. */
+  function zuDenPreisen() {
+    try {
+      if (typeof window.openPreise === 'function') return window.openPreise();
+      if (typeof window.zuPreisen === 'function') return window.zuPreisen();
+    } catch (e) {}
+    location.href = '/preise';
+  }
+
+  /* Macht ein Element anklickbar - einmal, und mit Tastatur. */
+  function klickbar(el, beschriftung) {
+    if (!el || el.dataset.aktKlick) return;
+    el.dataset.aktKlick = '1';
+    el.style.cursor = 'pointer';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    if (beschriftung) el.setAttribute('aria-label', beschriftung);
+    el.addEventListener('click', zuDenPreisen);
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zuDenPreisen(); }
+    });
+  }
   function $(id) { return document.getElementById(id); }
 
   function preiseSetzen() {
@@ -146,6 +170,15 @@
     /* Und der Knopf daneben. Eine Leiste, die "30 % Rabatt" sagt und
        dann auf die Warteliste fuehrt, waere die teuerste Art, eine
        Aktion zu verschenken. */
+    /* Das Preisschild im Hero - "Black Week - 30 %" und darunter der
+       Preis. Julia, 23.11.2026: "auf den Black Week -30 % ganz am
+       Anfang unter 'Deutsch sprechen lernt man nur durch Sprechen'
+       auch anklickbar machen und man kommt direkt zu den Preisen."
+       Es sieht aus wie ein Angebot, also muss es sich auch wie eines
+       anfassen lassen. */
+    var schild = $('raLabel') && $('raLabel').closest ? $('raLabel').closest('.rangebot') : null;
+    klickbar(schild, 'Zu den Preisen');
+
     var kn = $('kbxKnopf');
     if (kn && !kn.dataset.aktion) {
       kn.dataset.aktion = '1';
@@ -265,15 +298,6 @@
       try { sessionStorage.setItem('dow_akt_leiste_zu', '1'); } catch (e2) {}
     };
 
-    /* Zu den Preisen. Auf der Startseite gibt es dafuer ein Fenster,
-       sonst die Preisseite. */
-    function zuDenPreisen() {
-      try {
-        if (typeof window.openPreise === 'function') return window.openPreise();
-        if (typeof window.zuPreisen === 'function') return window.zuPreisen();
-      } catch (e) {}
-      location.href = '/preise';
-    }
     bar.addEventListener('click', zuDenPreisen);
     bar.setAttribute('role', 'button');
     bar.setAttribute('tabindex', '0');
