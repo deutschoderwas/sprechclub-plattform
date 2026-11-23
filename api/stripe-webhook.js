@@ -260,6 +260,19 @@ async function sendPaymentMail(sub, inv) {
     const abo = /premium/.test(tier);
     const community = tier === 'community';
     const abDatum = tier === 'premiumplus' ? '1. Februar 2027' : '1. November 2026';
+    /* Laeuft der Unterricht schon? Fuer Premium seit dem 1. November,
+       fuer Premium Plus ab dem 1. Februar 2027.
+
+       Julia, 23.11.2026: "was bekommen die Leute fuer eine Nachricht,
+       wenn sie das Abo bezahlen?" - bis heute stand in dieser Mail
+       "Dein Unterricht startet am 1. November 2026" und "Ab dann
+       buchst du...". Wer in der Black Week kauft, liest also ein
+       Datum, das drei Wochen zurueckliegt, und denkt, er muesse
+       warten - dabei kann er sofort buchen. */
+    const startTs = tier === 'premiumplus'
+      ? Date.parse('2027-02-01T00:00:00+01:00')
+      : Date.parse('2026-11-01T00:00:00+01:00');
+    const laeuftSchon = Date.now() >= startTs;
     /* Julia, 18.10.2026: "die Leute haben keine bestaetigung, dass sie
        erst am 01.12 zahlen muessen. Ich will nicht, dass ihnen im
        November Geld abgebucht wird."
@@ -303,9 +316,11 @@ async function sendPaymentMail(sub, inv) {
     const kasten1 = abo
       ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
           <tr><td style="padding:16px 18px">
-            <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">&#128197; Dein Unterricht startet am ${abDatum}</div>
-            <div style="font-size:15px;line-height:1.55;color:#06403A">Ab dann buchst du so viele Stunden, wie du willst &ndash; ohne Guthaben, ohne Limit. Deine Pl&auml;tze kannst du dir <b>schon jetzt</b> im Stundenplan reservieren.</div>
-            ${naechsteAbbuchung ? `<div style="font-size:15px;line-height:1.55;color:#06403A;margin-top:10px;padding-top:10px;border-top:1px solid rgba(6,64,58,.18)">Bezahlt hast du schon &ndash; <b>im November wird nichts abgebucht</b>. Das n&auml;chste Mal erst am <b>${naechsteAbbuchung}</b>.</div>` : ''}
+            <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${laeuftSchon ? '&#128483;&#65039; Du kannst sofort buchen' : '&#128197; Dein Unterricht startet am ' + abDatum}</div>
+            <div style="font-size:15px;line-height:1.55;color:#06403A">${laeuftSchon
+              ? 'Der Sprechclub l&auml;uft t&auml;glich von Montag bis Sonntag. Such dir im Stundenplan eine Stunde aus &ndash; die erste kann heute sein. So viele, wie du willst, ohne Guthaben, ohne Limit.'
+              : 'Ab dann buchst du so viele Stunden, wie du willst &ndash; ohne Guthaben, ohne Limit. Deine Pl&auml;tze kannst du dir <b>schon jetzt</b> im Stundenplan reservieren.'}</div>
+            ${naechsteAbbuchung ? `<div style="font-size:15px;line-height:1.55;color:#06403A;margin-top:10px;padding-top:10px;border-top:1px solid rgba(6,64,58,.18)">Bezahlt hast du schon &ndash; das n&auml;chste Mal erst am <b>${naechsteAbbuchung}</b>.${laeuftSchon ? '' : ' <b>Im November wird nichts abgebucht.</b>'}</div>` : ''}
           </td></tr></table>`
       : (community
       ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
@@ -329,7 +344,8 @@ async function sendPaymentMail(sub, inv) {
             <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; Die Lernplattform ist sofort offen</div>
             <div style="font-size:14.5px;line-height:1.55;color:#6B7280">Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.</div>
           </td></tr></table>`;
-    const knopf = community ? 'Zur Lernplattform' : (abo ? 'Stundenplan ansehen' : 'Jetzt Stunde buchen');
+    const knopf = community ? 'Zur Lernplattform'
+      : (abo ? (laeuftSchon ? 'Jetzt erste Stunde buchen' : 'Stundenplan ansehen') : 'Jetzt Stunde buchen');
     const ziel = community ? 'https://www.deutschoderwas-club.de/schuelerbereich' : BOOK;
     const html = `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${kopf}</title></head>
@@ -358,7 +374,7 @@ async function sendPaymentMail(sub, inv) {
 
   <tr><td style="padding:0 30px 10px">
     <p style="font-size:13.5px;line-height:1.6;color:#6B7280;margin:0">
-      <b>Dein Tarif:</b> ${label} &middot; ${abo ? 'unbegrenzt buchen ab ' + abDatum : (community ? 'Lernplattform, ohne Live-Stunden' : stunden + ' LIVE-Stunden / Monat')}<br>
+      <b>Dein Tarif:</b> ${label} &middot; ${abo ? (laeuftSchon ? 'unbegrenzt buchen, ab sofort' : 'unbegrenzt buchen ab ' + abDatum) : (community ? 'Lernplattform, ohne Live-Stunden' : stunden + ' LIVE-Stunden / Monat')}<br>
       Dein Abo verl&auml;ngert sich automatisch &ndash; jederzeit k&uuml;ndbar. <a href="${PORTAL}" style="color:#0F766E">Abo verwalten</a>
     </p>
   </td></tr>
