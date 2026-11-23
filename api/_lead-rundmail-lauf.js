@@ -83,7 +83,40 @@ async function abgemeldet() {
 export function textZuHtml(text) {
   return String(text || '').replace(/\r\n/g, '\n').split(/\n{2,}/)
     .map((absatz) => {
-      const inhalt = esc(absatz).replace(/\n/g, '<br>')
+      const roh = absatz.trim();
+
+      /* Ein Absatz, der nur aus [Text](Adresse) besteht, wird ein
+         Knopf. Julia, 23.11.2026: "Aber wie sieht die Mail dann aus?
+         Professionell?" - ein nackter Link mitten im Text ist das
+         nicht, und in einer Mail, die zu etwas einladen soll, ist der
+         Knopf die Stelle, auf die geklickt wird.
+
+         Als Tabelle gebaut und ohne Hintergrundbild, weil Outlook
+         alles andere verschluckt. Dunkle Schrift auf Tuerkis, wie auf
+         der Seite: weiss auf Tuerkis ist zu kontrastarm. */
+      const knopf = roh.match(/^\[([^\]]{1,60})\]\((https?:\/\/[^\s)]+)\)$/);
+      if (knopf) {
+        return '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 18px">'
+          + '<tr><td align="center" bgcolor="#2DD4BF" style="border-radius:999px">'
+          + '<a href="' + esc(knopf[2]) + '" '
+          + 'style="display:inline-block;padding:14px 28px;font-family:\'Space Grotesk\',\'Segoe UI\',sans-serif;'
+          + 'font-size:16px;font-weight:700;color:#06403A;text-decoration:none;border-radius:999px">'
+          + esc(knopf[1]) + '</a></td></tr></table>';
+      }
+
+      /* Eine Zeile, die mit - oder * anfaengt, wird ein Punkt mit
+         Haken davor. Vorher stand dort ein nackter Bindestrich. */
+      const zeilen = roh.split('\n');
+      if (zeilen.length && zeilen.every((z) => /^\s*[-*\u2022]\s+/.test(z))) {
+        return '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 14px">'
+          + zeilen.map((z) => '<tr>'
+              + '<td valign="top" style="padding:0 9px 7px 0;font-size:16px;line-height:1.5;color:#14B8A6">\u2713</td>'
+              + '<td valign="top" style="padding:0 0 7px;font-size:16px;line-height:1.5">'
+              + esc(z.replace(/^\s*[-*\u2022]\s+/, '')) + '</td></tr>').join('')
+          + '</table>';
+      }
+
+      const inhalt = esc(roh).replace(/\n/g, '<br>')
         .replace(/(https?:\/\/[^\s<]+)/g,
           '<a href="$1" style="color:#0F766E;font-weight:600">$1</a>');
       return '<p style="font-size:16px;line-height:1.65;margin:0 0 14px">' + inhalt + '</p>';
