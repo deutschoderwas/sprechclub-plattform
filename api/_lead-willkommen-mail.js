@@ -49,7 +49,12 @@ import { tuerenZu, aktionLaeuft, AKTION_PREIS, AKTION_ALT,
 export { TUEREN_ZU_AB, TUEREN_AUF, tuerenZu } from './_tueren.js';
 
 export function willkommenBetreff(jetzt = Date.now()) {
-  if (tuerenZu(jetzt)) return 'Schön, dass du da bist — die Türen öffnen am 23. November';
+  /* Julia, 23.11.2026: "Ab dem 01.12 bekommt jeder eine andere
+     Willkommensmail und zwar, danke, dass du dich fuer den Sprechclub
+     interessierst. Wir oeffnen die Tueren mit einem schoenen Rabatt
+     kurz vor Weihnachten. Bis dahin kannst du die Lernplattform
+     nutzen." */
+  if (tuerenZu(jetzt)) return 'Danke, dass du dich für den Sprechclub interessierst';
   /* Julia, 23.11.2026: "alle die sich auf die Warteliste eintragen ab
      heute bis zum 30.11 erhalten eine andere Willkommensmail. Sie
      bekommen die Mail: Schön, dass du dich für den Sprechclub
@@ -116,14 +121,14 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   <tr><td style="padding:16px 30px 0">
     <h1 style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:26px;line-height:1.25;margin:0 0 12px">
       ${zu
-        ? `Sch&ouml;n, dass du da bist, ${v}. Du stehst auf der <span style="color:#DD0000">Warteliste</span>.`
+        ? `Danke, dass du dich f&uuml;r den <span style="color:#DD0000">Sprechclub</span> interessierst, ${v}.`
         : aktion
         ? `Sch&ouml;n, dass du dich f&uuml;r den <span style="color:#DD0000">Sprechclub</span> interessierst, ${v}.`
         : `Sch&ouml;n, dass du da bist, ${v}. Jetzt wird <span style="color:#DD0000">gesprochen</span>.`}
     </h1>
     <p style="font-size:16px;line-height:1.65;margin:0 0 18px">
       ${zu
-        ? 'Danke, dass du dich eingetragen hast. Aktuell ist der Sprechclub <b>voll</b> &ndash; aber am <b>Montag, dem 23. November</b>, &ouml;ffnen wir die Anmeldung noch einmal, f&uuml;r eine Woche.'
+        ? 'Die Anmeldung f&uuml;r den Sprechclub ist immer nur f&uuml;r eine bestimmte Zeit offen, weil wir begrenzte Pl&auml;tze haben. <b>Kurz vor Weihnachten</b> machen wir sie wieder auf &ndash; mit einem sch&ouml;nen Rabatt. Du stehst auf der Liste und h&ouml;rst als Erste davon.'
         : aktion
         ? 'Die Anmeldung ist gerade offen. Sobald du Mitglied bist, kannst du den Unterricht <b>sofort buchen</b> &ndash; du kannst also noch heute in deiner ersten Stunde sitzen. Das Wichtigste in drei S&auml;tzen:'
         : 'Du hast dich f&uuml;r den Sprechclub eingetragen &ndash; danke daf&uuml;r. Zwei Dinge sind jetzt wichtig f&uuml;r dich:'}
@@ -133,10 +138,10 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
   <tr><td style="padding:0 30px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#A7F3D0;border-radius:14px;margin-bottom:12px">
       <tr><td style="padding:16px 18px">
-        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#128197; Am 23. November &ouml;ffnen wir noch einmal &ndash; eine Woche lang'
+        <div style="font-family:'Space Grotesk','Segoe UI',sans-serif;font-weight:700;font-size:17px;color:#06403A;margin-bottom:4px">${zu ? '&#127876; Kurz vor Weihnachten geht die Anmeldung wieder auf'
           : aktion ? '&#128483;&#65039; Jeden Tag sprechen, Montag bis Sonntag' : '&#128197; Der Unterricht startet am 1. November'}</div>
         <div style="font-size:15px;line-height:1.55;color:#06403A">${zu
-          ? '<b>Wir sagen dir rechtzeitig Bescheid</b>, damit du deinen Platz sicher bekommst. Du musst nichts weiter tun &ndash; du stehst auf der Liste.'
+          ? '<b>Wir sagen dir rechtzeitig Bescheid</b>, damit du deinen Platz sicher bekommst &ndash; und zwar mit einem sch&ouml;nen Rabatt. Du musst nichts weiter tun.'
           : aktion
           ? 'In kleinen Gruppen, mit echten Menschen. Du suchst dir aus, wann du kommst &ndash; <b>unbegrenzt</b>, kein Stundenpaket. Buchen kannst du direkt nach der Anmeldung.'
           : 'Danach t&auml;glich von Montag bis Sonntag. Du suchst dir aus, wann du kommst.'}</div>
@@ -148,13 +153,13 @@ export function willkommenHtml(vorname, jetzt = Date.now()) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;border:1px solid #F0E5D8;border-radius:14px;margin-bottom:18px">
       <tr><td style="padding:14px 18px">
         <div style="font-weight:700;font-size:15.5px;margin-bottom:3px">&#9989; ${zu ? 'Solange kannst du in Ruhe die Lernplattform nutzen' : 'Die ganze Lernplattform ist dabei'}</div>
-        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">${zu ? '' : 'Im Sprechclub ohne Aufpreis enthalten und sofort offen: '}Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist der <b>Lernclub</b> f&uuml;r 16&nbsp;&euro; im Monat &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick zum Sprechclub.' : ''}</div>
+        <div style="font-size:14.5px;line-height:1.55;color:#6B7280">${zu ? '' : 'Im Sprechclub ohne Aufpreis enthalten und sofort offen: '}Kurse von A1 bis C1, &Uuml;bungen, regelm&auml;&szlig;iger Podcast und Amanda, mit der du sprechen kannst, wann du willst.${zu ? ' Das ist der <b>Lernclub</b> f&uuml;r 16&nbsp;&euro; im Monat, monatlich k&uuml;ndbar &ndash; und wenn die T&uuml;ren wieder aufgehen, wechselst du mit einem Klick zum Sprechclub.' : ''}</div>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td align="center" style="padding:0 30px 20px">
-    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Lernclub ansehen' : aktion ? 'Jetzt anmelden' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
+    <a href="${zu ? 'https://www.deutschoderwas-club.de/preise' : 'https://www.deutschoderwas-club.de/preise'}" style="display:inline-block;background:#2DD4BF;color:#06403A;font-weight:700;font-size:16.5px;text-decoration:none;padding:15px 34px;border-radius:999px">${zu ? 'Preise &amp; Lernclub ansehen' : aktion ? 'Jetzt anmelden' : 'Platz sichern' + (rabatt ? ' &ndash; bis 31. Oktober' : '')}</a>
     ${aktion ? `<div style="font-size:14px;line-height:1.5;color:#6B7280;margin-top:10px">Die Anmeldung ist bis zum ${esc(aktionBis)} offen.</div>` : ''}
   </td></tr>
 
