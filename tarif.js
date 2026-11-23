@@ -100,6 +100,20 @@
       ? 'eine Zahlung f\u00fcr 6 Monate \u00b7 ' + euro(HALB.proMonat) + ' im Monat'
       : 'monatlich k\u00fcndbar');
 
+    /* Das Preise-Fenster auf der Startseite (#preiseWin). Das ist die
+       Stelle, an der tatsaechlich gekauft wird - "Preise", "Mitglied
+       werden" und "Alle Tarife ansehen" fuehren alle dorthin. */
+    setz($('preisP'), p);
+    var altWrapP = $('altWrapP');
+    if (altWrapP) altWrapP.style.display = '';
+    var altP = $('altP'); if (altP) altP.textContent = alt;
+    setz($('sparP'), '−' + proz + ' %');
+    setz($('totalP'), halb
+      ? 'eine Zahlung für 6 Monate · ' + euro(HALB.proMonat) + ' im Monat'
+      : 'monatlich kündbar');
+    var einheit = document.querySelector('#preisP + .np-unit');
+    if (einheit) einheit.textContent = halb ? '/ 6 Monate' : '/ Monat';
+
     /* Die Klebeleiste unten und das Etikett im Hero */
     setz($('raPreis'), p);
     setz($('kbxText'), halb
@@ -134,30 +148,46 @@
     document.head.appendChild(s);
   }
 
+  /* Ueber welchen Preisbloecken steht er? Ueber ALLEN, die es auf
+     dieser Seite gibt - frueher nur ueber dem ersten. Auf der
+     Startseite ist der erste die Mitgliedschaftskarte ganz unten;
+     gekauft wird aber im Preise-Fenster weiter oben, und dort stand
+     am 23.11.2026 nur der Monatspreis. Julia: "du hast den
+     Halbjahresbutton vergessen" - sie hatte ins Fenster gesehen. */
+  function ankerListe() {
+    var a = [];
+    var ek = document.querySelector('.ek-zahl');
+    if (ek) a.push(ek);
+    var pp = document.getElementById('preisP');          // Preise-Fenster, Sprechclub-Karte
+    if (pp) a.push((pp.closest && pp.closest('.np-kr')) || pp.parentNode);
+    var pz = document.getElementById('pZahl');           // preise.html, club.html, sprechclub.html
+    if (pz) a.push((pz.closest && pz.closest('.preis,.pzahl,.pcard,.karte')) || pz);
+    return a.filter(function (e, i) { return e && a.indexOf(e) === i; });
+  }
+
   function schalterBauen() {
-    /* Ueber welchem Preisblock soll er stehen? Wir nehmen den ersten,
-       den es auf dieser Seite gibt. Gibt es keinen, passiert nichts -
-       dann ist es eine Seite ohne Preiskarte. */
-    var anker = document.querySelector('.ek-zahl')
-             || (document.getElementById('pZahl') && document.getElementById('pZahl').closest('.preis,.pzahl,.pcard,.karte'))
-             || document.getElementById('pZahl');
-    if (!anker || anker.dataset.tfDa) return;
-    anker.dataset.tfDa = '1';
+    var anker = ankerListe();
+    if (!anker.length) return;   // Seite ohne Preiskarte
     stil();
 
-    var zeile = document.createElement('div');
-    zeile.className = 'tf-zeile';
-    zeile.innerHTML = '<div class="tf-schalter" role="group" aria-label="Zahlweise wählen">'
-      + '<button type="button" data-tf="monat" aria-pressed="true">Monatlich</button>'
-      + '<button type="button" data-tf="halb" aria-pressed="false">6 Monate'
-      + '<span class="tf-spar">−' + HALB.prozent + ' %</span></button>'
-      + '</div>';
-    anker.parentNode.insertBefore(zeile, anker);
+    anker.forEach(function (ziel) {
+      if (!ziel.parentNode || ziel.dataset.tfDa) return;
+      ziel.dataset.tfDa = '1';
 
-    zeile.addEventListener('click', function (e) {
-      var k = e.target.closest('button[data-tf]');
-      if (!k) return;
-      waehlen(k.dataset.tf === 'halb' ? HALB : MONAT);
+      var zeile = document.createElement('div');
+      zeile.className = 'tf-zeile';
+      zeile.innerHTML = '<div class="tf-schalter" role="group" aria-label="Zahlweise wählen">'
+        + '<button type="button" data-tf="monat" aria-pressed="true">Monatlich</button>'
+        + '<button type="button" data-tf="halb" aria-pressed="false">6 Monate'
+        + '<span class="tf-spar">−' + HALB.prozent + ' %</span></button>'
+        + '</div>';
+      ziel.parentNode.insertBefore(zeile, ziel);
+
+      zeile.addEventListener('click', function (e) {
+        var k = e.target.closest('button[data-tf]');
+        if (!k) return;
+        waehlen(k.dataset.tf === 'halb' ? HALB : MONAT);
+      });
     });
   }
 
@@ -188,8 +218,17 @@
     kasseUmlegen();
     /* Die Seiten zeichnen ihre Preise selbst, teils erst spaet - und
        aktion.js setzt sie danach noch einmal. Wir kommen als Letzte. */
-    setTimeout(function () { kasseUmlegen(); if (T.gewaehlt !== MONAT) preiseSchreiben(); }, 600);
-    setTimeout(function () { if (T.gewaehlt !== MONAT) preiseSchreiben(); }, 1800);
+    setTimeout(function () { kasseUmlegen(); schalterBauen(); if (T.gewaehlt !== MONAT) preiseSchreiben(); }, 600);
+    setTimeout(function () { schalterBauen(); if (T.gewaehlt !== MONAT) preiseSchreiben(); }, 1800);
+    /* Manche Preiskarten entstehen erst beim Oeffnen des Fensters.
+       Darum nach jedem Klick kurz nachsehen, ob ein Preisblock
+       dazugekommen ist, der noch keinen Umschalter hat. */
+    document.addEventListener('click', function () {
+      setTimeout(function () {
+        schalterBauen();
+        if (T.gewaehlt !== MONAT) preiseSchreiben();
+      }, 120);
+    }, true);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
