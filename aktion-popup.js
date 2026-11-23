@@ -136,7 +136,14 @@
       + '<button class="ap-zu" type="button" aria-label="Schließen">✕</button>'
       + '<span class="ap-fahne">' + A.name + ' · ' + A.prozent + ' % Rabatt</span>'
       + '<h3 id="apTitel">Diese Woche sprichst du für <b style="color:#FFCE00">' + A.preis + ' €</b> im Monat.</h3>'
-      + '<p>Der Sprechclub ist sonst geschlossen. Für die ' + A.name + ' machen wir auf — und du zahlst dauerhaft weniger.</p>'
+      /* Julia, 23.11.2026: "der Sprechclub ist sonst geschlossen auch
+         nicht (Die Anmeldungen fuer den Sprechclub sind immer nur fuer
+         eine bestimmte Zeit geoeffnet, weil wir begrenzte Plaetze
+         haben)". Der Club laeuft taeglich weiter - zu ist nur die
+         Anmeldung. Das ist nicht dasselbe, und das Erste klingt nach
+         einem Club, in dem gerade nichts passiert. */
+      + '<p>Die Anmeldung ist immer nur f\u00fcr eine bestimmte Zeit offen, weil wir begrenzte Pl\u00e4tze haben. '
+      + 'Diese Woche machen wir auf \u2014 und du zahlst dauerhaft weniger.</p>'
       + '<div class="ap-preis"><span class="ap-neu">' + A.preis + ' €</span>'
       +   '<span class="ap-alt">' + A.alt + ' €</span><span class="ap-pm">im Monat</span></div>'
       + '<span class="ap-spar">Du sparst ' + A.spart + ' € — jeden Monat, solange du dabei bist</span>'

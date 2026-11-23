@@ -172,7 +172,7 @@ export function rundmailHtml(betreff, text, anrede) {
   </td></tr>
 
   <tr><td style="padding:6px 30px 24px">
-    <p style="font-family:${FF};font-size:16px;line-height:1.65;margin:0;color:#1A1A1A">Liebe Gr&uuml;&szlig;e<br>Julia</p>
+    <p style="font-family:${FF};font-size:16px;line-height:1.65;margin:0;color:#1A1A1A">Liebe Gr&uuml;&szlig;e<br>Julia &amp; deutschoderwas Team</p>
   </td></tr>
 
   <tr><td style="padding:0 30px 24px">
