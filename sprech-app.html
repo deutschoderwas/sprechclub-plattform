@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deutschoderwas · Sprechclub-Themen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tuerkis:#2DD4BF; --tuerkis-d:#14B8A6; --tuerkis-soft:#A7F3D0; --tuerkis-text:#0F766E; --auf-tuerkis:#06403A;
+  --anthrazit:#1A1A1A; --rot:#DD0000; --gold:#FFCE00;
+  --creme:#FFF8E0; --creme-hell:#FFFCF5; --weich:#6B7280; --rahmen:#F0E5D8; --weiss:#fff;
+  --schatten:0 4px 18px rgba(0,0,0,.06); --schatten-l:0 2px 8px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--creme);color:var(--anthrazit);-webkit-font-smoothing:antialiased;}
+h1,h2,h3,.gro{font-family:'Space Grotesk','Segoe UI',sans-serif;}
+
+/* ---------- Kopf ---------- */
+.top{position:sticky;top:0;z-index:30;background:var(--creme);border-bottom:1px solid var(--rahmen);padding:12px 20px 10px;}
+.top-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.marke{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;letter-spacing:-.01em;white-space:nowrap;}
+.marke .o{color:var(--tuerkis-d);}
+.marke small{display:block;font-family:'Inter';font-weight:500;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--weich);margin-top:1px;}
+.suche{flex:1 1 240px;position:relative;min-width:180px;}
+.suche input{width:100%;border:1px solid var(--rahmen);background:var(--weiss);border-radius:999px;padding:11px 16px 11px 40px;font-family:'Inter';font-size:.95rem;color:var(--anthrazit);outline:none;}
+.suche input:focus{border-color:var(--tuerkis);box-shadow:0 0 0 3px rgba(45,212,191,.18);}
+.suche .lupe{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--weich);font-size:1rem;}
+.niv{display:flex;gap:6px;flex-wrap:wrap;}
+.niv button{border:1px solid var(--rahmen);background:var(--weiss);border-radius:999px;padding:9px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.82rem;cursor:pointer;color:var(--anthrazit);transition:.12s;}
+.niv button:hover{border-color:var(--tuerkis);}
+.niv button.on{background:var(--anthrazit);color:#fff;border-color:var(--anthrazit);}
+
+/* Bereich-Chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;}
+.chip{border:1px solid var(--rahmen);background:var(--creme-hell);border-radius:999px;padding:7px 13px;font-size:.82rem;font-weight:600;cursor:pointer;color:#374151;display:flex;align-items:center;gap:7px;transition:.12s;}
+.chip:hover{border-color:var(--tuerkis);}
+.chip.on{background:var(--tuerkis-soft);border-color:var(--tuerkis);color:var(--auf-tuerkis);}
+.chip .n{background:rgba(0,0,0,.07);border-radius:999px;font-size:.72rem;font-weight:700;padding:1px 7px;color:#4b5563;}
+.chip.on .n{background:rgba(6,64,58,.14);color:var(--auf-tuerkis);}
+
+/* ---------- Layout ---------- */
+.wrap{display:grid;grid-template-columns:320px 1fr;gap:0;max-width:1500px;margin:0 auto;min-height:calc(100vh - 118px);}
+.liste{border-right:1px solid var(--rahmen);padding:14px 10px 40px;overflow:auto;}
+.liste-kopf{font-family:'Space Grotesk';font-weight:700;font-size:.92rem;color:var(--weich);padding:4px 10px 10px;}
+.t-item{width:100%;text-align:left;border:1px solid transparent;background:var(--creme-hell);border-radius:14px;padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:.12s;display:block;}
+.t-item:hover{border-color:var(--rahmen);box-shadow:var(--schatten-l);}
+.t-item.on{border-color:var(--tuerkis);background:#fff;box-shadow:var(--schatten);}
+.t-item .tt{font-family:'Space Grotesk';font-weight:600;font-size:1rem;line-height:1.25;}
+.t-item .tb{font-size:.78rem;color:var(--weich);margin-top:3px;}
+
+/* Niveau-Badge */
+.lv{display:inline-block;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+.lv-ab{background:#FFF3C4;color:#8A6D00;}
+.lv-bb{background:var(--tuerkis-soft);color:var(--auf-tuerkis);}
+.lv-bc{background:#DCFCE7;color:#166534;}
+
+/* ---------- Detail ---------- */
+.detail{padding:26px 34px 70px;overflow:auto;}
+.d-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+.d-breadcrumb{font-size:.82rem;color:var(--weich);font-weight:600;letter-spacing:.02em;}
+.d-titel{font-family:'Space Grotesk';font-weight:700;font-size:2rem;line-height:1.1;margin:4px 0 0;}
+.d-tools{display:flex;gap:8px;align-items:center;}
+.btn{border:1px solid var(--rahmen);background:var(--creme-hell);border-radius:999px;padding:9px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.84rem;cursor:pointer;color:var(--anthrazit);display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{border-color:var(--tuerkis);}
+.btn-prim{background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-d));color:var(--auf-tuerkis);border:none;box-shadow:var(--schatten-l);}
+
+.sek{margin-top:26px;}
+.sek-h{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rot);margin-bottom:14px;}
+.sek-h .ic{font-size:1.05rem;}
+
+/* Fragen */
+.frage{display:flex;gap:14px;align-items:flex-start;background:var(--creme-hell);border:1px solid var(--rahmen);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.12s;}
+.frage:hover{border-color:var(--tuerkis);}
+.frage.aktiv{background:#fff;border-color:var(--tuerkis);box-shadow:var(--schatten);}
+.frage .nr{flex:none;width:30px;height:30px;border-radius:999px;background:var(--anthrazit);color:#fff;font-family:'Space Grotesk';font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.frage.aktiv .nr{background:var(--tuerkis-d);color:#fff;}
+.frage .ft{font-size:1.02rem;line-height:1.5;padding-top:3px;}
+
+/* Redemittel / Antworten */
+.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.rm-karte{background:#fff;border:1px solid var(--rahmen);border-radius:16px;padding:16px 18px;box-shadow:var(--schatten-l);}
+.rm-karte h4{font-family:'Space Grotesk';font-weight:600;font-size:.98rem;margin:0 0 10px;color:var(--auf-tuerkis);display:flex;align-items:center;gap:8px;}
+.rm-karte ul{margin:0;padding:0;list-style:none;}
+.rm-karte li{font-size:.98rem;line-height:1.45;padding:7px 0;border-bottom:1px dashed var(--rahmen);}
+.rm-karte li:last-child{border-bottom:none;}
+.rm-karte li b{color:var(--tuerkis-text);font-weight:700;}
+
+/* Vokabeln */
+.vok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;}
+.vok{background:var(--creme-hell);border:1px solid var(--rahmen);border-radius:14px;padding:12px 14px;cursor:pointer;transition:.12s;}
+.vok:hover{border-color:var(--tuerkis);}
+.vok .w{font-family:'Space Grotesk';font-weight:600;font-size:1.02rem;}
+.vok .bsp{font-size:.86rem;color:var(--weich);margin-top:3px;line-height:1.4;}
+.vok .ue{font-size:.9rem;color:var(--tuerkis-text);font-weight:600;margin-top:6px;display:none;}
+.vok.show .ue{display:block;}
+.vok .tipp{font-size:.72rem;color:var(--weich);margin-top:6px;}
+.vok.show .tipp{display:none;}
+
+.leer{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;color:var(--weich);padding:30px;}
+.leer .em{font-size:3rem;margin-bottom:10px;}
+
+/* Präsentiermodus */
+body.praesi .top .suche, body.praesi .liste{display:none;}
+body.praesi .wrap{grid-template-columns:1fr;}
+body.praesi .detail{padding:30px max(40px,6vw) 80px;}
+body.praesi .d-titel{font-size:2.5rem;}
+body.praesi .frage .ft{font-size:1.18rem;}
+
+@media(max-width:860px){
+  .wrap{grid-template-columns:1fr;}
+  .liste{border-right:none;border-bottom:1px solid var(--rahmen);max-height:42vh;}
+  .rm-grid{grid-template-columns:1fr;}
+  .detail{padding:20px 18px 60px;}
+  .d-titel{font-size:1.6rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-row">
+    <div class="marke">deutsch<span class="o">oderwas</span><small>Sprechclub · Themen</small></div>
+    <div class="suche">
+      <span class="lupe">🔍</span>
+      <input id="suche" type="text" placeholder="Thema suchen …" autocomplete="off">
+    </div>
+    <div class="niv" id="niv"></div>
+  </div>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="wrap">
+  <aside class="liste">
+    <div class="liste-kopf" id="liste-kopf">Themen</div>
+    <div id="liste"></div>
+  </aside>
+  <main class="detail" id="detail"></main>
+</div>
+
+<script>
+/* ===================== DATEN =====================
+   niveau: 'ab' = A2·B1 | 'bb' = B1·B2 | 'bc' = B2·C1
+   vokabeln: {w: "der Begriff", ue: "Übersetzung", bsp: "Beispielsatz"} */
+const BAENDER = { ab:{label:'A2·B1',cls:'lv-ab'}, bb:{label:'B1·B2',cls:'lv-bb'}, bc:{label:'B2·C1',cls:'lv-bc'} };
+
+const THEMEN = [
+  {
+    id:'gedaechtnis', titel:'Gedächtnis verbessern', bereich:'Gesundheit & Wohlbefinden', niveau:'bb',
+    fragen:[
+      'Glaubst du, dass es möglich ist, sein Gedächtnis durch spezielle Techniken zu verbessern?',
+      'Welche Gedächtnistechniken kennst du und wie funktionieren sie deiner Meinung nach?',
+      'Hast du schon einmal eine Methode ausprobiert, um dir etwas besser zu merken? Wenn ja, welche?',
+      'Denkst du, dass das Alter einen Einfluss auf das Gedächtnis hat? Warum oder warum nicht?',
+      'Welche Rolle spielt die Ernährung in Bezug auf das Gedächtnis und die geistige Leistung?',
+      'Wie wichtig ist regelmäßige geistige Aktivität für das Gedächtnistraining?',
+      'Was hältst du von Gedächtnistraining-Apps oder -Spielen? Sind sie hilfreich oder eher eine Ablenkung?',
+      'Wie beeinflussen Stress und Schlafmangel das Gedächtnis deiner Meinung nach?',
+      'Glaubst du, dass das Erlernen einer neuen Sprache das Gedächtnis stärkt? Warum?',
+      'Welche Empfehlung würdest du jemandem geben, der sein Gedächtnis verbessern möchte?'
+    ],
+    redemittel:[
+      {h:'🗣️ Meinung ausdrücken', l:['Ich glaube, dass …','Meiner Meinung nach …','Ich finde es faszinierend, wie …','Für mich ist klar, dass …']},
+      {h:'🤝 Zustimmen & relativieren', l:['Das sehe ich genauso.','Da ist etwas dran, aber …','Es kommt darauf an, ob …','Einerseits …, andererseits …']}
+    ],
+    antworten:[
+      'Ich glaube, dass Gedächtnistraining eine wichtige Rolle für unser geistiges Wohlbefinden spielt.',
+      'Eine ausgewogene Ernährung kann meiner Meinung nach positive Effekte auf das Gedächtnis haben.',
+      'Ich finde es spannend, wie Technologien wie Apps unser Lernen unterstützen können.',
+      'Regelmäßige Aktivität ist nicht nur wichtig für den Körper, sondern auch für das Gedächtnis.'
+    ],
+    vokabeln:[
+      {w:'die Gedächtnistechnik', ue:'memory technique', bsp:'Mit einer guten Gedächtnistechnik merkt man sich Namen leichter.'},
+      {w:'kognitiv', ue:'cognitive', bsp:'Schach trainiert die kognitiven Fähigkeiten.'},
+      {w:'die Leistung', ue:'performance', bsp:'Schlaf verbessert die geistige Leistung.'},
+      {w:'die Ernährung', ue:'nutrition / diet', bsp:'Eine gesunde Ernährung hilft dem Gehirn.'},
+      {w:'der Einfluss', ue:'influence', bsp:'Stress hat einen großen Einfluss auf das Gedächtnis.'},
+      {w:'der Schlafmangel', ue:'sleep deprivation', bsp:'Bei Schlafmangel kann man sich schlecht konzentrieren.'},
+      {w:'die Ablenkung', ue:'distraction', bsp:'Das Handy ist oft eine große Ablenkung.'},
+      {w:'der Aufwand', ue:'effort', bsp:'Mit etwas Aufwand kann man viel erreichen.'}
+    ]
+  },
+  {
+    id:'aemter', titel:'Gespräche mit Ämtern', bereich:'Alltag & Behörden', niveau:'bb',
+    fragen:[
+      'Welche Erfahrungen hast du schon mit deutschen Ämtern gemacht?',
+      'Welches Amt findest du am kompliziertesten und warum?',
+      'Was machst du, wenn du ein Formular nicht verstehst?',
+      'Wie bereitest du dich auf einen Termin beim Amt vor?',
+      'Hast du schon einmal einen Termin verpasst? Was ist dann passiert?',
+      'Findest du die Beamten eher freundlich oder eher streng?',
+      'Was würdest du an deutschen Ämtern verändern, wenn du könntest?',
+      'Wie wichtig ist es, bei einem Amt höflich und geduldig zu bleiben?',
+      'Welche Unterlagen muss man in deinem Heimatland für wichtige Anträge mitbringen?',
+      'Welchen Tipp würdest du jemandem geben, der zum ersten Mal zu einem deutschen Amt geht?'
+    ],
+    redemittel:[
+      {h:'🏢 Höflich am Amt', l:['Könnten Sie mir bitte helfen?','Ich möchte einen Antrag auf … stellen.','Ich habe das leider nicht ganz verstanden.','Könnten Sie das bitte wiederholen?']},
+      {h:'💬 Erfahrung & Meinung', l:['Meine Erfahrung mit … war …','Am meisten stört mich, dass …','Ich finde es anstrengend, dass …','Zum Glück hat am Ende alles geklappt.']}
+    ],
+    antworten:[
+      'Ich finde das Bürgeramt am kompliziertesten, weil man oft lange auf einen Termin wartet.',
+      'Wenn ich ein Formular nicht verstehe, frage ich jemanden oder nutze ein Wörterbuch.',
+      'Vor einem Termin lege ich mir alle Unterlagen bereit, damit nichts fehlt.',
+      'Mein Tipp: früh einen Termin buchen und immer freundlich bleiben.'
+    ],
+    vokabeln:[
+      {w:'das Amt', ue:'public office / authority', bsp:'Das Amt ist nur vormittags geöffnet.'},
+      {w:'der Antrag', ue:'application', bsp:'Ich stelle einen Antrag auf einen neuen Pass.'},
+      {w:'das Formular', ue:'form', bsp:'Bitte füllen Sie das Formular vollständig aus.'},
+      {w:'der Termin', ue:'appointment', bsp:'Mein Termin ist um zehn Uhr.'},
+      {w:'die Unterlagen', ue:'documents', bsp:'Bringen Sie bitte alle Unterlagen mit.'},
+      {w:'die Behörde', ue:'authority / agency', bsp:'Die Behörde braucht zwei Wochen für die Antwort.'},
+      {w:'die Bescheinigung', ue:'certificate / confirmation', bsp:'Ich brauche eine Bescheinigung vom Arbeitgeber.'},
+      {w:'zuständig sein', ue:'to be responsible', bsp:'Welches Amt ist dafür zuständig?'}
+    ]
+  },
+  {
+    id:'haustiere', titel:'Hund oder Katze?', bereich:'Persönlichkeit & Reflexion', niveau:'ab',
+    fragen:[
+      'Bist du eher ein Hundemensch oder ein Katzenmensch?',
+      'Hast du ein Haustier? Wenn ja, welches? Wenn nein, welches hättest du gern?',
+      'Welches Tier passt am besten zu deinem Charakter? Warum?',
+      'Was ist schöner: ein Hund, der immer spielen will, oder eine Katze, die unabhängig ist?',
+      'Welche Vorteile und Nachteile hat ein Haustier im Alltag?',
+      'Sind Haustiere gut für Kinder? Warum oder warum nicht?',
+      'Wie viel Zeit sollte man für ein Haustier haben?',
+      'Was kostet ein Haustier ungefähr im Monat, glaubst du?',
+      'Gibt es in deinem Heimatland typische Haustiere?',
+      'Würdest du lieber ein exotisches oder ein ganz normales Haustier haben?'
+    ],
+    redemittel:[
+      {h:'❤️ Vorlieben nennen', l:['Ich bin eher ein …','Ich mag lieber …, weil …','Für mich passt … besser, weil …','Am liebsten hätte ich …']},
+      {h:'⚖️ Vergleichen', l:['… ist treuer als …','… ist unabhängiger als …','Im Gegensatz zu … ist …','Beide haben Vor- und Nachteile.']}
+    ],
+    antworten:[
+      'Ich bin eher ein Katzenmensch, weil Katzen ruhig und unabhängig sind.',
+      'Ein Hund passt zu mir, weil ich gern draußen bin und viel Bewegung mag.',
+      'Ein Haustier macht viel Freude, aber man braucht auch Zeit und Geld.',
+      'Für Kinder sind Haustiere gut, weil sie Verantwortung lernen.'
+    ],
+    vokabeln:[
+      {w:'der Hundemensch', ue:'dog person', bsp:'Mein Bruder ist ein echter Hundemensch.'},
+      {w:'der Katzenmensch', ue:'cat person', bsp:'Ich bin eher ein Katzenmensch.'},
+      {w:'treu', ue:'loyal', bsp:'Hunde sind sehr treu.'},
+      {w:'unabhängig', ue:'independent', bsp:'Katzen sind ziemlich unabhängig.'},
+      {w:'verspielt', ue:'playful', bsp:'Der junge Hund ist sehr verspielt.'},
+      {w:'die Verantwortung', ue:'responsibility', bsp:'Ein Haustier bedeutet viel Verantwortung.'},
+      {w:'füttern', ue:'to feed', bsp:'Ich füttere die Katze jeden Morgen.'},
+      {w:'das Fell', ue:'fur / coat', bsp:'Die Katze hat ein weiches Fell.'}
+    ]
+  }
+];
+
+/* ===================== STATE & RENDER ===================== */
+const S = { niveau:'all', bereich:'all', suche:'', sel:THEMEN[0].id };
+
+function gefiltert(ignoreBereich){
+  const q=S.suche.trim().toLowerCase();
+  return THEMEN.filter(t=>{
+    if(S.niveau!=='all' && t.niveau!==S.niveau) return false;
+    if(!ignoreBereich && S.bereich!=='all' && t.bereich!==S.bereich) return false;
+    if(q){ const hay=(t.titel+' '+t.bereich).toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  });
+}
+
+function renderNiv(){
+  const box=document.getElementById('niv');
+  const opts=[['all','Alle Niveaus'],['ab','A2·B1'],['bb','B1·B2'],['bc','B2·C1']];
+  box.innerHTML=opts.map(([k,l])=>`<button class="${S.niveau===k?'on':''}" onclick="setNiv('${k}')">${l}</button>`).join('');
+}
+function renderChips(){
+  const base=gefiltert(true); // nach Niveau+Suche, aber ohne Bereichsfilter → Zählung
+  const map={};
+  base.forEach(t=>{ map[t.bereich]=(map[t.bereich]||0)+1; });
+  const bereiche=Object.keys(map).sort();
+  let html=`<button class="chip ${S.bereich==='all'?'on':''}" onclick="setBereich('all')">Alle Bereiche <span class="n">${base.length}</span></button>`;
+  html+=bereiche.map(b=>`<button class="chip ${S.bereich===b?'on':''}" onclick="setBereich('${b.replace(/'/g,"\\'")}')">${b} <span class="n">${map[b]}</span></button>`).join('');
+  document.getElementById('chips').innerHTML=html;
+}
+function renderListe(){
+  const ts=gefiltert();
+  document.getElementById('liste-kopf').textContent = ts.length+' '+(ts.length===1?'Thema':'Themen');
+  const box=document.getElementById('liste');
+  if(!ts.length){ box.innerHTML=`<div style="padding:16px 10px;color:var(--weich);font-size:.9rem">Keine Themen – Filter anpassen.</div>`; return; }
+  box.innerHTML=ts.map(t=>`<button class="t-item ${S.sel===t.id?'on':''}" onclick="selThema('${t.id}')">
+      <span class="tt">${t.titel}</span>
+      <span class="tb">${t.bereich} · <span class="lv ${BAENDER[t.niveau].cls}">${BAENDER[t.niveau].label}</span></span>
+    </button>`).join('');
+}
+function renderDetail(){
+  const t=THEMEN.find(x=>x.id===S.sel);
+  const d=document.getElementById('detail');
+  if(!t){ d.innerHTML=`<div class="leer"><div class="em">🗣️</div><h2>Wähle links ein Thema</h2><p>Dann erscheinen hier die Fragen, Redemittel und Vokabeln.</p></div>`; return; }
+  const fragen=t.fragen.map((f,i)=>`<div class="frage" onclick="this.classList.toggle('aktiv')"><div class="nr">${i+1}</div><div class="ft">${f}</div></div>`).join('');
+  const rm=t.redemittel.map(r=>`<div class="rm-karte"><h4>${r.h}</h4><ul>${r.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  const antw=`<div class="rm-karte"><h4>💡 So kannst du antworten</h4><ul>${t.antworten.map(a=>`<li>„${a}"</li>`).join('')}</ul></div>`;
+  const vok=t.vokabeln.map(v=>`<div class="vok" onclick="this.classList.toggle('show')">
+      <div class="w">${v.w}</div>
+      <div class="bsp">${v.bsp}</div>
+      <div class="ue">→ ${v.ue}</div>
+      <div class="tipp">tippen für Übersetzung</div>
+    </div>`).join('');
+  d.innerHTML=`
+    <div class="d-kopf">
+      <div>
+        <div class="d-breadcrumb">${t.bereich}</div>
+        <h1 class="d-titel">${t.titel}</h1>
+      </div>
+      <div class="d-tools">
+        <span class="lv ${BAENDER[t.niveau].cls}" style="font-size:.84rem;padding:5px 12px">${BAENDER[t.niveau].label}</span>
+        <button class="btn" onclick="togglePraesi()" id="btn-praesi">🖥️ Präsentieren</button>
+      </div>
+    </div>
+
+    <div class="sek">
+      <div class="sek-h"><span class="ic">💬</span> Fragen für die Gruppe</div>
+      ${fragen}
+    </div>
+
+    <div class="sek">
+      <div class="sek-h"><span class="ic">🧩</span> Redemittel &amp; Antworten</div>
+      <div class="rm-grid">${rm}${antw}</div>
+    </div>
+
+    <div class="sek">
+      <div class="sek-h"><span class="ic">📚</span> Vokabeln <span style="color:var(--weich);font-weight:600;text-transform:none;letter-spacing:0;font-size:.74rem">· tippen für Übersetzung</span></div>
+      <div class="vok-grid">${vok}</div>
+    </div>`;
+}
+
+function setNiv(k){ S.niveau=k; if(S.bereich!=='all' && !gefiltert(true).some(t=>t.bereich===S.bereich)) S.bereich='all'; nachFilter(); }
+function setBereich(b){ S.bereich=b; nachFilter(); }
+function selThema(id){ S.sel=id; renderListe(); renderDetail(); window.scrollTo({top:0,behavior:'instant'}); document.getElementById('detail').scrollTop=0; }
+function nachFilter(){
+  renderNiv(); renderChips(); renderListe();
+  const sichtbar=gefiltert();
+  if(!sichtbar.some(t=>t.id===S.sel)){ S.sel = sichtbar.length?sichtbar[0].id:null; }
+  renderDetail();
+}
+function togglePraesi(){
+  document.body.classList.toggle('praesi');
+  const on=document.body.classList.contains('praesi');
+  const b=document.getElementById('btn-praesi'); if(b){ b.textContent = on?'✕ Normal':'🖥️ Präsentieren'; b.classList.toggle('btn-prim',on); }
+}
+
+document.getElementById('suche').addEventListener('input', e=>{ S.suche=e.target.value; nachFilter(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.body.classList.contains('praesi')) togglePraesi(); });
+
+renderNiv(); renderChips(); renderListe(); renderDetail();
+</script>
+</body>
+</html>
