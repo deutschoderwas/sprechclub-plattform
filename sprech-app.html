@@ -5,135 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>deutschoderwas · Sprechclub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --tuerkis:#2DD4BF; --tuerkis-d:#14B8A6; --tuerkis-soft:#A7F3D0; --auf-tuerkis:#06403A;
-  --anthrazit:#1A1A1A; --rot:#DD0000; --gold:#FFCE00;
-  --creme:#FFF8E0; --creme-hell:#FFFCF5; --weich:#6B7280; --rahmen:#F0E5D8; --weiss:#fff;
-  --schatten:0 4px 18px rgba(0,0,0,.06); --schatten-l:0 2px 8px rgba(0,0,0,.05);
-  /* Niveau-Akzent (wird je nach Niveau überschrieben) – Standard = neutral */
-  --akz:#1A1A1A; --akz-soft:#EDE7D6; --akz-text:#1A1A1A; --akz-grad:linear-gradient(135deg,#2DD4BF,#14B8A6); --akz-tint:#FFF8E0; --akz-bar:#FFF8E0;
+  --ink:#14181B; --soft:#5A6B72; --line:#E7ECEE; --bg:#F6F9FA; --card:#FFFFFF;
+  --primary:#D42A21; --turq:#1B9BC0; --accent:#FFE100; --green:#4E9E12;
+  --radius:18px; --shadow:0 2px 10px rgba(20,24,27,.05); --shadow-m:0 10px 26px rgba(20,24,27,.09);
+  /* Niveau-Akzent – je Niveau überschrieben; Standard = Marken-Türkis (warm & freundlich) */
+  --akz:#1B9BC0; --akz-soft:#E4F3F8; --akz-text:#10627A; --akz-tint:#F7FBFC;
 }
-/* Niveau färbt die GANZE Seite – drei klar verschiedene Farben */
-body[data-niveau="ab"]{ --akz:#E8A400; --akz-soft:#FBE7A8; --akz-text:#6E4E00; --akz-grad:linear-gradient(135deg,#FFCE00,#E8A400); --akz-tint:#FFF6DA; --akz-bar:#FDEEBE; } /* Gold */
-body[data-niveau="bb"]{ --akz:#0FB5A6; --akz-soft:#BEEFE8; --akz-text:#064B45; --akz-grad:linear-gradient(135deg,#2DD4BF,#0FB5A6); --akz-tint:#DFF6F2; --akz-bar:#C7F2EC; } /* Türkis */
-body[data-niveau="bc"]{ --akz:#5B52E0; --akz-soft:#DAD7FA; --akz-text:#2E278F; --akz-grad:linear-gradient(135deg,#8B83F0,#5B52E0); --akz-tint:#EEEDFD; --akz-bar:#DEDAFB; } /* Indigo */
+body[data-niveau="ab"]{ --akz:#1B9BC0; --akz-soft:#E1F2F7; --akz-text:#0F5C6B; --akz-tint:#F4FAFC; } /* Türkis */
+body[data-niveau="bb"]{ --akz:#C9A200; --akz-soft:#FBF1C4; --akz-text:#6B4E00; --akz-tint:#FEFBEF; } /* Gold */
+body[data-niveau="bc"]{ --akz:#D42A21; --akz-soft:#FBE3E1; --akz-text:#9A1C16; --akz-tint:#FEF6F5; } /* Rot */
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--akz-tint);color:var(--anthrazit);-webkit-font-smoothing:antialiased;transition:background .25s;}
-h1,h2,h3{font-family:'Space Grotesk','Segoe UI',sans-serif;}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--akz-tint);-webkit-font-smoothing:antialiased;transition:background .25s;}
+h1,h2,h3,h4{font-family:'Space Grotesk','Segoe UI',sans-serif;}
 
-/* dünnes Niveau-Band ganz oben */
-.band{height:5px;background:var(--akz-grad);}
+/* Niveau-Akzentlinie oben */
+.band{height:4px;background:var(--akz);transition:background .25s;}
 
 /* ---------- Kopf ---------- */
-.top{position:sticky;top:0;z-index:30;background:var(--akz-tint);border-bottom:1px solid var(--rahmen);padding:12px 20px 12px;transition:background .25s;}
-.top-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
-.marke{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;letter-spacing:-.01em;white-space:nowrap;}
-.marke .o{color:var(--tuerkis-d);}
-.marke small{display:block;font-family:'Inter';font-weight:600;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--weich);margin-top:1px;}
-.suche{flex:1 1 220px;position:relative;min-width:160px;}
-.suche input{width:100%;border:1px solid var(--rahmen);background:var(--weiss);border-radius:999px;padding:11px 16px 11px 40px;font-family:'Inter';font-size:.95rem;color:var(--anthrazit);outline:none;}
-.suche input:focus{border-color:var(--akz);box-shadow:0 0 0 3px color-mix(in srgb,var(--akz) 22%,transparent);}
-.suche .lupe{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--weich);}
-.niv{display:flex;gap:6px;flex-wrap:wrap;}
-.niv button{border:1.5px solid var(--rahmen);background:var(--weiss);border-radius:999px;padding:9px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.82rem;cursor:pointer;color:var(--anthrazit);transition:.12s;}
+.top{position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--line);padding:12px 22px;}
+.top-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.marke{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;letter-spacing:-.01em;white-space:nowrap;display:flex;align-items:center;gap:9px;}
+.marke .logo{width:34px;height:34px;border-radius:999px;object-fit:cover;border:2px solid var(--turq);background:var(--akz-soft);flex:none;}
+.marke .wm{color:var(--ink);}
+.marke .club{color:var(--turq);margin-left:5px;}
+.marke small{display:block;font-family:'Inter';font-weight:600;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:2px;}
+.nivbadge{font-family:'Space Grotesk';font-weight:600;font-size:.82rem;border:1px solid var(--akz);color:var(--akz-text);background:var(--akz-soft);border-radius:999px;padding:3px 12px;}
+.suche{flex:1 1 200px;position:relative;min-width:150px;}
+.suche input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 14px 10px 38px;font-family:'Inter';font-size:.95rem;color:var(--ink);outline:none;transition:.12s;}
+.suche input:focus{border-color:var(--akz);background:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--akz) 15%,transparent);}
+.suche .lupe{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--soft);}
+.niv{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.niv .cap{font-weight:600;font-size:.78rem;color:var(--soft);}
+.niv button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.82rem;cursor:pointer;color:var(--ink);transition:.12s;display:inline-flex;align-items:center;gap:7px;}
+.niv button .dot{width:9px;height:9px;border-radius:999px;display:inline-block;}
+.niv button[data-n="ab"] .dot{background:#1B9BC0;}
+.niv button[data-n="bb"] .dot{background:#C9A200;}
+.niv button[data-n="bc"] .dot{background:#D42A21;}
+.niv button[data-n="all"] .dot{background:var(--soft);}
 .niv button:hover{border-color:var(--akz);}
-.niv button.on{color:#fff;border-color:transparent;background:var(--akz);}
-.niv button[data-n="ab"].on{background:#CA8A04;} .niv button[data-n="bb"].on{background:#14B8A6;} .niv button[data-n="bc"].on{background:#16A34A;}
-.niv button[data-n="all"].on{background:var(--anthrazit);}
-
-/* Reihe-Label */
-.reihe{display:inline-flex;align-items:center;gap:7px;margin-left:auto;background:var(--akz-soft);color:var(--akz-text);border-radius:999px;padding:7px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.82rem;}
+.niv button.on{color:#fff;border-color:transparent;}
+.niv button[data-n="ab"].on{background:#1B9BC0;} .niv button[data-n="bb"].on{background:#C9A200;} .niv button[data-n="bc"].on{background:#D42A21;} .niv button[data-n="all"].on{background:var(--ink);}
+.niv button.on .dot{background:#fff;}
+.reihe{display:inline-flex;align-items:center;gap:7px;margin-left:auto;background:var(--akz-soft);color:var(--akz-text);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.84rem;}
 
 /* ---------- Layout ---------- */
-.wrap{display:grid;grid-template-columns:300px 1fr;max-width:1500px;margin:0 auto;min-height:calc(100vh - 95px);position:relative;transition:grid-template-columns .22s;}
+.wrap{display:grid;grid-template-columns:300px 1fr;max-width:1500px;margin:0 auto;min-height:calc(100vh - 95px);position:relative;transition:grid-template-columns .2s;}
 body.zu .wrap{grid-template-columns:0 1fr;}
-
-.liste{border-right:1px solid var(--rahmen);padding:16px 12px 40px;overflow:auto;background:var(--creme-hell);position:relative;}
+.liste{border-right:1px solid var(--line);background:var(--card);padding:16px 12px 40px;overflow:auto;position:relative;}
 body.zu .liste{display:none;}
-.gruppe-h{font-family:'Space Grotesk';font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--weich);padding:14px 10px 8px;}
-.gruppe-h:first-child{padding-top:2px;}
-.b-item{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:12px;padding:10px 11px;margin-bottom:2px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:10px;}
-.b-item:hover{background:var(--creme);}
-.b-item.on{background:var(--akz-soft);border-color:var(--akz);}
-.b-item .em{flex:none;width:30px;height:30px;border-radius:9px;background:var(--creme);display:flex;align-items:center;justify-content:center;font-size:1.02rem;}
+.niv-ribbon{display:flex;align-items:center;gap:9px;background:var(--akz-soft);border:1px solid color-mix(in srgb,var(--akz) 35%,transparent);border-radius:12px;padding:9px 12px;margin:0 2px 12px;font-family:'Space Grotesk';font-weight:600;font-size:.9rem;color:var(--akz-text);}
+.niv-ribbon .pt{width:12px;height:12px;border-radius:999px;}
+.gruppe-h{font-weight:700;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;color:var(--soft);padding:14px 10px 8px;}
+.b-item{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:11px;padding:9px 11px;margin-bottom:2px;cursor:pointer;transition:.1s;display:flex;align-items:center;gap:11px;}
+.b-item:hover{background:var(--bg);}
+.b-item.on{background:var(--akz-soft);border-color:color-mix(in srgb,var(--akz) 30%,transparent);}
+.b-item .em{flex:none;width:32px;height:32px;border-radius:9px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1rem;}
 .b-item.on .em{background:#fff;}
-.b-item .bn{flex:1;font-weight:600;font-size:.93rem;line-height:1.2;}
-.b-item .ct{flex:none;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;color:var(--weich);background:rgba(0,0,0,.05);border-radius:999px;padding:1px 8px;}
+.b-item .bn{flex:1;font-weight:600;font-size:.92rem;line-height:1.2;color:var(--ink);}
+.b-item .ct{flex:none;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;color:var(--soft);background:var(--bg);border-radius:999px;padding:1px 8px;}
 .b-item.on .ct{color:var(--akz-text);background:#fff;}
 .b-item.leer .bn,.b-item.leer .ct{opacity:.5;}
 
-/* Zieher / Toggle */
-.zieher{position:absolute;top:14px;right:-13px;z-index:20;width:26px;height:26px;border-radius:999px;border:1px solid var(--rahmen);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--schatten-l);font-size:.9rem;color:var(--weich);}
+.zieher{position:absolute;top:14px;right:-13px;z-index:20;width:26px;height:26px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--soft);box-shadow:var(--shadow);}
 .zieher:hover{color:var(--akz);border-color:var(--akz);}
-.auf{position:fixed;left:12px;top:104px;z-index:40;display:none;align-items:center;gap:7px;background:#fff;border:1px solid var(--rahmen);border-radius:999px;padding:8px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.84rem;cursor:pointer;box-shadow:var(--schatten);color:var(--anthrazit);}
+.auf{position:fixed;left:14px;top:106px;z-index:40;display:none;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-m);border-radius:999px;padding:8px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.85rem;cursor:pointer;color:var(--ink);}
 body.zu .auf{display:inline-flex;}
-.auf:hover{border-color:var(--akz);}
 
-/* ---------- Hauptbereich ---------- */
-.detail{padding:26px 34px 70px;overflow:auto;}
+/* ---------- Haupt ---------- */
+.detail{padding:28px 36px 70px;overflow:auto;}
+.welc{max-width:640px;margin:7vh auto 0;text-align:center;}
+.welc .em{font-size:2.6rem;width:94px;height:94px;border-radius:999px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
+.welc h1{font-size:2rem;margin:10px 0 10px;letter-spacing:-.01em;}
+.welc p{color:var(--soft);font-size:1.05rem;line-height:1.6;margin:0 auto;max-width:500px;}
+.welc .hint{margin-top:22px;display:inline-flex;gap:8px;align-items:center;background:var(--akz);color:#fff;border-radius:999px;padding:10px 18px;font-weight:600;font-size:.92rem;box-shadow:var(--shadow-m);}
 
-/* Willkommen */
-.welc{max-width:680px;margin:5vh auto 0;text-align:center;}
-.welc .em{font-size:3.2rem;}
-.welc h1{font-size:2rem;margin:10px 0 8px;}
-.welc p{color:var(--weich);font-size:1.05rem;line-height:1.6;margin:0 auto 6px;max-width:520px;}
-.welc .hint{margin-top:22px;display:inline-flex;gap:8px;align-items:center;background:var(--akz-soft);color:var(--akz-text);border-radius:999px;padding:9px 16px;font-weight:600;font-size:.9rem;}
-
-/* Themenkarten im Bereich */
 .b-kopf{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
-.b-kopf .em{width:48px;height:48px;border-radius:14px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
-.b-kopf h1{font-size:1.7rem;margin:0;}
-.b-kopf .sub{color:var(--weich);font-size:.9rem;font-weight:600;}
-.karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:22px;}
-.karte{text-align:left;background:var(--weiss);border:1px solid var(--rahmen);border-radius:16px;padding:16px 18px;cursor:pointer;transition:.12s;box-shadow:var(--schatten-l);}
-.karte:hover{border-color:var(--akz);transform:translateY(-2px);box-shadow:var(--schatten);}
-.karte .kt{font-family:'Space Grotesk';font-weight:600;font-size:1.1rem;line-height:1.2;}
-.karte .kmeta{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--weich);font-size:.82rem;}
-.karte .pfeil{margin-top:12px;color:var(--akz);font-weight:700;font-size:.85rem;}
-.keine{margin-top:26px;background:var(--creme-hell);border:1px dashed var(--rahmen);border-radius:16px;padding:26px;text-align:center;color:var(--weich);}
+.b-kopf .em{width:50px;height:50px;border-radius:14px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.b-kopf h1{font-size:1.7rem;margin:0;letter-spacing:-.01em;}
+.b-kopf .sub{color:var(--soft);font-size:.88rem;font-weight:600;}
+.karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:15px;margin-top:22px;}
+.karte{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:17px 19px;cursor:pointer;transition:.14s;box-shadow:var(--shadow);}
+.karte:hover{border-color:var(--akz);box-shadow:var(--shadow-m);transform:translateY(-2px);}
+.karte .kem{width:40px;height:40px;border-radius:12px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:12px;}
+.karte .kt{font-family:'Space Grotesk';font-weight:600;font-size:1.12rem;line-height:1.2;}
+.karte .kmeta{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--soft);font-size:.82rem;}
+.karte .pfeil{margin-top:13px;color:var(--akz-text);font-weight:600;font-size:.84rem;}
+.keine{margin-top:26px;background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:28px;text-align:center;color:var(--soft);}
 
 .lv{display:inline-block;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;border-radius:999px;padding:2px 9px;white-space:nowrap;}
-.lv-ab{background:#FEF3C7;color:#854D0E;} .lv-bb{background:var(--tuerkis-soft);color:var(--auf-tuerkis);} .lv-bc{background:#DCFCE7;color:#166534;}
+.lv-ab{background:#E1F2F7;color:#0F5C6B;} .lv-bb{background:#FBF1C4;color:#6B4E00;} .lv-bc{background:#FBE3E1;color:#9A1C16;}
 
-/* Theme-Detail */
-.zurueck{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--akz-text);font-family:'Space Grotesk';font-weight:600;font-size:.9rem;cursor:pointer;padding:4px 0;margin-bottom:8px;}
+.zurueck{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--akz-text);font-family:'Space Grotesk';font-weight:600;font-size:.9rem;cursor:pointer;padding:4px 0;margin-bottom:10px;}
 .d-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.d-breadcrumb{font-size:.82rem;color:var(--weich);font-weight:600;}
-.d-titel{font-family:'Space Grotesk';font-weight:700;font-size:2rem;line-height:1.1;margin:4px 0 0;}
+.d-breadcrumb{font-size:.82rem;color:var(--soft);font-weight:600;}
+.d-titel{font-family:'Space Grotesk';font-weight:700;font-size:2rem;line-height:1.1;margin:4px 0 0;letter-spacing:-.01em;}
 .d-tools{display:flex;gap:8px;align-items:center;}
-.btn{border:1px solid var(--rahmen);background:var(--creme-hell);border-radius:999px;padding:9px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.84rem;cursor:pointer;color:var(--anthrazit);display:inline-flex;align-items:center;gap:7px;}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.84rem;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:7px;transition:.12s;}
 .btn:hover{border-color:var(--akz);}
-.btn-prim{background:var(--akz-grad);color:#fff;border:none;box-shadow:var(--schatten-l);}
+.btn-prim{background:var(--akz);color:#fff;border-color:transparent;}
 
-.sek{margin-top:26px;}
-.sek-h{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--akz-text);margin-bottom:14px;}
-.frage{display:flex;gap:14px;align-items:flex-start;background:var(--creme-hell);border:1px solid var(--rahmen);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.12s;}
+.sek{margin-top:28px;}
+.sek-h{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk';font-weight:700;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--akz-text);margin-bottom:14px;}
+.frage{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.12s;box-shadow:var(--shadow);}
 .frage:hover{border-color:var(--akz);}
-.frage.aktiv{background:#fff;border-color:var(--akz);box-shadow:var(--schatten);}
-.frage .nr{flex:none;width:30px;height:30px;border-radius:999px;background:var(--anthrazit);color:#fff;font-family:'Space Grotesk';font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
-.frage.aktiv .nr{background:var(--akz);}
+.frage.aktiv{border-color:var(--akz);box-shadow:inset 3px 0 0 var(--akz),var(--shadow);}
+.frage .nr{flex:none;width:28px;height:28px;border-radius:999px;background:var(--akz-soft);color:var(--akz-text);font-family:'Space Grotesk';font-weight:700;font-size:.86rem;display:flex;align-items:center;justify-content:center;}
+.frage.aktiv .nr{background:var(--akz);color:#fff;}
 .frage .ft{font-size:1.02rem;line-height:1.5;padding-top:3px;}
-.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.rm-karte{background:#fff;border:1px solid var(--rahmen);border-radius:16px;padding:16px 18px;box-shadow:var(--schatten-l);}
+.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.rm-karte{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
 .rm-karte h4{font-family:'Space Grotesk';font-weight:600;font-size:.98rem;margin:0 0 10px;color:var(--akz-text);display:flex;align-items:center;gap:8px;}
 .rm-karte ul{margin:0;padding:0;list-style:none;}
-.rm-karte li{font-size:.98rem;line-height:1.45;padding:7px 0;border-bottom:1px dashed var(--rahmen);}
+.rm-karte li{font-size:.97rem;line-height:1.45;padding:7px 0;border-bottom:1px solid var(--line);}
 .rm-karte li:last-child{border-bottom:none;}
-.vok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;}
-.vok{background:var(--creme-hell);border:1px solid var(--rahmen);border-radius:14px;padding:12px 14px;cursor:pointer;transition:.12s;}
+.vok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:11px;}
+.vok{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;cursor:pointer;transition:.12s;box-shadow:var(--shadow);}
 .vok:hover{border-color:var(--akz);}
-.vok .w{font-family:'Space Grotesk';font-weight:600;font-size:1.02rem;}
-.vok .bsp{font-size:.86rem;color:var(--weich);margin-top:3px;line-height:1.4;}
-.vok .ue{font-size:.9rem;color:var(--akz-text);font-weight:600;margin-top:6px;display:none;}
+.vok .w{font-family:'Space Grotesk';font-weight:600;font-size:1.04rem;}
+.vok .bsp{font-size:.86rem;color:var(--soft);margin-top:4px;line-height:1.4;}
+.vok .ue{font-size:.92rem;color:var(--akz-text);font-weight:600;margin-top:6px;display:none;}
 .vok.show .ue{display:block;}
-.vok .tipp{font-size:.72rem;color:var(--weich);margin-top:6px;}
+.vok .tipp{font-size:.72rem;color:var(--soft);margin-top:6px;}
 .vok.show .tipp{display:none;}
 
-/* Präsentiermodus */
 body.praesi .top .suche,body.praesi .liste,body.praesi .reihe{display:none;}
 body.praesi .wrap{grid-template-columns:1fr;}
 body.praesi .auf{display:none;}
@@ -143,7 +143,7 @@ body.praesi .frage .ft{font-size:1.18rem;}
 
 @media(max-width:860px){
   .wrap{grid-template-columns:1fr;}
-  .liste{border-right:none;border-bottom:1px solid var(--rahmen);max-height:40vh;}
+  .liste{border-right:none;border-bottom:1px solid var(--line);max-height:40vh;}
   body.zu .liste{display:none;}
   .rm-grid{grid-template-columns:1fr;}
   .detail{padding:20px 18px 60px;}
@@ -157,7 +157,7 @@ body.praesi .frage .ft{font-size:1.18rem;}
 
 <div class="top">
   <div class="top-row">
-    <div class="marke">deutsch<span class="o">oderwas</span><small>Sprechclub</small></div>
+    <div class="marke"><span class="wm">deutschoderwas</span><span class="club">club</span><span class="nivbadge" id="nivbadge">alle Niveaus</span></div>
     <div class="suche"><span class="lupe">🔍</span><input id="suche" type="text" placeholder="Thema suchen …" autocomplete="off"></div>
     <div class="niv" id="niv"></div>
     <div class="reihe">🗣️ Freies Sprechen &amp; Debatten</div>
@@ -174,37 +174,23 @@ body.praesi .frage .ft{font-size:1.18rem;}
 <button class="auf" onclick="toggleListe()">☰ Bereiche</button>
 
 <script>
-const BAENDER={ ab:{label:'A2·B1',cls:'lv-ab'}, bb:{label:'B1·B2',cls:'lv-bb'}, bc:{label:'B2·C1',cls:'lv-bc'} };
+const BAENDER={ ab:{label:'A2·B1',wort:'Grundstufe',cls:'lv-ab',farbe:'#1B9BC0'}, bb:{label:'B1·B2',wort:'Mittelstufe',cls:'lv-bb',farbe:'#C9A200'}, bc:{label:'B2·C1',wort:'Oberstufe',cls:'lv-bc',farbe:'#D42A21'} };
 
-/* Bereiche – Reihe „Freies Sprechen & Debatten", für alle Niveaus gleich */
 const BEREICHE=[
-  { gruppe:'Alltag & Leben', items:[
-    {n:'Alltag & Routinen', em:'☕'},
-    {n:'Familie & Beziehungen', em:'👪'},
-    {n:'Freundschaft & Kontakte', em:'🤝'},
-    {n:'Wohnen & Nachbarschaft', em:'🏠'},
-    {n:'Essen & Ernährung', em:'🍽️'},
-    {n:'Gesundheit & Wohlbefinden', em:'💚'},
-    {n:'Freizeit & Hobbys', em:'🎨'},
-    {n:'Reisen & Urlaub', em:'✈️'},
-    {n:'Geld & Konsum', em:'💶'},
-    {n:'Medien & Digitales', em:'📱'},
-    {n:'Umwelt & Nachhaltigkeit', em:'🌱'},
-    {n:'Persönlichkeit & Werte', em:'🧭'},
+  { gruppe:'Alltag & Leben', farbe:'#E4F3F8', items:[
+    {n:'Alltag & Routinen', em:'☕'},{n:'Familie & Beziehungen', em:'👪'},{n:'Freundschaft & Kontakte', em:'🤝'},
+    {n:'Wohnen & Nachbarschaft', em:'🏠'},{n:'Essen & Ernährung', em:'🍽️'},{n:'Gesundheit & Wohlbefinden', em:'💚'},
+    {n:'Freizeit & Hobbys', em:'🎨'},{n:'Reisen & Urlaub', em:'✈️'},{n:'Geld & Konsum', em:'💶'},
+    {n:'Medien & Digitales', em:'📱'},{n:'Umwelt & Nachhaltigkeit', em:'🌱'},{n:'Persönlichkeit & Werte', em:'🧭'},
     {n:'Gesellschaft & Aktuelles', em:'🗞️'},
   ]},
-  { gruppe:'Beruf & Bildung', items:[
-    {n:'Arbeit & Berufsalltag', em:'💼'},
-    {n:'Bewerbung & Karriere', em:'📈'},
-    {n:'Zusammenarbeit & Team', em:'👥'},
-    {n:'Ausbildung & Weiterbildung', em:'🎓'},
-    {n:'Work-Life-Balance', em:'⚖️'},
-    {n:'Behörden & Formelles', em:'🏛️'},
+  { gruppe:'Beruf & Bildung', farbe:'#FBF1C4', items:[
+    {n:'Arbeit & Berufsalltag', em:'💼'},{n:'Bewerbung & Karriere', em:'📈'},{n:'Zusammenarbeit & Team', em:'👥'},
+    {n:'Ausbildung & Weiterbildung', em:'🎓'},{n:'Work-Life-Balance', em:'⚖️'},{n:'Behörden & Formelles', em:'🏛️'},
   ]},
 ];
 const EMOJI={}; BEREICHE.forEach(g=>g.items.forEach(b=>EMOJI[b.n]=b.em));
 
-/* Beispiel-Themen (Detailinhalte folgen pro Bereich) */
 const THEMEN=[
   { id:'gedaechtnis', titel:'Gedächtnis verbessern', bereich:'Gesundheit & Wohlbefinden', niveau:'bb',
     fragen:['Glaubst du, dass man sein Gedächtnis durch Techniken verbessern kann?','Welche Gedächtnistechniken kennst du?','Hast du schon eine Methode ausprobiert, um dir etwas zu merken?','Hat das Alter einen Einfluss auf das Gedächtnis?','Welche Rolle spielt die Ernährung für die geistige Leistung?','Wie wichtig ist regelmäßige geistige Aktivität?','Was hältst du von Gedächtnis-Apps – hilfreich oder Ablenkung?','Wie beeinflussen Stress und Schlafmangel das Gedächtnis?','Stärkt das Lernen einer Sprache das Gedächtnis? Warum?','Welchen Tipp gibst du jemandem, der sein Gedächtnis verbessern will?'],
@@ -224,42 +210,45 @@ const THEMEN=[
 ];
 
 const S={ niveau:'all', bereich:null, sel:null };
-
-function themenVon(bereich){ return THEMEN.filter(t=>t.bereich===bereich && (S.niveau==='all'||t.niveau===S.niveau)); }
-function anzahl(bereich){ return themenVon(bereich).length; }
+function themenVon(b){ return THEMEN.filter(t=>t.bereich===b && (S.niveau==='all'||t.niveau===S.niveau)); }
+function anzahl(b){ return themenVon(b).length; }
 
 function renderNiv(){
-  document.getElementById('niv').innerHTML=[['all','Alle'],['ab','A2·B1'],['bb','B1·B2'],['bc','B2·C1']]
-    .map(([k,l])=>`<button data-n="${k}" class="${S.niveau===k?'on':''}" onclick="setNiv('${k}')">${l}</button>`).join('');
+  document.getElementById('niv').innerHTML=`<span class="cap">Niveau:</span>`+[['all','Alle'],['ab','A2·B1'],['bb','B1·B2'],['bc','B2·C1']]
+    .map(([k,l])=>`<button data-n="${k}" class="${S.niveau===k?'on':''}" onclick="setNiv('${k}')"><span class="dot"></span>${l}</button>`).join('');
+  document.getElementById('nivbadge').textContent = S.niveau==='all' ? 'alle Niveaus' : BAENDER[S.niveau].label;
+}
+function nivRibbon(){
+  if(S.niveau==='all') return `<div class="niv-ribbon"><span class="pt" style="background:var(--soft)"></span>Alle Niveaus</div>`;
+  const b=BAENDER[S.niveau];
+  return `<div class="niv-ribbon"><span class="pt" style="background:${b.farbe}"></span>Niveau ${b.label} · ${b.wort}</div>`;
 }
 function renderBereiche(){
   const q=document.getElementById('suche').value.trim().toLowerCase();
-  let html='';
+  let html=nivRibbon();
   BEREICHE.forEach(g=>{
-    const items=g.items.filter(b=>!q || b.n.toLowerCase().includes(q));
+    const items=g.items.filter(b=>!q||b.n.toLowerCase().includes(q));
     if(!items.length) return;
     html+=`<div class="gruppe-h">${g.gruppe}</div>`;
     html+=items.map(b=>{ const c=anzahl(b.n);
       return `<button class="b-item ${S.bereich===b.n?'on':''} ${c?'':'leer'}" onclick="selBereich('${b.n.replace(/'/g,"\\'")}')">
-        <span class="em">${b.em}</span><span class="bn">${b.n}</span><span class="ct">${c}</span></button>`;
-    }).join('');
+        <span class="em" style="background:${g.farbe}">${b.em}</span><span class="bn">${b.n}</span><span class="ct">${c}</span></button>`;}).join('');
   });
-  document.getElementById('bereiche').innerHTML=html||`<div style="padding:16px 10px;color:var(--weich);font-size:.9rem">Kein Bereich gefunden.</div>`;
+  document.getElementById('bereiche').innerHTML=html;
 }
 function renderDetail(){
   const d=document.getElementById('detail');
-  if(S.sel){ const t=THEMEN.find(x=>x.id===S.sel); return renderThema(d,t); }
+  if(S.sel){ return renderThema(d, THEMEN.find(x=>x.id===S.sel)); }
   if(S.bereich){ return renderBereichView(d,S.bereich); }
   d.innerHTML=`<div class="welc"><div class="em">🗣️</div>
     <h1>Worüber möchtet ihr sprechen?</h1>
-    <p>Wählt oben euer <b>Niveau</b> – die ganze Seite färbt sich dann in eurer Stufe. Sucht euch links einen <b>Bereich</b> aus und legt los.</p>
+    <p>Wählt oben euer <b>Niveau</b> – die ganze Seite stellt sich darauf ein. Sucht euch links einen <b>Bereich</b> aus und legt los.</p>
     <div class="hint">👈 Bereich links wählen</div></div>`;
 }
 function renderBereichView(d,b){
   const ts=themenVon(b);
   const karten = ts.length
-    ? `<div class="karten">${ts.map(t=>`<button class="karte" onclick="selThema('${t.id}')">
-        <div class="kt">${t.titel}</div>
+    ? `<div class="karten">${ts.map(t=>`<button class="karte" onclick="selThema('${t.id}')"><div class="kem">${EMOJI[t.bereich]||'💬'}</div><div class="kt">${t.titel}</div>
         <div class="kmeta"><span class="lv ${BAENDER[t.niveau].cls}">${BAENDER[t.niveau].label}</span> · ${t.fragen.length} Fragen</div>
         <div class="pfeil">Öffnen →</div></button>`).join('')}</div>`
     : `<div class="keine">📝 In diesem Bereich sind noch keine Themen hinterlegt${S.niveau!=='all'?' für dieses Niveau':''} – wir füllen sie Schritt für Schritt.</div>`;
@@ -273,7 +262,7 @@ function renderThema(d,t){
   const vok=t.vokabeln.map(v=>`<div class="vok" onclick="this.classList.toggle('show')"><div class="w">${v.w}</div><div class="bsp">${v.bsp}</div><div class="ue">→ ${v.ue}</div><div class="tipp">tippen für Übersetzung</div></div>`).join('');
   d.innerHTML=`<button class="zurueck" onclick="zurueckZumBereich()">‹ ${t.bereich}</button>
     <div class="d-kopf"><div><div class="d-breadcrumb">${t.bereich}</div><h1 class="d-titel">${t.titel}</h1></div>
-      <div class="d-tools"><span class="lv ${BAENDER[t.niveau].cls}" style="font-size:.84rem;padding:5px 12px">${BAENDER[t.niveau].label}</span>
+      <div class="d-tools"><span class="lv ${BAENDER[t.niveau].cls}" style="font-size:.84rem;padding:4px 12px">${BAENDER[t.niveau].label}</span>
       <button class="btn" id="btn-praesi" onclick="togglePraesi()">🖥️ Präsentieren</button></div></div>
     <div class="sek"><div class="sek-h">💬 Fragen für die Gruppe</div>${fragen}</div>
     <div class="sek"><div class="sek-h">🧩 Redemittel &amp; Antworten</div><div class="rm-grid">${rm}${antw}</div></div>
@@ -281,7 +270,7 @@ function renderThema(d,t){
 }
 
 function setNiv(k){ S.niveau=k; document.body.dataset.niveau=k;
-  if(S.sel){ const t=THEMEN.find(x=>x.id===S.sel); if(t && k!=='all' && t.niveau!==k) S.sel=null; }
+  if(S.sel){ const t=THEMEN.find(x=>x.id===S.sel); if(t&&k!=='all'&&t.niveau!==k) S.sel=null; }
   renderNiv(); renderBereiche(); renderDetail(); }
 function selBereich(b){ S.bereich=b; S.sel=null; renderBereiche(); renderDetail(); document.getElementById('detail').scrollTop=0; }
 function selThema(id){ S.sel=id; renderDetail(); document.getElementById('detail').scrollTop=0; }
@@ -291,7 +280,6 @@ function togglePraesi(){ document.body.classList.toggle('praesi'); const on=docu
 
 document.getElementById('suche').addEventListener('input',renderBereiche);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.body.classList.contains('praesi')) togglePraesi(); });
-
 renderNiv(); renderBereiche(); renderDetail();
 </script>
 </body>
