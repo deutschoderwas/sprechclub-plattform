@@ -1357,6 +1357,25 @@
     if(istLehrer && typeof boBroadcastPos==='function') boBroadcastPos(group||0);   // Kollegen sehen, wo ich bin
     setTimeout(()=>{ renderGrid(); if(typeof manageSubscriptions==='function') manageSubscriptions(); if(typeof applySavedBg==='function') applySavedBg(); if(typeof updateGroupNotes==='function') updateGroupNotes(); }, 250);
   }
+  // Schüler meldet sich beim Lehrer ("hello"); der Lehrer teilt ihn dann automatisch
+  // der kleinsten, niveau-passenden Gruppe zu (boAutoAssignLate). user-ID-basiert –
+  // beide Seiten nutzen window._meId, daher keine session-id-Verwechslung.
+  function boSagHallo(){
+    try{ if(!istLehrer && window._boCh && window._meId && (window._currentGroup||0)===0)
+      window._boCh.send({ type:'broadcast', event:'hello', payload:{ id: window._meId } }); }catch(e){}
+  }
+  // Solange die Gruppen laufen und ICH (wirklich da, im Hauptraum) noch KEINE Gruppe
+  // habe: alle paar Sekunden erneut melden, bis der Lehrer mich zuteilt. So bleibt
+  // niemand, der tatsächlich anwesend ist, im Hauptraum hängen. (Julia, 23.11.2026)
+  function boWarteAufGruppe(){
+    if(istLehrer) return;
+    clearInterval(window._boWaitIv);
+    window._boWaitIv=setInterval(()=>{
+      const g=(window._breakoutGroups&&window._breakoutGroups[window._meId])||0;
+      if(!window._breakoutActive || g>0 || (window._currentGroup||0)!==0){ clearInterval(window._boWaitIv); return; }
+      boSagHallo();
+    }, 4000);
+  }
   function handleBreakout(p){
     if(!p) return;
     if(p.active){
@@ -1373,9 +1392,13 @@
         }
         if(g && g!==window._currentGroup) wechsleRaum(g);
         else if(!g && window._currentGroup) wechsleRaum(0);   // aus der Gruppe genommen → zurück in den Hauptraum
+        // Anwesend, aber (noch) ohne Gruppe → beim Lehrer melden und dranbleiben,
+        // bis ich zugeteilt bin. Sonst gar nichts zu tun → Warteschleife stoppen.
+        if(!g && (window._currentGroup||0)===0){ boSagHallo(); boWarteAufGruppe(); }
+        else { clearInterval(window._boWaitIv); }
       }
     } else {
-      window._breakoutActive=false; hideBoBanner();
+      window._breakoutActive=false; hideBoBanner(); clearInterval(window._boWaitIv);
       if(typeof gnotesAutoSave==='function') gnotesAutoSave();   // Gruppen-Notiz noch sichern …
       if(typeof gnotesLeave==='function') gnotesLeave();   // … dann Gruppen-Notiz weg
       if(window._currentGroup) wechsleRaum(0);
