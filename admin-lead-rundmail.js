@@ -96,7 +96,7 @@
       +     '<label style="display:flex;align-items:center;gap:6px;cursor:pointer">'
       +       '<input type="checkbox" id="rm-anrede" checked> Mit Anrede („Hallo Maria,“)</label>'
       +     '<label style="display:flex;align-items:center;gap:6px;cursor:pointer">'
-      +       '<input type="checkbox" id="rm-ohnepremium"> Premium-Mitglieder überspringen</label>'
+      +       '<input type="checkbox" id="rm-ohnepremium" checked> Premium-Mitglieder überspringen</label>'
       +     '<label style="display:flex;align-items:center;gap:6px">'
       +       'Nur Leads ab <input type="date" id="rm-ab" '
       +         'style="padding:5px 8px;border:1px solid #ccc;border-radius:8px;font:inherit;font-size:13px"></label>'
