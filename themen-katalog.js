@@ -81,7 +81,24 @@
     { id: 'genitiv',        name: 'Genitiv',                       gruppe: 'Fälle & Präpositionen' },
     { id: 'ndeklination',   name: 'n-Deklination',                 gruppe: 'Fälle & Präpositionen' },
     { id: 'adjdekl',        name: 'Adjektivdeklination',           gruppe: 'Adjektive' },
-    { id: 'komparativ',     name: 'Komparativ & Superlativ',       gruppe: 'Adjektive' }
+    { id: 'komparativ',     name: 'Komparativ & Superlativ',       gruppe: 'Adjektive' },
+    // Ergänzt am 25.11. für die bisherigen Club-Stunden (siehe themen-zuordnung.js)
+    { id: 'relativsaetze',  name: 'Relativsätze',                  gruppe: 'Satzbau' },
+    { id: 'modalpartikeln', name: 'Modalpartikeln (doch, mal, eben …)', gruppe: 'Satzbau' },
+    { id: 'praepverben',    name: 'Verben mit fester Präposition', gruppe: 'Fälle & Präpositionen' },
+    { id: 'dawo',           name: 'da- & wo-Komposita',            gruppe: 'Fälle & Präpositionen' },
+    { id: 'nvv',            name: 'Nomen-Verb-Verbindungen',       gruppe: 'Stil' },
+    { id: 'nominalisierung',name: 'Nominalisierung',               gruppe: 'Stil' }
+  ];
+
+  // Sprachliche Themen, die an keinem Lebensbereich hängen (ergänzt am 25.11.).
+  var SPRACHE = [
+    { id: 'vorsilben',        name: 'Verben mit Vorsilben (an-, auf-, aus- …)' },
+    { id: 'wortfamilien',     name: 'Wortfamilien (gehen, kommen, machen …)' },
+    { id: 'umgangssprache',   name: 'Umgangssprache & Redewendungen' },
+    { id: 'aehnlichewoerter', name: 'Wörter, die sich ähneln & falsche Freunde' },
+    { id: 'starkeadj',        name: 'Starke Adjektive' },
+    { id: 'gespraech',        name: 'Gespräche führen (Small Talk, nachfragen, Nein sagen …)' }
   ];
 
   // Navigationspunkte der Fokus-Apps → Lebensbereich bzw. Grammatik-Thema.
@@ -140,12 +157,12 @@
     liste.forEach(function (x) { m[x.id] = x; });
     return m;
   }
-  var THEMA = nachId(THEMEN), BEREICH = nachId(BEREICHE), GRAMM = nachId(GRAMMATIK), FOK = nachId(FOKUS);
+  var THEMA = nachId(THEMEN), BEREICH = nachId(BEREICHE), GRAMM = nachId(GRAMMATIK), FOK = nachId(FOKUS), SPR = nachId(SPRACHE);
 
   var katalog = {
-    version: 1,
+    version: 2,
     NIVEAUS: NIVEAUS, FOKUS: FOKUS, GRUPPEN: GRUPPEN, BEREICHE: BEREICHE,
-    GRAMMATIK: GRAMMATIK, NAV: NAV, THEMEN: THEMEN,
+    GRAMMATIK: GRAMMATIK, SPRACHE: SPRACHE, NAV: NAV, THEMEN: THEMEN,
 
     // "sprechen:aemter" oder (fokus, appId) → Thema oder null
     thema: function (fokusOderId, appId) {
@@ -155,6 +172,7 @@
     bereich: function (id) { return BEREICH[id] || null; },
     grammatik: function (id) { return GRAMM[id] || null; },
     fokus: function (id) { return FOK[id] || null; },
+    sprache: function (id) { return SPR[id] || null; },
 
     // Navigationspunkt einer Fokus-App → Lebensbereich- bzw. Grammatik-id
     ausNav: function (fokus, navName) {
