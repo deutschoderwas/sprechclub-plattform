@@ -55,7 +55,7 @@
 /* ---------- A1 · Tag & Uhrzeit ---------- */
 "der Morgen": "Am §Morgen§ trinke ich zuerst ein Glas Wasser.",
 "der Vormittag": "Am §Vormittag§ habe ich einen Termin beim Arzt.",
-"der Mittag": "Um §Mittag§ mache ich eine halbe Stunde Pause.",
+"der Mittag": "Am §Mittag§ mache ich eine halbe Stunde Pause.",
 "der Nachmittag": "Am §Nachmittag§ hole ich die Kinder ab.",
 "der Abend": "Am §Abend§ lese ich noch ein bisschen.",
 "die Nacht": "In der §Nacht§ war es sehr laut auf der Straße.",

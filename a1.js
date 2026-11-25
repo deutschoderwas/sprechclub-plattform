@@ -153,8 +153,8 @@ window.A1 = {
       {typ:'luecke', f:'Das ist ___ Mann. Er heißt Yusuf.', l:'mein', e:'der Mann ist ein der-Wort, deshalb mein ohne Endung.'},
       {typ:'luecke', f:'Ich ___ zwei Kinder.', l:'habe', e:'Bei ich heißt es habe. haben ist unregelmäßig, aber bei ich ganz normal mit -e.'},
       {typ:'luecke', f:'___ du Geschwister?', l:'Hast', e:'du hast — in der Frage steht das Verb vorne.'},
-      {typ:'luecke', f:'Mein Sohn ist drei Jahre alt. ___ geht noch nicht in die Schule.', l:'Er', e:'Der Sohn ist ein Mann, also er.'},
-      {typ:'luecke', f:'Meine Eltern wohnen in Vietnam. ___ telefonieren jeden Sonntag.', l:'Wir', e:'Du und deine Eltern zusammen — das ist wir.'},
+      {typ:'luecke', f:'Mein Sohn ist drei Jahre alt. ___ geht noch nicht in die Schule.', l:'Er', e:'Der Sohn ist männlich, also er.'},
+      {typ:'luecke', f:'Meine Eltern wohnen in Vietnam. ___ telefonieren jeden Sonntag.', l:'Wir', alts:['Sie'], e:'Du und deine Eltern zusammen — das ist wir. Sie (die Eltern) stimmt auch.'},
       {typ:'wahl', f:'Sie sprechen mit Frau Berger und zeigen ein Foto. Was fragen Sie höflich?', o:['Ist das deine Tochter?','Ist das Ihre Tochter?','Ist das meine Tochter?'], l:1, e:'Zu einer fremden Erwachsenen sagst du Sie, also Ihre mit großem I.'},
       {typ:'wahl', f:'Was bedeutet ledig?', o:['verheiratet','nicht verheiratet','geschieden'], l:1, e:'ledig heißt: noch nie verheiratet. Das Wort steht in fast jedem Formular.'},
       {typ:'bausteine', l:'Ich habe einen Bruder und zwei Schwestern.', teile:['Ich','habe','einen','Bruder','und','zwei','Schwestern'], e:'einen Bruder, aber zwei Schwestern — im Plural brauchst du kein Wort davor.'},
@@ -307,7 +307,7 @@ window.A1 = {
       {typ:'artikel', w:'Bad', l:'das', e:'das Bad, Plural die Bäder.'},
       {typ:'artikel', w:'Balkon', l:'der', e:'der Balkon. Betonung hinten: BalKON.'},
       {typ:'artikel', w:'Schrank', l:'der', e:'der Schrank, Plural die Schränke.'},
-      {typ:'artikel', w:'Wohnung', l:'die', e:'die Wohnung. Wörter auf -ung sind immer die-Wörter — eine Regel, die immer stimmt.'},
+      {typ:'artikel', w:'Wohnung', l:'die', e:'die Wohnung. Nomen mit der Nachsilbe -ung (wohnen → Wohnung) sind immer die-Wörter.'},
       {typ:'luecke', f:'Der Tisch ist alt. ___ kommt weg.', l:'Er', e:'der Tisch wird er.'},
       {typ:'luecke', f:'Die Küche ist neu. ___ ist sehr hell.', l:'Sie', e:'die Küche wird sie.'},
       {typ:'luecke', f:'Der Aufzug funktioniert ___.', l:'nicht', e:'nicht verneint das Verb und steht dahinter.'},
@@ -539,7 +539,7 @@ window.A1 = {
       {typ:'luecke', f:'Er ___ sehr schnell Deutsch ___.', l:'hat gelernt', e:'lernen ist regelmäßig: ge- plus lern plus -t. Perfekt mit haben.'},
       {typ:'luecke', f:'Meine Tochter ___ eine Zwei ___.', l:'hat bekommen', e:'bekommen bekommt kein ge-. Das Partizip ist gleich wie der Infinitiv: bekommen.'},
       {typ:'wahl', f:'Welches Verb bildet das Perfekt mit sein?', o:['lernen','fahren','machen'], l:1, e:'fahren ist eine Bewegung: Ich bin gefahren. lernen und machen nehmen haben.'},
-      {typ:'wahl', f:'Note 1 in Deutschland heißt:', o:['sehr gut','ausreichend','schlecht'], l:0, e:'Die Skala geht von 1 (sehr gut) bis 6 (nicht ausreichend). Anders als in vielen Ländern ist die kleine Zahl die gute.'},
+      {typ:'wahl', f:'Note 1 in Deutschland heißt:', o:['sehr gut','ausreichend','schlecht'], l:0, e:'Die Skala geht von 1 (sehr gut) bis 6 (ungenügend). Anders als in vielen Ländern ist die kleine Zahl die gute.'},
       {typ:'bausteine', l:'Ich habe mein Kind in der Kita angemeldet.', teile:['Ich','habe','mein','Kind','in','der','Kita','angemeldet'], e:'habe auf Platz 2, das Partizip angemeldet ganz am Ende.'},
       {typ:'bausteine', l:'Ich bin gestern zum Elternabend gegangen.', teile:['Ich','bin','gestern','zum','Elternabend','gegangen'], e:'gehen nimmt sein. Das Partizip gegangen steht am Ende.'},
       {typ:'bausteine', l:'Er will nach der Schule Fußball spielen.', teile:['Er','will','nach','der','Schule','Fußball','spielen'], e:'will auf Platz 2, spielen am Ende — die Modalverb-Klammer.'},
@@ -606,7 +606,7 @@ window.A1 = {
       {t:'Beruf ohne Artikel', e:'Wenn du deinen Beruf nennst, steht kein Artikel davor. Das ist anders als im Englischen. Mit als betonst du die Tätigkeit.', bsp:['Ich bin Lehrer.','Sie ist Krankenpflegerin.','Ich arbeite als Fahrer.']},
       {t:'bei, als, für', e:'bei nennt die Firma. als nennt die Tätigkeit. für nennt den Bereich oder die Person.', bsp:['Ich arbeite bei Aldi.','Ich arbeite als Fahrerin.','Ich bin für die Küche zuständig.']},
       {t:'seit und vor', e:'seit heißt: es hat angefangen und läuft noch. vor heißt: es ist vorbei. Beide stehen mit einer Zeitangabe.', bsp:['Ich wohne seit zwei Jahren in Leipzig.','Vor zwei Jahren bin ich gekommen.','Ich arbeite seit Mai bei der Post.']},
-      {t:'war und hatte', e:'Bei sein und haben benutzt man für die Vergangenheit nicht das Perfekt, sondern war und hatte. Das klingt besser und ist kürzer.', bsp:['ich war — du warst — er war — wir waren','ich hatte — du hattest — er hatte — wir hatten','Ich war Lehrer. Ich hatte einen guten Job.']}
+      {t:'war und hatte', e:'Bei sein und haben benutzt man für die Vergangenheit meistens nicht das Perfekt, sondern war und hatte. Das klingt besser und ist kürzer.', bsp:['ich war — du warst — er war — wir waren','ich hatte — du hattest — er hatte — wir hatten','Ich war Lehrer. Ich hatte einen guten Job.']}
     ],
     ueb: [
       {typ:'luecke', f:'Ich bin Lehrer. Meine Frau ist ___.', l:'Lehrerin', e:'Die weibliche Form bekommt -in: die Lehrerin.'},
@@ -614,7 +614,7 @@ window.A1 = {
       {typ:'luecke', f:'Ich arbeite ___ der Post.', l:'bei', e:'bei plus Arbeitgeber: bei der Post, bei Aldi, bei Siemens.'},
       {typ:'luecke', f:'Ich wohne ___ zwei Jahren in Leipzig.', l:'seit', e:'seit heißt: es läuft noch. Die Zeit steht im Dativ: seit zwei Jahren.'},
       {typ:'luecke', f:'___ drei Jahren war ich in Syrien.', l:'Vor', e:'vor heißt: es ist vorbei. Danach passt war sehr gut.'},
-      {typ:'luecke', f:'Früher ___ ich Lehrer und ___ einen guten Job.', l:'war hatte', e:'Bei sein und haben nimmt man in der Vergangenheit war und hatte, nicht das Perfekt.'},
+      {typ:'luecke', f:'Früher ___ ich Lehrer und ___ einen guten Job.', l:'war hatte', e:'Bei sein und haben nimmt man in der Vergangenheit meistens war und hatte, nicht das Perfekt.'},
       {typ:'wahl', f:'Was sagst du, wenn du deinen Beruf nennst?', o:['Ich bin ein Fahrer.','Ich bin Fahrer.','Ich bin der Fahrer.'], l:1, e:'Beim Beruf steht im Deutschen kein Artikel: Ich bin Fahrer.'},
       {typ:'wahl', f:'Du arbeitest von 6 bis 14 Uhr. Welche Schicht ist das?', o:['Frühschicht','Spätschicht','Nachtschicht'], l:0, e:'Die Frühschicht fängt sehr früh an, meistens um sechs.'},
       {typ:'bausteine', l:'Ich arbeite seit einem Jahr als Pflegerin.', teile:['Ich','arbeite','seit','einem','Jahr','als','Pflegerin'], e:'seit für die Zeit, als für die Tätigkeit — zwei Präpositionen in einem Satz.'},
@@ -690,13 +690,13 @@ window.A1 = {
       {typ:'luecke', f:'___ muss vorher einen Termin machen.', l:'Man', e:'man heißt: alle Leute. Das Verb steht wie bei er.'},
       {typ:'luecke', f:'___ Sie bitte das Formular ___.', l:'Füllen aus', e:'Imperativ mit Sie: Verb vorne, Sie dahinter, aus am Ende.'},
       {typ:'luecke', f:'___ Sie mir bitte helfen?', l:'Können', e:'Höfliche Bitte mit können: das Verb steht vorne, helfen am Ende.'},
-      {typ:'wahl', f:'Du bist neu in der Stadt. Was musst du in den ersten 14 Tagen machen?', o:['ein Konto eröffnen','dich beim Bürgeramt anmelden','einen Deutschkurs buchen'], l:1, e:'Die Anmeldung beim Bürgeramt ist Pflicht. Ohne sie bekommst du keine Steuer-ID und kein Konto.'},
+      {typ:'wahl', f:'Du bist neu in der Stadt. Was musst du in den ersten 14 Tagen machen?', o:['ein Konto eröffnen','dich beim Bürgeramt anmelden','einen Deutschkurs buchen'], l:1, e:'Die Anmeldung beim Bürgeramt ist Pflicht. Danach kommt auch deine Steuer-ID automatisch per Post, und viele Banken wollen die Meldebescheinigung sehen.'},
       {typ:'wahl', f:'Was ist der Unterschied? Ich kann nicht kommen. / Ich darf nicht kommen.', o:['Das ist dasselbe.','kann = es ist nicht möglich, darf = es ist verboten','kann = verboten, darf = nicht möglich'], l:1, e:'können ist die Möglichkeit, dürfen die Erlaubnis. Beim Amt ist der Unterschied wichtig.'},
       {typ:'wahl', f:'Was bedeutet: Ziehen Sie bitte eine Wartenummer?', o:['Sie müssen bezahlen.','Sie nehmen einen Zettel mit einer Nummer und warten.','Sie müssen morgen wiederkommen.'], l:1, e:'Fast jedes Amt arbeitet mit Nummern. Auf dem Bildschirm erscheint deine Nummer und ein Zimmer.'},
       {typ:'bausteine', l:'Ich möchte einen Termin beim Bürgeramt machen.', teile:['Ich','möchte','einen','Termin','beim','Bürgeramt','machen'], e:'möchte auf Platz 2, machen am Ende. der Termin wird einen Termin.'},
       {typ:'bausteine', l:'Welche Unterlagen brauche ich für den Antrag?', teile:['Welche','Unterlagen','brauche','ich','für','den','Antrag'], e:'W-Frage: Fragewort plus Nomen vorne, dann sofort das Verb. Nach für kommt den Antrag.'},
       {typ:'bausteine', l:'Man muss vorher einen Termin buchen.', teile:['Man','muss','vorher','einen','Termin','buchen'], e:'muss auf Platz 2, buchen am Ende — die Modalverb-Klammer.'},
-      {typ:'paare', p:[['das Bürgeramt','Anmeldung und Meldebescheinigung'],['die Ausländerbehörde','Aufenthaltserlaubnis'],['das Jobcenter','Arbeit und Geld'],['die Krankenkasse','Versichertenkarte'],['das Finanzamt','Steuer-ID']], e:'Jedes Amt hat seine Aufgabe. Wenn du das weißt, sparst du dir viele falsche Wege.'},
+      {typ:'paare', p:[['das Bürgeramt','Anmeldung und Meldebescheinigung'],['die Ausländerbehörde','Aufenthaltserlaubnis'],['das Jobcenter','Arbeit und Geld'],['die Krankenkasse','Versichertenkarte'],['das Finanzamt','Steuererklärung']], e:'Jedes Amt hat seine Aufgabe. Wenn du das weißt, sparst du dir viele falsche Wege.'},
       {typ:'hoeren', text:'Bitte füllen Sie das Formular aus und unterschreiben Sie unten rechts. Dann bringen Sie es zu Zimmer 214.', f:'Was sollst du zuerst machen?', o:['zu Zimmer 214 gehen','das Formular ausfüllen','einen Termin buchen'], l:1, e:'Die Reihenfolge steht im Satz: ausfüllen, unterschreiben, dann bringen.'},
       {typ:'hoeren', text:'Nummer B 47, bitte zu Schalter drei.', f:'Wohin sollst du gehen?', o:['zu Schalter drei','zu Schalter sieben','zu Zimmer 47'], l:0, e:'B 47 ist die Wartenummer, Schalter drei ist der Ort. Höre auf das Wort nach zu.'},
       {typ:'sprechen', f:'Sag am Empfang: Guten Tag, ich habe einen Termin um zehn Uhr. Mein Name ist …', l:'Guten Tag, ich habe einen Termin', e:'Termin plus Uhrzeit plus Name — mehr will der Empfang nicht wissen.'},
@@ -711,7 +711,7 @@ window.A1 = {
         {amanda:'Gern. Haben Sie Ihren Pass und die Wohnungsgeberbestätigung dabei?', hinweis:'Antworte. Wenn etwas fehlt, sag es.', beispiel:'Ja, hier ist mein Pass. Die Bestätigung habe ich auch.', redemittel:['Ja, hier bitte.','Die Bestätigung habe ich nicht.','Was ist das genau?']},
         {amanda:'Sehr gut. Füllen Sie bitte dieses Formular aus. Alle Personen in der Wohnung, auch die Kinder.', hinweis:'Frag nach, wenn du etwas nicht verstehst.', beispiel:'Entschuldigung, ich verstehe diese Zeile nicht. Können Sie mir helfen?', redemittel:['Können Sie mir helfen?','Was bedeutet dieses Wort?','Sprechen Sie bitte langsam.']},
         {amanda:'Natürlich. Hier steht: Einzugsdatum. Also der Tag, an dem Sie in die Wohnung gekommen sind.', hinweis:'Bedanke dich und sag, wann du eingezogen bist.', beispiel:'Danke. Wir sind am ersten Juni eingezogen.', redemittel:['Danke, jetzt verstehe ich.','Wir sind am … eingezogen.','Ich schreibe den ersten Juni.']},
-        {amanda:'Danke. Unterschreiben Sie bitte hier unten. Möchten Sie noch die Steuer-ID beantragen?', hinweis:'Antworte und frag, wie lange es dauert.', beispiel:'Ja, bitte. Wie lange dauert das?', redemittel:['Ja, bitte.','Nein, danke, das habe ich schon.','Wie lange dauert das?']}
+        {amanda:'Danke. Unterschreiben Sie bitte hier unten. Brauchen Sie die Meldebescheinigung heute noch?', hinweis:'Antworte und frag, wie lange es dauert.', beispiel:'Ja, bitte. Wie lange dauert das?', redemittel:['Ja, bitte.','Nein, danke, heute nicht.','Wie lange dauert das?']}
       ]
     },
     schreiben: {
@@ -932,7 +932,7 @@ window.A1 = {
       {typ:'sprechen', f:'Ruf an: Guten Tag, mein Name ist … Ich rufe wegen meiner Bestellung an. Könnten Sie mir bitte helfen?', l:'Guten Tag, mein Name ist', e:'Gruß, Name, Grund, Bitte. Diese vier Schritte machen dich am Telefon sicher.'},
       {typ:'uebersetzen', f:'I would like to cancel my contract.', l:'Ich würde gern meinen Vertrag kündigen.', e:'würde gern plus Infinitiv am Ende. mein Vertrag wird im Akkusativ zu meinen Vertrag.'},
       {typ:'ordnen', l:['Guten Tag, Kundenservice Elektro Meier.','Guten Tag, mein Name ist Amina Haddad.','Ich rufe wegen meiner Waschmaschine an. Sie funktioniert nicht.','Wann haben Sie das Gerät gekauft?','Vor drei Monaten. Hier ist die Rechnungsnummer.'], f:'Bring den Anruf beim Kundenservice in die richtige Reihenfolge.', e:'Die Firma meldet sich, du nennst deinen Namen, dann den Grund. Danach kommen die Details.'},
-      {typ:'artikel', w:'Rechnung', l:'die', e:'die Rechnung. Alle Wörter auf -ung sind die-Wörter, ohne Ausnahme.'}
+      {typ:'artikel', w:'Rechnung', l:'die', e:'die Rechnung. Nomen mit der Nachsilbe -ung sind immer die-Wörter.'}
     ],
     dialog: {
       ort: 'Du hast vor drei Wochen online eine Waschmaschine gekauft. Sie funktioniert nicht mehr. Du rufst beim Kundenservice an.',

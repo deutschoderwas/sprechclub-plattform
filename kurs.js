@@ -1469,7 +1469,8 @@
       var f=el('ku2Feld'); if(!f) return;
       var t=(f.value||'').replace(/^\s+|\s+$/g,''); if(!t) return;
       f.disabled=true;
-      antwort(gleich(t,a.l));
+      /* 25.11.2026: weitere richtige Lösungen (alts), z. B. „Sie“ neben „Wir“ */
+      antwort(gleich(t,a.l) || (a.alts||[]).some(function(x){ return gleich(t,x); }));
     }
     else if(a.typ==='bausteine'){
       var satz=U.hilf.bau.map(function(x){ return x.w; }).join(' ');

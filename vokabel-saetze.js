@@ -195,7 +195,7 @@ window.VOKABEL_SAETZE={
 "die Gabel": "Die Nudeln esse ich mit der §Gabel§, nicht mit den Händen.",
 "die Geborgenheit": "In der Küche meiner Mutter spüre ich §Geborgenheit§.",
 "die Gemütlichkeit": "Bei Kerzen und Tee herrscht richtige §Gemütlichkeit§.",
-"die Haltestelle": "Die Bus §haltestelle§ ist direkt vor dem Supermarkt.",
+"die Haltestelle": "Die §Haltestelle§ ist direkt vor dem Supermarkt.",
 "die Hausaufgabe": "Mein Sohn macht seine §Hausaufgaben§ jeden Tag nach dem Essen.",
 "die Heimat": "Nach zehn Jahren in Berlin ist diese Stadt meine §Heimat§.",
 "die Identität": "Meine Sprache und meine Geschichte gehören zu meiner §Identität§.",
