@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deutschoderwas club · Rollenspiele</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14181B;--soft:#5A6B72;--line:#E7ECEE;--bg:#F6F9FA;--card:#FFFFFF;--primary:#D42A21;--turq:#1B9BC0;--accent:#FFE100;--green:#4E9E12;--radius:18px;--shadow:0 2px 10px rgba(20,24,27,.05);--shadow-m:0 10px 26px rgba(20,24,27,.09);--akz:#1B9BC0;--akz-soft:#E4F3F8;--akz-text:#10627A;--akz-tint:#F7FBFC;}
+body[data-niveau="ab"]{--akz:#1B9BC0;--akz-soft:#E1F2F7;--akz-text:#0F5C6B;--akz-tint:#F4FAFC;}
+body[data-niveau="bb"]{--akz:#C9A200;--akz-soft:#FBF1C4;--akz-text:#6B4E00;--akz-tint:#FEFBEF;}
+body[data-niveau="bc"]{--akz:#D42A21;--akz-soft:#FBE3E1;--akz-text:#9A1C16;--akz-tint:#FEF6F5;}
+*{box-sizing:border-box;}html,body{margin:0;padding:0;}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--akz-tint);-webkit-font-smoothing:antialiased;transition:background .25s;}
+h1,h2,h3,h4{font-family:'Space Grotesk','Segoe UI',sans-serif;}
+.band{height:4px;background:var(--akz);transition:background .25s;}
+.top{position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--line);padding:12px 22px;}
+.top-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.marke{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;letter-spacing:-.01em;white-space:nowrap;display:flex;align-items:center;gap:9px;}
+.marke .wm{color:var(--ink);}.marke .club{color:var(--turq);margin-left:5px;}
+.nivbadge{font-family:'Space Grotesk';font-weight:600;font-size:.82rem;border:1px solid var(--akz);color:var(--akz-text);background:var(--akz-soft);border-radius:999px;padding:3px 12px;}
+.suche{flex:1 1 200px;position:relative;min-width:150px;}
+.suche input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 14px 10px 38px;font-family:'Inter';font-size:.95rem;color:var(--ink);outline:none;}
+.suche input:focus{border-color:var(--akz);background:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--akz) 15%,transparent);}
+.suche .lupe{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--soft);}
+.niv{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.niv .cap{font-weight:600;font-size:.78rem;color:var(--soft);}
+.niv button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.82rem;cursor:pointer;color:var(--ink);transition:.12s;display:inline-flex;align-items:center;gap:7px;}
+.niv button .dot{width:9px;height:9px;border-radius:999px;display:inline-block;}
+.niv button[data-n="ab"] .dot{background:#1B9BC0;}.niv button[data-n="bb"] .dot{background:#C9A200;}.niv button[data-n="bc"] .dot{background:#D42A21;}.niv button[data-n="all"] .dot{background:var(--soft);}
+.niv button:hover{border-color:var(--akz);}.niv button.on{color:#fff;border-color:transparent;}
+.niv button[data-n="ab"].on{background:#1B9BC0;}.niv button[data-n="bb"].on{background:#C9A200;}.niv button[data-n="bc"].on{background:#D42A21;}.niv button[data-n="all"].on{background:var(--ink);}
+.niv button.on .dot{background:#fff;}
+.reihe{display:inline-flex;align-items:center;gap:7px;margin-left:auto;background:var(--akz-soft);color:var(--akz-text);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.84rem;}
+.wrap{display:grid;grid-template-columns:300px 1fr;max-width:1500px;margin:0 auto;min-height:calc(100vh - 95px);position:relative;transition:grid-template-columns .2s;}
+body.zu .wrap{grid-template-columns:0 1fr;}
+.liste{border-right:1px solid var(--line);background:var(--card);padding:16px 12px 40px;overflow:auto;position:relative;}
+body.zu .liste{display:none;}
+.niv-ribbon{display:flex;align-items:center;gap:9px;background:var(--akz-soft);border:1px solid color-mix(in srgb,var(--akz) 35%,transparent);border-radius:12px;padding:9px 12px;margin:0 2px 12px;font-family:'Space Grotesk';font-weight:600;font-size:.9rem;color:var(--akz-text);}
+.niv-ribbon .pt{width:12px;height:12px;border-radius:999px;}
+.gruppe-h{font-weight:700;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;color:var(--soft);padding:14px 10px 8px;}
+.b-item{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:11px;padding:9px 11px;margin-bottom:2px;cursor:pointer;transition:.1s;display:flex;align-items:center;gap:11px;}
+.b-item:hover{background:var(--bg);}.b-item.on{background:var(--akz-soft);border-color:color-mix(in srgb,var(--akz) 30%,transparent);}
+.b-item .em{flex:none;width:32px;height:32px;border-radius:9px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.b-item.on .em{background:#fff;}
+.b-item .bn{flex:1;font-weight:600;font-size:.92rem;line-height:1.2;}
+.b-item .ct{flex:none;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;color:var(--soft);background:var(--bg);border-radius:999px;padding:1px 8px;}
+.b-item.on .ct{color:var(--akz-text);background:#fff;}.b-item.leer .bn,.b-item.leer .ct{opacity:.5;}
+.zieher{position:absolute;top:14px;right:-13px;z-index:20;width:26px;height:26px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--soft);box-shadow:var(--shadow);}
+.auf{position:fixed;left:14px;top:106px;z-index:40;display:none;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-m);border-radius:999px;padding:8px 14px;font-family:'Space Grotesk';font-weight:600;font-size:.85rem;cursor:pointer;color:var(--ink);}
+body.zu .auf{display:inline-flex;}
+.detail{padding:28px 36px 70px;overflow:auto;}
+.welc{max-width:640px;margin:7vh auto 0;text-align:center;}
+.welc .em{font-size:2.6rem;width:94px;height:94px;border-radius:999px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
+.welc h1{font-size:2rem;margin:10px 0 10px;letter-spacing:-.01em;}
+.welc p{color:var(--soft);font-size:1.05rem;line-height:1.6;margin:0 auto;max-width:500px;}
+.welc .hint{margin-top:22px;display:inline-flex;gap:8px;align-items:center;background:var(--akz);color:#fff;border-radius:999px;padding:10px 18px;font-weight:600;font-size:.92rem;box-shadow:var(--shadow-m);}
+.b-kopf{display:flex;align-items:center;gap:14px;margin-bottom:4px;}
+.b-kopf .em{width:50px;height:50px;border-radius:14px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.b-kopf h1{font-size:1.7rem;margin:0;letter-spacing:-.01em;}.b-kopf .sub{color:var(--soft);font-size:.88rem;font-weight:600;}
+.karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:15px;margin-top:22px;}
+.karte{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:17px 19px;cursor:pointer;transition:.14s;box-shadow:var(--shadow);}
+.karte:hover{border-color:var(--akz);box-shadow:var(--shadow-m);transform:translateY(-2px);}
+.karte .kem{width:40px;height:40px;border-radius:12px;background:var(--akz-soft);display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:12px;}
+.karte .kt{font-family:'Space Grotesk';font-weight:600;font-size:1.12rem;line-height:1.2;}
+.karte .kmeta{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--soft);font-size:.82rem;}
+.karte .pfeil{margin-top:13px;color:var(--akz-text);font-weight:600;font-size:.84rem;}
+.keine{margin-top:26px;background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);padding:28px;text-align:center;color:var(--soft);}
+.lv{display:inline-block;font-family:'Space Grotesk';font-weight:700;font-size:.72rem;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+.lv-ab{background:#E1F2F7;color:#0F5C6B;}.lv-bb{background:#FBF1C4;color:#6B4E00;}.lv-bc{background:#FBE3E1;color:#9A1C16;}
+.zurueck{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--akz-text);font-family:'Space Grotesk';font-weight:600;font-size:.9rem;cursor:pointer;padding:4px 0;margin-bottom:10px;}
+.d-kopf{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.d-breadcrumb{font-size:.82rem;color:var(--soft);font-weight:600;}
+.d-titel{font-family:'Space Grotesk';font-weight:700;font-size:2rem;line-height:1.1;margin:4px 0 0;letter-spacing:-.01em;}
+.d-tools{display:flex;gap:8px;align-items:center;}
+.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 15px;font-family:'Space Grotesk';font-weight:600;font-size:.84rem;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:7px;transition:.12s;}
+.btn:hover{border-color:var(--akz);}.btn-prim{background:var(--akz);color:#fff;border-color:transparent;}
+.sek{margin-top:28px;}
+.sek-h{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk';font-weight:700;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--akz-text);margin-bottom:14px;}
+/* Rollenspiel-spezifisch */
+.situation{background:var(--akz-soft);border:1px solid color-mix(in srgb,var(--akz) 35%,transparent);border-radius:var(--radius);padding:16px 20px;font-size:1.05rem;line-height:1.6;}
+.rollen{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.rolle{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);border-top:4px solid var(--akz);}
+.rolle .tag{display:inline-block;font-family:'Space Grotesk';font-weight:700;font-size:.74rem;background:var(--akz-soft);color:var(--akz-text);border-radius:999px;padding:2px 10px;margin-bottom:8px;}
+.rolle h3{font-size:1.2rem;margin:0 0 8px;}
+.rolle .ziel{font-size:.98rem;line-height:1.5;margin-bottom:10px;}
+.rolle .ziel b{color:var(--akz-text);}
+.rolle ul{margin:0;padding-left:18px;}.rolle li{font-size:.94rem;line-height:1.5;margin-bottom:4px;color:#374151;}
+.rm-karte{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
+.rm-karte h4{font-family:'Space Grotesk';font-weight:600;font-size:.98rem;margin:0 0 10px;color:var(--akz-text);}
+.rm-karte ul{margin:0;padding:0;list-style:none;}
+.rm-karte li{font-size:.97rem;line-height:1.45;padding:7px 0;border-bottom:1px solid var(--line);}.rm-karte li:last-child{border-bottom:none;}
+.vok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px;}
+.vok{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 15px;cursor:pointer;box-shadow:var(--shadow);}
+.vok .w{font-family:'Space Grotesk';font-weight:600;font-size:1.02rem;}
+.vok .ue{font-size:.9rem;color:var(--akz-text);font-weight:600;margin-top:5px;display:none;}.vok.show .ue{display:block;}
+.vok .tipp{font-size:.72rem;color:var(--soft);margin-top:5px;}.vok.show .tipp{display:none;}
+body.praesi .top .suche,body.praesi .liste,body.praesi .reihe{display:none;}
+body.praesi .wrap{grid-template-columns:1fr;}body.praesi .auf{display:none;}body.praesi .detail{padding:30px max(40px,6vw) 80px;}body.praesi .d-titel{font-size:2.5rem;}
+@media(max-width:860px){.wrap{grid-template-columns:1fr;}.liste{border-right:none;border-bottom:1px solid var(--line);max-height:40vh;}body.zu .liste{display:none;}.rollen{grid-template-columns:1fr;}.detail{padding:20px 18px 60px;}.zieher{display:none;}.reihe{margin-left:0;}}
+</style>
+</head>
+<body data-niveau="all">
+<div class="band"></div>
+<div class="top"><div class="top-row">
+  <div class="marke"><span class="wm">deutschoderwas</span><span class="club">club</span><span class="nivbadge" id="nivbadge">alle Niveaus</span></div>
+  <div class="suche"><span class="lupe">🔍</span><input id="suche" type="text" placeholder="Situation suchen …" autocomplete="off"></div>
+  <div class="niv" id="niv"></div>
+  <div class="reihe">🎭 Rollenspiele</div>
+</div></div>
+<div class="wrap"><aside class="liste"><button class="zieher" id="zieher" onclick="toggleListe()">‹</button><div id="bereiche"></div></aside><main class="detail" id="detail"></main></div>
+<button class="auf" onclick="toggleListe()">☰ Situationen</button>
+<script>
+const BAENDER={ab:{label:'A2·B1',wort:'Grundstufe',cls:'lv-ab',farbe:'#1B9BC0'},bb:{label:'B1·B2',wort:'Mittelstufe',cls:'lv-bb',farbe:'#C9A200'},bc:{label:'B2·C1',wort:'Oberstufe',cls:'lv-bc',farbe:'#D42A21'}};
+const BEREICHE=[
+  {gruppe:'Alltag', farbe:'#E4F3F8', items:[
+    {n:'Im Restaurant',em:'🍽️'},{n:'Beim Arzt',em:'🩺'},{n:'Beim Einkaufen',em:'🛒'},{n:'Beim Amt',em:'🏛️'},
+    {n:'Wohnungssuche',em:'🏠'},{n:'Beim Friseur',em:'✂️'},{n:'Am Telefon',em:'📞'},{n:'Small Talk',em:'💬'},
+  ]},
+  {gruppe:'Beruf', farbe:'#FBF1C4', items:[
+    {n:'Bewerbungsgespräch',em:'📋'},{n:'Beim Chef',em:'👔'},{n:'Kundengespräch',em:'🤝'},{n:'Teammeeting',em:'👥'},{n:'Beschwerde & Reklamation',em:'⚠️'},
+  ]},
+];
+const EMOJI={};BEREICHE.forEach(g=>g.items.forEach(b=>EMOJI[b.n]=b.em));
+const THEMEN=[
+  { id:'restaurant', titel:'Im Restaurant', bereich:'Im Restaurant', niveau:'ab',
+    situation:'Ein Gast kommt in ein Restaurant, lässt sich beraten und bestellt Essen und Getränke. Am Ende stimmt etwas mit der Rechnung nicht.',
+    rollen:[{tag:'Rolle A',name:'🧑 Gast',ziel:'Du hast Hunger und möchtest <b>etwas essen und trinken bestellen</b>.',infos:['Du magst kein scharfes Essen.','Frag nach einer Empfehlung.','Am Ende ist ein Getränk zu viel auf der Rechnung – sag höflich Bescheid.']},
+      {tag:'Rolle B',name:'🧑‍🍳 Kellner/in',ziel:'Du bedienst den Gast <b>freundlich</b> und nimmst die Bestellung auf.',infos:['Empfiehl das Tagesgericht.','Frag nach Getränken und Nachtisch.','Bleib höflich, auch wenn der Gast sich beschwert.']}],
+    redemittel:[{h:'🧑 Gast',l:['Ich hätte gern …','Was können Sie empfehlen?','Könnte ich bitte die Rechnung haben?','Entschuldigung, hier stimmt etwas nicht.']},{h:'🧑‍🍳 Kellner/in',l:['Was darf es sein?','Möchten Sie etwas trinken?','Ich empfehle Ihnen …','Das tut mir leid, ich kümmere mich darum.']}],
+    vokabeln:[{w:'die Speisekarte',ue:'menu'},{w:'die Vorspeise',ue:'starter'},{w:'das Hauptgericht',ue:'main course'},{w:'die Rechnung',ue:'bill'},{w:'das Trinkgeld',ue:'tip'},{w:'bestellen',ue:'to order'}] },
+  { id:'bewerbung', titel:'Bewerbungsgespräch', bereich:'Bewerbungsgespräch', niveau:'bb',
+    situation:'Ein Bewerber hat ein Vorstellungsgespräch für eine neue Stelle. Die Personalerin stellt Fragen zu Erfahrung, Stärken und Motivation.',
+    rollen:[{tag:'Rolle A',name:'🧑 Bewerber/in',ziel:'Präsentiere dich <b>gut</b>, beantworte die Fragen und stelle selbst eine Frage.',infos:['Du hast 3 Jahre Erfahrung.','Deine Stärke ist Teamarbeit, deine Schwäche Ungeduld.','Du möchtest wissen, wie die Arbeitszeiten sind.']},
+      {tag:'Rolle B',name:'👔 Personaler/in',ziel:'Lerne den Bewerber kennen und finde heraus, ob er passt.',infos:['Frag nach Erfahrung, Stärken und Schwächen.','Frag nach der Motivation für die Stelle.','Bleib professionell und freundlich.']}],
+    redemittel:[{h:'🧑 Bewerber/in',l:['Meine Stärken sind …','In meiner letzten Stelle habe ich …','Ich interessiere mich für …, weil …','Darf ich fragen, wie …?']},{h:'👔 Personaler/in',l:['Erzählen Sie etwas über sich.','Warum möchten Sie bei uns arbeiten?','Was sind Ihre Stärken und Schwächen?','Haben Sie noch Fragen?']}],
+    vokabeln:[{w:'die Bewerbung',ue:'application'},{w:'das Vorstellungsgespräch',ue:'job interview'},{w:'die Stärke / Schwäche',ue:'strength / weakness'},{w:'die Erfahrung',ue:'experience'},{w:'die Stelle',ue:'position / job'},{w:'der Lebenslauf',ue:'CV / résumé'}] },
+  { id:'amt-beschwerde', titel:'Beschwerde beim Amt', bereich:'Beim Amt', niveau:'bc',
+    situation:'Ein Bürger hat einen Bescheid vom Amt bekommen, mit dem er nicht einverstanden ist. Er möchte sich beschweren und eine Lösung finden.',
+    rollen:[{tag:'Rolle A',name:'🧑 Bürger/in',ziel:'Erkläre dein Problem <b>höflich, aber bestimmt</b> und fordere eine Lösung.',infos:['Der Bescheid enthält aus deiner Sicht einen Fehler.','Du hast alle Unterlagen fristgerecht eingereicht.','Du möchtest wissen, welche Möglichkeiten du hast.']},
+      {tag:'Rolle B',name:'🧑‍💼 Sachbearbeiter/in',ziel:'Erkläre die Regeln und zeige mögliche Lösungswege auf.',infos:['Bleib sachlich und erkläre die Rechtslage.','Weise auf die Möglichkeit eines Widerspruchs hin.','Nenne die Frist und die nötigen Unterlagen.']}],
+    redemittel:[{h:'🧑 Bürger/in',l:['Ich möchte mich über … beschweren.','Könnten Sie mir erklären, warum …?','Ich bestehe darauf, dass …','Welche Möglichkeiten habe ich?']},{h:'🧑‍💼 Sachbearbeiter/in',l:['Leider ist das nicht möglich, weil …','Sie können innerhalb von vier Wochen Widerspruch einlegen.','Dafür brauchen wir folgende Unterlagen …','Ich verstehe Ihren Ärger, aber …']}],
+    vokabeln:[{w:'der Bescheid',ue:'official notice'},{w:'der Widerspruch',ue:'objection / appeal'},{w:'die Frist',ue:'deadline'},{w:'die Zuständigkeit',ue:'responsibility / jurisdiction'},{w:'sich beschweren',ue:'to complain'},{w:'die Ausnahme',ue:'exception'}] },
+];
+const S={niveau:'all',bereich:null,sel:null};
+function themenVon(b){return THEMEN.filter(t=>t.bereich===b&&(S.niveau==='all'||t.niveau===S.niveau));}
+function anzahl(b){return themenVon(b).length;}
+function renderNiv(){document.getElementById('niv').innerHTML=`<span class="cap">Niveau:</span>`+[['all','Alle'],['ab','A2·B1'],['bb','B1·B2'],['bc','B2·C1']].map(([k,l])=>`<button data-n="${k}" class="${S.niveau===k?'on':''}" onclick="setNiv('${k}')"><span class="dot"></span>${l}</button>`).join('');document.getElementById('nivbadge').textContent=S.niveau==='all'?'alle Niveaus':BAENDER[S.niveau].label;}
+function nivRibbon(){if(S.niveau==='all')return`<div class="niv-ribbon"><span class="pt" style="background:var(--soft)"></span>Alle Niveaus</div>`;const b=BAENDER[S.niveau];return`<div class="niv-ribbon"><span class="pt" style="background:${b.farbe}"></span>Niveau ${b.label} · ${b.wort}</div>`;}
+function renderBereiche(){const q=document.getElementById('suche').value.trim().toLowerCase();let html=nivRibbon();BEREICHE.forEach(g=>{const items=g.items.filter(b=>!q||b.n.toLowerCase().includes(q));if(!items.length)return;html+=`<div class="gruppe-h">${g.gruppe}</div>`;html+=items.map(b=>{const c=anzahl(b.n);return`<button class="b-item ${S.bereich===b.n?'on':''} ${c?'':'leer'}" onclick="selBereich('${b.n.replace(/'/g,"\\'")}')"><span class="em" style="background:${g.farbe}">${b.em}</span><span class="bn">${b.n}</span><span class="ct">${c}</span></button>`;}).join('');});document.getElementById('bereiche').innerHTML=html;}
+function renderDetail(){const d=document.getElementById('detail');if(S.sel)return renderThema(d,THEMEN.find(x=>x.id===S.sel));if(S.bereich)return renderBereichView(d,S.bereich);
+  d.innerHTML=`<div class="welc"><div class="em">🎭</div><h1>Welche Situation spielt ihr?</h1><p>Wählt oben euer <b>Niveau</b> und links eine <b>Situation</b>. Jede/r bekommt eine Rollenkarte mit Ziel und Infos – dann wird gespielt.</p><div class="hint">👈 Situation links wählen</div></div>`;}
+function renderBereichView(d,b){const ts=themenVon(b);const karten=ts.length?`<div class="karten">${ts.map(t=>`<button class="karte" onclick="selThema('${t.id}')"><div class="kem">${EMOJI[t.bereich]||'🎭'}</div><div class="kt">${t.titel}</div><div class="kmeta"><span class="lv ${BAENDER[t.niveau].cls}">${BAENDER[t.niveau].label}</span> · ${t.rollen.length} Rollen</div><div class="pfeil">Öffnen →</div></button>`).join('')}</div>`:`<div class="keine">📝 Zu dieser Situation ist noch kein Rollenspiel hinterlegt${S.niveau!=='all'?' für dieses Niveau':''} – folgt Schritt für Schritt.</div>`;d.innerHTML=`<div class="b-kopf"><div class="em">${EMOJI[b]||'🎭'}</div><div><h1>${b}</h1><div class="sub">Rollenspiele</div></div></div>${karten}`;}
+function renderThema(d,t){
+  const rollen=t.rollen.map(r=>`<div class="rolle"><span class="tag">${r.tag}</span><h3>${r.name}</h3><div class="ziel">${r.ziel}</div><ul>${r.infos.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('');
+  const rm=t.redemittel.map(r=>`<div class="rm-karte"><h4>${r.h}</h4><ul>${r.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('');
+  const vok=t.vokabeln.map(v=>`<div class="vok" onclick="this.classList.toggle('show')"><div class="w">${v.w}</div><div class="ue">→ ${v.ue}</div><div class="tipp">tippen für Übersetzung</div></div>`).join('');
+  d.innerHTML=`<button class="zurueck" onclick="zurueckZumBereich()">‹ ${t.bereich}</button>
+    <div class="d-kopf"><div><div class="d-breadcrumb">Rollenspiele</div><h1 class="d-titel">${t.titel}</h1></div><div class="d-tools"><span class="lv ${BAENDER[t.niveau].cls}" style="font-size:.84rem;padding:4px 12px">${BAENDER[t.niveau].label}</span><button class="btn" id="btn-praesi" onclick="togglePraesi()">🖥️ Präsentieren</button></div></div>
+    <div class="sek"><div class="sek-h">🎬 Die Situation</div><div class="situation">${t.situation}</div></div>
+    <div class="sek"><div class="sek-h">🎭 Die Rollen</div><div class="rollen">${rollen}</div></div>
+    <div class="sek"><div class="sek-h">🧩 Redemittel pro Rolle</div><div class="rollen">${rm}</div></div>
+    <div class="sek"><div class="sek-h">📚 Vokabeln · tippen für Übersetzung</div><div class="vok-grid">${vok}</div></div>`;
+}
+function setNiv(k){S.niveau=k;document.body.dataset.niveau=k;if(S.sel){const t=THEMEN.find(x=>x.id===S.sel);if(t&&k!=='all'&&t.niveau!==k)S.sel=null;}renderNiv();renderBereiche();renderDetail();}
+function selBereich(b){S.bereich=b;S.sel=null;renderBereiche();renderDetail();document.getElementById('detail').scrollTop=0;}
+function selThema(id){S.sel=id;renderDetail();document.getElementById('detail').scrollTop=0;}
+function zurueckZumBereich(){S.sel=null;renderDetail();}
+function toggleListe(){document.body.classList.toggle('zu');const z=document.getElementById('zieher');if(z)z.textContent=document.body.classList.contains('zu')?'›':'‹';}
+function togglePraesi(){document.body.classList.toggle('praesi');const on=document.body.classList.contains('praesi');const b=document.getElementById('btn-praesi');if(b){b.textContent=on?'✕ Normal':'🖥️ Präsentieren';b.classList.toggle('btn-prim',on);}}
+document.getElementById('suche').addEventListener('input',renderBereiche);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('praesi'))togglePraesi();});
+renderNiv();renderBereiche();renderDetail();
+</script>
+</body>
+</html>
