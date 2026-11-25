@@ -86,7 +86,15 @@ export default async function handler(req, res) {
       });
     }
     if (String(req.query?.alle || '') === '1') {
-      return res.status(200).json({ ok: true, schluessel: Object.keys(FREEBIES) });
+      /* Julia, 25.11.2026: "Wir brauchen aber bitte eine verknuepfte
+         Seite so wie z.B .../freebies". Die Uebersicht braucht mehr
+         als die Schluessel - aber genau wie die Einzelseite nie den
+         Dateilink. Der kommt erst nach dem Eintragen. */
+      return res.status(200).json({
+        ok: true,
+        schluessel: Object.keys(FREEBIES),
+        freebies: Object.keys(FREEBIES).map((k) => ({ schluessel: k, ...oeffentlich(FREEBIES[k]) })),
+      });
     }
     if (!f) return res.status(200).json({ ok: false, unbekannt: true, freebie: oeffentlich(UNBEKANNT) });
     return res.status(200).json({ ok: true, schluessel, freebie: oeffentlich(f) });

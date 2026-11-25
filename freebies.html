@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kostenloses Material · deutschoderwas</title>
+<meta name="description" content="Alle kostenlosen Materialien von deutschoderwas: Sätze, Listen und Hefte zum Deutschlernen — direkt in dein Postfach.">
+<link rel="icon" href="/start-bilder/01-deutschoderwas-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- ============================================================
+     freebies.html — die Übersicht über alle Geschenke
+
+     Julia, 25.11.2026: "Wir brauchen aber bitte eine verknüpfte
+     Seite so wie z.B www.deutschoderwas-club.de/freebies" und
+     "aber es muss wie unsere Landingpage sein oder eher die
+     Schülerplattform vom Design".
+
+     Also die Farben der Landingpage: dunkles Petrolblau im Kopf,
+     Sand darunter, weisse Karten, roter Knopf, Gold als Marker.
+     Nicht die Petrol-Creme-Welt des SOS-Heftes - die bleibt der
+     einzelnen Geschenkseite vorbehalten.
+
+     Die Seite weiss nichts über die einzelnen Geschenke. Sie fragt
+     api/freebie.js?alle=1 und baut sich daraus. Ein neues Geschenk
+     in api/_freebies.js eintragen genügt; hier ist nichts zu tun.
+     ============================================================ -->
+<style>
+:root{
+  --ink:#12242B; --ink-2:#1B323B; --paper:#FFFEFC; --sand:#FDF9F1;
+  --soft:#66727A; --line:#E2DCD3; --acc:#C0392B; --acc-d:#A32F23;
+  --gold:#E8B93B; --gold-mark:#FFE39A; --teal:#2DD4BF; --teal-ink:#06403A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--sand);color:var(--ink);
+  font-family:Inter,-apple-system,'Segoe UI',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* ---- Kopf ---- */
+.kopf{background:var(--ink);color:#fff}
+.kopf .in{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px}
+.marke{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;white-space:nowrap}
+.marke img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.12)}
+.marke i{color:var(--teal);font-style:normal}
+.kopf a.zum{background:var(--acc);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;
+  padding:10px 18px;border-radius:999px;white-space:nowrap}
+.kopf a.zum:hover{background:var(--acc-d)}
+
+/* ---- Hero ---- */
+.hero{background:linear-gradient(170deg,var(--ink) 0%,var(--ink-2) 100%);color:#fff;
+  padding:46px 20px 56px;text-align:center}
+.hero .in{max-width:760px;margin:0 auto}
+.augen{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 14px}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(31px,6.4vw,50px);line-height:1.08;margin:0;text-wrap:balance}
+h1 mark{background:var(--gold);color:var(--ink);padding:.04em .18em;border-radius:6px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero p{font-size:17.5px;color:rgba(255,255,255,.84);margin:16px auto 0;max-width:54ch}
+
+/* ---- Karten ---- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+.karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:-26px 0 0}
+.karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;
+  padding:24px 24px 22px;display:flex;flex-direction:column;gap:11px;text-decoration:none;color:var(--ink);
+  box-shadow:0 6px 22px rgba(18,36,43,.07);transition:transform .16s ease,box-shadow .16s ease}
+.karte:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(18,36,43,.13)}
+.k-augen{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.k-titel{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25px;line-height:1.14;
+  letter-spacing:-.01em;margin:0}
+.k-titel span{color:var(--soft);font-weight:600}
+.k-text{font-size:15.5px;color:var(--soft);margin:0}
+.k-punkte{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.k-punkte li{display:flex;gap:9px;font-size:14.5px;line-height:1.45}
+.k-punkte .h{color:#1B9E8A;font-weight:800;flex:0 0 auto}
+.k-knopf{margin-top:auto;padding-top:16px}
+.k-knopf span{display:inline-block;background:var(--acc);color:#fff;font-weight:700;font-size:15.5px;
+  padding:12px 22px;border-radius:999px}
+.karte:hover .k-knopf span{background:var(--acc-d)}
+
+.leer{background:var(--paper);border:1px dashed var(--line);border-radius:18px;
+  padding:26px;margin:-26px 0 0;font-size:16.5px;color:var(--soft)}
+
+/* ---- Schluss ---- */
+.ende{background:var(--ink);color:#fff;border-radius:22px;padding:30px 28px;margin:34px 0 0;text-align:center}
+.ende h2{font-family:'Space Grotesk',sans-serif;font-size:26px;margin:0 0 10px;letter-spacing:-.01em}
+.ende p{margin:0 auto 18px;font-size:16.5px;color:rgba(255,255,255,.85);max-width:48ch}
+.ende a{display:inline-block;background:var(--acc);color:#fff;font-weight:700;font-size:16.5px;
+  text-decoration:none;padding:14px 26px;border-radius:999px}
+.ende a:hover{background:var(--acc-d)}
+
+.fuss{margin:30px 0 0;font-size:13px;color:var(--soft);text-align:center}
+.fuss a{color:var(--soft)}
+
+/* Auf schmalen Handys darf der Knopf nicht hinausrutschen. */
+@media(max-width:430px){
+  .kopf .in{padding:12px 14px;gap:10px}
+  .marke{font-size:15.5px}
+  .marke img{width:30px;height:30px}
+  .kopf a.zum{font-size:13px;padding:9px 13px}
+}
+</style>
+</head>
+<body>
+
+<header class="kopf"><div class="in">
+  <a class="marke" href="/"><img src="/start-bilder/01-deutschoderwas-logo.png" alt=""><span>deutschoderwas <i>club</i></span></a>
+  <a class="zum" href="/preise">Mitglied werden</a>
+</div></header>
+
+<section class="hero"><div class="in">
+  <div class="augen">Kostenlos für dich</div>
+  <h1>Material, mit dem du <mark>sofort</mark> anfangen kannst.</h1>
+  <p>Keine Theorie, keine dicken Hefte. Sätze und Listen, die du am selben Tag benutzt —
+     such dir aus, was du brauchst, trag deine E-Mail ein, fertig.</p>
+</div></section>
+
+<div class="wrap">
+  <div class="karten" id="karten"></div>
+  <div class="leer" id="leer" hidden>Hier wird gerade etwas Neues vorbereitet. Schau in ein paar Tagen wieder vorbei.</div>
+
+  <div class="ende">
+    <h2>Und wenn du wirklich sprechen willst?</h2>
+    <p>Material allein bringt niemanden zum Sprechen. Im Sprechclub redest du jeden Tag
+       mit echten Menschen — Montag bis Sonntag, in kleinen Gruppen.</p>
+    <a href="/preise">Den Sprechclub ansehen</a>
+  </div>
+
+  <p class="fuss">deutschoderwas · <a href="/impressum.html">Impressum</a> · <a href="/datenschutz.html">Datenschutz</a></p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var E = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
+    });
+  };
+
+  function karte(f) {
+    var titel = E(f.titel || '')
+      + (f.zeile2 ? ' <span>' + E(f.zeile2) + '</span>' : '')
+      + (f.stark ? ' <span>' + E(f.stark) + '</span>' : '');
+    var punkte = (f.punkte || []).slice(0, 3).map(function (p) {
+      return '<li><span class="h">✓</span><span>' + E(p) + '</span></li>';
+    }).join('');
+    return '<a class="karte" href="/f/' + encodeURIComponent(f.schluessel) + '">'
+      + (f.augen ? '<div class="k-augen">' + E(f.augen) + '</div>' : '')
+      + '<h2 class="k-titel">' + titel + '</h2>'
+      + (f.unter ? '<p class="k-text">' + E(f.unter) + '</p>' : '')
+      + (punkte ? '<ul class="k-punkte">' + punkte + '</ul>' : '')
+      + '<div class="k-knopf"><span>Kostenlos holen</span></div>'
+      + '</a>';
+  }
+
+  fetch('/api/freebie?alle=1')
+    .then(function (r) { return r.json(); })
+    .then(function (a) {
+      var liste = (a && a.freebies) || [];
+      if (!liste.length) { document.getElementById('leer').hidden = false; return; }
+      document.getElementById('karten').innerHTML = liste.map(karte).join('');
+    })
+    .catch(function () {
+      var l = document.getElementById('leer');
+      l.textContent = 'Die Liste lädt gerade nicht. Probier es bitte gleich noch einmal.';
+      l.hidden = false;
+    });
+})();
+</script>
+</body>
+</html>
