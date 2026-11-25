@@ -25,6 +25,15 @@
   var A = window.AKTION;
   if (!A || !A.laeuft()) return;
 
+  /* Julia, 25.11.2026: "vielleicht Black Week 30 % in der Mitte
+     wegmachen". Sie hat recht: das Fenster ging genau dann auf,
+     wenn jemand bei den Preisen ankam - und legte sich ueber die
+     Preise und die Fragen, also ueber die zwei Stellen, an denen
+     entschieden wird. Die laufende Leiste oben und die Klebeleiste
+     unten sagen dasselbe, ohne jemandem im Weg zu stehen.
+     Ein false hier schaltet es aus; ein true holt es zurueck. */
+  var FENSTER_AN = false;
+
   var SCHUBLADE = 'dow_aktion_popup';
   var RUHE_STD  = 20;      // einmal am Tag reicht
   var NACH_MS   = 16000;
@@ -167,6 +176,7 @@
   }
 
   function start() {
+    if (!FENSTER_AN) return;
     if (gesehen()) return;
     var ab = setTimeout(aufmachen, NACH_MS);
     function beimScrollen() {
