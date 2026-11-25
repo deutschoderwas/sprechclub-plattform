@@ -28,70 +28,79 @@
      ============================================================ -->
 <style>
 :root{
-  --ink:#12242B; --ink-2:#1B323B; --paper:#FFFEFC; --sand:#FDF9F1;
-  --soft:#66727A; --line:#E2DCD3; --acc:#C0392B; --acc-d:#A32F23;
-  --gold:#E8B93B; --gold-mark:#FFE39A; --teal:#2DD4BF; --teal-ink:#06403A;
+  /* Die Farben der Plattform: Schwarz, Rot, Gold, Tuerkis.
+     Tuerkis ist die Knopffarbe (mit dunkler Schrift darauf),
+     Rot und Gold sind Akzente - nie flaechig. */
+  --tinte:#1A1A1A; --tinte-2:#232323; --creme:#FFF8E0; --karte:#FFFCF5;
+  --soft:#6B7280; --line:#F0E5D8;
+  --tuerkis:#2DD4BF; --tuerkis-d:#14B8A6; --auf-tuerkis:#06403A;
+  --rot:#DD0000; --rot-d:#B30000; --gold:#FFCE00;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--sand);color:var(--ink);
+body{background:var(--creme);color:var(--tinte);
   font-family:Inter,-apple-system,'Segoe UI',system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;line-height:1.6}
 
 /* ---- Kopf ---- */
-.kopf{background:var(--ink);color:#fff}
+.fahne{height:6px;display:flex}
+.fahne i{flex:1}
+.fahne i:nth-child(1){background:#1A1A1A}
+.fahne i:nth-child(2){background:var(--rot)}
+.fahne i:nth-child(3){background:var(--gold)}
+.kopf{background:var(--tinte);color:#fff}
 .kopf .in{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;
   justify-content:space-between;gap:16px}
 .marke{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;
   font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;white-space:nowrap}
 .marke img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.12)}
-.marke i{color:var(--teal);font-style:normal}
-.kopf a.zum{background:var(--acc);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;
+.marke i{color:var(--tuerkis);font-style:normal}
+.kopf a.zum{background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-d));color:var(--auf-tuerkis);text-decoration:none;font-weight:800;font-size:14.5px;
   padding:10px 18px;border-radius:999px;white-space:nowrap}
-.kopf a.zum:hover{background:var(--acc-d)}
+.kopf a.zum:hover{background:var(--tuerkis-d)}
 
 /* ---- Hero ---- */
-.hero{background:linear-gradient(170deg,var(--ink) 0%,var(--ink-2) 100%);color:#fff;
+.hero{background:linear-gradient(170deg,var(--tinte) 0%,var(--tinte-2) 100%);color:#fff;
   padding:46px 20px 56px;text-align:center}
 .hero .in{max-width:760px;margin:0 auto}
 .augen{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   color:var(--gold);margin:0 0 14px}
 h1{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.02em;
   font-size:clamp(31px,6.4vw,50px);line-height:1.08;margin:0;text-wrap:balance}
-h1 mark{background:var(--gold);color:var(--ink);padding:.04em .18em;border-radius:6px;
+h1 mark{background:var(--gold);color:var(--tinte);padding:.04em .18em;border-radius:6px;
   -webkit-box-decoration-break:clone;box-decoration-break:clone}
 .hero p{font-size:17.5px;color:rgba(255,255,255,.84);margin:16px auto 0;max-width:54ch}
 
 /* ---- Karten ---- */
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
 .karten{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:-26px 0 0}
-.karte{background:var(--paper);border:1px solid var(--line);border-radius:18px;
-  padding:24px 24px 22px;display:flex;flex-direction:column;gap:11px;text-decoration:none;color:var(--ink);
-  box-shadow:0 6px 22px rgba(18,36,43,.07);transition:transform .16s ease,box-shadow .16s ease}
-.karte:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(18,36,43,.13)}
-.k-augen{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.karte{background:var(--karte);border:1px solid var(--line);border-radius:18px;
+  padding:24px 24px 22px;display:flex;flex-direction:column;gap:11px;text-decoration:none;color:var(--tinte);
+  box-shadow:0 6px 22px rgba(26,26,26,.07);transition:transform .16s ease,box-shadow .16s ease}
+.karte:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(26,26,26,.13)}
+.k-augen{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rot)}
 .k-titel{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25px;line-height:1.14;
   letter-spacing:-.01em;margin:0}
 .k-titel span{color:var(--soft);font-weight:600}
 .k-text{font-size:15.5px;color:var(--soft);margin:0}
 .k-punkte{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
 .k-punkte li{display:flex;gap:9px;font-size:14.5px;line-height:1.45}
-.k-punkte .h{color:#1B9E8A;font-weight:800;flex:0 0 auto}
+.k-punkte .h{color:var(--tuerkis-d);font-weight:800;flex:0 0 auto}
 .k-knopf{margin-top:auto;padding-top:16px}
-.k-knopf span{display:inline-block;background:var(--acc);color:#fff;font-weight:700;font-size:15.5px;
+.k-knopf span{display:inline-block;background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-d));color:var(--auf-tuerkis);font-weight:800;font-size:15.5px;
   padding:12px 22px;border-radius:999px}
-.karte:hover .k-knopf span{background:var(--acc-d)}
+.karte:hover .k-knopf span{background:var(--tuerkis-d)}
 
-.leer{background:var(--paper);border:1px dashed var(--line);border-radius:18px;
+.leer{background:var(--karte);border:1px dashed var(--line);border-radius:18px;
   padding:26px;margin:-26px 0 0;font-size:16.5px;color:var(--soft)}
 
 /* ---- Schluss ---- */
-.ende{background:var(--ink);color:#fff;border-radius:22px;padding:30px 28px;margin:34px 0 0;text-align:center}
+.ende{background:var(--tinte);color:#fff;border-radius:22px;padding:30px 28px;margin:34px 0 0;text-align:center}
 .ende h2{font-family:'Space Grotesk',sans-serif;font-size:26px;margin:0 0 10px;letter-spacing:-.01em}
 .ende p{margin:0 auto 18px;font-size:16.5px;color:rgba(255,255,255,.85);max-width:48ch}
-.ende a{display:inline-block;background:var(--acc);color:#fff;font-weight:700;font-size:16.5px;
+.ende a{display:inline-block;background:linear-gradient(135deg,var(--tuerkis),var(--tuerkis-d));color:var(--auf-tuerkis);font-weight:800;font-size:16.5px;
   text-decoration:none;padding:14px 26px;border-radius:999px}
-.ende a:hover{background:var(--acc-d)}
+.ende a:hover{background:var(--tuerkis-d)}
 
 .fuss{margin:30px 0 0;font-size:13px;color:var(--soft);text-align:center}
 .fuss a{color:var(--soft)}
@@ -107,6 +116,7 @@ h1 mark{background:var(--gold);color:var(--ink);padding:.04em .18em;border-radiu
 </head>
 <body>
 
+<div class="fahne"><i></i><i></i><i></i></div>
 <header class="kopf"><div class="in">
   <a class="marke" href="/"><img src="/start-bilder/01-deutschoderwas-logo.png" alt=""><span>deutschoderwas <i>club</i></span></a>
   <a class="zum" href="/preise">Mitglied werden</a>
