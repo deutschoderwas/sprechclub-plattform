@@ -33,6 +33,12 @@ export const TESTZEIT_TAGE  = 3;
 export const TESTZEIT_PLAENE = ['premium_month', 'premium_6m'];
 export const testzeitAktiv = (jetzt = Date.now()) => jetzt >= TESTZEIT_AB;
 
+/* Julia, 26.11.2026 21:43: "6 monatsabo ist ab dem 1.12 30 prozent reduziert".
+   Regulaer 834 EUR (6 x 139). 30 % weniger waeren 583,80 - wir nehmen 583,
+   damit "30 %" stimmt und nicht uebertrieben ist (30,1 %). Gilt ab 1.12.
+   dauerhaft fuer neue Halbjahresabos; die Black Week (399) laeuft bis 30.11. */
+export const HALBJAHR_PREIS_AB_0112 = 583;
+
 export const tuerenZu = (jetzt = Date.now()) =>
   !aktionLaeuft(jetzt)
   && jetzt >= TUEREN_ZU_AB && (!TUEREN_AUF || jetzt < TUEREN_AUF);

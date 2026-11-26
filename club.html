@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<script src="/aktion.js?v=5"></script>
-<script src="/tarif.js?v=3" defer></script>
+<script src="/aktion.js?v=6"></script>
+<script src="/tarif.js?v=4" defer></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Der Sprechclub — endlich Deutsch sprechen</title>
 <meta name="description" content="Jeden Tag mit echten Menschen Deutsch sprechen, in kleinen Gruppen — und wenn ihr Hilfe braucht, kommt die Lehrkraft dazu.">
@@ -723,7 +723,7 @@ var START = new Date('2026-11-01T00:00:00+01:00');
    Zum Wiederaufmachen hier UND in index.html und preise.html
    TUEREN_AUF auf dasselbe Datum setzen. Der eigentliche Riegel liegt
    im Server (api/_tueren.js), damit keine Seite ihn umgehen kann. */
-window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : (window.OFFEN ? window.OFFEN.aufAb() : null);   /* ab 1.12.2026 dauerhaft offen, siehe aktion.js (OFFEN) */   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function tuerenZu(){ var n = Date.now();
   return n >= START.getTime() && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
 function zurWarteliste(){
@@ -785,7 +785,8 @@ function wartelisteSchalten(){
   /* Die Preise neu zeichnen, jetzt mit normal === true. */
   setzeTakt(TAKT);
 
-  var wl = document.getElementById('wl'); if (wl) wl.classList.add('an');
+  /* Ab 1.12. ist der Sprechclub offen - dann keine "ausgebucht"-Warteliste. */
+  var wl = document.getElementById('wl'); if (wl && tuerenZu()) wl.classList.add('an');
 
   /* Julia, 31.10.2026, ueber diese Seite: "hier auch nur die
      Warteliste". Es reichte nicht, den einen Premium-Knopf
@@ -889,7 +890,7 @@ function zumPreis(){
    PREMIUM_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
    erst in die Kasse laeuft und dort abgewiesen wird.
    Premium wieder verkaufen: hier und dort auf false. */
-window.PREMIUM_PAUSIERT = !(window.AKTION && window.AKTION.laeuft());   /* Black Week: 24.-30.11. offen, danach wieder zu - siehe aktion.js */
+window.PREMIUM_PAUSIERT = !((window.AKTION && window.AKTION.laeuft()) || (window.OFFEN && window.OFFEN.offen()));   /* Black Week: 24.-30.11. offen, danach wieder zu - siehe aktion.js */
 /* Nur Premium-Plaene sind angehalten — alles mit "premium" im Namen. */
 function premiumGesperrt(id){
   return !!window.PREMIUM_PAUSIERT && /premium/i.test(String(id || ''));
@@ -904,7 +905,7 @@ function setzeTakt(){ /* Schalter entfernt — bleibt nur fuer alte Aufrufe */ }
    immer funktioniert, auch wenn Stripe.js nicht laedt. */
 async function kaufen(stufe){
   if (stufe==='premium' && (window.PREMIUM_PAUSIERT || tuerenZu())) { zurWarteliste(); return; }
-  var id = stufe==='premium' ? 'premium_month' : 'community_month';
+  var id = stufe==='premium' ? ((window.TARIF && window.TARIF.gewaehlt && window.TARIF.gewaehlt.id) || 'premium_month') : 'community_month';
   var knopf = document.getElementById(stufe==='premium' ? 'kaufPremium' : 'kaufCommunity');
   var alt = knopf.textContent;
   knopf.disabled = true; knopf.textContent = 'Einen Moment …';
@@ -930,6 +931,12 @@ function melden(t){ var m=document.getElementById('meldung'); if(m) m.textConten
 
 /* Ganz zum Schluss, wenn TAKT und setzeTakt stehen. */
 wartelisteSchalten();
+/* Ab 1.12.2026: 3 Tage kostenlos - Knopf und Satz darunter. */
+(function(){ if (!(window.OFFEN && window.OFFEN.offen()) || (window.AKTION && window.AKTION.laeuft())) return;
+  var k = document.getElementById('kaufPremium'); if (k) k.textContent = window.OFFEN.knopf + ' \u2192';
+  var f = document.getElementById('pFuss'); if (f) f.textContent = window.OFFEN.text;
+  var v = document.getElementById('pVor'); if (v) v.textContent = 'Neu dabei? Dann testest du den Sprechclub 3 Tage kostenlos.';
+})();
 
 /* ---------- Bewegung einschalten ----------
    Erst hier wird .anim gesetzt. Vorher ist die Seite vollstaendig
@@ -1032,7 +1039,7 @@ wartelisteSchalten();
   }).catch(function(){ /* fest geschriebener Plan bleibt stehen */ });
 })();
 </script>
-<script src="/basis-popup.js?v=2" defer></script>
+<script src="/basis-popup.js?v=3" defer></script>
 <script src="/aktion-popup.js?v=4"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

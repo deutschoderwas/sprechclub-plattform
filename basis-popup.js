@@ -23,6 +23,9 @@
      hintereinander sind keine Werbung mehr, sondern eine Zumutung -
      und die Aktion ist in der Woche das wichtigere Angebot. */
   if (window.AKTION && window.AKTION.laeuft && window.AKTION.laeuft()) return;
+  /* Ab 1.12.2026 ist der Sprechclub dauerhaft offen - dann stimmt
+     "Du musst nicht bis zum Dezember warten" nicht mehr. */
+  if (window.OFFEN && window.OFFEN.offen && window.OFFEN.offen()) return;
   window.BASISPOPUP = true;
 
   var SCHUBLADE = 'dow_basis_popup';

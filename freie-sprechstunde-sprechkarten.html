@@ -155,6 +155,7 @@ kbd{font-family:'Inter';font-size:.8rem;font-weight:800;background:#fff;border:2
 .gk-tipp[open] summary::after{content:'zu';background:var(--ink-mute)}
 .gk-tipp .inhalt{padding:0 1.05rem 1rem;font-size:1.02rem;color:var(--ink-soft);line-height:1.65}
 .gk-tipp .inhalt b{color:var(--ink);font-weight:700}
+.deckbild{height:clamp(140px,22vw,240px);border-radius:22px;background-size:cover;background-position:center;margin:0 0 1rem;box-shadow:0 10px 26px rgba(0,0,0,.12);border:3px solid #fff}
 .gk-ideen{display:flex;flex-wrap:wrap;gap:.45rem;margin:.45rem 0 .2rem}.gk-ideen span{background:var(--f);color:#fff;font-weight:700;font-size:.9rem;border-radius:999px;padding:.32rem .8rem;line-height:1.3;box-shadow:0 2px 0 var(--f-d)}
 .gk-tipp .dlg{display:block;margin-top:.5rem;padding-left:.7rem;border-left:3px solid var(--f)}
 .gk-fuss{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.55rem}
@@ -185,6 +186,7 @@ footer{text-align:center;margin-top:2.6rem;font-size:.85rem;color:var(--ink-mute
 
   <nav class="tabs" id="tabs"></nav>
 
+  <div class="deckbild" id="dkBild" hidden></div>
   <div class="deckkopf">
     <div class="wo"><span class="zz" id="dkZ"></span>
       <div><h2 id="dkN"></h2><div class="us" id="dkU"></div></div>
@@ -264,9 +266,9 @@ const BEREICHE = [
  { id:'erinnerungen',name:'Erinnerungen',               zeichen:'&#128247;',       unter:'Fr&uuml;her, Kindheit, pr&auml;gende Momente',   f:'#7A5BD0', d:'#4B3390' },
  { id:'zukunft',     name:'Zukunft &amp; Pl&auml;ne',    zeichen:'&#128302;',       unter:'Tr&auml;ume, Vors&auml;tze, was kommt',          f:'#1B9BC0', d:'#0C5C74' },
  { id:'diskussion',  name:'Diskussion &amp; Debatte',    zeichen:'&#9878;&#65039;', unter:'Pro &amp; Contra, Argumente, h&ouml;flich streiten', f:'#D99500', d:'#8A5E00' },
- { id:'advent',      name:'Winter &amp; Advent',     zeichen:'&#10052;&#65039;', unter:'Fragen, Diskussion, Aufgaben &amp; Rollenspiele zu dritt', f:'#1B9BC0', d:'#0C5C74' },
- { id:'geschenke',   name:'Einkaufen &amp; Geschenke', zeichen:'&#127873;', unter:'Shoppen, schenken, umtauschen', f:'#D32F23', d:'#8C1D15' },
- { id:'erkaeltung',  name:'Gesund durch den Winter', zeichen:'&#129319;', unter:'Erkältung, Arzt, Apotheke, Krankmeldung', f:'#0E9E86', d:'#076253' },
+ { id:'advent',      name:'Winter &amp; Advent',     zeichen:'&#10052;&#65039;', unter:'Fragen, Diskussion, Aufgaben &amp; Rollenspiele zu dritt', f:'#1B9BC0', d:'#0C5C74' , bild:'bilder/sprechkarten/advent.webp' },
+ { id:'geschenke',   name:'Einkaufen &amp; Geschenke', zeichen:'&#127873;', unter:'Shoppen, schenken, umtauschen', f:'#D32F23', d:'#8C1D15' , bild:'bilder/sprechkarten/geschenke.webp' },
+ { id:'erkaeltung',  name:'Gesund durch den Winter', zeichen:'&#129319;', unter:'Erkältung, Arzt, Apotheke, Krankmeldung', f:'#0E9E86', d:'#076253' , bild:'bilder/sprechkarten/erkaeltung.webp' },
  { id:'rollenspiele', name:'Rollenspiele',           zeichen:'&#127917;',       unter:'Zu zweit eine Situation spielen', f:'#8E44AD', d:'#5B2C85' }
 ];
 
@@ -1025,6 +1027,8 @@ function zeichnen(){
   document.getElementById('dkZ').innerHTML = b.zeichen;
   document.getElementById('dkN').innerHTML = b.name;
   document.getElementById('dkU').innerHTML = b.unter;
+  var dkB = document.getElementById('dkBild');
+  if (b.bild) { dkB.hidden = false; dkB.style.backgroundImage = 'url(' + b.bild + ')'; } else { dkB.hidden = true; }
 
   var offenZahl = 0;
   for (var i = 0; i < s.folge.length; i++) if (!s.weg[s.folge[i]]) offenZahl++;

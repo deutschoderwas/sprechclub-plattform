@@ -35,13 +35,20 @@
   window.TARIFSCHALTER = true;
 
   var A = window.AKTION;
-  if (!A || !A.laeuft()) return;
+  /* Ab 1.12.2026 laeuft der Umschalter weiter (Julia 26.11.: Halbjahr
+     ab 1.12. 30 % reduziert, beide mit 3 Tagen kostenlos). */
+  var O = window.OFFEN;
+  var AKT = !!(A && A.laeuft());
+  var OFF = !AKT && !!(O && O.offen());
+  if (!AKT && !OFF) return;
 
   /* Die Zahlen stehen hier nur, um sie zu ZEIGEN. Gerechnet wird auf
      dem Server. Aendert Julia den Preis, aendert sie ihn in
      api/_tueren.js - und dann auch hier. */
-  var MONAT = { id: 'premium_month', preis: A.preis, alt: A.alt };
-  var HALB  = { id: 'premium_6m',    preis: 399,     alt: 834, monate: 6 };
+  var MONAT = AKT ? { id: 'premium_month', preis: A.preis, alt: A.alt }
+                  : { id: 'premium_month', preis: O.preis, alt: O.preis };
+  var HALB  = AKT ? { id: 'premium_6m', preis: 399, alt: 834, monate: 6 }
+                  : { id: 'premium_6m', preis: O.preis6m, alt: O.alt6m, monate: 6 };
 
   HALB.proMonat = Math.round((HALB.preis / HALB.monate) * 100) / 100;   // 66,5
   HALB.prozent  = Math.floor((1 - HALB.preis / HALB.alt) * 100);        // 52
@@ -80,7 +87,7 @@
 
     /* index.html, Mitgliedschaftskarte */
     setz($('ekNeu'), p);
-    var ekAlt = $('ekAlt'); if (ekAlt) { ekAlt.textContent = alt; ekAlt.style.display = ''; }
+    var ekAlt = $('ekAlt'); if (ekAlt) { ekAlt.textContent = alt; ekAlt.style.display = (OFF && !halb) ? 'none' : ''; }
     var ekTakt = document.querySelector('.ek-zahl i');
     if (ekTakt) { ekTakt.removeAttribute('data-i18n'); ekTakt.textContent = takt; }
     var abr = document.querySelector('.ek-abr');
@@ -92,10 +99,21 @@
        Abzeichen. Beim halben Jahr sind es 52 und nicht 30 - stehen
        bleiben duerfen die 30 dort auf keinen Fall, das waere ein
        Preisversprechen, das nicht zum Preis daneben passt. */
-    var proz = halb ? HALB.prozent : A.prozent;
-    setz($('pSpar'), '\u2212' + proz + ' %');
+    var proz = halb ? HALB.prozent : (AKT ? A.prozent : 0);
+    setz($('pSpar'), proz ? '\u2212' + proz + ' %' : '');
     var fahne = $('pFahne');
-    if (fahne) fahne.textContent = A.name + ' \u00b7 \u2212' + proz + ' %';
+    if (fahne) fahne.textContent = AKT ? (A.name + ' \u00b7 \u2212' + proz + ' %') : '3 Tage kostenlos';
+    /* Ab 1.12.: beim Monat gibt es keinen Streichpreis - nur beim halben Jahr. */
+    if (OFF) {
+      var zeigAlt = halb ? '' : 'none';
+      var w1 = $('pAltWrap'); if (w1) w1.style.display = zeigAlt;
+      var e1 = $('ekAlt'); if (e1) e1.style.display = zeigAlt;
+      var w2 = $('altWrapP'); if (w2) w2.style.display = zeigAlt;
+      /* Der Satz unter dem Knopf - Julias wichtigster Punkt. */
+      var kl = $('pKlein'); if (kl) kl.textContent = halb ? O.text6m : O.text;
+      var tz = $('tzText'); if (tz) tz.textContent = halb ? O.text6m : O.text;
+      var pf = $('pFuss'); if (pf) pf.textContent = halb ? O.text6m : O.text;
+    }
     setz($('pHinweis'), halb
       ? 'eine Zahlung f\u00fcr 6 Monate \u00b7 ' + euro(HALB.proMonat) + ' im Monat'
       : 'monatlich k\u00fcndbar');
@@ -105,9 +123,9 @@
        werden" und "Alle Tarife ansehen" fuehren alle dorthin. */
     setz($('preisP'), p);
     var altWrapP = $('altWrapP');
-    if (altWrapP) altWrapP.style.display = '';
+    if (altWrapP) altWrapP.style.display = (OFF && !halb) ? 'none' : '';
     var altP = $('altP'); if (altP) altP.textContent = alt;
-    setz($('sparP'), '−' + proz + ' %');
+    setz($('sparP'), proz ? '−' + proz + ' %' : '');
     setz($('totalP'), halb
       ? 'eine Zahlung für 6 Monate · ' + euro(HALB.proMonat) + ' im Monat'
       : 'monatlich kündbar');
@@ -128,9 +146,10 @@
        Umschalter an der Preiskarte, wo der Vergleich danebensteht. */
     var mp = euro(MONAT.preis), malt = euro(MONAT.alt);
     setz($('raPreis'), mp);
-    setz($('kbxText'), A.prozent + ' % Rabatt · ' + mp + ' statt ' + malt + ' im Monat');
+    setz($('kbxText'), AKT ? (A.prozent + ' % Rabatt · ' + mp + ' statt ' + malt + ' im Monat')
+                           : ('3 Tage kostenlos · danach ' + mp + ' im Monat'));
     var kn = $('kbxKnopf');
-    if (kn) kn.textContent = 'Für ' + mp + ' dabei sein';
+    if (kn) kn.textContent = AKT ? ('Für ' + mp + ' dabei sein') : O.knopf;
   }
 
   /* ---------- Der Umschalter ---------- */

@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<script src="/aktion.js?v=5"></script>
-<script src="/tarif.js?v=3" defer></script>
+<script src="/aktion.js?v=6"></script>
+<script src="/tarif.js?v=4" defer></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sprechclub · deutschoderwas</title>
 <meta name="description" content="Jeden Tag eine Stunde Deutsch sprechen — mit echten Menschen, in kleinen Gruppen, von A2 bis C1. Du darfst zuhören, bis du so weit bist.">
@@ -544,7 +544,7 @@ function clubOffen(){ return Date.now() >= CLUB_START; }
    PREMIUM_PAUSIERT); das hier ist die Oberflaeche dazu, damit niemand
    erst in die Kasse laeuft und dort abgewiesen wird.
    Premium wieder verkaufen: hier und dort auf false. */
-window.PREMIUM_PAUSIERT = !(window.AKTION && window.AKTION.laeuft());   /* Black Week: 24.-30.11. offen, danach wieder zu - siehe aktion.js */
+window.PREMIUM_PAUSIERT = !((window.AKTION && window.AKTION.laeuft()) || (window.OFFEN && window.OFFEN.offen()));   /* Black Week: 24.-30.11. offen, danach wieder zu - siehe aktion.js */
 /* Nur Premium-Plaene sind angehalten — alles mit "premium" im Namen. */
 function premiumGesperrt(id){
   return !!window.PREMIUM_PAUSIERT && /premium/i.test(String(id || ''));
@@ -561,6 +561,12 @@ function setzePremium(){
     $('pAlt').innerHTML = 'statt <s>' + PREIS + ' \u20ac</s> im Monat'
       + '<span class="spar">\u2212' + proz + ' %</span>';
     $('pFahne').style.display = '';
+  } else if (window.OFFEN && window.OFFEN.offen()) {
+    /* Ab 1.12.: 3 Tage kostenlos - und klar sagen, dass danach abgebucht wird. */
+    $('pAlt').innerHTML = '3 Tage kostenlos, danach 139 \u20ac im Monat';
+    $('pFahne').textContent = '3 Tage kostenlos'; $('pFahne').style.display = '';
+    $('pKnopf').textContent = window.OFFEN.knopf;
+    $('pKlein').textContent = window.OFFEN.text;
   } else {
     $('pAlt').innerHTML = 'monatlich k\u00fcndbar';
     $('pFahne').style.display = 'none';
@@ -732,7 +738,7 @@ async function bezahlen(passId, knopf, alterText){
    TUEREN_AUF setzen — wie in index.html, preise.html und club.html.
    Der Server sperrt ohnehin (api/_tueren.js); hier geht es darum,
    dass der Knopf nicht in eine Fehlermeldung laeuft. */
-window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : null;   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
+window.TUEREN_AUF = (window.AKTION && window.AKTION.laeuft()) ? window.AKTION.von : (window.OFFEN ? window.OFFEN.aufAb() : null);   /* ab 1.12.2026 dauerhaft offen, siehe aktion.js (OFFEN) */   /* Black Week: 24.-30.11. gehen die Tueren von allein auf, siehe aktion.js */   /* z. B. Date.parse('2026-11-16T00:00:00+01:00') */
 function tuerenZu(){ var n = Date.now(), zu = Date.parse('2026-11-01T00:00:00+01:00');
   return n >= zu && (!window.TUEREN_AUF || n < window.TUEREN_AUF); }
 document.addEventListener('DOMContentLoaded', function(){
@@ -743,19 +749,20 @@ document.addEventListener('DOMContentLoaded', function(){
   if (f) { f.textContent = 'Anmeldung geschlossen'; f.style.display = ''; }
 });
 
+function planWahl(){ return (window.TARIF && window.TARIF.gewaehlt && window.TARIF.gewaehlt.id) || 'premium_month'; }  /* Monat oder 6 Monate - je nach Umschalter (tarif.js) */
 async function premiumKnopf(btn){
   if (tuerenZu()) { location.href = '/index.html#warteliste'; return; }
   meldung('');
   var alt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Einen Moment …';
-  await bezahlen('premium_month', btn, alt);
+  await bezahlen(planWahl(), btn, alt);
 }
 
 setzePremium();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/basis-popup.js?v=2" defer></script>
+<script src="/basis-popup.js?v=3" defer></script>
 <script src="/aktion-popup.js?v=4"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS, AKTION_PREIS_6M,
-         testzeitAktiv, TESTZEIT_TAGE, TESTZEIT_PLAENE } from './_tueren.js';
+         testzeitAktiv, TESTZEIT_TAGE, TESTZEIT_PLAENE, TUEREN_AUF, HALBJAHR_PREIS_AB_0112 } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -140,6 +140,10 @@ function aktuellerPlan(id){
      hier und nicht im Browser. */
   if (p && id === 'premium_6m' && aktionLaeuft()) {
     return Object.assign({}, p, { preis: AKTION_PREIS_6M });
+  }
+  /* Ab 1.12.: Halbjahr 30 % guenstiger (583 statt 834), Julia 26.11. */
+  if (p && id === 'premium_6m' && Date.now() >= TUEREN_AUF) {
+    return Object.assign({}, p, { preis: HALBJAHR_PREIS_AB_0112 });
   }
   const r = PREMIUM_REGULAER[id];
   if (!p || !r || Date.now() < PREMIUM_REGULAER_AB) return p;

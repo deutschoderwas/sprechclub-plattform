@@ -48,16 +48,48 @@
      zu werben, waere dann falsch und angreifbar. Bei 97 € sind es
      30,2 %: Die Aussage stimmt und ist sogar leicht untertrieben. */
   A.prozent = Math.floor((A.spart / A.alt) * 100);             // 30
+  /* Vorschau fuer Julia (So 29.11.): mit ?vorschau=0112 an der Adresse
+     sieht jede Seite so aus wie ab dem 1. Dezember. Nur die Anzeige -
+     die Kasse entscheidet weiter selbst nach der echten Uhr. */
+  var VORSCHAU = /[?&]vorschau=0112\b/.test(location.search);
   A.laeuft = function (jetzt) {
+    if (VORSCHAU) return false;
     var t = jetzt || Date.now();
     return t >= A.von && t < A.bis;
   };
   /* Nur die Leiste, noch kein Angebot. */
   A.vorlaufLaeuft = function (jetzt) {
+    if (VORSCHAU) return false;
     var t = jetzt || Date.now();
     return t >= A.vorlauf && t < A.von;
   };
   window.AKTION = A;
+
+  /* ------------------------------------------------------------
+     AB 1.12.2026: Sprechclub dauerhaft offen, 3 Tage kostenlos.
+     Julia, 26.11.2026: "ab dem 01.12 den Sprechclub fuer 139 Euro
+     wieder anbieten, definitiv offen lassen, aber dafuer 3 Tage
+     kostenlos (nach 3 Tagen wird automatisch abgebucht). Das muss
+     ganz klar vermerkt werden." - Halbjahr ebenso (21:41).
+     Serverseitig dieselben Daten in api/_tueren.js.
+     ------------------------------------------------------------ */
+  var O = {
+    ab: Date.parse('2026-12-01T00:00:00+01:00'),
+    tage: 3,
+    preis: 139,
+    vorschau: VORSCHAU,
+    knopf: '3 Tage kostenlos testen',
+    /* Ueberall derselbe Satz direkt unter dem Knopf. */
+    text: 'Danach 139 € im Monat. Wird nach 3 Tagen automatisch abgebucht. Vorher jederzeit kündbar.',
+    /* Halbjahr ab 1.12.: 30 % weniger, 583 statt 834 (Julia 21:43). */
+    preis6m: 583,
+    alt6m: 834,
+    text6m: 'Danach 583 € für 6 Monate. Wird nach 3 Tagen automatisch abgebucht. Vorher jederzeit kündbar.'
+  };
+  O.offen = function (jetzt) { return VORSCHAU || (jetzt || Date.now()) >= O.ab; };
+  /* Fuer window.TUEREN_AUF: ein Zeitpunkt, ab dem die Tueren offen sind. */
+  O.aufAb = function () { return VORSCHAU ? 1 : O.ab; };
+  window.OFFEN = O;
 
   /* Der Rabatt in der Form, die die Seiten schon kennen: dort steht
      ueberall "var PREIS = 139, RABATT = 0" - RABATT ist der
