@@ -51,6 +51,7 @@ export const FREEBIES = {
     punkte: [
       'Arzt, Amt, Vermieter, Mailbox — Wort für Wort, was du sagen kannst',
       'Mit englischer Übersetzung und der lockeren Alltagsvariante',
+      'Ein ganzer Anruf zum Mitlesen — vom „Guten Tag“ bis zum Auflegen',
       'Mit Buchstabiertafel, damit dein Name am Telefon ankommt',
     ],
     bild:   '/freebies/vorschau/telefon.jpg',
