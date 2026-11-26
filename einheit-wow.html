@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dow-design.css">
 <style>
 :root{
   --tur:#2DD4BF; --tur-d:#14B8A6; --tur-ink:#0A6256; --tur-btn:#06403A;
@@ -236,6 +237,185 @@ body.home .hud,body.home .pbar{display:none;}
 .mword.done .chk{color:#2e7d43;}
 .mgoal{margin-top:20px;font-family:var(--ff-h);font-weight:700;font-size:1.1rem;color:#d7efe9;}
 .mgoal b{color:var(--gold);}
+/* ===== Gerüst v2 (26.11.2026): Lernbogen verstehen → merken → üben → sprechen ===== */
+.stage{justify-content:flex-start;}
+.slide.on{margin:auto 0;}
+.sogehts{display:inline-flex;align-items:center;gap:10px;margin-top:12px;background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.38);color:#d7efe9;border-radius:999px;padding:8px 16px;font-weight:800;font-size:clamp(.92rem,1.3vw,1.05rem);}
+.sogehts b{color:var(--gold);}
+/* Foto + Platzhalter */
+.foto{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,#2b2214,#3a2e17);box-shadow:0 24px 48px rgba(0,0,0,.45);aspect-ratio:4/3;}
+.foto img{width:100%;height:100%;object-fit:cover;display:block;}
+.foto .ph{display:none;}
+.foto.leer{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border:2px dashed rgba(255,206,0,.35);}
+.foto.leer .ph{display:block;font-size:3.6rem;}
+.foto.leer::after{content:"Foto folgt";font-family:var(--ff-h);font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,206,0,.7);}
+.zwei{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px;align-items:center;margin-top:20px;max-width:1100px;}
+.optlist{display:flex;flex-direction:column;gap:11px;}
+.feedback{margin-top:14px;border-radius:16px;padding:14px 18px;font-weight:800;font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.45;display:none;}
+.feedback.on{display:block;animation:pop .25s ease;}
+.feedback.ok{background:#eafaef;color:#1f5b33;}
+.feedback.no{background:#fdeeec;color:#8a1a12;}
+.feedback.info{background:var(--cream2);color:var(--ink);}
+/* Redemittel nach Funktion */
+.rm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;margin-top:20px;}
+.rm-box{background:var(--cream2);color:var(--ink);border-radius:20px;padding:16px 16px 12px;box-shadow:0 22px 44px rgba(0,0,0,.4);border-top:7px solid var(--tur);}
+.rm-box.gold{border-top-color:var(--gold-d);}.rm-box.rot{border-top-color:var(--rot);}.rm-box.lila{border-top-color:#7C5CD6;}
+.rm-f{font-family:var(--ff-h);font-weight:800;font-size:1.02rem;margin-bottom:10px;}
+.rm-i{display:block;width:100%;text-align:left;background:var(--cream);border:1px solid rgba(0,0,0,.06);border-radius:12px;padding:9px 12px;margin-bottom:8px;cursor:pointer;font-family:var(--ff-b);font-size:clamp(.95rem,1.25vw,1.08rem);font-weight:800;color:var(--ink);}
+.rm-i:hover{border-color:var(--tur);}
+.rm-i .bsp{display:none;font-weight:600;font-style:italic;color:#6f6450;margin-top:6px;font-size:.92em;}
+.rm-i.open .bsp{display:flex;gap:8px;align-items:center;}
+mark.m{background:linear-gradient(transparent 55%,rgba(255,206,0,.55) 55%);color:inherit;padding:0 2px;border-radius:3px;}
+.gold mark.m{background:linear-gradient(transparent 55%,rgba(45,212,191,.45) 55%);}
+.say{flex:none;border:none;background:var(--tur);color:var(--tur-btn);width:30px;height:30px;border-radius:999px;cursor:pointer;font-size:.9rem;}
+/* Chat-Dialog */
+.chat{display:flex;flex-direction:column;gap:10px;margin-top:20px;max-width:860px;}
+.bub{max-width:76%;border-radius:20px;padding:12px 16px;font-weight:700;font-size:clamp(1rem,1.45vw,1.2rem);line-height:1.45;box-shadow:0 14px 30px rgba(0,0,0,.3);display:flex;gap:10px;align-items:flex-start;animation:pop .25s ease;}
+.bub .wer{flex:none;width:30px;height:30px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-weight:800;font-size:.85rem;}
+.bub.A{align-self:flex-start;background:var(--cream2);color:var(--ink);border-bottom-left-radius:6px;}
+.bub.A .wer{background:var(--tur);color:var(--tur-btn);}
+.bub.B{align-self:flex-end;background:#2a4b46;color:#fff;border-bottom-right-radius:6px;}
+.bub.B .wer{background:var(--gold);color:#17110A;}
+.bub.B mark.m{background:linear-gradient(transparent 55%,rgba(255,206,0,.45) 55%);}
+.bub .say{margin-left:auto;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.ghost{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-family:var(--ff-h);font-weight:800;font-size:.95rem;border-radius:14px;padding:12px 18px;cursor:pointer;}
+.ghost:hover{background:rgba(255,255,255,.18);}
+/* Puzzle */
+.pz{display:grid;grid-template-columns:1fr 1fr;gap:12px 26px;margin-top:20px;max-width:980px;}
+.pz-col{display:flex;flex-direction:column;gap:10px;}
+.pz-t{background:var(--cream2);color:var(--ink);border:2px solid transparent;border-radius:14px;padding:12px 16px;font-weight:800;font-size:clamp(.98rem,1.4vw,1.15rem);cursor:pointer;text-align:left;font-family:var(--ff-b);box-shadow:0 12px 26px rgba(0,0,0,.3);}
+.pz-t.sel{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,206,0,.25);}
+.pz-t.done{background:#eafaef;color:#1f5b33;border-color:#2e7d43;cursor:default;}
+.pz-t.err{animation:shake .35s;border-color:var(--rot);}
+@keyframes shake{25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+/* Lücken */
+.wbank{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.wbank span{background:rgba(255,206,0,.16);border:1px solid rgba(255,206,0,.45);color:#ffe27a;border-radius:999px;padding:6px 14px;font-weight:800;}
+.gap{display:inline-block;min-width:80px;border:none;border-bottom:3px dashed var(--gold-d);background:rgba(255,206,0,.18);border-radius:8px 8px 0 0;padding:0 10px;font:inherit;font-weight:900;color:inherit;cursor:pointer;}
+.gap.zeig{background:#eafaef;color:#1f5b33;border-bottom-color:#2e7d43;}
+/* Rollenspiel-Karten */
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:20px;max-width:1100px;}
+.rp-card{background:var(--cream2);color:var(--ink);border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 18px 36px rgba(0,0,0,.38);border:none;text-align:left;font-family:var(--ff-b);transition:transform .15s;}
+.rp-card:hover{transform:translateY(-4px);}
+.rp-card .foto{border-radius:0;box-shadow:none;aspect-ratio:16/10;}
+.rp-card .foto.leer .ph{font-size:2.4rem;}
+.rp-card .tt{font-family:var(--ff-h);font-weight:800;font-size:1.05rem;padding:11px 14px 4px;}
+.rp-card .st{padding:0 14px 12px;font-size:.82rem;font-weight:800;color:var(--tur-ink);}
+.rp-card.gespielt .st{color:#2e7d43;}
+.rp-det{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:22px;margin-top:16px;max-width:1150px;align-items:start;}
+.rolle2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.rk{background:var(--cream2);color:var(--ink);border-radius:16px;padding:14px 16px;font-weight:800;line-height:1.4;box-shadow:0 14px 28px rgba(0,0,0,.3);border-left:6px solid var(--tur);}
+.rk.b{border-left-color:var(--gold-d);}
+.rk small{display:block;font-family:var(--ff-h);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#8a7d58;margin-bottom:4px;}
+.ziel{margin-top:12px;background:rgba(255,206,0,.15);border:1px solid rgba(255,206,0,.45);border-radius:14px;padding:11px 15px;font-weight:800;color:#ffe9a6;}
+/* Debatte */
+.these{font-family:var(--ff-h);font-weight:800;font-size:clamp(1.4rem,2.8vw,2.2rem);line-height:1.2;max-width:980px;margin-top:14px;}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;max-width:1000px;}
+.pc .card h4{font-family:var(--ff-h);font-weight:800;margin-bottom:8px;}
+.pc .card li{font-weight:700;margin:6px 0 6px 18px;line-height:1.4;}
+.pc .pro{border-top:7px solid #2e7d43;}.pc .contra{border-top:7px solid var(--rot);}
+/* 90-Sekunden-Challenge */
+.ch-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;max-width:960px;}
+.ch{display:flex;gap:16px;align-items:center;background:var(--cream2);color:var(--ink);border-radius:18px;padding:14px 18px;box-shadow:0 16px 32px rgba(0,0,0,.34);}
+.ch .q{font-family:var(--ff-h);font-weight:800;font-size:clamp(1.02rem,1.5vw,1.2rem);}
+.ch .hw{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.ch .hw span{background:#efe6cd;border-radius:999px;padding:3px 11px;font-size:.85rem;font-weight:800;color:#5d5036;}
+.ch .go2{margin-left:auto;flex:none;border:none;border-radius:14px;padding:12px 16px;background:var(--gold);color:#17110A;font-family:var(--ff-h);font-weight:800;cursor:pointer;min-width:110px;font-size:1rem;}
+.ch .go2.run{background:var(--rot);color:#fff;}
+.ch .go2.fertig{background:#2e7d43;color:#fff;}
+/* Quiz-Anschluss */
+.anschluss{margin-top:14px;background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.4);border-radius:16px;padding:13px 17px;font-weight:800;color:#d7efe9;max-width:640px;}
+.anschluss b{color:var(--gold);}
+/* Simulator */
+.sim{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px;align-items:start;margin-top:16px;max-width:1120px;}
+.sim-text{font-size:clamp(1.08rem,1.6vw,1.3rem);font-weight:800;line-height:1.5;}
+.sim-hint{margin:12px 0;font-weight:800;color:#ffe27a;}
+.sim-folge{margin-top:14px;background:var(--cream2);color:var(--ink);border-radius:16px;padding:14px 18px;font-weight:800;line-height:1.45;display:flex;gap:12px;align-items:flex-start;}
+.sim-folge .gs{font-size:2rem;line-height:1;}
+.sim-ende{max-width:760px;margin:20px auto 0;text-align:center;}
+.sim-ende .gross{font-family:var(--ff-h);font-weight:800;font-size:clamp(3rem,7vw,5rem);color:var(--gold);}
+.slide > .big-word{display:table;margin-top:18px;}
+.clock{top:13vh;}
+@media(max-width:900px){.zwei,.rp-det,.sim,.pz,.pc,.rolle2{grid-template-columns:1fr;}}
+
+/* ===== Papier-Look (Julia 26.11.: „zu schwarz“, „zu KI-mäßig“) – hell, warm, handgemacht ===== */
+:root{--paper:#FBF3DF;--paper2:#FFFDF6;--line:#1E1B16;--dust:#DCE8EC;--dust-d:#2F6F7D;}
+body{background:var(--paper);color:var(--ink);}
+.scene{background:var(--paper);} .scene .photo,.blob{display:none;} .scene::after{display:none;}
+.tex{opacity:.6;mix-blend-mode:multiply;} .vig{box-shadow:inset 0 0 160px rgba(120,90,30,.10);} .motif{opacity:.07;}
+.motif svg{stroke:var(--line);}
+.s-h,.frage-q,.these,.big-word h1,.home-h,.home-logo{color:var(--ink);text-shadow:none;}
+.s-sub,.home-sub{color:#5b5242;text-shadow:none;}
+.card,.opt,.rm-box,.pz-t,.ch,.rp-card,.t-card,.rolle,.task-card,.fbox.antw,.bub.A,.rk,.sim-folge,.feedback,.niv-card,.ffront,.gpop-card{background:var(--paper2);border:2px solid var(--line)!important;box-shadow:4px 4px 0 var(--line)!important;}
+.card:hover,.t-card:hover,.rp-card:hover,.opt:hover{box-shadow:6px 6px 0 var(--line)!important;}
+.rm-box{border-top:8px solid var(--tur)!important;} .rm-box.gold{border-top-color:var(--gold-d)!important;} .rm-box.rot{border-top-color:var(--rot)!important;} .rm-box.lila{border-top-color:#7C5CD6!important;}
+.rolle{border-top:8px solid var(--tur)!important;} .rolle:nth-child(2){border-top-color:var(--gold-d)!important;} .rolle:nth-child(3){border-top-color:var(--rot)!important;}
+.pc .pro{border-top:8px solid #2e7d43!important;} .pc .contra{border-top:8px solid var(--rot)!important;}
+.rk{border-left:8px solid var(--tur)!important;} .rk.b{border-left-color:var(--gold-d)!important;}
+.opt.right,.pz-t.done{background:#E6F6EA!important;border-color:#2e7d43!important;color:#1f5b33;}
+.opt.wrong{background:#FDECEA!important;border-color:var(--rot)!important;}
+.opt.dim{opacity:.45;}
+.pz-t.sel{border-color:var(--gold-d)!important;box-shadow:4px 4px 0 var(--gold-d)!important;}
+.bub.B,.folge,.anschluss{background:var(--dust);color:var(--ink);border:2px solid var(--line);box-shadow:4px 4px 0 var(--line);}
+.bub.B .wer{background:var(--dust-d);color:#fff;} .bub.A .wer{background:var(--tur);color:var(--ink);}
+.folge .lbl,.folge li,.anschluss b{color:var(--ink);} .folge li::before{color:var(--dust-d);}
+.antw .lbl{color:var(--tur-ink);}
+.sogehts{background:transparent;border:none;border-left:4px solid var(--gold-d);border-radius:0;color:#3f382c;padding:4px 0 4px 12px;}
+.sogehts b{color:var(--ink);background:linear-gradient(transparent 58%,rgba(255,206,0,.65) 58%);}
+.kicker,.zusatz-badge,.lv{border:2px solid var(--line);box-shadow:none;}
+.lv{background:var(--paper2);color:var(--ink);}
+.done-btn{border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);color:var(--ink);}
+.ghost,.back,.to-themen{background:var(--paper2);border:2px solid var(--line);color:var(--ink);}
+.hud .pill{background:var(--paper2);border:2px solid var(--line);color:var(--ink);backdrop-filter:none;}
+.hud .pts{color:#8a6600;} .hud .tmr{color:var(--ink);}
+.nav{background:none;} .nav button{border:2px solid var(--line);box-shadow:3px 3px 0 var(--line);}
+.dot{background:rgba(30,27,22,.18);} .dot.on{background:var(--ink);}
+.counter{color:rgba(30,27,22,.45);} .pbar{box-shadow:none;}
+.merk{box-shadow:6px 6px 0 var(--gold-d);border:2px solid var(--line);}
+.tipp{background:#FFF3C4;border:2px solid var(--line);box-shadow:4px 4px 0 var(--line);} .tipp .t{color:var(--ink);}
+.ablauf{background:var(--paper2);border:2px dashed var(--line);} .ablauf .t b{color:var(--ink);}
+.mgoal,.sim-hint{color:#5b5242;} .mgoal b{color:var(--ink);}
+.ziel,.wbank span{background:#FFF3C4;border:2px solid var(--line);color:var(--ink);}
+.foto{background:repeating-linear-gradient(45deg,#F3E8CC 0 12px,#EEE0BD 12px 24px);border:2px solid var(--line);box-shadow:4px 4px 0 var(--line);}
+.foto.leer::after{color:#7a6326;} .rp-card .foto{border:none;border-bottom:2px solid var(--line);box-shadow:none;}
+.bereich-h{color:var(--ink);} .bereich-h::after{background:rgba(30,27,22,.15);}
+[style*="color:var(--gold)"]{color:#8a6600!important;}
+.gloss::after{color:#b38600;} .chunk{background:var(--paper);}
+.say{border:2px solid var(--line);}
+.gap{background:#FFF3C4;}
+
+/* ===== EIN Design (Julia 26.11.2026, Variante C) – Werte kommen aus dow-design.css ===== */
+:root{--tur:var(--dow-tuerkis);--tur-d:var(--dow-tuerkis-dunkel);--tur-ink:var(--dow-tuerkis-dunkel);--tur-btn:#fff;
+  --ink:var(--dow-ink);--rot:var(--dow-rot);--gold:var(--dow-gold-hell);--gold-d:var(--dow-gold);--gold-ink:var(--dow-ink);
+  --ff-h:var(--dow-ff-h);--ff-b:var(--dow-ff-b);--paper:var(--dow-bg);--paper2:var(--dow-card);--line:var(--dow-ink);
+  --dust:var(--dow-staubblau);--dust-d:var(--dow-tuerkis-dunkel);--cream:#F4EFE2;--cream2:var(--dow-card);}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:41;background:linear-gradient(90deg,var(--dow-ink) 0 25%,var(--dow-rot) 25% 50%,var(--dow-gold) 50% 75%,var(--dow-tuerkis) 75% 100%);}
+.pbar{top:4px;height:4px;background:var(--dow-tuerkis);}
+.tex{opacity:.35;}
+.card,.opt,.rm-box,.pz-t,.ch,.rp-card,.t-card,.rolle,.task-card,.fbox.antw,.bub.A,.rk,.sim-folge,.feedback,.niv-card,.ffront,.gpop-card,
+.bub.B,.folge,.anschluss,.tipp,.foto,.ziel,.wbank span{border-width:1.5px!important;box-shadow:var(--dow-schatten)!important;}
+.card:hover,.t-card:hover,.rp-card:hover,.opt:hover{box-shadow:var(--dow-schatten-hover)!important;}
+.wbank span,.ziel{box-shadow:none!important;}
+.rp-card .foto{box-shadow:none!important;}
+.opt.right,.pz-t.done{background:var(--dow-tuerkis-soft)!important;border-color:var(--dow-tuerkis)!important;color:var(--dow-tuerkis-dunkel);}
+.done-btn{background:var(--dow-gold);color:var(--dow-ink);border:1.5px solid var(--dow-ink);box-shadow:var(--dow-schatten);}
+.done-btn:disabled{background:var(--dow-gruen-soft);color:var(--dow-gruen);}
+.ghost,.back,.to-themen,.hud .pill,.nav button,.lv,.kicker,.zusatz-badge{border-width:1.5px;}
+.kicker,.zusatz-badge{background:var(--dow-gold-hell);}
+.merk{box-shadow:5px 5px 0 var(--dow-gold);}
+.fakt .ic,.ablauf .ic{background:var(--dow-tuerkis);color:#fff;}
+.bub.A .wer{background:var(--dow-tuerkis);color:#fff;} .bub.B .wer{background:var(--dow-ink);color:#fff;}
+.sit.s1::before{background:var(--dow-tuerkis);} .s1 .badge{background:var(--dow-tuerkis);} .s1 i{background:var(--dow-tuerkis);}
+.s1 .tag{background:var(--dow-tuerkis-soft);color:var(--dow-tuerkis-dunkel);}
+/* Niveau-Farben: Türkis / Gold / Rot */
+.niv-card.ab .top,.niv-card.ab .ring{background:var(--dow-ab)!important;color:#fff!important;}
+.niv-card.bb .top,.niv-card.bb .ring{background:var(--dow-bb)!important;color:#fff!important;}
+.niv-card.bc .top,.niv-card.bc .ring{background:var(--dow-bc)!important;color:#fff!important;}
+.lv2.ab{background:var(--dow-ab);color:#fff;} .lv2.bb{background:var(--dow-bb);color:#fff;} .lv2.bc{background:var(--dow-bc);color:#fff;}
+.badge-niv.ab .lv{background:var(--dow-ab)!important;color:#fff!important;}.badge-niv.bb .lv{background:var(--dow-bb)!important;color:#fff!important;}.badge-niv.bc .lv{background:var(--dow-bc)!important;color:#fff!important;}
+.niv-card .cnt{background:var(--dow-tuerkis-soft);color:var(--dow-tuerkis-dunkel);}
+.s-h,.home-h,.big-word h1,.frage-q,.these{font-family:var(--dow-ff-h);font-weight:700;}
 </style>
 </head>
 <body>
@@ -464,180 +644,2013 @@ stufe('puenktlichkeit','bc',{
 
 /* ---------- DUZEN & SIEZEN · 🟨 A2·B1 ---------- */
 stufe('duzen','ab',{
-  titel:'Duzen & Siezen', emoji:'🤝', bereich:'Landeskunde DACH',
-  intro:'„Du“ oder „Sie“? Hier lernt ihr, wann man was sagt.',
-  glossar:{
-    'duzen':{e:'😊',t:'„du“ sagen. Das ist freundlich und locker.'},
-    'siezen':{e:'🎩',t:'„Sie“ sagen. Das ist höflich und mit Abstand.'},
-    'Fremde':{e:'🚶',t:'Menschen, die du nicht kennst.'}
+ "titel": "Duzen & Siezen",
+ "emoji": "🤝",
+ "bereich": "Landeskunde DACH",
+ "intro": "„Du“ oder „Sie“? Hier lernt ihr, wann man was sagt.",
+ "einstieg": {
+  "bild": "bilder/landeskunde/duzen-einstieg.webp",
+  "frage": "Zwei Menschen treffen sich zum ersten Mal im Büro. Was sagen sie wohl?",
+  "o": [
+   "„Hallo, wie geht’s dir?“",
+   "„Guten Tag, wie geht es Ihnen?“",
+   "Gar nichts."
+  ],
+  "r": 1,
+  "aufloesung": "Bei der Arbeit und mit Fremden sagt man zuerst meistens „Sie“. Das „du“ kommt oft später."
+ },
+ "glossar": {
+  "duzen": {
+   "e": "😊",
+   "t": "„du“ sagen. Das ist freundlich und locker."
   },
-  dach:[
-    'Zu Familie, Freunden und Kindern sagt man „du“. Das heißt <g>duzen</g>.',
-    'Zu <g>Fremde</g>n, beim Arzt und beim Amt sagt man „Sie“. Das heißt <g>siezen</g>.',
-    'Mit „Sie“ sagt man auch „Herr“ oder „Frau“ und den Nachnamen: „Guten Tag, Frau Weber!“',
-    'Unter jungen Leuten und im Sportverein sagt man fast immer „du“.'
-  ],
-  skala:{titel:'🤝 Du oder Sie?', legende:'🔴 immer „Sie“ &nbsp; 🟡 kommt darauf an &nbsp; 🟢 meistens „du“. Und wie ist das in eurem Land?'},
-  situationen:[
-    {o:'Arzt & Amt', ic:'🏛️', s:3, meter:95, w:'Sie', t:'Hier sagt man immer „Sie“.'},
-    {o:'Arbeit', ic:'💼', s:2, meter:55, w:'mal so, mal so', t:'In manchen Firmen „du“, in anderen „Sie“.'},
-    {o:'Freunde & Familie', ic:'🏡', s:1, meter:10, w:'du', t:'Hier sagt man immer „du“.'}
-  ],
-  merk:'Kennst du die Person nicht? Dann sag „Sie“. Bietet sie dir das „du“ an, darfst du „du“ sagen.',
-  ablauf:'Lest zuerst gemeinsam die Fakten. Dann nimmt sich <b>eine Person eine Frage</b> und liest sie vor. <b>Alle antworten reihum</b> – nutzt die Antwort-Hilfen, wenn ihr nicht weiterwisst.',
-  fragen:[
-    {q:'Zu wem sagst du „du“?', folge:['Sagst du „du“ zu deinen Nachbarn?','Sagst du „du“ zu deinem Chef?'], antw:['Ich sage „du“ zu meiner Familie und zu meinen Freunden.','Zu meinen Kollegen sage ich auch „du“.','Zu meinen Nachbarn sage ich noch „Sie“.']},
-    {q:'Gibt es „du“ und „Sie“ auch in deiner Sprache?', folge:['Wie sagt man das in deiner Sprache?','Ist das für dich schwer auf Deutsch?'], antw:['Ja, bei uns gibt es das auch.','Nein, in meiner Sprache gibt es nur ein Wort.','Am Anfang war das für mich schwer.']},
-    {q:'Was machst du, wenn du nicht weißt: „du“ oder „Sie“?', folge:['Hast du schon mal einen Fehler gemacht?','Fragst du dann einfach?'], antw:['Dann sage ich lieber „Sie“.','Ich höre zuerst, was die andere Person sagt.','Ich frage einfach: „Duzen wir uns?“']}
-  ],
-  chunks:[
-    {h:'🤝 Das „du“ anbieten', l:['Wollen wir uns duzen?','Sag einfach „du“ zu mir!','Ich bin Anna.']},
-    {h:'🙋 Unsicher sein', l:['Darf ich „du“ sagen?','Entschuldigung, ich war unsicher.','Bei uns ist das anders.']}
-  ],
-  vokabeln:[
-    {w:'duzen', bsp:'Wir duzen uns.', ue:'„du“ zu jemandem sagen'},
-    {w:'siezen', bsp:'Beim Arzt siezt man sich.', ue:'„Sie“ zu jemandem sagen'},
-    {w:'höflich', bsp:'„Sie“ ist höflich.', ue:'nett und mit Respekt'},
-    {w:'der Nachname', bsp:'Mein Nachname ist Weber.', ue:'der Familienname, z. B. „Weber“'},
-    {w:'der Kollege', bsp:'Mein Kollege heißt Tom.', ue:'Person, mit der du arbeitest'}
-  ],
-  tipp:'Wenn du unsicher bist: Sag zuerst „Sie“. Das ist nie falsch.',
-  mission:{t:'Benutzt 5 neue Wörter', d:'Jedes neue Wort aus dieser Stunde zählt. Schafft ihr 5?', pts:20},
-  aktiv:{
-    titel:'Spielt eine kleine Szene', emoji:'🎭',
-    aufgabe:'Erster Tag bei der Arbeit. Ihr trefft euch in der Küche und kennt euch noch nicht.',
-    rollenA:'🙋 Du bist neu. Stell dich vor. Sag „Sie“.',
-    rollenB:'☕ Du arbeitest schon lange hier. Biete das „du“ an.',
-    hilfe:['Guten Morgen! Ich bin neu hier.','Mein Name ist …','Wollen wir uns duzen? Ich bin …','Gern! Ich bin …'],
-    pts:15
+  "siezen": {
+   "e": "🎩",
+   "t": "„Sie“ sagen. Das ist höflich und mit Abstand."
   },
-  quiz:[
-    {q:'Du gehst zum Arzt. Was sagst du?',o:['„Sie“','„du“','Egal'],r:0},
-    {q:'Was sagst du zu deinem kleinen Bruder?',o:['„Sie“','„du“','„Herr“'],r:1},
-    {q:'Du bist unsicher. Was ist am besten?',o:['Ich sage „du“.','Ich sage lieber „Sie“.','Ich sage nichts.'],r:1}
+  "Fremde": {
+   "e": "🚶",
+   "t": "Menschen, die du nicht kennst."
+  }
+ },
+ "dach": [
+  "Zu Familie, Freunden und Kindern sagt man „du“. Das heißt <g>duzen</g>.",
+  "Zu <g>Fremde</g>n, beim Arzt und beim Amt sagt man „Sie“. Das heißt <g>siezen</g>.",
+  "Mit „Sie“ sagt man auch „Herr“ oder „Frau“ und den Nachnamen: „Guten Tag, Frau Weber!“",
+  "Unter jungen Leuten und im Sportverein sagt man fast immer „du“."
+ ],
+ "skala": {
+  "titel": "🤝 Du oder Sie?",
+  "legende": "🔴 immer „Sie“ &nbsp; 🟡 kommt darauf an &nbsp; 🟢 meistens „du“. Und wie ist das in eurem Land?"
+ },
+ "situationen": [
+  {
+   "o": "Arzt & Amt",
+   "ic": "🏛️",
+   "s": 3,
+   "meter": 95,
+   "w": "Sie",
+   "t": "Hier sagt man immer „Sie“."
+  },
+  {
+   "o": "Arbeit",
+   "ic": "💼",
+   "s": 2,
+   "meter": 55,
+   "w": "mal so, mal so",
+   "t": "In manchen Firmen „du“, in anderen „Sie“."
+  },
+  {
+   "o": "Freunde & Familie",
+   "ic": "🏡",
+   "s": 1,
+   "meter": 10,
+   "w": "du",
+   "t": "Hier sagt man immer „du“."
+  }
+ ],
+ "redemittel": [
+  {
+   "funktion": "Jemanden mit „Sie“ begrüßen",
+   "farbe": "tuerkis",
+   "items": [
+    {
+     "s": "Guten Tag, <m>Frau</m> Weber!",
+     "bsp": "Guten Tag, Frau Weber! Wie geht es Ihnen?"
+    },
+    {
+     "s": "Wie geht es <m>Ihnen</m>?",
+     "bsp": "Danke, gut. Und wie geht es Ihnen?"
+    },
+    {
+     "s": "Darf ich <m>Sie</m> etwas fragen?",
+     "bsp": "Entschuldigung, darf ich Sie etwas fragen?"
+    },
+    {
+     "s": "Auf <m>Wiedersehen</m>!",
+     "bsp": "Vielen Dank und auf Wiedersehen!"
+    }
+   ]
+  },
+  {
+   "funktion": "Das „du“ anbieten",
+   "farbe": "gold",
+   "items": [
+    {
+     "s": "<m>Wollen wir uns duzen</m>?",
+     "bsp": "Wir arbeiten jetzt zusammen. Wollen wir uns duzen?"
+    },
+    {
+     "s": "Sag einfach „<m>du</m>“ zu mir!",
+     "bsp": "Ich bin Anna. Sag einfach „du“ zu mir!"
+    },
+    {
+     "s": "Ich bin <m>der</m> Tom.",
+     "bsp": "Hallo, ich bin der Tom."
+    },
+    {
+     "s": "<m>Gern</m>, ich bin Lisa.",
+     "bsp": "Gern! Ich bin Lisa."
+    }
+   ]
+  },
+  {
+   "funktion": "Wenn du unsicher bist",
+   "farbe": "rot",
+   "items": [
+    {
+     "s": "<m>Darf ich „du“ sagen</m>?",
+     "bsp": "Entschuldigung, darf ich „du“ sagen?"
+    },
+    {
+     "s": "<m>Duzen wir uns</m> schon?",
+     "bsp": "Ich weiß es nicht mehr: Duzen wir uns schon?"
+    },
+    {
+     "s": "Oh, <m>Entschuldigung</m>!",
+     "bsp": "Oh, Entschuldigung! Ich meine natürlich „Sie“."
+    },
+    {
+     "s": "Bei uns ist das <m>anders</m>.",
+     "bsp": "Bei uns ist das anders. Wir sagen immer „du“."
+    }
+   ]
+  }
+ ],
+ "dialog": {
+  "situation": "Erster Tag im neuen Job. Herr Klein zeigt Ana die Küche.",
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "<m>Guten Morgen, Frau</m> Silva! Willkommen im Team."
+   },
+   {
+    "wer": "B",
+    "t": "Guten Morgen, Herr Klein! Vielen Dank."
+   },
+   {
+    "wer": "A",
+    "t": "Hier ist die Küche. Möchten <m>Sie</m> einen Kaffee?"
+   },
+   {
+    "wer": "B",
+    "t": "Ja, gern. Danke!"
+   },
+   {
+    "wer": "A",
+    "t": "Übrigens, ich bin der Markus. <m>Wollen wir uns duzen</m>?"
+   },
+   {
+    "wer": "B",
+    "t": "<m>Gern</m>! Ich bin Ana."
+   },
+   {
+    "wer": "A",
+    "t": "Super, Ana. Wie trinkst <m>du</m> deinen Kaffee?"
+   },
+   {
+    "wer": "B",
+    "t": "Mit Milch, bitte. Danke, Markus!"
+   }
   ]
+ },
+ "wassagen": [
+  {
+   "situation": "Du gehst zum Arzt. Was sagst du zur Ärztin?",
+   "o": [
+    "„Hallo, wie geht’s dir?“",
+    "„Guten Tag, Frau Doktor Meier.“",
+    "„Hey!“"
+   ],
+   "r": 1,
+   "warum": "Beim Arzt sagt man „Sie“ und „Frau/Herr“ + Nachname."
+  },
+  {
+   "situation": "Deine neue Kollegin sagt: „Ich bin Lisa.“ Was antwortest du?",
+   "o": [
+    "„Freut mich, Lisa! Ich bin …“",
+    "„Guten Tag, Frau Lisa.“",
+    "„Wie heißen Sie?“"
+   ],
+   "r": 0,
+   "warum": "Sie sagt ihren Vornamen. Das heißt: Ihr könnt „du“ sagen."
+  },
+  {
+   "situation": "Du sprichst mit einem kleinen Kind im Park.",
+   "o": [
+    "„Wie heißen Sie?“",
+    "„Wie heißt du?“",
+    "„Wie heißt ihr Name?“"
+   ],
+   "r": 1,
+   "warum": "Zu Kindern sagt man immer „du“."
+  },
+  {
+   "situation": "Du sagst aus Versehen „du“ zur Nachbarin. Was jetzt?",
+   "o": [
+    "Nichts sagen.",
+    "„Oh, Entschuldigung! Ich meine „Sie“.“",
+    "Weglaufen."
+   ],
+   "r": 1,
+   "warum": "Eine kurze Entschuldigung reicht. Das ist kein Drama."
+  },
+  {
+   "situation": "Du bist unsicher: „du“ oder „Sie“?",
+   "o": [
+    "Immer „du“.",
+    "Zuerst „Sie“.",
+    "Gar nicht sprechen."
+   ],
+   "r": 1,
+   "warum": "„Sie“ ist nie falsch. Das „du“ kann später kommen."
+  }
+ ],
+ "puzzle": [
+  [
+   "Wollen wir",
+   "uns duzen?"
+  ],
+  [
+   "Wie geht es",
+   "Ihnen?"
+  ],
+  [
+   "Sag einfach",
+   "„du“ zu mir!"
+  ],
+  [
+   "Darf ich",
+   "„du“ sagen?"
+  ],
+  [
+   "Oh, Entschuldigung,",
+   "ich meine „Sie“."
+  ],
+  [
+   "Guten Tag,",
+   "Herr Becker!"
+  ]
+ ],
+ "luecken": {
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "Guten Tag, ___ Schneider!",
+    "loes": "Frau"
+   },
+   {
+    "wer": "B",
+    "t": "Guten Tag! Wie geht es ___?",
+    "loes": "Ihnen"
+   },
+   {
+    "wer": "A",
+    "t": "Gut, danke. ___ wir uns duzen?",
+    "loes": "Wollen"
+   },
+   {
+    "wer": "B",
+    "t": "Ja, ___! Ich bin Paula.",
+    "loes": "gern"
+   },
+   {
+    "wer": "A",
+    "t": "Und ich bin Ben. Woher kommst ___, Paula?",
+    "loes": "du"
+   }
+  ],
+  "woerter": [
+   "Frau",
+   "Ihnen",
+   "Wollen",
+   "gern",
+   "du"
+  ]
+ },
+ "rollen": [
+  {
+   "titel": "Beim Bäcker",
+   "bild": "bilder/landeskunde/duzen-rp-baecker.webp",
+   "a": "🙋 Du kaufst Brötchen. Sag „Sie“.",
+   "b": "🥐 Du arbeitest beim Bäcker. Sei freundlich.",
+   "ziel": "Kauft 4 Brötchen und sagt höflich Tschüss.",
+   "hilfe": [
+    "Guten Morgen! Ich hätte gern vier Brötchen.",
+    "Möchten Sie noch etwas?",
+    "Nein danke, das ist alles.",
+    "Einen schönen Tag noch!"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Guten Morgen! Ich hätte gern vier Brötchen, bitte."
+    },
+    {
+     "wer": "B",
+     "t": "Gern. Möchten Sie noch etwas?"
+    },
+    {
+     "wer": "A",
+     "t": "Nein danke. Was macht das?"
+    },
+    {
+     "wer": "B",
+     "t": "2,40 Euro, bitte. Einen schönen Tag noch!"
+    }
+   ]
+  },
+  {
+   "titel": "Im Sportverein",
+   "bild": "bilder/landeskunde/duzen-rp-verein.webp",
+   "a": "⚽ Du bist neu im Verein. Stell dich vor.",
+   "b": "🏃 Du bist schon lange dabei. Sag gleich „du“.",
+   "ziel": "Lernt euch kennen und verabredet euch zum Training.",
+   "hilfe": [
+    "Hallo, ich bin neu hier.",
+    "Hi! Ich bin Jonas. Wie heißt du?",
+    "Wann ist das nächste Training?",
+    "Komm doch am Dienstag!"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Hallo, ich bin neu hier. Ich heiße Mira."
+    },
+    {
+     "wer": "B",
+     "t": "Hi Mira! Ich bin Jonas. Spielst du schon lange Fußball?"
+    },
+    {
+     "wer": "A",
+     "t": "Seit zwei Jahren. Wann ist das nächste Training?"
+    },
+    {
+     "wer": "B",
+     "t": "Am Dienstag um sieben. Komm doch!"
+    }
+   ]
+  },
+  {
+   "titel": "Die neue Nachbarin",
+   "bild": "bilder/landeskunde/duzen-rp-nachbarin.webp",
+   "a": "🏡 Du bist neu im Haus. Stell dich mit „Sie“ vor.",
+   "b": "👵 Du wohnst schon lange hier. Biete am Ende das „du“ an.",
+   "ziel": "Stellt euch vor – und am Ende sagt ihr „du“.",
+   "hilfe": [
+    "Guten Tag, ich wohne jetzt im zweiten Stock.",
+    "Herzlich willkommen!",
+    "Ich bin übrigens die Helga. Sag doch „du“!",
+    "Gern, ich bin …"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Guten Tag! Ich wohne jetzt im zweiten Stock. Ich bin Frau Ahmadi."
+    },
+    {
+     "wer": "B",
+     "t": "Herzlich willkommen, Frau Ahmadi! Ich bin Frau Krause."
+    },
+    {
+     "wer": "A",
+     "t": "Freut mich sehr!"
+    },
+    {
+     "wer": "B",
+     "t": "Ach, sag doch einfach „du“. Ich bin die Helga."
+    },
+    {
+     "wer": "A",
+     "t": "Gern, Helga! Ich bin Leyla."
+    }
+   ]
+  },
+  {
+   "titel": "Der Fehler",
+   "bild": "bilder/landeskunde/duzen-rp-fehler.webp",
+   "a": "😅 Du sagst aus Versehen „du“ zum Chef.",
+   "b": "👔 Du bist der Chef. Reagiere freundlich.",
+   "ziel": "Rettet die Situation mit einer Entschuldigung.",
+   "hilfe": [
+    "Hast du kurz Zeit? – Oh, Entschuldigung!",
+    "Ich meine: Haben Sie kurz Zeit?",
+    "Kein Problem!",
+    "Was kann ich für Sie tun?"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Hast du kurz Zeit? Oh, Entschuldigung! Haben Sie kurz Zeit?"
+    },
+    {
+     "wer": "B",
+     "t": "Kein Problem! Ja, natürlich. Was gibt es?"
+    },
+    {
+     "wer": "A",
+     "t": "Ich habe eine Frage zum Termin morgen."
+    }
+   ]
+  }
+ ],
+ "fragen": [
+  {
+   "q": "Zu wem sagst du „du“?",
+   "folge": [
+    "Sagst du „du“ zu deinen Nachbarn?",
+    "Sagst du „du“ zu deinem Chef?"
+   ],
+   "antw": [
+    "Ich sage „du“ zu meiner Familie und zu meinen Freunden.",
+    "Zu meinen Kollegen sage ich auch „du“.",
+    "Zu meinen Nachbarn sage ich noch „Sie“."
+   ]
+  },
+  {
+   "q": "Gibt es „du“ und „Sie“ auch in deiner Sprache?",
+   "folge": [
+    "Wie sagt man das in deiner Sprache?",
+    "Ist das für dich schwer auf Deutsch?"
+   ],
+   "antw": [
+    "Ja, bei uns gibt es das auch.",
+    "Nein, in meiner Sprache gibt es nur ein Wort.",
+    "Am Anfang war das für mich schwer."
+   ]
+  },
+  {
+   "q": "Was machst du, wenn du nicht weißt: „du“ oder „Sie“?",
+   "folge": [
+    "Hast du schon mal einen Fehler gemacht?",
+    "Fragst du dann einfach?"
+   ],
+   "antw": [
+    "Dann sage ich lieber „Sie“.",
+    "Ich höre zuerst, was die andere Person sagt.",
+    "Ich frage einfach: „Duzen wir uns?“"
+   ]
+  }
+ ],
+ "challenge": [
+  {
+   "frage": "Zu wem sagst du „du“ – und zu wem „Sie“?",
+   "hilfe": [
+    "Familie",
+    "Freunde",
+    "Chef",
+    "Arzt",
+    "Nachbarn"
+   ]
+  },
+  {
+   "frage": "Wie ist das mit „du“ und „Sie“ in deinem Land?",
+   "hilfe": [
+    "bei uns",
+    "höflich",
+    "immer",
+    "nie",
+    "anders"
+   ]
+  },
+  {
+   "frage": "Erzähl von einem Fehler mit „du“ oder „Sie“.",
+   "hilfe": [
+    "aus Versehen",
+    "peinlich",
+    "Entschuldigung",
+    "lachen"
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "q": "Was sagst du zur Ärztin?",
+   "o": [
+    "„Sie“",
+    "„du“",
+    "„ihr“"
+   ],
+   "r": 0,
+   "anschluss": "Wann warst du das letzte Mal beim Arzt?"
+  },
+  {
+   "q": "Was sagt man zu einem Kind?",
+   "o": [
+    "„du“",
+    "„Sie“",
+    "„Herr“"
+   ],
+   "r": 0,
+   "anschluss": "Hast du Kinder in der Familie?"
+  },
+  {
+   "q": "Welcher Satz ist höflich?",
+   "o": [
+    "„Wie geht es Ihnen?“",
+    "„Wie geht’s?“",
+    "„Was willst du?“"
+   ],
+   "r": 0,
+   "anschluss": "Wen hast du heute schon so begrüßt?"
+  },
+  {
+   "q": "Was sagt man, wenn man das „du“ anbietet?",
+   "o": [
+    "„Wollen wir uns duzen?“",
+    "„Wie alt sind Sie?“",
+    "„Tschüss!“"
+   ],
+   "r": 0,
+   "anschluss": "Hat dir schon mal jemand das „du“ angeboten?"
+  },
+  {
+   "q": "Du bist unsicher. Was ist am besten?",
+   "o": [
+    "„Sie“ sagen",
+    "„du“ sagen",
+    "nichts sagen"
+   ],
+   "r": 0,
+   "anschluss": "Wann warst du zuletzt unsicher?"
+  }
+ ],
+ "merk": "Kennst du die Person nicht? Dann sag „Sie“. Bietet sie dir das „du“ an, darfst du „du“ sagen.",
+ "tipp": "Wenn du unsicher bist: Sag zuerst „Sie“. Das ist nie falsch.",
+ "simulator": {
+  "intro": "Ihr seid neu in Deutschland. Heute ist euer erster Tag in der neuen Stadt. Einigt euch bei jeder Szene auf EINE Antwort – und sagt, warum!",
+  "start": "s1",
+  "szenen": {
+   "s1": {
+    "bild": "bilder/landeskunde/duzen-sim-amt.webp",
+    "text": "Ihr seid beim Bürgeramt. Der Mann am Schalter sagt: „Guten Tag. Was kann ich für Sie tun?“",
+    "optionen": [
+     {
+      "t": "„Hallo! Ich will mich anmelden.“",
+      "folge": "Der Mann schaut kurz komisch. Es klappt, aber er ist etwas kühl.",
+      "punkte": 1,
+      "next": "s2"
+     },
+     {
+      "t": "„Guten Tag! Ich möchte mich anmelden, bitte.“",
+      "folge": "Der Mann lächelt. Alles geht schnell.",
+      "punkte": 3,
+      "next": "s2"
+     },
+     {
+      "t": "„Hey, wie geht’s dir?“",
+      "folge": "Der Mann sagt: „Mir geht es gut, danke. Und Ihnen?“ Ups – zu locker!",
+      "punkte": 0,
+      "next": "s2"
+     }
+    ]
+   },
+   "s2": {
+    "bild": "bilder/landeskunde/duzen-sim-baecker.webp",
+    "text": "Danach beim Bäcker. Die Verkäuferin ist jung und sagt: „Na, was darf’s sein?“",
+    "optionen": [
+     {
+      "t": "„Guten Morgen! Ich hätte gern ein Brötchen, bitte.“",
+      "folge": "Perfekt. Freundlich und höflich.",
+      "punkte": 3,
+      "next": "s3"
+     },
+     {
+      "t": "„Gib mir ein Brötchen.“",
+      "folge": "Sie gibt dir das Brötchen – aber ohne Lächeln.",
+      "punkte": 0,
+      "next": "s3"
+     },
+     {
+      "t": "„Ein Brötchen, danke.“",
+      "folge": "Okay, aber ein bisschen kurz.",
+      "punkte": 1,
+      "next": "s3"
+     }
+    ]
+   },
+   "s3": {
+    "bild": "bilder/landeskunde/duzen-sim-nachbar.webp",
+    "text": "Im Treppenhaus trefft ihr einen älteren Nachbarn. Er sagt: „Guten Tag! Sie sind die Neuen, oder?“",
+    "optionen": [
+     {
+      "t": "„Ja! Hallo, ich bin Sam. Und du?“",
+      "folge": "Er sagt: „Ich bin Herr Wolf.“ Er wollte noch nicht duzen.",
+      "punkte": 1,
+      "next": "s4"
+     },
+     {
+      "t": "„Ja, guten Tag! Wir wohnen jetzt im dritten Stock.“",
+      "folge": "Herr Wolf freut sich und erzählt vom Haus.",
+      "punkte": 3,
+      "next": "s4"
+     },
+     {
+      "t": "Nur nicken und weitergehen.",
+      "folge": "Herr Wolf denkt: Die sind aber unfreundlich.",
+      "punkte": 0,
+      "next": "s4"
+     }
+    ]
+   },
+   "s4": {
+    "bild": "bilder/landeskunde/duzen-sim-party.webp",
+    "text": "Am Abend: Party bei neuen Kollegen. Eine Frau sagt: „Hi, ich bin Jule! Und du?“",
+    "optionen": [
+     {
+      "t": "„Hi Jule, ich bin Sam!“",
+      "folge": "Super! Ihr redet den ganzen Abend.",
+      "punkte": 3,
+      "next": "ende"
+     },
+     {
+      "t": "„Guten Abend, Frau Jule.“",
+      "folge": "Jule lacht: „Frau Jule? Sag einfach Jule!“",
+      "punkte": 1,
+      "next": "ende"
+     },
+     {
+      "t": "„Wie heißen Sie mit Nachnamen?“",
+      "folge": "Jule ist überrascht. Auf einer Party ist das zu förmlich.",
+      "punkte": 0,
+      "next": "ende"
+     }
+    ]
+   }
+  },
+  "ende": [
+   {
+    "ab": 10,
+    "text": "🏆 Profis! Ihr wisst genau, wann „du“ und wann „Sie“ passt."
+   },
+   {
+    "ab": 6,
+    "text": "👍 Gut gemacht! Nur manchmal wart ihr zu locker oder zu förmlich."
+   },
+   {
+    "ab": 0,
+    "text": "💡 Noch etwas üben. Merkt euch: Wenn ihr unsicher seid, sagt „Sie“."
+   }
+  ]
+ }
+});
+
+stufe('duzen','bb',{
+ "titel": "Duzen & Siezen",
+ "emoji": "🤝",
+ "bereich": "Landeskunde DACH",
+ "intro": "Wer bietet wem das „du“ an – und warum ist das manchmal so kompliziert?",
+ "einstieg": {
+  "bild": "bilder/landeskunde/duzen-einstieg.webp",
+  "frage": "Wer darf in Deutschland normalerweise das „du“ anbieten?",
+  "o": [
+   "die jüngere Person",
+   "die ältere Person oder der Chef",
+   "immer der Mann"
+  ],
+  "r": 1,
+  "aufloesung": "Meistens bietet die ältere oder ranghöhere Person das „du“ an. Die jüngere fragt besser nicht zuerst."
+ },
+ "glossar": {
+  "das Du anbieten": {
+   "e": "🎁",
+   "t": "sagen: „Wollen wir uns duzen?“ Das macht meistens die ältere oder wichtigere Person."
+  },
+  "förmlich": {
+   "e": "🎩",
+   "t": "offiziell und höflich, mit Abstand."
+  },
+  "Hierarchie": {
+   "e": "🪜",
+   "t": "wer in einer Firma oben ist (Chef) und wer unten."
+  }
+ },
+ "dach": [
+  "Normalerweise darf die ältere Person oder der Chef <g>das Du anbieten</g>. Die jüngere Person fragt besser nicht zuerst.",
+  "In vielen Start-ups und großen Firmen duzen sich alle – auch mit dem Chef. In Banken und Behörden ist es oft <g>förmlich</g>.",
+  "Wo die <g>Hierarchie</g> flach ist, duzt man schneller.",
+  "In der Schweiz duzt man oft schneller als in Deutschland. In Österreich sind Titel wie „Frau Doktor“ noch wichtiger.",
+  "Im Internet, in Werbung und in Apps sagt man fast immer „du“."
+ ],
+ "skala": {
+  "titel": "🤝 Wo duzt man?",
+  "legende": "🔴 meistens „Sie“ &nbsp; 🟡 kommt darauf an &nbsp; 🟢 meistens „du“. Und wie ist das in eurem Land?"
+ },
+ "situationen": [
+  {
+   "o": "Behörde & Bank",
+   "ic": "🏦",
+   "s": 3,
+   "meter": 90,
+   "w": "Sie",
+   "t": "Offiziell und förmlich – hier bleibt man beim „Sie“."
+  },
+  {
+   "o": "Büro & Firma",
+   "ic": "💼",
+   "s": 2,
+   "meter": 55,
+   "w": "kommt darauf an",
+   "t": "Start-up: „du“. Alte Firma: oft „Sie“."
+  },
+  {
+   "o": "Verein & Internet",
+   "ic": "⚽",
+   "s": 1,
+   "meter": 15,
+   "w": "du",
+   "t": "Im Sportverein und online duzt man sofort."
+  }
+ ],
+ "redemittel": [
+  {
+   "funktion": "Das „du“ anbieten",
+   "farbe": "gold",
+   "items": [
+    {
+     "s": "Wir können uns <m>gern duzen</m>.",
+     "bsp": "Wir sehen uns ja jetzt jeden Tag – wir können uns gern duzen."
+    },
+    {
+     "s": "<m>Was hältst du davon, wenn</m> wir uns duzen?",
+     "bsp": "Was hältst du davon, wenn wir uns duzen? Ich bin Petra."
+    },
+    {
+     "s": "Ich biete dir <m>das Du an</m>.",
+     "bsp": "Nach so vielen Jahren biete ich dir das Du an."
+    },
+    {
+     "s": "Ich heiße <m>übrigens</m> Markus.",
+     "bsp": "Ich heiße übrigens Markus – sag ruhig „du“."
+    }
+   ]
+  },
+  {
+   "funktion": "Annehmen oder vorsichtig bleiben",
+   "farbe": "tuerkis",
+   "items": [
+    {
+     "s": "<m>Sehr gern, das ist mir sogar lieber</m>.",
+     "bsp": "Sehr gern, das ist mir sogar lieber. Ich bin Ali."
+    },
+    {
+     "s": "<m>Gern – aber vor Kunden</m> bleibe ich beim „Sie“.",
+     "bsp": "Gern – aber vor Kunden bleibe ich lieber beim „Sie“, okay?"
+    },
+    {
+     "s": "<m>Daran muss ich mich erst gewöhnen</m>.",
+     "bsp": "Duzen mit dem Chef? Daran muss ich mich erst gewöhnen!"
+    },
+    {
+     "s": "Ist das <m>hier so üblich</m>?",
+     "bsp": "Duzen sich hier alle? Ist das hier so üblich?"
+    }
+   ]
+  },
+  {
+   "funktion": "Einen Fehler retten",
+   "farbe": "rot",
+   "items": [
+    {
+     "s": "<m>Oh, Entschuldigung – ich meinte natürlich</m> „Sie“.",
+     "bsp": "Kannst du – oh, Entschuldigung, ich meinte natürlich: Können Sie mir helfen?"
+    },
+    {
+     "s": "<m>Duzen wir uns eigentlich schon</m>?",
+     "bsp": "Sorry, duzen wir uns eigentlich schon oder noch nicht?"
+    },
+    {
+     "s": "<m>Ich bin mir da nie ganz sicher</m>.",
+     "bsp": "Bei „du“ und „Sie“ bin ich mir nie ganz sicher."
+    },
+    {
+     "s": "<m>Das ist mir rausgerutscht</m>.",
+     "bsp": "Entschuldigung, das „du“ ist mir einfach rausgerutscht."
+    }
+   ]
+  },
+  {
+   "funktion": "Vergleichen",
+   "farbe": "lila",
+   "items": [
+    {
+     "s": "<m>Bei uns</m> duzt man fast alle.",
+     "bsp": "Bei uns duzt man fast alle, sogar die Lehrer."
+    },
+    {
+     "s": "<m>Im Gegensatz zu</m> Deutschland …",
+     "bsp": "Im Gegensatz zu Deutschland sagt man bei uns zu Älteren immer die höfliche Form."
+    },
+    {
+     "s": "<m>Das war für mich am Anfang</m> komisch.",
+     "bsp": "Das war für mich am Anfang komisch, den Chef zu siezen."
+    },
+    {
+     "s": "<m>In der Schweiz</m> geht das schneller.",
+     "bsp": "In der Schweiz geht das mit dem „du“ schneller."
+    }
+   ]
+  }
+ ],
+ "dialog": {
+  "situation": "Seit drei Monaten arbeiten Petra und Ali zusammen – immer noch per „Sie“.",
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "Herr Haddad, haben Sie kurz Zeit?"
+   },
+   {
+    "wer": "B",
+    "t": "Natürlich, Frau Lang. Was gibt’s?"
+   },
+   {
+    "wer": "A",
+    "t": "Ach, wissen Sie was? Wir arbeiten jetzt schon so lange zusammen. <m>Was halten Sie davon, wenn wir uns duzen</m>?"
+   },
+   {
+    "wer": "B",
+    "t": "<m>Sehr gern, das ist mir sogar lieber</m>! Ich bin Ali."
+   },
+   {
+    "wer": "A",
+    "t": "Petra. Freut mich, Ali!"
+   },
+   {
+    "wer": "B",
+    "t": "Aber eine Frage: Beim Chef bleibe ich beim „Sie“, oder? <m>Ist das hier so üblich</m>?"
+   },
+   {
+    "wer": "A",
+    "t": "Ja, beim Chef warten wir, <m>bis er das Du anbietet</m>."
+   },
+   {
+    "wer": "B",
+    "t": "Gut zu wissen. <m>Daran muss ich mich erst gewöhnen</m> – <m>bei uns</m> duzt man den Chef sofort."
+   }
+  ]
+ },
+ "wassagen": [
+  {
+   "situation": "Du bist 25. Dein 60-jähriger Nachbar ist sehr nett. Darfst du ihm das „du“ anbieten?",
+   "o": [
+    "Ja, sofort.",
+    "Besser warten – er bietet es an.",
+    "Nur per WhatsApp."
+   ],
+   "r": 1,
+   "warum": "Normalerweise bietet die ältere Person das „du“ an."
+  },
+  {
+   "situation": "Dein neuer Chef sagt: „Bei uns duzen sich alle. Ich bin Stefan.“",
+   "o": [
+    "„Danke, Herr Stefan.“",
+    "„Super, Stefan! Ich bin …“",
+    "„Ich bleibe lieber beim Sie, Herr Chef.“"
+   ],
+   "r": 1,
+   "warum": "Wenn der Chef das „du“ anbietet, nimmt man es meistens an."
+  },
+  {
+   "situation": "Du schreibst eine E-Mail an einen Kunden, den du nicht kennst.",
+   "o": [
+    "„Hallo du,“",
+    "„Sehr geehrter Herr Braun,“",
+    "„Hey Braun!“"
+   ],
+   "r": 1,
+   "warum": "Bei Kunden ist man förmlich – auch in Firmen mit Duz-Kultur."
+  },
+  {
+   "situation": "Dir ist ein „du“ zur Vermieterin rausgerutscht.",
+   "o": [
+    "„Das ist mir rausgerutscht – Entschuldigung!“",
+    "So tun, als wäre nichts.",
+    "Ab jetzt immer „du“ sagen."
+   ],
+   "r": 0,
+   "warum": "Kurz entschuldigen und weitermachen. Die meisten finden das nicht schlimm."
+  },
+  {
+   "situation": "In einer App steht: „Hast du schon dein Profil ausgefüllt?“ Ist das unhöflich?",
+   "o": [
+    "Ja, sehr.",
+    "Nein, online duzt man fast immer.",
+    "Nur in Österreich."
+   ],
+   "r": 1,
+   "warum": "Apps, Werbung und Social Media duzen fast immer."
+  }
+ ],
+ "puzzle": [
+  [
+   "Was hältst du davon,",
+   "wenn wir uns duzen?"
+  ],
+  [
+   "Sehr gern,",
+   "das ist mir sogar lieber."
+  ],
+  [
+   "Daran muss ich",
+   "mich erst gewöhnen."
+  ],
+  [
+   "Duzen wir uns",
+   "eigentlich schon?"
+  ],
+  [
+   "Das „du“ ist mir",
+   "einfach rausgerutscht."
+  ],
+  [
+   "Im Gegensatz zu Deutschland",
+   "duzt man bei uns alle."
+  ]
+ ],
+ "luecken": {
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "Wir arbeiten schon so lange zusammen. Was ___ Sie davon, wenn wir uns duzen?",
+    "loes": "halten"
+   },
+   {
+    "wer": "B",
+    "t": "Sehr gern, das ist mir sogar ___!",
+    "loes": "lieber"
+   },
+   {
+    "wer": "A",
+    "t": "Ich heiße ___ Petra.",
+    "loes": "übrigens"
+   },
+   {
+    "wer": "B",
+    "t": "Und beim Chef? Ist das hier so ___?",
+    "loes": "üblich"
+   },
+   {
+    "wer": "A",
+    "t": "Beim Chef warten wir, bis er uns das Du ___.",
+    "loes": "anbietet"
+   }
+  ],
+  "woerter": [
+   "halten",
+   "lieber",
+   "übrigens",
+   "üblich",
+   "anbietet"
+  ]
+ },
+ "rollen": [
+  {
+   "titel": "Der Chef bietet das Du an",
+   "bild": "bilder/landeskunde/duzen-rp-chef.webp",
+   "a": "👔 Du bist der Chef. Biete das „du“ an – mit einem Grund.",
+   "b": "💼 Du bist neu. Du freust dich, bist aber unsicher wegen Kunden.",
+   "ziel": "Klärt, wann ihr „du“ sagt und wann „Sie“.",
+   "hilfe": [
+    "Was hältst du davon, wenn wir uns duzen?",
+    "Sehr gern! Aber vor Kunden …?",
+    "Vor Kunden bleiben wir beim „Sie“.",
+    "Daran muss ich mich erst gewöhnen."
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Bei uns im Team duzen sich alle. Was hältst du davon, wenn wir uns auch duzen? Ich bin Stefan."
+    },
+    {
+     "wer": "B",
+     "t": "Sehr gern! Ich bin Karim. Und vor Kunden?"
+    },
+    {
+     "wer": "A",
+     "t": "Da bleiben wir beim „Sie“. Das ist professioneller."
+    },
+    {
+     "wer": "B",
+     "t": "Alles klar. Daran muss ich mich erst gewöhnen!"
+    }
+   ]
+  },
+  {
+   "titel": "Die Vermieterin",
+   "bild": "bilder/landeskunde/duzen-rp-vermieterin.webp",
+   "a": "🔑 Du bist Mieter und sagst aus Versehen „du“.",
+   "b": "🏠 Du bist die Vermieterin, 65 Jahre. Du bleibst lieber beim „Sie“.",
+   "ziel": "Rettet die Situation höflich.",
+   "hilfe": [
+    "Kannst du – oh, Entschuldigung!",
+    "Das ist mir rausgerutscht.",
+    "Kein Problem, aber …",
+    "Ich bleibe lieber beim „Sie“."
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Kannst du mir … oh, Entschuldigung! Können Sie mir sagen, wann der Handwerker kommt?"
+    },
+    {
+     "wer": "B",
+     "t": "Kein Problem. Ich bleibe aber lieber beim „Sie“, wenn das okay ist."
+    },
+    {
+     "wer": "A",
+     "t": "Natürlich. Das ist mir nur rausgerutscht."
+    },
+    {
+     "wer": "B",
+     "t": "Der Handwerker kommt am Donnerstag."
+    }
+   ]
+  },
+  {
+   "titel": "Elternabend",
+   "bild": "bilder/landeskunde/duzen-rp-elternabend.webp",
+   "a": "👨‍👩‍👧 Du bist Mutter oder Vater. Du kennst die anderen Eltern nicht.",
+   "b": "🙋 Du bist auch Mutter oder Vater und duzt alle sofort.",
+   "ziel": "Findet heraus: Duzt man sich hier?",
+   "hilfe": [
+    "Duzen wir uns hier eigentlich?",
+    "Unter Eltern duzt man sich meistens.",
+    "Ah, gut zu wissen!",
+    "Ich bin übrigens …"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Entschuldigung, duzen sich die Eltern hier eigentlich?"
+    },
+    {
+     "wer": "B",
+     "t": "Ja, unter Eltern duzt man sich meistens. Ich bin übrigens Jana."
+    },
+    {
+     "wer": "A",
+     "t": "Gut zu wissen! Ich bin Omar. Mein Sohn ist in der 2b."
+    }
+   ]
+  },
+  {
+   "titel": "Videocall mit der Schweiz",
+   "bild": "bilder/landeskunde/duzen-rp-schweiz.webp",
+   "a": "💻 Du arbeitest in Deutschland und siezt den neuen Kollegen aus Zürich.",
+   "b": "🇨🇭 Du bist aus Zürich und duzt sofort.",
+   "ziel": "Sprecht über den Unterschied – und einigt euch.",
+   "hilfe": [
+    "Guten Tag, Herr Meier, schön, Sie kennenzulernen.",
+    "Sag doch einfach „du“, ich bin Reto.",
+    "In der Schweiz geht das schneller, oder?",
+    "Bei uns ist das eher so: …"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Guten Tag, Herr Meier. Schön, Sie kennenzulernen."
+    },
+    {
+     "wer": "B",
+     "t": "Grüezi! Sag doch einfach „du“ – ich bin Reto."
+    },
+    {
+     "wer": "A",
+     "t": "Gern! In der Schweiz geht das schneller, oder?"
+    },
+    {
+     "wer": "B",
+     "t": "Ja, bei uns in der Firma duzen sich alle."
+    }
+   ]
+  }
+ ],
+ "fragen": [
+  {
+   "q": "Duzt oder siezt ihr euch bei der Arbeit oder im Kurs?",
+   "folge": [
+    "Wer hat das „du“ angeboten?",
+    "Findest du das gut so?"
+   ],
+   "antw": [
+    "Bei uns duzen sich alle, auch mit dem Chef.",
+    "Mit den Kollegen duze ich mich, den Chef sieze ich.",
+    "Am Anfang haben wir uns gesiezt, später geduzt."
+   ]
+  },
+  {
+   "q": "Ist dir schon mal ein „du“ oder „Sie“ falsch herausgerutscht?",
+   "folge": [
+    "Wie hat die andere Person reagiert?",
+    "Was hast du dann gesagt?"
+   ],
+   "antw": [
+    "Ja, ich habe meine Vermieterin aus Versehen geduzt.",
+    "Das war mir ein bisschen peinlich.",
+    "Die Person hat gelacht und gesagt: „Kein Problem!“"
+   ]
+  },
+  {
+   "q": "Was gefällt dir besser: „du“ oder „Sie“?",
+   "folge": [
+    "Wirkt „Sie“ für dich kalt oder respektvoll?",
+    "Wie ist das in deinem Land mit Älteren?"
+   ],
+   "antw": [
+    "Mir gefällt „du“ besser, das ist persönlicher.",
+    "Ich finde „Sie“ respektvoll, nicht kalt.",
+    "In meinem Land spricht man Ältere sehr höflich an."
+   ]
+  }
+ ],
+ "challenge": [
+  {
+   "frage": "Erzähl von einer Situation, in der dir jemand das „du“ angeboten hat.",
+   "hilfe": [
+    "angeboten",
+    "überrascht",
+    "gefreut",
+    "seitdem"
+   ]
+  },
+  {
+   "frage": "Was gefällt dir besser: „du“ oder „Sie“? Begründe!",
+   "hilfe": [
+    "persönlich",
+    "respektvoll",
+    "Abstand",
+    "weil"
+   ]
+  },
+  {
+   "frage": "Wie spricht man in deinem Land mit Älteren und Chefs?",
+   "hilfe": [
+    "im Gegensatz zu",
+    "bei uns",
+    "Respekt",
+    "üblich"
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "q": "Wer bietet normalerweise das „du“ an?",
+   "o": [
+    "die ältere oder ranghöhere Person",
+    "die jüngere Person",
+    "immer der Gast"
+   ],
+   "r": 0,
+   "anschluss": "Wer hat dir zuletzt das „du“ angeboten?"
+  },
+  {
+   "q": "Was bedeutet „Das ist mir rausgerutscht“?",
+   "o": [
+    "Ich habe es ohne Absicht gesagt.",
+    "Ich bin hingefallen.",
+    "Ich habe es vergessen."
+   ],
+   "r": 0,
+   "anschluss": "Was ist dir schon mal auf Deutsch rausgerutscht?"
+  },
+  {
+   "q": "Wie beginnt eine E-Mail an einen fremden Kunden?",
+   "o": [
+    "„Sehr geehrte Frau …“",
+    "„Hallo du,“",
+    "„Hey!“"
+   ],
+   "r": 0,
+   "anschluss": "Schreibst du oft E-Mails auf Deutsch?"
+  },
+  {
+   "q": "Wo duzt man oft schneller als in Deutschland?",
+   "o": [
+    "in der Schweiz",
+    "beim Amt",
+    "vor Gericht"
+   ],
+   "r": 0,
+   "anschluss": "Warst du schon mal in der Schweiz oder in Österreich?"
+  },
+  {
+   "q": "Welcher Satz nimmt das „du“ an?",
+   "o": [
+    "„Sehr gern, das ist mir sogar lieber.“",
+    "„Daran glaube ich nicht.“",
+    "„Auf Wiedersehen.“"
+   ],
+   "r": 0,
+   "anschluss": "Fällt dir das Duzen leicht oder schwer?"
+  }
+ ],
+ "merk": "Das „du“ bietet meistens die ältere Person oder der Chef an. Wer unsicher ist, wartet – oder fragt freundlich.",
+ "tipp": "Duzt dich jemand, darfst du meistens zurückduzen. Siezt dich jemand, bleib beim „Sie“, bis dir das „du“ angeboten wird.",
+ "simulator": {
+  "intro": "Ihr habt einen neuen Job in einer deutschen Firma. Erste Woche! Einigt euch bei jeder Szene auf EINE Antwort und begründet sie.",
+  "start": "s1",
+  "szenen": {
+   "s1": {
+    "bild": "bilder/landeskunde/duzen-sim-buero.webp",
+    "text": "Montag, 9 Uhr. Die Teamleiterin sagt: „Willkommen! Bei uns im Team duzen sich alle. Ich bin Katrin.“",
+    "optionen": [
+     {
+      "t": "„Danke, Frau Katrin!“",
+      "folge": "Katrin lacht: „Einfach Katrin!“ Kleiner Fehler, aber sympathisch.",
+      "punkte": 1,
+      "next": "s2"
+     },
+     {
+      "t": "„Super, danke, Katrin! Ich bin …“",
+      "folge": "Perfekt angenommen. Das Team findet euch sofort nett.",
+      "punkte": 3,
+      "next": "s2"
+     },
+     {
+      "t": "„Ich bleibe lieber beim Sie.“",
+      "folge": "Katrin ist etwas irritiert. Ein angebotenes „du“ abzulehnen wirkt kühl.",
+      "punkte": 0,
+      "next": "s2"
+     }
+    ]
+   },
+   "s2": {
+    "bild": "bilder/landeskunde/duzen-sim-chef.webp",
+    "text": "Dienstag. Der Geschäftsführer, Herr Dr. Brandt, kommt in die Küche. Er sagt: „Guten Morgen!“",
+    "optionen": [
+     {
+      "t": "„Morgen! Na, wie geht’s dir?“",
+      "folge": "Herr Dr. Brandt hebt die Augenbrauen. Mit dem Chef vom Chef duzt man nicht einfach so.",
+      "punkte": 0,
+      "next": "s3"
+     },
+     {
+      "t": "„Guten Morgen, Herr Brandt! Ich bin neu im Team von Katrin.“",
+      "folge": "Er freut sich und fragt nach eurem ersten Eindruck.",
+      "punkte": 3,
+      "next": "s3"
+     },
+     {
+      "t": "Nichts sagen, Kaffee nehmen, gehen.",
+      "folge": "Schade – eine Chance zum Kennenlernen verpasst.",
+      "punkte": 1,
+      "next": "s3"
+     }
+    ]
+   },
+   "s3": {
+    "bild": "bilder/landeskunde/duzen-sim-kunde.webp",
+    "text": "Mittwoch. Ein Kunde ruft an. Ihr kennt ihn nicht.",
+    "optionen": [
+     {
+      "t": "„Hallo, hier ist das Team von Katrin, was gibt’s?“",
+      "folge": "Der Kunde ist irritiert. Am Telefon mit Kunden: lieber förmlich.",
+      "punkte": 0,
+      "next": "s4"
+     },
+     {
+      "t": "„Guten Tag, Firma Lumen, mein Name ist … Was kann ich für Sie tun?“",
+      "folge": "Sehr professionell. Der Kunde ist zufrieden.",
+      "punkte": 3,
+      "next": "s4"
+     },
+     {
+      "t": "„Ja?“",
+      "folge": "Etwas zu kurz. Der Kunde fragt, ob er richtig ist.",
+      "punkte": 1,
+      "next": "s4"
+     }
+    ]
+   },
+   "s4": {
+    "bild": "bilder/landeskunde/duzen-sim-feier.webp",
+    "text": "Freitag, Feierabend-Bier. Ihr sagt aus Versehen „du“ zu Herrn Dr. Brandt.",
+    "optionen": [
+     {
+      "t": "„Oh, Entschuldigung, das ist mir rausgerutscht!“",
+      "folge": "Er lacht: „Kein Problem!“ Gut gerettet.",
+      "punkte": 3,
+      "next": "ende"
+     },
+     {
+      "t": "So tun, als wäre nichts passiert.",
+      "folge": "Er sagt nichts – aber es bleibt ein komisches Gefühl.",
+      "punkte": 1,
+      "next": "ende"
+     },
+     {
+      "t": "Ab jetzt einfach weiter duzen.",
+      "folge": "Herr Dr. Brandt antwortet betont mit „Sie“. Das war zu viel.",
+      "punkte": 0,
+      "next": "ende"
+     }
+    ]
+   }
+  },
+  "ende": [
+   {
+    "ab": 10,
+    "text": "🏆 Ihr kennt die Regeln im Büro wie Einheimische!"
+   },
+   {
+    "ab": 6,
+    "text": "👍 Gut! Nur bei Chefs und Kunden noch etwas genauer sein."
+   },
+   {
+    "ab": 0,
+    "text": "💡 Merkt euch: Im Team oft „du“ – mit Chefs von oben und mit Kunden „Sie“."
+   }
+  ]
+ }
+});
+
+stufe('duzen','bc',{
+ "titel": "Duzen & Siezen",
+ "emoji": "🤝",
+ "bereich": "Landeskunde DACH",
+ "intro": "Ein kleines Wort mit großer Wirkung: Was sagt das „du“ über eine Gesellschaft?",
+ "einstieg": {
+  "bild": "bilder/landeskunde/duzen-einstieg.webp",
+  "frage": "Ein Autofahrer duzt bei einer Kontrolle bewusst die Polizistin. Was kann passieren?",
+  "o": [
+   "Nichts – das ist normal.",
+   "Es kann als Beleidigung gelten, im Extremfall mit Geldstrafe.",
+   "Er bekommt einen Rabatt."
+  ],
+  "r": 1,
+  "aufloesung": "Wer Polizisten bewusst und abwertend duzt, riskiert eine Anzeige wegen Beleidigung. „Du“ und „Sie“ sind also mehr als Grammatik."
+ },
+ "glossar": {
+  "Distanz": {
+   "e": "↔️",
+   "t": "innerer Abstand zwischen Menschen, z. B. im Beruf."
+  },
+  "Beleidigung": {
+   "e": "⚠️",
+   "t": "ein Wort oder eine Handlung, die jemanden kränkt. Kann sogar strafbar sein."
+  },
+  "Brüderschaft trinken": {
+   "e": "🍻",
+   "t": "alter Brauch: Man trinkt zusammen und duzt sich danach."
+  },
+  "Duz-Kultur": {
+   "e": "🌐",
+   "t": "wenn in einer Firma oder Branche alle „du“ sagen."
+  }
+ },
+ "dach": [
+  "Das „Sie“ schafft <g>Distanz</g> – das kann Respekt zeigen, aber auch Kälte.",
+  "Viele Firmen haben eine <g>Duz-Kultur</g> eingeführt, damit alle sich näher und gleichberechtigt fühlen.",
+  "Wer einen Polizisten bewusst duzt, riskiert, dass das als <g>Beleidigung</g> gilt – im Extremfall droht eine Geldstrafe.",
+  "Früher hat man oft <g>Brüderschaft trinken</g> müssen, um sich zu duzen. Heute geht es meistens schneller.",
+  "Ein angebotenes „du“ abzulehnen, wirkt in Deutschland schnell unfreundlich."
+ ],
+ "skala": {
+  "titel": "🤝 Nähe oder Distanz?",
+  "legende": "🔴 viel Distanz &nbsp; 🟡 gemischt &nbsp; 🟢 viel Nähe. Und wie ist das in eurem Land?"
+ },
+ "situationen": [
+  {
+   "o": "Polizei & Gericht",
+   "ic": "⚖️",
+   "s": 3,
+   "meter": 98,
+   "w": "nur „Sie“",
+   "t": "Ein „du“ kann hier als Beleidigung gelten."
+  },
+  {
+   "o": "Konzern & Kundschaft",
+   "ic": "🏢",
+   "s": 2,
+   "meter": 60,
+   "w": "gemischt",
+   "t": "Intern „du“, gegenüber Kunden oft „Sie“."
+  },
+  {
+   "o": "Start-up & Social Media",
+   "ic": "📱",
+   "s": 1,
+   "meter": 10,
+   "w": "nur „du“",
+   "t": "Hier wirkt „Sie“ fast schon seltsam."
+  }
+ ],
+ "redemittel": [
+  {
+   "funktion": "Meinung begründen",
+   "farbe": "tuerkis",
+   "items": [
+    {
+     "s": "<m>Ich bin der Meinung, dass</m> das „Sie“ Respekt zeigt, <m>weil</m> …",
+     "bsp": "Ich bin der Meinung, dass das „Sie“ Respekt zeigt, weil es Grenzen setzt."
+    },
+    {
+     "s": "<m>Meines Erachtens</m> ändert ein Wort nichts an der Hierarchie.",
+     "bsp": "Meines Erachtens ändert ein „du“ nichts daran, wer entscheidet."
+    },
+    {
+     "s": "<m>Für mich spricht vor allem dafür, dass</m> …",
+     "bsp": "Für mich spricht vor allem dafür, dass man offener redet."
+    },
+    {
+     "s": "<m>Ausschlaggebend ist für mich</m> …",
+     "bsp": "Ausschlaggebend ist für mich, wie man miteinander umgeht – nicht das Pronomen."
+    }
+   ]
+  },
+  {
+   "funktion": "Abwägen",
+   "farbe": "gold",
+   "items": [
+    {
+     "s": "<m>Einerseits</m> schafft das „du“ Nähe, <m>andererseits</m> …",
+     "bsp": "Einerseits schafft das „du“ Nähe, andererseits verschwimmen die Grenzen."
+    },
+    {
+     "s": "<m>Das kommt ganz darauf an, ob</m> …",
+     "bsp": "Das kommt ganz darauf an, ob man mit Kunden arbeitet."
+    },
+    {
+     "s": "<m>Man darf nicht vergessen, dass</m> …",
+     "bsp": "Man darf nicht vergessen, dass Ältere das „Sie“ oft als Wertschätzung sehen."
+    },
+    {
+     "s": "<m>Unterm Strich</m> …",
+     "bsp": "Unterm Strich ist mir ein freundliches „Sie“ lieber als ein falsches „du“."
+    }
+   ]
+  },
+  {
+   "funktion": "Höflich ablehnen",
+   "farbe": "rot",
+   "items": [
+    {
+     "s": "<m>Das ist sehr nett, aber mir ist</m> im Beruf das „Sie“ <m>lieber</m>.",
+     "bsp": "Das ist sehr nett, aber mir ist im Beruf das „Sie“ lieber."
+    },
+    {
+     "s": "<m>Darf ich vorerst beim „Sie“ bleiben</m>?",
+     "bsp": "Darf ich vorerst beim „Sie“ bleiben? Ich brauche noch etwas Zeit."
+    },
+    {
+     "s": "<m>Nehmen Sie es bitte nicht persönlich</m>.",
+     "bsp": "Nehmen Sie es bitte nicht persönlich – das ist bei mir einfach so."
+    },
+    {
+     "s": "<m>Ich trenne da gern</m> Beruf und Privatleben.",
+     "bsp": "Ich trenne da gern Beruf und Privatleben."
+    }
+   ]
+  },
+  {
+   "funktion": "Widersprechen",
+   "farbe": "lila",
+   "items": [
+    {
+     "s": "<m>Da muss ich widersprechen</m>: …",
+     "bsp": "Da muss ich widersprechen: Auch per „du“ kann man respektvoll sein."
+    },
+    {
+     "s": "<m>Das sehe ich etwas anders</m>, denn …",
+     "bsp": "Das sehe ich etwas anders, denn in meiner Kultur gilt das Gegenteil."
+    },
+    {
+     "s": "<m>Das mag sein, aber</m> …",
+     "bsp": "Das mag sein, aber gegenüber Kunden wirkt das unprofessionell."
+    },
+    {
+     "s": "<m>Ich verstehe deinen Punkt, trotzdem</m> …",
+     "bsp": "Ich verstehe deinen Punkt, trotzdem finde ich die Duz-Kultur aufgesetzt."
+    }
+   ]
+  }
+ ],
+ "dialog": {
+  "situation": "Teamsitzung: Ab Montag soll in der Firma eine Duz-Kultur gelten. Lena und Herr Vogt diskutieren.",
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "Ich finde die Idee super. <m>Für mich spricht vor allem dafür, dass</m> wir offener miteinander reden."
+   },
+   {
+    "wer": "B",
+    "t": "<m>Das mag sein, aber</m> ich bin seit 25 Jahren hier. Ein „du“ ändert nichts daran, wer entscheidet."
+   },
+   {
+    "wer": "A",
+    "t": "<m>Da muss ich widersprechen</m>: Es senkt die Hemmschwelle, Kritik zu äußern."
+   },
+   {
+    "wer": "B",
+    "t": "<m>Einerseits</m> verstehe ich das, <m>andererseits</m> fühlt es sich für mich aufgesetzt an."
+   },
+   {
+    "wer": "A",
+    "t": "<m>Das kommt ganz darauf an, ob</m> es von allen getragen wird."
+   },
+   {
+    "wer": "B",
+    "t": "Genau. <m>Darf ich vorerst beim „Sie“ bleiben</m>? <m>Nehmen Sie es bitte nicht persönlich</m>."
+   },
+   {
+    "wer": "A",
+    "t": "Natürlich. <m>Unterm Strich</m> zählt, dass wir respektvoll bleiben."
+   }
+  ]
+ },
+ "wassagen": [
+  {
+   "situation": "Dein Chef bietet dir das „du“ an, du willst aber Distanz. Welche Antwort ist am diplomatischsten?",
+   "o": [
+    "„Nein, danke.“",
+    "„Das ist sehr nett, aber mir ist im Beruf das „Sie“ lieber – nehmen Sie es bitte nicht persönlich.“",
+    "„Duzen ist albern.“"
+   ],
+   "r": 1,
+   "warum": "Dank + Grund + Beziehungssatz: So lehnt man ab, ohne zu verletzen."
+  },
+  {
+   "situation": "Jemand behauptet: „Wer duzt, hat keinen Respekt.“ Wie widersprichst du höflich?",
+   "o": [
+    "„Quatsch!“",
+    "„Das sehe ich etwas anders, denn Respekt zeigt sich im Ton, nicht im Pronomen.“",
+    "„Okay.“"
+   ],
+   "r": 1,
+   "warum": "Widersprechen + begründen – ohne den anderen anzugreifen."
+  },
+  {
+   "situation": "Du willst abwägen. Welcher Satz passt?",
+   "o": [
+    "„Einerseits schafft das „du“ Nähe, andererseits verschwimmen Grenzen.“",
+    "„Duzen ist immer besser.“",
+    "„Ist mir egal.“"
+   ],
+   "r": 0,
+   "warum": "Einerseits … andererseits zeigt beide Seiten."
+  },
+  {
+   "situation": "Eine Werbung duzt dich: „Gönn dir was!“ Warum machen Firmen das?",
+   "o": [
+    "Sie wollen jung und nahbar wirken.",
+    "Es ist gesetzlich vorgeschrieben.",
+    "Aus Versehen."
+   ],
+   "r": 0,
+   "warum": "Das „du“ in der Werbung soll Nähe und Lockerheit vermitteln."
+  },
+  {
+   "situation": "Du schreibst einer Professorin, die alle Studenten duzt. Wie beginnst du die erste Mail?",
+   "o": [
+    "„Hey Sabine!“",
+    "„Liebe Frau Professorin Kraus,“ – und wartest ab.",
+    "„Yo!“"
+   ],
+   "r": 1,
+   "warum": "Beim ersten Kontakt förmlich bleiben – das „du“ bietet die ranghöhere Person an."
+  }
+ ],
+ "puzzle": [
+  [
+   "Einerseits schafft das „du“ Nähe,",
+   "andererseits verschwimmen die Grenzen."
+  ],
+  [
+   "Darf ich vorerst",
+   "beim „Sie“ bleiben?"
+  ],
+  [
+   "Meines Erachtens ändert ein Wort",
+   "nichts an der Hierarchie."
+  ],
+  [
+   "Das mag sein,",
+   "aber vor Kunden wirkt das unprofessionell."
+  ],
+  [
+   "Nehmen Sie es",
+   "bitte nicht persönlich."
+  ],
+  [
+   "Ausschlaggebend ist für mich,",
+   "wie man miteinander umgeht."
+  ]
+ ],
+ "luecken": {
+  "zeilen": [
+   {
+    "wer": "A",
+    "t": "___ schafft das „du“ Nähe, andererseits fehlt manchmal die Grenze.",
+    "loes": "Einerseits"
+   },
+   {
+    "wer": "B",
+    "t": "Meines ___ ändert ein Pronomen nichts an der Macht.",
+    "loes": "Erachtens"
+   },
+   {
+    "wer": "A",
+    "t": "Da muss ich ___: Es senkt die Hemmschwelle.",
+    "loes": "widersprechen"
+   },
+   {
+    "wer": "B",
+    "t": "Das ist sehr nett, aber mir ist im Beruf das „Sie“ ___.",
+    "loes": "lieber"
+   },
+   {
+    "wer": "A",
+    "t": "___ Strich zählt der respektvolle Umgang.",
+    "loes": "Unterm"
+   }
+  ],
+  "woerter": [
+   "Einerseits",
+   "Erachtens",
+   "widersprechen",
+   "lieber",
+   "Unterm"
+  ]
+ },
+ "rollen": [
+  {
+   "titel": "Teamsitzung: Duz-Kultur ja oder nein?",
+   "bild": "bilder/landeskunde/duzen-rp-teamsitzung.webp",
+   "a": "🚀 Du bist dafür. Nenne zwei Argumente.",
+   "b": "🎩 Du bist dagegen. Nenne zwei Bedenken.",
+   "ziel": "Findet am Ende einen Kompromiss.",
+   "hilfe": [
+    "Für mich spricht vor allem dafür, dass …",
+    "Das mag sein, aber …",
+    "Einerseits …, andererseits …",
+    "Wie wäre es mit einem Kompromiss: intern „du“, extern „Sie“?"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Für mich spricht vor allem dafür, dass wir dann schneller und offener kommunizieren."
+    },
+    {
+     "wer": "B",
+     "t": "Das mag sein, aber ich befürchte, dass die Grenzen verschwimmen."
+    },
+    {
+     "wer": "A",
+     "t": "Einerseits verstehe ich das, andererseits haben viele Firmen gute Erfahrungen gemacht."
+    },
+    {
+     "wer": "B",
+     "t": "Wie wäre es mit einem Kompromiss: intern „du“, gegenüber Kunden „Sie“?"
+    }
+   ]
+  },
+  {
+   "titel": "Das Du ablehnen",
+   "bild": "bilder/landeskunde/duzen-rp-ablehnen.webp",
+   "a": "👔 Du bist Chef und bietest das „du“ an.",
+   "b": "🙅 Du möchtest beim „Sie“ bleiben – ohne zu verletzen.",
+   "ziel": "Lehnt diplomatisch ab, die Beziehung bleibt gut.",
+   "hilfe": [
+    "Was halten Sie davon, wenn wir uns duzen?",
+    "Das ist sehr nett, aber …",
+    "Ich trenne gern Beruf und Privatleben.",
+    "Nehmen Sie es bitte nicht persönlich."
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Wir arbeiten so gut zusammen. Was halten Sie davon, wenn wir uns duzen?"
+    },
+    {
+     "wer": "B",
+     "t": "Das ist sehr nett, aber mir ist im Beruf das „Sie“ lieber. Ich trenne da gern Beruf und Privatleben."
+    },
+    {
+     "wer": "A",
+     "t": "Verstehe ich vollkommen."
+    },
+    {
+     "wer": "B",
+     "t": "Nehmen Sie es bitte nicht persönlich – ich schätze die Zusammenarbeit sehr."
+    }
+   ]
+  },
+  {
+   "titel": "Die Polizeikontrolle",
+   "bild": "bilder/landeskunde/duzen-rp-polizei.webp",
+   "a": "🚗 Du bist genervt und duzt den Polizisten.",
+   "b": "👮 Du bist Polizist und reagierst professionell, aber klar.",
+   "ziel": "Der Polizist erklärt, warum das ein Problem ist – die Situation beruhigt sich.",
+   "hilfe": [
+    "Was willst du denn von mir?",
+    "Ich bitte Sie, beim „Sie“ zu bleiben.",
+    "Das kann als Beleidigung gelten.",
+    "Entschuldigung, ich war gestresst."
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "Was willst du denn jetzt von mir?"
+    },
+    {
+     "wer": "B",
+     "t": "Ich bitte Sie, beim „Sie“ zu bleiben. Ein bewusstes Duzen kann als Beleidigung gelten."
+    },
+    {
+     "wer": "A",
+     "t": "Oh – Entschuldigung, ich war gestresst. Was kann ich für Sie tun?"
+    },
+    {
+     "wer": "B",
+     "t": "Führerschein und Fahrzeugschein, bitte."
+    }
+   ]
+  },
+  {
+   "titel": "Kulturvergleich unter Kollegen",
+   "bild": "bilder/landeskunde/duzen-rp-vergleich.webp",
+   "a": "🌍 In deiner Kultur ist es anders. Erkläre, wie.",
+   "b": "🇩🇪 Du findest das deutsche System logisch. Frag kritisch nach.",
+   "ziel": "Versteht die Logik der anderen Kultur.",
+   "hilfe": [
+    "In meiner Kultur legt man mehr Wert auf …",
+    "Das sehe ich etwas anders, denn …",
+    "Man darf nicht verallgemeinern, aber …",
+    "Unterm Strich …"
+   ],
+   "beispiel": [
+    {
+     "wer": "A",
+     "t": "In meiner Kultur legt man mehr Wert auf Alter als auf Position. Einen älteren Kollegen spricht man immer formell an."
+    },
+    {
+     "wer": "B",
+     "t": "Auch wenn er dir das „du“ anbietet?"
+    },
+    {
+     "wer": "A",
+     "t": "Dann wäre es unhöflich, das sofort anzunehmen. Man darf nicht verallgemeinern, aber das ist oft so."
+    },
+    {
+     "wer": "B",
+     "t": "Spannend. Unterm Strich geht es bei beiden um Respekt – nur anders gezeigt."
+    }
+   ]
+  }
+ ],
+ "fragen": [
+  {
+   "q": "Sollten Firmen das „du“ für alle einführen?",
+   "folge": [
+    "Wird die Hierarchie dadurch wirklich flacher?",
+    "Ist es leichter, einen Chef zu kritisieren, den man duzt?"
+   ],
+   "antw": [
+    "Ich finde das gut, weil es die Zusammenarbeit lockerer macht.",
+    "Meiner Meinung nach ändert ein Wort nichts an der Macht des Chefs.",
+    "Einerseits schafft das „du“ Nähe, andererseits fehlt manchmal die Grenze."
+   ]
+  },
+  {
+   "q": "Kann man ein angebotenes „du“ ablehnen?",
+   "folge": [
+    "Wie würdest du das höflich formulieren?",
+    "In welcher Situation würdest du lieber beim „Sie“ bleiben?"
+   ],
+   "antw": [
+    "Theoretisch ja, aber das wirkt schnell kühl.",
+    "Ich würde sagen, dass ich mich mit „Sie“ wohler fühle.",
+    "Bei meinem Vermieter bleibe ich lieber beim „Sie“."
+   ]
+  },
+  {
+   "q": "Stirbt das „Sie“ irgendwann aus?",
+   "folge": [
+    "Welche Rolle spielen Werbung und Internet dabei?",
+    "Wäre das ein Verlust oder ein Fortschritt?"
+   ],
+   "antw": [
+    "Ich glaube schon, weil junge Leute fast nur noch duzen.",
+    "Nein, bei Behörden und vor Gericht wird es bleiben.",
+    "Für mich wäre das ein Verlust, weil „Sie“ Respekt zeigt."
+   ]
+  }
+ ],
+ "debatte": {
+  "these": "Das „Sie“ ist ein Auslaufmodell und sollte im Berufsleben abgeschafft werden.",
+  "pro": [
+   "Junge Generationen duzen fast nur noch.",
+   "Flache Hierarchien brauchen eine gemeinsame Sprache.",
+   "Internationale Teams kennen den Unterschied oft gar nicht."
+  ],
+  "contra": [
+   "Das „Sie“ schützt Grenzen und Privatsphäre.",
+   "Gegenüber Kunden wirkt „Sie“ professioneller.",
+   "Ein erzwungenes „du“ ist auch nicht ehrlich."
+  ]
+ },
+ "challenge": [
+  {
+   "frage": "Sollten Firmen eine Duz-Kultur einführen? Wäge ab!",
+   "hilfe": [
+    "einerseits",
+    "andererseits",
+    "Hierarchie",
+    "Kompromiss"
+   ]
+  },
+  {
+   "frage": "Wie würdest du ein angebotenes „du“ ablehnen – und warum?",
+   "hilfe": [
+    "diplomatisch",
+    "Grenzen",
+    "nicht persönlich",
+    "Beruf und Privatleben"
+   ]
+  },
+  {
+   "frage": "Was sagt die Anrede über eine Gesellschaft aus?",
+   "hilfe": [
+    "Nähe",
+    "Distanz",
+    "Macht",
+    "Respekt"
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "q": "Was kann bewusstes Duzen eines Polizisten sein?",
+   "o": [
+    "eine Beleidigung",
+    "ein Kompliment",
+    "Pflicht"
+   ],
+   "r": 0,
+   "anschluss": "Wie spricht man in deinem Land mit der Polizei?"
+  },
+  {
+   "q": "Welcher Ausdruck leitet ein Abwägen ein?",
+   "o": [
+    "„Einerseits … andererseits …“",
+    "„Quatsch!“",
+    "„Auf jeden Fall.“"
+   ],
+   "r": 0,
+   "anschluss": "Bei welchem Thema bist du gerade hin- und hergerissen?"
+  },
+  {
+   "q": "Was bedeutet „Unterm Strich …“?",
+   "o": [
+    "Am Ende, alles zusammen betrachtet",
+    "Unter dem Tisch",
+    "Ganz am Anfang"
+   ],
+   "r": 0,
+   "anschluss": "Was ist unterm Strich dein Fazit zu „du“ und „Sie“?"
+  },
+  {
+   "q": "Warum duzen viele Marken in der Werbung?",
+   "o": [
+    "um nahbar und jung zu wirken",
+    "weil es billiger ist",
+    "weil das Gesetz es verlangt"
+   ],
+   "r": 0,
+   "anschluss": "Welche Werbung ist dir zuletzt aufgefallen?"
+  },
+  {
+   "q": "Wie wirkt es meistens, ein angebotenes „du“ abzulehnen?",
+   "o": [
+    "schnell kühl – außer man begründet es diplomatisch",
+    "immer sehr freundlich",
+    "völlig egal"
+   ],
+   "r": 0,
+   "anschluss": "Würdest du ein „du“ jemals ablehnen?"
+  }
+ ],
+ "merk": "„Du“ oder „Sie“ ist keine Grammatik-, sondern eine Beziehungsfrage: Es zeigt Nähe, Distanz und Machtverhältnisse.",
+ "tipp": "Im Beruf gilt: Ein „du“ vom Chef annehmen ist normal – aber in E-Mails an Kunden bleibt man trotzdem oft beim „Sie“.",
+ "simulator": {
+  "intro": "Ihr seid für ein Jahr nach Deutschland gezogen – in eine Führungsposition. Jede Entscheidung hat Folgen. Diskutiert, einigt euch, begründet!",
+  "start": "s1",
+  "szenen": {
+   "s1": {
+    "bild": "bilder/landeskunde/duzen-sim-start.webp",
+    "text": "Erster Tag als Teamleitung. Im Team sind Leute zwischen 24 und 61. Wie sprecht ihr sie an?",
+    "optionen": [
+     {
+      "t": "Ihr bietet allen sofort das „du“ an.",
+      "folge": "Die Jüngeren freuen sich. Herr Peters (61) wirkt reserviert.",
+      "punkte": 2,
+      "next": "s2"
+     },
+     {
+      "t": "Ihr siezt alle und wartet ab, was im Team üblich ist.",
+      "folge": "Gute Beobachtung: Ihr merkt, dass sich das Team untereinander duzt – außer mit Herrn Peters.",
+      "punkte": 3,
+      "next": "s2"
+     },
+     {
+      "t": "Ihr duzt nur die Jüngeren.",
+      "folge": "Das sorgt für Getuschel: Wer gehört dazu, wer nicht?",
+      "punkte": 0,
+      "next": "s2"
+     }
+    ]
+   },
+   "s2": {
+    "bild": "bilder/landeskunde/duzen-sim-peters.webp",
+    "text": "Herr Peters sagt: „Ich bleibe lieber beim Sie. Nehmen Sie es bitte nicht persönlich.“",
+    "optionen": [
+     {
+      "t": "„Selbstverständlich, Herr Peters. Ich schätze Ihre Offenheit.“",
+      "folge": "Herr Peters nickt. Die Beziehung ist stabil.",
+      "punkte": 3,
+      "next": "s3"
+     },
+     {
+      "t": "„Bei uns duzen sich aber alle.“",
+      "folge": "Herr Peters fühlt sich unter Druck gesetzt.",
+      "punkte": 0,
+      "next": "s3"
+     },
+     {
+      "t": "Ihr sagt nichts und duzt ihn trotzdem weiter.",
+      "folge": "Herr Peters beschwert sich bei der Personalabteilung.",
+      "punkte": 0,
+      "next": "s3"
+     }
+    ]
+   },
+   "s3": {
+    "bild": "bilder/landeskunde/duzen-sim-kunde.webp",
+    "text": "Ein wichtiger Kunde (Mitte 50) kommt zum Meeting. Ihr kennt ihn nicht.",
+    "optionen": [
+     {
+      "t": "Ihr siezt ihn – und duzt euer Team im Meeting weiter.",
+      "folge": "Realistisch und professionell. Der Kunde findet das ganz normal.",
+      "punkte": 3,
+      "next": "s4"
+     },
+     {
+      "t": "Ihr duzt ihn, damit es locker wird.",
+      "folge": "Er antwortet konsequent mit „Sie“. Ihr wirkt etwas unseriös.",
+      "punkte": 0,
+      "next": "s4"
+     },
+     {
+      "t": "Ihr siezt im Meeting alle, auch das Team.",
+      "folge": "Das Team ist irritiert – das wirkt gespielt.",
+      "punkte": 1,
+      "next": "s4"
+     }
+    ]
+   },
+   "s4": {
+    "bild": "bilder/landeskunde/duzen-sim-feedback.webp",
+    "text": "Ein Jahr später. Eine junge Kollegin sagt: „Seit wir uns duzen, traue ich mich nicht mehr, dich zu kritisieren – das wirkt so persönlich.“",
+    "optionen": [
+     {
+      "t": "Ihr führt wieder „Sie“ für alle ein.",
+      "folge": "Ein harter Bruch. Viele sind verunsichert.",
+      "punkte": 0,
+      "next": "ende"
+     },
+     {
+      "t": "Ihr sprecht im Team offen darüber und vereinbart feste Feedback-Regeln.",
+      "folge": "Stark! Ihr zeigt: Respekt hängt nicht am Pronomen, sondern an der Kultur.",
+      "punkte": 3,
+      "next": "ende"
+     },
+     {
+      "t": "„Das ist doch dein Problem.“",
+      "folge": "Die Kollegin zieht sich zurück. Das Team-Klima leidet.",
+      "punkte": 0,
+      "next": "ende"
+     }
+    ]
+   }
+  },
+  "ende": [
+   {
+    "ab": 10,
+    "text": "🏆 Diplomatie-Profis! Ihr versteht, dass „du“ und „Sie“ Beziehungsfragen sind."
+   },
+   {
+    "ab": 6,
+    "text": "👍 Solide! Bei Grenzen und Hierarchien noch feinfühliger sein."
+   },
+   {
+    "ab": 0,
+    "text": "💡 Merke: Das „du“ anbieten ist leicht – es gut leben ist die Kunst."
+   }
+  ]
+ }
 });
 
 /* ---------- DUZEN & SIEZEN · 🟦 B1·B2 ---------- */
-stufe('duzen','bb',{
-  titel:'Duzen & Siezen', emoji:'🤝', bereich:'Landeskunde DACH',
-  intro:'Wer bietet wem das „du“ an – und warum ist das manchmal so kompliziert?',
-  glossar:{
-    'das Du anbieten':{e:'🎁',t:'sagen: „Wollen wir uns duzen?“ Das macht meistens die ältere oder wichtigere Person.'},
-    'förmlich':{e:'🎩',t:'offiziell und höflich, mit Abstand.'},
-    'Hierarchie':{e:'🪜',t:'wer in einer Firma oben ist (Chef) und wer unten.'}
-  },
-  dach:[
-    'Normalerweise darf die ältere Person oder der Chef <g>das Du anbieten</g>. Die jüngere Person fragt besser nicht zuerst.',
-    'In vielen Start-ups und großen Firmen duzen sich alle – auch mit dem Chef. In Banken und Behörden ist es oft <g>förmlich</g>.',
-    'Wo die <g>Hierarchie</g> flach ist, duzt man schneller.',
-    'In der Schweiz duzt man oft schneller als in Deutschland. In Österreich sind Titel wie „Frau Doktor“ noch wichtiger.',
-    'Im Internet, in Werbung und in Apps sagt man fast immer „du“.'
-  ],
-  skala:{titel:'🤝 Wo duzt man?', legende:'🔴 meistens „Sie“ &nbsp; 🟡 kommt darauf an &nbsp; 🟢 meistens „du“. Und wie ist das in eurem Land?'},
-  situationen:[
-    {o:'Behörde & Bank', ic:'🏦', s:3, meter:90, w:'Sie', t:'Offiziell und förmlich – hier bleibt man beim „Sie“.'},
-    {o:'Büro & Firma', ic:'💼', s:2, meter:55, w:'kommt darauf an', t:'Start-up: „du“. Alte Firma: oft „Sie“.'},
-    {o:'Verein & Internet', ic:'⚽', s:1, meter:15, w:'du', t:'Im Sportverein und online duzt man sofort.'}
-  ],
-  merk:'Das „du“ bietet meistens die ältere Person oder der Chef an. Wer unsicher ist, wartet – oder fragt freundlich.',
-  ablauf:'Lest zuerst gemeinsam die Fakten. Dann nimmt sich <b>eine Person eine Frage</b> und liest sie vor. <b>Alle antworten reihum</b> und stellen danach die Folgefragen.',
-  fragen:[
-    {q:'Duzt oder siezt ihr euch bei der Arbeit oder im Kurs?', folge:['Wer hat das „du“ angeboten?','Findest du das gut so?'], antw:['Bei uns duzen sich alle, auch mit dem Chef.','Mit den Kollegen duze ich mich, den Chef sieze ich.','Am Anfang haben wir uns gesiezt, später geduzt.']},
-    {q:'Ist dir schon mal ein „du“ oder „Sie“ falsch herausgerutscht?', folge:['Wie hat die andere Person reagiert?','Was hast du dann gesagt?'], antw:['Ja, ich habe meine Vermieterin aus Versehen geduzt.','Das war mir ein bisschen peinlich.','Die Person hat gelacht und gesagt: „Kein Problem!“']},
-    {q:'Was gefällt dir besser: „du“ oder „Sie“?', folge:['Wirkt „Sie“ für dich kalt oder respektvoll?','Wie ist das in deinem Land mit Älteren?'], antw:['Mir gefällt „du“ besser, das ist persönlicher.','Ich finde „Sie“ respektvoll, nicht kalt.','In meinem Land spricht man Ältere sehr höflich an.']}
-  ],
-  chunks:[
-    {h:'🎁 Das „du“ anbieten und annehmen', l:['Wir können uns gern duzen.','Ich heiße übrigens Markus.','Gern, das ist mir sogar lieber!']},
-    {h:'😅 Einen Fehler retten', l:['Oh, Entschuldigung – ich meinte natürlich „Sie“.','Duzen wir uns schon oder noch nicht?','Ich bin mir da nie ganz sicher.']}
-  ],
-  vokabeln:[
-    {w:'das Du anbieten', bsp:'Mein Chef hat mir das Du angeboten.', ue:'vorschlagen, dass man sich duzt'},
-    {w:'förmlich', bsp:'Die E-Mail ist sehr förmlich.', ue:'offiziell, mit Abstand'},
-    {w:'die Anrede', bsp:'Die Anrede in Briefen ist „Sehr geehrte Frau …“.', ue:'wie man eine Person anspricht'},
-    {w:'aus Versehen', bsp:'Ich habe sie aus Versehen geduzt.', ue:'ohne Absicht, nicht geplant'},
-    {w:'peinlich', bsp:'Der Fehler war mir peinlich.', ue:'man schämt sich ein bisschen'},
-    {w:'der Respekt', bsp:'„Sie“ zeigt Respekt.', ue:'man achtet eine andere Person'}
-  ],
-  tipp:'Duzt dich jemand, darfst du meistens zurückduzen. Siezt dich jemand, bleib beim „Sie“, bis dir das „du“ angeboten wird.',
-  mission:{t:'Benutzt 5 neue Wörter', d:'Jedes neue Wort aus dieser Stunde zählt. Schafft ihr 5?', pts:20},
-  aktiv:{
-    titel:'Spielt eine kleine Szene', emoji:'🎭',
-    aufgabe:'Ihr arbeitet seit drei Monaten zusammen und siezt euch noch. Eine Person möchte das ändern.',
-    rollenA:'🙋 Du bist länger in der Firma. Biete das „du“ an.',
-    rollenB:'💼 Du bist neuer. Reagiere – freust du dich oder bist du lieber vorsichtig?',
-    hilfe:['Wir arbeiten jetzt schon so lange zusammen …','Wollen wir uns nicht duzen?','Sehr gern! Ich heiße übrigens …','Gern, aber vor Kunden sage ich lieber noch „Sie“.'],
-    pts:15
-  },
-  quiz:[
-    {q:'Wer bietet normalerweise das „du“ an?',o:['die jüngere Person','die ältere Person oder der Chef','immer der Gast'],r:1},
-    {q:'Wo siezt man fast immer?',o:['im Sportverein','auf Instagram','bei der Behörde'],r:2},
-    {q:'Dein neuer Kollege duzt dich. Was kannst du tun?',o:['zurückduzen','ihn ignorieren','„Frau“ sagen'],r:0},
-    {q:'Wo duzt man oft schneller als in Deutschland?',o:['in der Schweiz','beim Amt','vor Gericht'],r:0}
-  ]
-});
-
-/* ---------- DUZEN & SIEZEN · 🟩 B2·C1 ---------- */
-stufe('duzen','bc',{
-  titel:'Duzen & Siezen', emoji:'🤝', bereich:'Landeskunde DACH',
-  intro:'Ein kleines Wort mit großer Wirkung: Was sagt das „du“ über eine Gesellschaft?',
-  glossar:{
-    'Distanz':{e:'↔️',t:'innerer Abstand zwischen Menschen, z. B. im Beruf.'},
-    'Beleidigung':{e:'⚠️',t:'ein Wort oder eine Handlung, die jemanden kränkt. Kann sogar strafbar sein.'},
-    'Brüderschaft trinken':{e:'🍻',t:'alter Brauch: Man trinkt zusammen und duzt sich danach.'},
-    'Duz-Kultur':{e:'🌐',t:'wenn in einer Firma oder Branche alle „du“ sagen.'}
-  },
-  dach:[
-    'Das „Sie“ schafft <g>Distanz</g> – das kann Respekt zeigen, aber auch Kälte.',
-    'Viele Firmen haben eine <g>Duz-Kultur</g> eingeführt, damit alle sich näher und gleichberechtigt fühlen.',
-    'Wer einen Polizisten bewusst duzt, riskiert, dass das als <g>Beleidigung</g> gilt – im Extremfall droht eine Geldstrafe.',
-    'Früher hat man oft <g>Brüderschaft trinken</g> müssen, um sich zu duzen. Heute geht es meistens schneller.',
-    'Ein angebotenes „du“ abzulehnen, wirkt in Deutschland schnell unfreundlich.'
-  ],
-  skala:{titel:'🤝 Nähe oder Distanz?', legende:'🔴 viel Distanz &nbsp; 🟡 gemischt &nbsp; 🟢 viel Nähe. Und wie ist das in eurem Land?'},
-  situationen:[
-    {o:'Polizei & Gericht', ic:'⚖️', s:3, meter:98, w:'nur „Sie“', t:'Ein „du“ kann hier als Beleidigung gelten.'},
-    {o:'Konzern & Kundschaft', ic:'🏢', s:2, meter:60, w:'gemischt', t:'Intern „du“, gegenüber Kunden oft „Sie“.'},
-    {o:'Start-up & Social Media', ic:'📱', s:1, meter:10, w:'nur „du“', t:'Hier wirkt „Sie“ fast schon seltsam.'}
-  ],
-  merk:'„Du“ oder „Sie“ ist keine Grammatik-, sondern eine Beziehungsfrage: Es zeigt Nähe, Distanz und Machtverhältnisse.',
-  ablauf:'Lest zuerst gemeinsam die Fakten. Eine Person liest eine Frage vor, <b>alle antworten reihum</b>. Widersprecht euch ruhig – begründet eure Meinung.',
-  fragen:[
-    {q:'Sollten Firmen das „du“ für alle einführen?', folge:['Wird die Hierarchie dadurch wirklich flacher?','Ist es leichter, einen Chef zu kritisieren, den man duzt?'], antw:['Ich finde das gut, weil es die Zusammenarbeit lockerer macht.','Meiner Meinung nach ändert ein Wort nichts an der Macht des Chefs.','Einerseits schafft das „du“ Nähe, andererseits fehlt manchmal die Grenze.']},
-    {q:'Kann man ein angebotenes „du“ ablehnen?', folge:['Wie würdest du das höflich formulieren?','In welcher Situation würdest du lieber beim „Sie“ bleiben?'], antw:['Theoretisch ja, aber das wirkt schnell kühl.','Ich würde sagen, dass ich mich mit „Sie“ wohler fühle.','Bei meinem Vermieter bleibe ich lieber beim „Sie“.']},
-    {q:'Stirbt das „Sie“ irgendwann aus?', folge:['Welche Rolle spielen Werbung und Internet dabei?','Wäre das ein Verlust oder ein Fortschritt?'], antw:['Ich glaube schon, weil junge Leute fast nur noch duzen.','Nein, bei Behörden und vor Gericht wird es bleiben.','Für mich wäre das ein Verlust, weil „Sie“ Respekt zeigt.']}
-  ],
-  chunks:[
-    {h:'💬 Meinung begründen', l:['Ich bin der Meinung, dass …, weil …','Einerseits …, andererseits …','Das sehe ich ganz anders.']},
-    {h:'🎩 Höflich ablehnen', l:['Das ist sehr nett, aber mir ist „Sie“ im Beruf lieber.','Darf ich vorerst beim „Sie“ bleiben?','Nehmen Sie es bitte nicht persönlich.']}
-  ],
-  vokabeln:[
-    {w:'die Distanz', bsp:'Das „Sie“ schafft Distanz.', ue:'innerer Abstand zwischen Menschen'},
-    {w:'die Beleidigung', bsp:'Das Duzen eines Polizisten kann als Beleidigung gelten.', ue:'Worte, die jemanden kränken'},
-    {w:'gleichberechtigt', bsp:'Im Team sind alle gleichberechtigt.', ue:'alle haben dieselben Rechte'},
-    {w:'ablehnen', bsp:'Sie hat das Du abgelehnt.', ue:'„nein“ sagen zu einem Angebot'},
-    {w:'die Grenze', bsp:'Mit „Sie“ ziehe ich eine klare Grenze.', ue:'bis hierhin und nicht weiter'},
-    {w:'aussterben', bsp:'Stirbt das „Sie“ aus?', ue:'langsam ganz verschwinden'}
-  ],
-  tipp:'Im Beruf gilt: Ein „du“ vom Chef annehmen ist normal – aber in E-Mails an Kunden bleibt man trotzdem oft beim „Sie“.',
-  mission:{t:'Benutzt 5 neue Wörter', d:'Jedes neue Wort aus dieser Stunde zählt. Schafft ihr 5?', pts:20},
-  aktiv:{
-    titel:'Spielt eine kleine Szene', emoji:'🎭',
-    aufgabe:'Teamsitzung: Die Firma will ab Montag eine Duz-Kultur für alle. Eine Person ist dafür, eine dagegen.',
-    rollenA:'🚀 Du bist dafür. Nenne zwei Gründe.',
-    rollenB:'🎩 Du bist skeptisch. Erkläre, was du befürchtest.',
-    hilfe:['Ich bin dafür, weil wir dann schneller und offener reden.','Ich befürchte, dass die Grenzen verschwinden.','Und was machen wir mit Kunden?','Wie wäre es mit einem Kompromiss: intern „du“, extern „Sie“?'],
-    pts:15
-  },
-  quiz:[
-    {q:'Was kann passieren, wenn man einen Polizisten bewusst duzt?',o:['Es kann als Beleidigung gelten.','Man bekommt einen Preis.','Nichts, das ist normal.'],r:0},
-    {q:'Was bedeutet „Brüderschaft trinken“?',o:['einen Streit beenden','zusammen trinken und sich danach duzen','nur mit Brüdern feiern'],r:1},
-    {q:'Warum führen Firmen eine Duz-Kultur ein?',o:['damit sich alle näher und gleichberechtigt fühlen','damit Kunden weniger kaufen','weil es ein Gesetz gibt'],r:0},
-    {q:'Wie wirkt es in Deutschland, ein angebotenes „du“ abzulehnen?',o:['sehr lustig','schnell unfreundlich','völlig egal'],r:1}
-  ]
-});
-
-/* ---------- SMALLTALK & HÖFLICHKEIT · 🟨 A2·B1 (aus alter Landeskunde-App übernommen + ergänzt) ---------- */
 stufe('smalltalk','ab',{"titel": "Smalltalk & Höflichkeit", "emoji": "💬", "bereich": "Landeskunde DACH", "intro": "Worüber redet man mit Fremden – und worüber lieber nicht?", "glossar": {"Floskel": {"e": "🗨️", "t": "ein Satz, den man aus Höflichkeit sagt. Man meint ihn nicht ganz wörtlich."}, "Smalltalk": {"e": "☕", "t": "ein kurzes, lockeres Gespräch über einfache Themen."}}, "dach": ["Typische <g>Smalltalk</g>-Themen: Wetter, Wochenende, Urlaub, Essen – nicht Gehalt, Alter oder Politik.", "Beim Ankommen sagt man „Hallo / Guten Tag“, beim Gehen „Tschüss / Auf Wiedersehen“, auch im Laden.", "„Wie geht’s?“ ist oft nur höfliche <g>Floskel</g> – eine kurze Antwort reicht.", "Man hält etwas Abstand und schaut beim Sprechen in die Augen."], "skala": {"titel": "💬 Welches Thema passt?", "legende": "🔴 lieber nicht &nbsp; 🟡 nur mit Freunden &nbsp; 🟢 immer gut. Und wie ist das in eurem Land?"}, "situationen": [{"o": "Gehalt & Geld", "ic": "💶", "s": 3, "meter": 92, "w": "lieber nicht", "t": "Über Geld spricht man mit Fremden fast nie."}, {"o": "Familie & Liebe", "ic": "❤️", "s": 2, "meter": 55, "w": "mit Freunden", "t": "Erst wenn man sich besser kennt."}, {"o": "Wetter & Wochenende", "ic": "🌤️", "s": 1, "meter": 12, "w": "immer gut", "t": "Das passt immer – beim Bäcker, im Büro, im Bus."}], "merk": "Beim Smalltalk: Wetter, Wochenende, Urlaub – ja. Geld, Alter, Politik – lieber nicht.", "fragen": [{"q": "Und, was hast du am Wochenende gemacht?", "folge": ["Mit wem warst du unterwegs?", "Was machst du nächstes Wochenende?"], "antw": ["Ich habe mich mit Freunden getroffen.", "Nicht viel – ich habe mich ausgeruht.", "Ich war einkaufen und spazieren."]}, {"q": "Worüber macht man in deinem Land Smalltalk?", "folge": ["Welche Themen sind bei euch tabu?", "Fällt dir Smalltalk auf Deutsch leicht?"], "antw": ["Bei uns redet man oft über Essen und Familie.", "Über Geld spricht man bei uns nicht.", "Smalltalk auf Deutsch finde ich noch schwer."]}, {"q": "Wie begrüßt man sich in deiner Kultur?", "folge": ["Gibt man sich die Hand oder umarmt man sich?", "Was sagt man beim Abschied?"], "antw": ["Bei uns umarmt man sich zur Begrüßung.", "Wir geben uns die Hand.", "Zum Abschied sagt man bei uns …"]}], "chunks": [{"h": "Smalltalk beginnen", "l": ["Schönes Wetter heute, oder?", "Und, wie war dein Tag?", "Warst du schon mal in …?"]}, {"h": "Höflich reagieren", "l": ["Ach, interessant!", "Das klingt schön.", "Oh, das tut mir leid."]}], "vokabeln": [{"w": "der Smalltalk", "bsp": "An der Bushaltestelle machen wir oft Smalltalk.", "ue": "kurzes, lockeres Gespräch"}, {"w": "die Floskel", "bsp": "„Wie geht’s?“ ist oft nur eine Floskel.", "ue": "höflicher Satz ohne tiefe Bedeutung"}, {"w": "höflich", "bsp": "Er ist immer sehr höflich.", "ue": "freundlich und respektvoll"}, {"w": "begrüßen", "bsp": "Man begrüßt auch die Verkäuferin.", "ue": "Hallo sagen; willkommen heißen"}], "tipp": "In kleinen Läden oder beim Bäcker ruhig „Hallo“ und „Tschüss“ sagen – das gehört dazu und wirkt freundlich.", "mission": {"t": "Benutzt 5 neue Wörter", "d": "Jedes neue Wort aus dieser Stunde zählt. Schafft ihr 5?", "pts": 20}, "aktiv": {"titel": "Spielt eine kleine Szene", "emoji": "🎭", "aufgabe": "Ihr steht zusammen an der Bushaltestelle. Der Bus kommt zu spät.", "rollenA": "🙋 Beginne ein kurzes Gespräch übers Wetter oder den Bus.", "rollenB": "🚌 Antworte freundlich und stell eine Frage zurück.", "hilfe": ["Der Bus ist heute wieder spät, oder?", "Ja, und es ist so kalt heute!", "Fahren Sie auch in die Stadt?", "Schönen Tag noch!"], "pts": 15}, "quiz": [{"q": "Welches Thema passt gut für Smalltalk?", "o": ["das Wetter", "das Gehalt", "die Politik"], "r": 0}, {"q": "„Wie geht’s?“ – was ist eine gute Antwort?", "o": ["eine lange Geschichte", "„Gut, danke! Und dir?“", "gar nichts sagen"], "r": 1}, {"q": "Was sagt man beim Bäcker, wenn man geht?", "o": ["„Tschüss!“", "„Guten Appetit!“", "„Prost!“"], "r": 0}]});
 
 /* ---------- NACHBARSCHAFT · 🟦 B1·B2 (aus alter Landeskunde-App übernommen + ergänzt) ---------- */
@@ -711,15 +2724,26 @@ function closeGloss(){gpop.classList.remove('on');}
 const dot='●',cir='○';
 function meterline(n){return dot.repeat(n)+cir.repeat(3-n);}
 let SL=[];
-function buildSL(){ SL=[];
-// 0 Titel
+/* ================= Gerüst v2 (26.11.2026) =================
+   Jede Station erscheint nur, wenn das Thema Daten dafür hat.
+   Reihenfolge = Lernbogen: verstehen → merken → gelenkt üben → frei sprechen → festigen.
+   Alte Felder (vokabeln, mission, aktiv, chunks) laufen weiter, falls vorhanden. */
+const mk=s=>String(s==null?'':s).replace(/<m>(.*?)<\/m>/g,'<mark class="m">$1</mark>');
+const ohneTags=s=>String(s==null?'':s).replace(/<[^>]+>/g,'');
+const sg=t=>`<div class="sogehts">👉 ${t}</div>`;
+function foto(src,em){return `<div class="foto"><img src="${src||''}" alt="" onerror="this.parentNode.classList.add('leer');this.remove()"><span class="ph">${em||'📷'}</span></div>`;}
+function sag(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(ohneTags(t));u.lang='de-DE';u.rate=.92;speechSynthesis.speak(u);}catch(e){}}
+const ST={};   // Zustand der interaktiven Stationen (pro Einheit neu)
+
+function buildSL(){ SL=[]; for(const k in ST) delete ST[k];
+// Titel
 SL.push(()=>`<div class="slide">
   <span class="kicker">${T.bereich} · ${T.niveau}</span>
   <svg class="spark" style="top:17vh;left:40vw" viewBox="0 0 42 42"><line x1="21" y1="3" x2="21" y2="14"/><line x1="5" y1="9" x2="14" y2="18"/><line x1="37" y1="9" x2="28" y2="18"/></svg>
   <div class="clock"><div class="ring"></div><span class="em">${T.emoji||'💬'}</span></div>
   <div class="big-word"><h1>${T.titel}</h1><svg class="swoosh" viewBox="0 0 460 30" preserveAspectRatio="none"><path d="M6 20 C130 5, 340 5, 454 13"/></svg></div>
-  <p class="s-sub">${T.intro}</p></div>`);
-// 1 Rollen (einfach + visuell)
+  <p class="s-sub">${T.intro||''}</p></div>`);
+// Rollen in der Dreiergruppe
 SL.push(()=>`<div class="slide">
   <div class="s-h">👥 Wer macht was?</div>
   <p class="s-sub">Ihr seid zu dritt. Jeder bekommt eine Aufgabe. 🔁 Wechselt die Rollen nach jeder Station.</p>
@@ -728,83 +2752,237 @@ SL.push(()=>`<div class="slide">
     <div class="rolle"><div class="em">❓</div><div class="rn">Der Frager</div><div class="rd">Du stellst die Fragen an die Gruppe.</div><div class="who">Person 2</div></div>
     <div class="rolle"><div class="em">⏱️</div><div class="rn">Die Uhr</div><div class="rd">Du passt auf die Zeit auf und tippst „weiter“.</div><div class="who">Person 3</div></div>
   </div></div>`);
-// 2 So macht ihr das (ganz einfach, Schritte)
-SL.push(()=>`<div class="slide">
-  <div class="s-h">✅ So einfach geht's</div>
-  <p class="s-sub">Immer gleich. Keine Angst – ihr schafft das!</p>
-  <div class="card" style="max-width:820px;margin-top:22px">
-    ${[['1️⃣','Einer liest laut vor.'],['2️⃣','Alle antworten – einer nach dem anderen.'],['3️⃣','Ihr wisst nicht weiter? Nehmt die grünen Sätze. 💚'],['4️⃣','Fertig? Tippt auf „weiter“ ›']].map(s=>`<div class="fakt"><div class="ic" style="background:var(--gold);color:#17110A;font-size:1.1rem">${s[0]}</div><div class="t">${s[1]}</div></div>`).join('')}
-  </div></div>`);
-// 3 DACH (Input)
-SL.push(()=>`<div class="slide">
+
+// 1 Einstieg mit Foto + Ratefrage
+if(T.einstieg){ SL.push(()=>{const e=T.einstieg; return `<div class="slide">
+  <span class="kicker">🤔 Was meint ihr?</span>
+  <div class="zwei">${foto(e.bild,T.emoji)}
+   <div><div class="frage-q" style="font-size:clamp(1.4rem,2.6vw,2.1rem)">${e.frage}</div>
+    ${sg('Jeder rät kurz und sagt <b>warum</b>. Dann tippt eine Antwort.')}
+    <div class="optlist" style="margin-top:16px">${e.o.map((o,i)=>`<button class="opt" onclick="einstiegAns(${i},this)"><span class="mk">${String.fromCharCode(65+i)}</span>${o}</button>`).join('')}</div>
+    <div class="feedback info" id="ein-fb">💡 ${e.aufloesung||''}</div></div></div></div>`;}); }
+
+// 2 So ist es in DACH
+if(T.dach){ SL.push(()=>`<div class="slide">
   <div class="s-h">🇩🇪 🇦🇹 🇨🇭 <span class="u">So ist es hier<svg viewBox="0 0 300 16" preserveAspectRatio="none"><path d="M5 10 C90 4, 210 4, 295 8"/></svg></span></div>
-  <p class="s-sub">Lest zusammen. 👆 Tippt auf <b style="color:var(--gold)">gelbe Wörter</b> – sie werden erklärt.</p>
-  <div class="card" style="max-width:900px;margin-top:22px">${T.dach.map(f=>`<div class="fakt"><div class="ic">✓</div><div class="t">${gloss(f)}</div></div>`).join('')}</div></div>`);
-// 4 Wo gilt das
-SL.push(()=>`<div class="slide">
-  <div class="s-h">${T.skala.titel}</div>
-  <p class="s-sub">${T.skala.legende}</p>
-  <div class="grid g3">${T.situationen.map(s=>`<div class="card sit s${s.s}"><div class="badge">${IC[s.ic]||`<span style="font-size:1.6em">${s.ic}</span>`}</div><div class="o">${s.o}<span class="tag">${s.w}</span></div><div class="t">${s.t}</div><div class="meter"><i data-w="${s.meter}"></i></div></div>`).join('')}</div></div>`);
-// 5 Merke
-SL.push(()=>`<div class="slide" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px">
+  ${sg('Lest zusammen. Tippt auf <b>gelbe Wörter</b> – sie werden erklärt.')}
+  <div class="card" style="max-width:900px;margin-top:22px">${T.dach.map(f=>`<div class="fakt"><div class="ic">✓</div><div class="t">${gloss(f)}</div></div>`).join('')}</div></div>`); }
+
+// 3 Ampel „Wo gilt das?“
+if(T.situationen && T.situationen.length){ SL.push(()=>`<div class="slide">
+  <div class="s-h">${(T.skala&&T.skala.titel)||'⏱️ Wo ist es wichtig?'}</div>
+  <p class="s-sub">${(T.skala&&T.skala.legende)||''}</p>
+  <div class="grid g3">${T.situationen.map(s=>`<div class="card sit s${s.s}"><div class="badge">${IC[s.ic]||`<span style="font-size:1.6em">${s.ic}</span>`}</div><div class="o">${s.o}<span class="tag">${s.w}</span></div><div class="t">${s.t}</div><div class="meter"><i data-w="${s.meter}"></i></div></div>`).join('')}</div></div>`); }
+
+// (alt) Merke früh, wenn es keinen v2-Lernbogen gibt
+if(T.merk && !T.redemittel){ SL.push(()=>`<div class="slide" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px">
   <span class="kicker">💡 Das Wichtigste</span>
-  <div class="merk" style="margin-top:14px"><span class="ml">💡 Merke</span><div class="mt">${T.merk}</div></div></div>`);
-// 6 Mission (konkret + zum Antippen)
-SL.push(()=>`<div class="slide">
+  <div class="merk" style="margin-top:14px"><span class="ml">💡 Merke</span><div class="mt">${T.merk}</div></div></div>`); }
+
+// 4 Redemittel nach Funktion
+if(T.redemittel && T.redemittel.length){ SL.push(()=>`<div class="slide">
+  <div class="s-h">🧩 So sagt man das</div>
+  ${sg('Lest die Sätze laut. Tippt einen Satz an → Beispiel + 🔊 anhören.')}
+  <div class="rm-grid">${T.redemittel.map((g,i)=>`<div class="rm-box ${g.farbe==='tuerkis'?'':g.farbe}"><div class="rm-f">${g.funktion}</div>
+    ${g.items.map((it,j)=>`<button class="rm-i" onclick="this.classList.toggle('open')">${mk(it.s)}<span class="bsp"><span class="say" onclick="event.stopPropagation();sag(T.redemittel[${i}].items[${j}].bsp)">🔊</span>${it.bsp||''}</span></button>`).join('')}
+  </div>`).join('')}</div></div>`); }
+
+// 5 Beispieldialog (Zeile für Zeile)
+if(T.dialog && T.dialog.zeilen){ SL.push(()=>`<div class="slide" data-init="dialogInit">
+  <div class="s-h">💬 So klingt das</div>
+  <p class="s-sub" style="margin-top:8px">${T.dialog.situation||''}</p>
+  ${sg('Zwei Personen lesen die Rollen <b>A</b> und <b>B</b>. Tippt „Nächste Zeile“.')}
+  <div class="chat" id="chat"></div>
+  <div class="btnrow"><button class="done-btn" style="margin-top:0" onclick="dialogNext()">Nächste Zeile ›</button><button class="ghost" onclick="dialogAlle()">Alle zeigen</button></div></div>`); }
+
+// 6 „Was sagst du hier?“
+if(T.wassagen && T.wassagen.length){ SL.push(()=>`<div class="slide" data-init="wsInit">
+  <span class="zusatz-badge">🎯 Üben</span><div class="s-h" style="margin-top:4px">🗨️ Was sagst du hier?</div>
+  ${sg('Lest die Situation. Sagt zuerst laut, was ihr sagen würdet. Dann tippt.')}
+  <div id="ws" style="margin-top:18px;max-width:860px"></div></div>`); }
+
+// 7 Satz-Puzzle
+if(T.puzzle && T.puzzle.length){ SL.push(()=>`<div class="slide" data-init="pzInit">
+  <span class="zusatz-badge">🎯 Üben</span><div class="s-h" style="margin-top:4px">🧩 Satz-Puzzle</div>
+  ${sg('Tippt links einen Anfang, dann rechts das passende Ende. Lest den ganzen Satz laut.')}
+  <div class="pz"><div class="pz-col" id="pz-l"></div><div class="pz-col" id="pz-r"></div></div>
+  <div class="mgoal" id="pz-goal"></div></div>`); }
+
+// 8 Lückendialog
+if(T.luecken && T.luecken.zeilen){ SL.push(()=>{const L=T.luecken; return `<div class="slide">
+  <span class="zusatz-badge">🎯 Üben</span><div class="s-h" style="margin-top:4px">✍️ Was fehlt?</div>
+  ${sg('Lest den Dialog zu zweit. Sagt das fehlende Wort – dann tippt auf die Lücke.')}
+  ${L.woerter?`<div class="wbank">${L.woerter.map(w=>`<span>${w}</span>`).join('')}</div>`:''}
+  <div class="chat">${L.zeilen.map((z,i)=>`<div class="bub ${z.wer==='B'?'B':'A'}"><span class="wer">${z.wer}</span><span>${String(z.t).replace('___',`<button class="gap" onclick="this.textContent=T.luecken.zeilen[${i}].loes;this.classList.add('zeig')">  ?  </button>`)}</span></div>`).join('')}</div></div>`;}); }
+
+// (alt) Mission „neue Wörter“
+if(T.mission && T.vokabeln){ SL.push(()=>`<div class="slide">
   <div class="s-h">🎯 Eure Aufgabe für die ganze Stunde</div>
   <p class="s-sub">Benutzt diese neuen Wörter beim Reden. 👆 Habt ihr ein Wort gesagt? Tippt es an!</p>
   <div class="mwords">${T.vokabeln.map(v=>`<button class="mword" onclick="missionTap(this)"><span class="chk">○</span>${v.w}</button>`).join('')}</div>
-  <div class="mgoal" id="mgoal">Schafft ihr alle Wörter? → <b>+${T.mission.pts} Punkte</b> 🎉</div></div>`);
-// 7-9 Fragen (viele Antwort-Hilfen)
-T.fragen.forEach((fr,i)=>SL.push(()=>`<div class="slide">
+  <div class="mgoal" id="mgoal">Schafft ihr alle Wörter? → <b>+${T.mission.pts} Punkte</b> 🎉</div></div>`); }
+
+// 9 Rollenspiel mit Situationskarten
+if(T.rollen && T.rollen.length){ SL.push(()=>`<div class="slide" data-init="rpInit">
+  <span class="zusatz-badge">🎭 Spiel-Station</span><div class="s-h" style="margin-top:4px">🎭 Rollenspiel</div>
+  ${sg('Wählt eine Karte. Zwei spielen, die dritte Person hört zu und hilft. Dann tauschen.')}
+  <div id="rp"></div></div>`); }
+
+// 10 Fragen zum Reden
+(T.fragen||[]).forEach((fr,i)=>SL.push(()=>`<div class="slide">
   <span class="kicker">💬 Redet zusammen · Frage ${i+1}</span>
   <div class="frage-q" style="margin-top:18px"><span class="qn">${i+1}</span>${fr.q}</div>
   <div class="fcols">
-    <div class="fbox folge"><div class="lbl">❓ Fragt auch noch</div><ul>${fr.folge.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-    <div class="fbox antw"><div class="lbl">💚 So kannst du antworten</div><ul>${fr.antw.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    <div class="fbox folge"><div class="lbl">❓ Fragt auch noch</div><ul>${(fr.folge||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    <div class="fbox antw"><div class="lbl">💚 So kannst du antworten</div><ul>${(fr.antw||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div>
   </div></div>`));
-// 10 Aktiv-Aufgabe: Rollenspiel
-SL.push(()=>`<div class="slide">
+
+// (alt) Einzel-Rollenspiel
+if(T.aktiv && !T.rollen){ SL.push(()=>`<div class="slide">
   <span class="zusatz-badge">🎭 Spiel-Station</span>
   <div class="s-h">${T.aktiv.emoji} ${T.aktiv.titel}</div>
   <div class="task-card" style="margin-top:16px">
-    <div class="tl">🎬 Die Situation</div>
-    <div class="ts">${T.aktiv.aufgabe}</div>
+    <div class="tl">🎬 Die Situation</div><div class="ts">${T.aktiv.aufgabe}</div>
     <div class="grid g2" style="margin-top:16px">
       <div class="card" style="box-shadow:none;border:2px solid var(--tur)"><div class="o" style="font-weight:800">${T.aktiv.rollenA}</div></div>
       <div class="card" style="box-shadow:none;border:2px solid var(--gold-d)"><div class="o" style="font-weight:800">${T.aktiv.rollenB}</div></div>
     </div>
     <div class="hilfe"><b>💚 Diese Sätze helfen euch:</b><ul>${T.aktiv.hilfe.map(x=>`<li>${x}</li>`).join('')}</ul></div>
   </div>
-  <button class="done-btn" onclick="winPts(${T.aktiv.pts},this)">✅ Szene gespielt! +${T.aktiv.pts} Punkte</button></div>`);
-// 11 Chunks
-SL.push(()=>`<div class="slide">
+  <button class="done-btn" onclick="winPts(${T.aktiv.pts},this)">✅ Szene gespielt! +${T.aktiv.pts} Punkte</button></div>`); }
+
+// 11 Mini-Debatte
+if(T.debatte){ SL.push(()=>{const d=T.debatte; return `<div class="slide">
+  <span class="kicker">⚖️ Mini-Debatte</span>
+  <div class="these">„${d.these}“</div>
+  ${sg('Eine Person ist <b>dafür</b>, eine <b>dagegen</b>, eine moderiert. Jede Seite 1 Minute. Dann tauscht.')}
+  <div class="pc"><div class="card pro"><h4>👍 Dafür</h4><ul>${d.pro.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  <div class="card contra"><h4>👎 Dagegen</h4><ul>${d.contra.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+  <button class="done-btn" onclick="winPts(15,this)">✅ Debattiert! +15 Punkte</button></div>`;}); }
+
+// (alt) Chunks
+if(T.chunks && !T.redemittel){ SL.push(()=>`<div class="slide">
   <div class="s-h">🧩 Diese Sätze helfen immer</div>
   <p class="s-sub">Fertige Bausteine – damit ihr nie stecken bleibt.</p>
-  <div class="grid g2">${T.chunks.map(c=>`<div class="card chunk-card"><div class="h4">${c.h}</div>${c.l.map(x=>`<div class="chunk">${x}</div>`).join('')}</div>`).join('')}</div></div>`);
-// 12 Vokabeln
-SL.push(()=>`<div class="slide">
+  <div class="grid g2">${T.chunks.map(c=>`<div class="card chunk-card"><div class="h4">${c.h}</div>${c.l.map(x=>`<div class="chunk">${x}</div>`).join('')}</div>`).join('')}</div></div>`); }
+
+// 12 90-Sekunden-Challenge
+if(T.challenge && T.challenge.length){ SL.push(()=>`<div class="slide">
+  <span class="zusatz-badge">⏱️ Challenge</span><div class="s-h" style="margin-top:4px">⏱️ 90 Sekunden sprechen</div>
+  ${sg('Eine Person wählt eine Frage und tippt <b>Start</b>. Sprich 90 Sekunden – die Wörter helfen dir.')}
+  <div class="ch-list">${T.challenge.map((c,i)=>`<div class="ch"><div><div class="q">${c.frage}</div><div class="hw">${(c.hilfe||[]).map(h=>`<span>${h}</span>`).join('')}</div></div><button class="go2" onclick="chStart(this)">▶ Start</button></div>`).join('')}</div></div>`); }
+
+// (alt) Vokabeln
+if(T.vokabeln && !T.redemittel){ SL.push(()=>`<div class="slide">
   <div class="s-h">📚 Neue Wörter</div>
   <p class="s-sub">👆 Tippt eine Karte an – sie dreht sich um.</p>
   <div class="vgrid">${T.vokabeln.map(v=>`<div class="flipwrap"><div class="flip" onclick="this.classList.toggle('on')">
     <div class="face ffront"><div class="w">${v.w}</div><div class="bsp">${v.bsp}</div><div class="hint2">👆 umdrehen</div></div>
-    <div class="face fback"><div class="w">${v.w}</div><div class="d">→ ${v.ue}</div></div></div></div>`).join('')}</div></div>`);
-// 13 Quiz-Challenge
-SL.push(()=>`<div class="slide"><span class="zusatz-badge">🏆 Challenge</span><div class="s-h">🏆 Quiz – wie viel wisst ihr?</div><p class="s-sub">Tippt die richtige Antwort. Jede richtige = Punkte!</p><div class="quiz" id="quiz"></div></div>`);
-// 14 Abschluss
+    <div class="face fback"><div class="w">${v.w}</div><div class="d">→ ${v.ue}</div></div></div></div>`).join('')}</div></div>`); }
+
+// 13 Quiz (+ persönliche Anschlussfrage)
+if(T.quiz && T.quiz.length){ SL.push(()=>`<div class="slide"><span class="zusatz-badge">🏆 Challenge</span><div class="s-h">🏆 Quiz – wie viel wisst ihr?</div><p class="s-sub">Tippt die richtige Antwort. Jede richtige = Punkte!</p><div class="quiz" id="quiz"></div></div>`); }
+
+// 14 Kulturschock-Simulator
+if(T.simulator && T.simulator.szenen){ SL.push(()=>`<div class="slide" data-init="simInit">
+  <span class="kicker">🧳 Kulturschock-Simulator</span>
+  <div id="sim"></div></div>`); }
+
+// 15 Merke + Tipp (v2: am Ende als Zusammenfassung)
+if(T.merk && T.redemittel){ SL.push(()=>`<div class="slide" style="display:flex;flex-direction:column;align-items:flex-start;gap:16px">
+  <span class="kicker">💡 Das Wichtigste</span>
+  <div class="merk"><span class="ml">💡 Merke</span><div class="mt">${T.merk}</div></div>
+  ${T.tipp?`<div class="tipp"><div class="ic">💡</div><div class="t">${T.tipp}</div></div>`:''}</div>`); }
+
+// Abschluss
 SL.push(()=>`<div class="slide" style="text-align:center">
   <div style="font-size:4rem">🎉</div>
   <div class="s-h" style="justify-content:center">Super gemacht!</div>
   <p class="s-sub" style="margin:10px auto 0">Ihr habt zusammen <b style="color:var(--gold);font-size:1.3em">${GROUP.score}</b> Punkte geschafft.</p>
   <div class="card" style="max-width:620px;margin:24px auto 0;text-align:left"><div class="tl" style="font-family:var(--ff-h);font-weight:800;font-size:1.1rem">🗣️ Letzte Frage – jeder sagt einen Satz:</div><div class="ts" style="margin-top:8px;font-weight:700;color:#44515a">„Das war heute neu für mich: ___“</div></div></div>`);
-
 } /* Ende buildSL */
+
+/* ---------- Logik der interaktiven Stationen ---------- */
+function einstiegAns(i,btn){const e=T.einstieg;const opts=btn.parentNode.querySelectorAll('.opt');if(ST.ein)return;ST.ein=1;
+  opts.forEach((o,j)=>{if(j===e.r)o.classList.add('right');else if(j===i)o.classList.add('wrong');else o.classList.add('dim');});
+  if(i===e.r)winPts(5);document.getElementById('ein-fb').classList.add('on');}
+// Dialog
+function bubble(z,extra){return `<div class="bub ${z.wer==='B'?'B':'A'}"><span class="wer">${z.wer}</span><span>${mk(z.t)}</span>${extra||''}</div>`;}
+function dialogInit(){ST.dz=ST.dz||0;dialogRender();}
+function dialogRender(){const c=document.getElementById('chat');if(!c)return;const Z=T.dialog.zeilen;
+  c.innerHTML=Z.slice(0,ST.dz).map((z,i)=>bubble(z,`<button class="say" onclick="sag(T.dialog.zeilen[${i}].t)">🔊</button>`)).join('')||'<div class="sogehts" style="margin:0">Tippt „Nächste Zeile“ ›</div>';}
+function dialogNext(){if(ST.dz<T.dialog.zeilen.length){ST.dz++;dialogRender();}}
+function dialogAlle(){ST.dz=T.dialog.zeilen.length;dialogRender();}
+// Was sagst du hier?
+function wsInit(){ST.wi=ST.wi||0;wsRender();}
+function wsRender(){const el=document.getElementById('ws');if(!el)return;const W=T.wassagen,i=ST.wi,w=W[i];
+  el.innerHTML=`<div style="font-family:var(--ff-h);font-weight:800;color:var(--gold);margin-bottom:8px">Situation ${i+1} von ${W.length}</div>
+  <div class="frage-q" style="font-size:clamp(1.3rem,2.4vw,1.9rem)">${w.situation}</div>
+  <div class="optlist" style="margin-top:16px">${w.o.map((o,j)=>`<button class="opt" onclick="wsAns(${j})"><span class="mk">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+  <div class="feedback" id="ws-fb"></div>
+  <div class="btnrow" id="ws-next" style="display:none"><button class="done-btn" style="margin-top:0" onclick="wsWeiter()">${i<W.length-1?'Nächste Situation ›':'Geschafft ✓'}</button></div>`;}
+function wsAns(j){const w=T.wassagen[ST.wi];if(ST['wsd'+ST.wi])return;ST['wsd'+ST.wi]=1;
+  document.querySelectorAll('#ws .opt').forEach((o,k)=>{if(k===w.r)o.classList.add('right');else if(k===j)o.classList.add('wrong');else o.classList.add('dim');});
+  const fb=document.getElementById('ws-fb');const ok=j===w.r;fb.className='feedback on '+(ok?'ok':'no');fb.innerHTML=(ok?'✅ Richtig! ':'❌ Nicht ganz. ')+(w.warum||'');
+  if(ok)winPts(5);document.getElementById('ws-next').style.display='flex';}
+function wsWeiter(){if(ST.wi<T.wassagen.length-1){ST.wi++;wsRender();}else go(1);}
+// Puzzle
+function pzInit(){if(!ST.pzOrd){ST.pzOrd=T.puzzle.map((_,i)=>i);for(let k=ST.pzOrd.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[ST.pzOrd[k],ST.pzOrd[j]]=[ST.pzOrd[j],ST.pzOrd[k]];}ST.pzOk={};}
+  ST.pzSel=null;pzRender();}
+function pzRender(){const l=document.getElementById('pz-l'),r=document.getElementById('pz-r');if(!l)return;
+  l.innerHTML=T.puzzle.map((p,i)=>`<button class="pz-t ${ST.pzOk[i]?'done':''} ${ST.pzSel===i?'sel':''}" onclick="pzLinks(${i})">${p[0]} …</button>`).join('');
+  r.innerHTML=ST.pzOrd.map(i=>`<button class="pz-t ${ST.pzOk[i]?'done':''}" id="pzr${i}" onclick="pzRechts(${i})">… ${T.puzzle[i][1]}</button>`).join('');
+  const n=Object.keys(ST.pzOk).length;document.getElementById('pz-goal').innerHTML=n===T.puzzle.length?'🎉 Alle Sätze richtig! Lest sie noch einmal laut.':`Noch <b>${T.puzzle.length-n}</b> Sätze`;}
+function pzLinks(i){if(ST.pzOk[i])return;ST.pzSel=i;pzRender();}
+function pzRechts(i){if(ST.pzSel==null||ST.pzOk[i])return;
+  if(i===ST.pzSel){ST.pzOk[i]=1;ST.pzSel=null;winPts(3);sag(T.puzzle[i][0]+' '+T.puzzle[i][1]);pzRender();}
+  else{const b=document.getElementById('pzr'+i);if(b){b.classList.remove('err');void b.offsetWidth;b.classList.add('err');}}}
+// Rollenspiel-Karten
+function rpInit(){ST.rpg=ST.rpg||{};rpListe();}
+function rpListe(){const el=document.getElementById('rp');if(!el)return;
+  el.innerHTML=`<div class="rp-grid">${T.rollen.map((r,i)=>`<button class="rp-card ${ST.rpg[i]?'gespielt':''}" onclick="rpZeig(${i})">${foto(r.bild,'🎭')}<div class="tt">${r.titel}</div><div class="st">${ST.rpg[i]?'✅ gespielt':'Karte öffnen ›'}</div></button>`).join('')}</div>`;}
+function rpZeig(i){const r=T.rollen[i],el=document.getElementById('rp');
+  el.innerHTML=`<button class="back" onclick="rpListe()">‹ Alle Karten</button>
+  <div class="rp-det"><div>${foto(r.bild,'🎭')}<div class="ziel">🎯 Ziel: ${r.ziel||''}</div></div>
+   <div><div class="these" style="margin-top:0;font-size:clamp(1.3rem,2.4vw,1.9rem)">${r.titel}</div>
+    <div class="rolle2" style="margin-top:12px"><div class="rk"><small>Rolle A</small>${r.a}</div><div class="rk b"><small>Rolle B</small>${r.b}</div></div>
+    <div class="task-card" style="margin-top:12px;padding:14px 18px"><div class="hilfe" style="margin-top:0"><b>💚 Diese Sätze helfen euch:</b><ul>${(r.hilfe||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+    <div class="btnrow">${r.beispiel?`<button class="ghost" onclick="rpBsp(${i})">👀 Beispiel zeigen</button>`:''}<button class="done-btn" style="margin-top:0" onclick="rpFertig(${i},this)">${ST.rpg[i]?'✅ Schon gespielt':'✅ Gespielt! +15'}</button></div>
+    <div class="chat" id="rp-bsp"></div></div></div>`;ohneEmoji(el);}
+function rpBsp(i){const c=document.getElementById('rp-bsp');if(!c)return;c.innerHTML=c.innerHTML?'':T.rollen[i].beispiel.map(z=>bubble(z)).join('');}
+function rpFertig(i,btn){if(ST.rpg[i])return;ST.rpg[i]=1;winPts(15,btn);}
+// 90-Sekunden-Challenge
+function chStart(btn){if(btn.dataset.lauf)return;btn.dataset.lauf=1;let s=90;btn.classList.add('run');btn.textContent='⏱ 1:30';
+  const iv=setInterval(()=>{s--;btn.textContent='⏱ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    if(s<=0||!document.body.contains(btn)){clearInterval(iv);if(document.body.contains(btn)){btn.classList.remove('run');btn.classList.add('fertig');btn.textContent='🎉 +10';winPts(10);}}},1000);}
+// Simulator
+function simInit(){if(!ST.sim)ST.sim={id:null,pkt:0,gewaehlt:null};simRender();}
+function simRender(){const el=document.getElementById('sim');if(!el)return;const S=T.simulator,z=ST.sim;
+  if(z.id===null){el.innerHTML=`<div class="these" style="font-size:clamp(1.3rem,2.4vw,1.9rem);max-width:880px">${S.intro}</div>
+    ${sg('Lest die Szene laut. Jede Person sagt kurz, was sie wählen würde und warum. <b>Einigt euch</b> – dann tippt.')}
+    <div class="btnrow"><button class="done-btn" style="margin-top:0" onclick="ST.sim.id=T.simulator.start;simRender()">🧳 Los geht’s ›</button></div>`;return;}
+  if(z.id==='ende'){const e=(S.ende||[]).slice().sort((a,b)=>b.ab-a.ab).find(x=>z.pkt>=x.ab)||{text:''};
+    el.innerHTML=`<div class="sim-ende"><div class="s-sub" style="margin:0 auto">Eure Kulturschock-Punkte</div><div class="gross">${z.pkt}</div><div class="card" style="margin-top:14px;font-weight:800;font-size:1.15rem;line-height:1.5">${e.text}</div>
+      <div class="btnrow" style="justify-content:center"><button class="ghost" onclick="ST.sim={id:null,pkt:0,gewaehlt:null};simRender()">↺ Nochmal spielen</button><button class="done-btn" style="margin-top:0" onclick="go(1)">Weiter ›</button></div></div>`;return;}
+  const sz=S.szenen[z.id];const nr=Object.keys(S.szenen).indexOf(z.id)+1;
+  el.innerHTML=`<div class="sim">${foto(sz.bild,'🧳')}<div>
+    <div style="font-family:var(--ff-h);font-weight:800;color:var(--gold)">Szene ${nr} von ${Object.keys(S.szenen).length}</div>
+    <div class="sim-text">${sz.text}</div>
+    <div class="sim-hint">⏳ Diskutiert 1 Minute – dann wählt gemeinsam.</div>
+    <div class="optlist">${sz.optionen.map((o,i)=>`<button class="opt" onclick="simWahl(${i})"><span class="mk">${String.fromCharCode(65+i)}</span>${o.t}</button>`).join('')}</div>
+    <div id="sim-f"></div></div></div>`;ohneEmoji(el);}
+function simWahl(i){const z=ST.sim;if(z.gewaehlt!==null)return;z.gewaehlt=i;const o=T.simulator.szenen[z.id].optionen[i];const p=Number(o.punkte)||0;
+  z.pkt+=p;if(p>0)winPts(p);
+  document.querySelectorAll('#sim .opt').forEach((b,k)=>b.classList.add(k===i?'right':'dim'));
+  const gs=p>=3?'😊':(p>=1?'😐':'😬');
+  document.getElementById('sim-f').innerHTML=`<div class="sim-folge"><span class="gs">${gs}</span><div>${o.folge}<div style="margin-top:6px;color:var(--tur-ink)">+${p} Punkte</div></div></div>
+   <div class="btnrow"><button class="done-btn" style="margin-top:0" onclick="ST.sim.id='${o.next||'ende'}';ST.sim.gewaehlt=null;simRender()">Weiter ›</button></div>`;}
 
 /* ============ START: Stufe → Thema → Einheit ============ */
 /* Jede Kleingruppe (ohne Lehrer) wählt ihre Stufe, dann ein Thema.
    Neues Thema: hier eine Zeile anlegen. Es wird pro Stufe klickbar,
    sobald stufe('<id>','<ab|bb|bc>',{…}) oben im INHALTE-Bereich existiert. */
-const NIV={ ab:{label:'A2 · B1',farbe:'🟨 Gelb',wort:'Grundstufe'}, bb:{label:'B1 · B2',farbe:'🟦 Blau',wort:'Mittelstufe'}, bc:{label:'B2 · C1',farbe:'🟩 Grün',wort:'Oberstufe'} };
+const NIV={ ab:{label:'A2 · B1',farbe:'Türkis',wort:'Grundstufe'}, bb:{label:'B1 · B2',farbe:'Gold',wort:'Mittelstufe'}, bc:{label:'B2 · C1',farbe:'Rot',wort:'Oberstufe'} };
 const THEMEN=[
   {id:'puenktlichkeit',titel:'Pünktlichkeit',bereich:'Alltag & Zusammenleben',em:'⏰'},
   {id:'duzen',titel:'Duzen & Siezen',bereich:'Alltag & Zusammenleben',em:'🤝'},
@@ -842,7 +3020,7 @@ function homeNiveau(){
       <p class="home-sub">Wählt als Gruppe eure Stufe – dann zeigen wir euch die Themen.</p>
     </div>
     <div class="niv-grid">${Object.keys(NIV).map(k=>{const n=NIV[k];const c=THEMEN.filter(t=>fertig(t.id,k)).length;
-      return `<div class="niv-card ${k}" onclick="homeThemen('${k}')"><div class="top"></div><div class="ring">${n.label.split(' · ')[0]}</div><div class="lab">${n.label}</div><div class="wort">${n.farbe} · ${n.wort}</div><div class="cnt">${c} ${c===1?'Thema':'Themen'}</div></div>`;}).join('')}</div>
+      return `<div class="niv-card ${k}" onclick="homeThemen('${k}')"><div class="top"></div><div class="ring">${n.label.split(' · ')[0]}</div><div class="lab">${n.label}</div><div class="wort">${n.wort}</div><div class="cnt">${c} ${c===1?'Thema':'Themen'}</div></div>`;}).join('')}</div>
   </div>`;
 }
 function homeThemen(k){
@@ -852,7 +3030,7 @@ function homeThemen(k){
   stage.innerHTML=`<div class="slide on">
     <div style="text-align:center"><button class="back" onclick="homeNiveau()">‹ Stufe ändern</button>
       <div class="home-h" style="margin-top:10px">Welches Thema?</div>
-      <p class="home-sub">Stufe <span class="lv2 ${k}" style="font-size:.95em">${NIV[k].farbe} · ${NIV[k].label}</span> · Schritt 2 von 2 – tippt ein Thema an.</p></div>
+      <p class="home-sub">Stufe <span class="lv2 ${k}" style="font-size:.95em">${NIV[k].label}</span> · Schritt 2 von 2 – tippt ein Thema an.</p></div>
     <div class="themen-wrap">${bereiche.map(b=>`<div class="bereich-h">${b}</div><div class="t-grid">${
       THEMEN.filter(t=>t.bereich===b).map(t=>fertig(t.id,k)
         ? `<div class="t-card" onclick="startUnit('${t.id}')"><div class="em">${t.em}</div><div class="tt">${t.titel}</div><div class="meta"><span class="lv2 ${k}">${NIV[k].label}</span><span class="go" style="margin-left:auto">Los ›</span></div></div>`
@@ -866,7 +3044,7 @@ function startUnit(id){
   T=EINHEITEN[id][curNiv]; T.niveau=NIV[curNiv].label; buildSL(); buildDots(); cur=0;
   document.body.classList.remove('home');
   const bd=document.querySelector('.badge-niv'); bd.className='badge-niv '+curNiv;
-  bd.querySelector('.lv').textContent=NIV[curNiv].farbe.split(' ')[0]+' '+NIV[curNiv].label;
+  bd.querySelector('.lv').textContent=NIV[curNiv].label;
   GROUP.score=0;document.getElementById('pts').textContent='0';startTimer();
   show(0);
 }
@@ -898,7 +3076,9 @@ function renderQuiz(){const q=T.quiz[qi];const el=document.getElementById('quiz'
 }
 function qAns(i){const q=T.quiz[qi];const opts=document.querySelectorAll('#quiz .opt');if(document.querySelector('#quiz .opt.right,#quiz .opt.wrong'))return;
   opts.forEach((o,j)=>{o.onclick=null;const oi=QORD[j];if(oi===q.r)o.classList.add('right');else if(oi===i)o.classList.add('wrong');else o.classList.add('dim');});
-  if(i===q.r)winPts(10);document.getElementById('qnext').style.display='inline-flex';}
+  if(i===q.r)winPts(10);
+  if(q.anschluss){const a=document.createElement('div');a.className='anschluss';a.innerHTML='🗣️ <b>Und du?</b> '+q.anschluss;document.getElementById('qnext').before(a);}
+  document.getElementById('qnext').style.display='inline-flex';}
 function qNext(){if(qi<T.quiz.length-1){qi++;renderQuiz();}else{go(1);}}
 function show(i){cur=Math.max(0,Math.min(SL.length-1,i));
   stage.innerHTML=SL[cur]();
@@ -909,7 +3089,14 @@ function show(i){cur=Math.max(0,Math.min(SL.length-1,i));
   document.getElementById('pbar').style.width=((cur+1)/SL.length*100)+'%';
   stage.querySelectorAll('.meter i').forEach(el=>{requestAnimationFrame(()=>el.style.width=el.dataset.w+'%');});
   if(SL[cur].toString().includes('id="quiz"')){qi=0;renderQuiz();}
+  ohneEmoji(stage);
+  const ini=stage.querySelector('[data-init]'); if(ini && typeof window[ini.dataset.init]==='function') window[ini.dataset.init]();
   stage.scrollTop=0;
+}
+function ohneEmoji(root){ /* Papier-Look: keine Emojis in Überschriften/Etiketten */
+  const RE=/[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}]/gu;
+  root.querySelectorAll('.s-h,.kicker,.zusatz-badge,.fbox .lbl,.rm-f,.home-h,.sogehts,.ziel,.hilfe b,.rk small,.pc h4,.ch-list .go2').forEach(el=>{
+    const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())) n.nodeValue=n.nodeValue.replace(RE,'').replace(/^\s+/,n.previousSibling?' ':''); });
 }
 function go(d){show(cur+d);}
 addEventListener('keydown',e=>{if(document.body.classList.contains('home'))return;if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape')closeGloss();});

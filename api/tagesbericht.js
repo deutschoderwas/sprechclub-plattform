@@ -155,7 +155,7 @@ export default async function handler(req, res) {
   try {
     const heuteTag = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin' }).format(new Date());
     const kurzTag = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Berlin', weekday: 'short' }).format(new Date());
-    const schreibtag = ['Mon', 'Wed', 'Fri'].includes(kurzTag);
+    const schreibtag = ['Tue', 'Fri'].includes(kurzTag);
     const { data: heutige } = await sb.from('podcasts')
       .select('id,level,titel,status').eq('datum', heuteTag);
     const { count: ohneTon } = await sb.from('podcasts')

@@ -1,0 +1,79 @@
+/* =====================================================================
+   deutschoderwas · EIN Design (Julia, 26.11.2026 · Variante C)
+   Einzige Quelle für Farben, Schriften, Formen. Doku: 00_ZENTRALE/DESIGN.md
+   Einbinden:  <link rel="stylesheet" href="/dow-design.css">
+   Seiten nutzen NUR diese Variablen + Bausteine (.dow-…), keine eigenen Hex-Farben.
+   ===================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root{
+  /* Flächen */
+  --dow-bg:#FAF6EC;          /* warmes Off-White */
+  --dow-card:#FFFFFF;
+  --dow-ink:#14181B;         /* Text, Konturen, dunkle Karte */
+  --dow-soft:#5F6B76;        /* Nebentext */
+  --dow-hair:#E7EBF0;        /* feine Linien in Karten */
+  /* Marke */
+  --dow-tuerkis:#1B9BC0;
+  --dow-tuerkis-dunkel:#0E6D85;
+  --dow-tuerkis-soft:#E6F8FC;
+  --dow-gold:#E0A800;
+  --dow-gold-hell:#FFCE00;
+  --dow-gold-soft:#FFF3C4;
+  --dow-rot:#D42A21;
+  --dow-rot-soft:#FDECEA;
+  --dow-staubblau:#E3EEF1;
+  --dow-gruen:#2E7D43;
+  --dow-gruen-soft:#E6F6EA;
+  /* Niveaus (überall gleich) */
+  --dow-ab:#1B9BC0;          /* A2 · B1 */
+  --dow-bb:#C9A200;          /* B1 · B2 */
+  --dow-bc:#D42A21;          /* B2 · C1 */
+  /* Schrift */
+  --dow-ff-h:'Space Grotesk',Inter,system-ui,sans-serif;
+  --dow-ff-b:Inter,system-ui,sans-serif;
+  /* Formen */
+  --dow-r:16px; --dow-r-lg:22px;
+  --dow-kontur:1.5px solid var(--dow-ink);
+  --dow-schatten:3px 3px 0 var(--dow-ink);
+  --dow-schatten-hover:5px 5px 0 var(--dow-ink);
+}
+
+/* ---------- Basis ---------- */
+.dow{background:var(--dow-bg);color:var(--dow-ink);font-family:var(--dow-ff-b);-webkit-font-smoothing:antialiased;}
+.dow h1,.dow h2,.dow h3,.dow-h{font-family:var(--dow-ff-h);letter-spacing:-.02em;color:var(--dow-ink);}
+
+/* Flaggen-Streifen (4 px) */
+.dow-streifen{height:4px;display:grid;grid-template-columns:repeat(4,1fr);}
+.dow-streifen::before,.dow-streifen::after{content:"";}
+.dow-streifen{background:linear-gradient(90deg,var(--dow-ink) 0 25%,var(--dow-rot) 25% 50%,var(--dow-gold) 50% 75%,var(--dow-tuerkis) 75% 100%);}
+
+/* Karten */
+.dow-karte{background:var(--dow-card);border:var(--dow-kontur);box-shadow:var(--dow-schatten);border-radius:var(--dow-r);padding:16px 18px;}
+.dow-karte.klick{cursor:pointer;transition:transform .12s,box-shadow .12s;}
+.dow-karte.klick:hover{transform:translate(-1px,-1px);box-shadow:var(--dow-schatten-hover);}
+.dow-hero{background:var(--dow-ink);color:#fff;border-radius:var(--dow-r-lg);padding:20px;}
+.dow-hero .dow-kicker{color:var(--dow-gold);}
+.dow-gespraech{background:var(--dow-staubblau);border:var(--dow-kontur);border-radius:var(--dow-r);padding:12px 16px;}
+
+/* Knöpfe */
+.dow-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:14px;border:var(--dow-kontur);box-shadow:var(--dow-schatten);background:var(--dow-gold);color:var(--dow-ink);font:800 15px var(--dow-ff-b);cursor:pointer;text-decoration:none;}
+.dow-btn:hover{box-shadow:var(--dow-schatten-hover);transform:translate(-1px,-1px);}
+.dow-btn.zweit{background:var(--dow-card);}
+.dow-btn.tuerkis{background:var(--dow-tuerkis);color:#fff;}
+
+/* Etiketten */
+.dow-kicker{font:800 11px var(--dow-ff-b);letter-spacing:.12em;text-transform:uppercase;}
+.dow-pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 12px;font:800 12px var(--dow-ff-b);color:#fff;}
+.dow-pill.ab{background:var(--dow-ab);} .dow-pill.bb{background:var(--dow-bb);} .dow-pill.bc{background:var(--dow-bc);}
+
+/* Antwort-Optionen */
+.dow-opt{display:block;width:100%;text-align:left;background:var(--dow-card);border:var(--dow-kontur);border-radius:12px;padding:11px 14px;font:700 15px var(--dow-ff-b);color:var(--dow-ink);cursor:pointer;}
+.dow-opt.richtig{background:var(--dow-tuerkis-soft);border-color:var(--dow-tuerkis);}
+.dow-opt.falsch{background:var(--dow-rot-soft);border-color:var(--dow-rot);}
+
+/* Gold-Schwung unter Titeln */
+.dow-schwung{display:block;height:12px;width:min(260px,70%);margin-top:2px;background:no-repeat center/100% 100% url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 12'><path d='M3 8 C70 2,150 2,217 6' stroke='%23E0A800' stroke-width='5' fill='none' stroke-linecap='round'/></svg>");}
+
+/* Markierung (Merkteil) */
+.dow mark,.dow-mark{background:linear-gradient(transparent 58%,rgba(255,206,0,.6) 58%);color:inherit;padding:0 2px;}

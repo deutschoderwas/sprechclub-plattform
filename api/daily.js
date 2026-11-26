@@ -77,7 +77,8 @@ export default async function handler(req, res) {
   const kurz = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Europe/Berlin', weekday: 'short'
   }).format(new Date());
-  const SCHREIBTAGE = ['Mon', 'Wed', 'Fri'];
+  // Julia 26.11.2026: zwei Podcast-Tage pro Woche (je 4 Folgen), Dienstag + Freitag.
+  const SCHREIBTAGE = ['Tue', 'Fri'];
   const heuteSchreiben = SCHREIBTAGE.includes(kurz);
 
   if (heuteSchreiben) {

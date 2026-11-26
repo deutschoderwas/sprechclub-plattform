@@ -90,12 +90,14 @@ const QUELLE_PRO_TAG = ['grammatik', 'alltag', 'alltag', 'wochenplan', 'grammati
 //                        So            Mo       Di       Mi           Do          Fr           Sa
 
 function quelleFuerTag(datum) {
+  /* Julia 26.11.2026: Podcast nur noch Di + Fr.
+     Dienstag = Thema der Sprechclub-Woche, Freitag im Wechsel
+     Aktuelles / Alltag & Kultur / Sprache, damit alle Arten vorkommen. */
   const d = new Date(datum + 'T12:00:00Z');
+  if (d.getUTCDay() === 2) return 'wochenplan';
   if (d.getUTCDay() === 5) {
-    /* Gerade Woche Aktuelles, ungerade Sprache — damit beides vorkommt,
-       ohne dass ein vierter Schreibtag nötig ist. */
     const woche = Math.floor((d.getTime() - Date.UTC(2026, 0, 1)) / (7 * 86400000));
-    return woche % 2 === 0 ? 'aktuelles' : 'grammatik';
+    return ['aktuelles', 'alltag', 'grammatik'][woche % 3];
   }
   return QUELLE_PRO_TAG[d.getUTCDay()];
 }
