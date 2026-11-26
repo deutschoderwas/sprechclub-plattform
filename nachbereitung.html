@@ -159,7 +159,7 @@ async function init(){
   }
   // Live-Mitschriften: HAUPTTAFEL (Hauptraum) liegt in class_notes.notes; die GRUPPEN-Tafeln in group_notes (grp>0).
   // Reihenfolge für die Live-Tafel: zuerst Hauptraum, dann die Gruppen (nicht durcheinander).
-  let gnRaw='', hnRaw=(cn && cn.notes) || '', grp=(gm && gm.grp) || null, allNotes=[];
+  let gnRaw='', hnRaw=(cn && cn.notes) || '', grp=(gm && gm.grp) || null, allNotes=[], gnList=[];
   const _hat=function(h){ return String(h||'').replace(/<[^>]+>/g,'').trim().length; };
   if(_hat(hnRaw)) allNotes.push({ grp:0, notes:hnRaw });
   try{
@@ -168,11 +168,36 @@ async function init(){
     (gnRows||[]).filter(r=> Number(r.grp)>0 && _hat(r.notes)).sort((a,b)=>a.grp-b.grp)
       .forEach(r=> allNotes.push({ grp:Number(r.grp), notes:r.notes }));
     if(grp && Number(grp)>0) gnRaw = byGrp[String(grp)] || '';
+    /* Fix 26.11.2026 (Natalia): ALLE eigenen Gruppen dieser Stunde (auch mehrere Runden).
+       Quelle: class_group_history (Verlauf, inkl. aus Daily rekonstruiert) + class_group_members. */
+    try{
+      const { data:hRows } = await sb.from('class_group_history').select('grp').eq('class_id',id).eq('user_id',session.user.id);
+      const meine = new Set((hRows||[]).map(r=>Number(r.grp)).filter(g=>g>0));
+      if(grp && Number(grp)>0) meine.add(Number(grp));
+      [...meine].sort((a,b)=>a-b).forEach(g=>{ const n=byGrp[String(g)]; if(_hat(n)) gnList.push({ grp:g, notes:n, label:'Gruppe '+g }); });
+      // frühere Runden (beim Neu-Mischen archiviert) – RLS liefert nur, wo ich Mitglied war
+      const { data:aRows } = await sb.from('group_notes_archiv').select('grp,notes,notes_updated_at,archived_at').eq('class_id',id).order('archived_at');
+      (aRows||[]).filter(r=>_hat(r.notes)).forEach(r=>{
+        const t=new Date(r.notes_updated_at||r.archived_at).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+        gnList.push({ grp:Number(r.grp), notes:r.notes, label:'Gruppe '+r.grp+' · frühere Runde (bis '+t+' Uhr)' });
+        allNotes.push({ grp:Number(r.grp), notes:r.notes, frueher:t });
+      });
+    }catch(e){}
+  }catch(e){}
+  /* Was ich im Unterricht mit „Für mich speichern“ gesichert habe (oder automatisch beim Gruppenende) */
+  let mitschrift=[];
+  try{
+    if(c && c.starts_at){
+      const t0=new Date(new Date(c.starts_at).getTime()-30*60000).toISOString();
+      const t1=new Date(new Date(c.starts_at).getTime()+4*3600000).toISOString();
+      const { data:mRows } = await sb.from('amanda_mitschrift').select('text,art,erstellt').eq('user_id',session.user.id).in('art',['tafel','gruppe']).gte('erstellt',t0).lte('erstellt',t1).order('erstellt');
+      mitschrift = (mRows||[]).filter(r=>String(r.text||'').trim());
+    }
   }catch(e){}
   // Eigene (pro Gruppe personalisierte) Version bevorzugen, sonst die gemeinsame
   const pc = (sn && sn.post_content) ? sn.post_content : (cn && cn.post_content);
-  if(!pc && !gnRaw && !hnRaw && !(allNotes&&allNotes.length) && !ha){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
-  render(id, c, pc || {}, { gnRaw, hnRaw, allNotes, grp, ha, abgabe:abg, isTeacher, subs });
+  if(!pc && !gnRaw && !hnRaw && !(allNotes&&allNotes.length) && !gnList.length && !mitschrift.length && !ha){ app.innerHTML='<div class="center">📋 Die Nachbereitung für diese Stunde ist noch nicht fertig.<br>Schau später nochmal vorbei.<br><br><a href="konto.html#stunden">← Zu meinen Stunden</a></div>'; return; }
+  render(id, c, pc || {}, { gnRaw, hnRaw, allNotes, gnList, mitschrift, grp, ha, abgabe:abg, isTeacher, subs });
 }
 
 function render(id, c, pc, extra){
@@ -213,13 +238,17 @@ function render(id, c, pc, extra){
   }
 
   // 0a · Deine LIVE-Mitschrift — EIGENE Kleingruppe UND Hauptraum, roh wie in der Stunde geschrieben (nichts geht verloren).
-  const gnHat = extra.gnRaw && sanitizeNotes(extra.gnRaw).replace(/<[^>]+>/g,'').trim().length;
+  const gnList = (extra.gnList && extra.gnList.length) ? extra.gnList : (extra.gnRaw ? [{ grp:extra.grp, notes:extra.gnRaw, label: extra.grp ? 'Gruppe '+extra.grp : '' }] : []);
+  const mitschrift = extra.mitschrift || [];
+  const gnHat = gnList.some(x=> sanitizeNotes(x.notes).replace(/<[^>]+>/g,'').trim().length);
   const hnHat = extra.hnRaw && sanitizeNotes(extra.hnRaw).replace(/<[^>]+>/g,'').trim().length;
-  if(gnHat || hnHat){
+  if(gnHat || hnHat || mitschrift.length){
     let gh = `<div class="kern"><h2>📝 Deine Live-Mitschrift</h2><p style="color:var(--muted);font-size:.86rem;margin:0">Genau das, was im Unterricht live mitgeschrieben wurde — damit nichts verloren geht.</p></div>`;
-    if(gnHat){ gh += `<div class="card a-teal"><h2 style="font-size:1.02rem;margin:0 0 6px">👥 Eure Kleingruppe${extra.grp?` (Gruppe ${esc(String(extra.grp))})`:''}</h2><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(extra.gnRaw)}</div></div>`; }
+    gnList.forEach(x=>{ if(!sanitizeNotes(x.notes).replace(/<[^>]+>/g,'').trim()) return;
+      gh += `<div class="card a-teal"><h2 style="font-size:1.02rem;margin:0 0 6px">👥 Eure Kleingruppe${x.label?` (${esc(x.label)})`:''}</h2><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(x.notes)}</div></div>`; });
     if(hnHat){ gh += `<div class="card a-red"><h2 style="font-size:1.02rem;margin:0 0 6px">🏛️ Aus dem Hauptraum (alle zusammen)</h2><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(extra.hnRaw)}</div></div>`; }
-    gh += `<div class="card a-gold"><h2>✏️ Deine eigenen Notizen</h2><p style="color:var(--muted);font-size:.84rem;margin:0 0 8px">Nur für dich — hier kannst du <b>nach der Stunde</b> ergänzen oder in eigenen Worten zusammenfassen (wird in diesem Browser gespeichert). Was du im Unterricht mit „💾 Für mich speichern“ gesichert hast, findest du in deinem Bereich unter „Deine Mitschrift“. <span class="notiz-ok" style="color:#127a44;font-weight:700"></span></p><textarea data-nk="dow-mynotiz-${esc(id)}" oninput="dowSaveNotiz(this)" style="width:100%;min-height:110px;font:inherit;line-height:1.6;border:1.5px dashed #cfc5af;border-radius:12px;padding:10px 12px;background:#fffdf8;box-sizing:border-box">${esc(dowLoadNotiz(id))}</textarea></div>`;
+    const gespHtml = mitschrift.length ? `<div style="margin:0 0 12px">${mitschrift.map(m=>`<div style="background:#FFF8E1;border:1px solid #F1E2A8;border-radius:10px;padding:10px 12px;margin:0 0 8px;white-space:pre-wrap;font-size:.95rem;line-height:1.6"><div style="font-size:.76rem;font-weight:700;color:#8a6d00;margin-bottom:4px">💾 Im Unterricht gespeichert · ${m.art==='gruppe'?'Gruppen-Notiz':'Tafel'} · ${esc(new Date(m.erstellt).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}))} Uhr</div>${esc(m.text)}</div>`).join('')}</div>` : '';
+    gh += `<div class="card a-gold"><h2>✏️ Deine eigenen Notizen</h2>${gespHtml}<p style="color:var(--muted);font-size:.84rem;margin:0 0 8px">Nur für dich — hier kannst du <b>nach der Stunde</b> ergänzen oder in eigenen Worten zusammenfassen (wird in diesem Browser gespeichert). Was du im Unterricht mit „💾 Für mich speichern“ gesichert hast, findest du in deinem Bereich unter „Deine Mitschrift“. <span class="notiz-ok" style="color:#127a44;font-weight:700"></span></p><textarea data-nk="dow-mynotiz-${esc(id)}" oninput="dowSaveNotiz(this)" style="width:100%;min-height:110px;font:inherit;line-height:1.6;border:1.5px dashed #cfc5af;border-radius:12px;padding:10px 12px;background:#fffdf8;box-sizing:border-box">${esc(dowLoadNotiz(id))}</textarea></div>`;
     tabs.push({ label:'📝 Deine Mitschrift', html:gh });
   }
 
@@ -227,8 +256,8 @@ function render(id, c, pc, extra){
   if(extra.allNotes && extra.allNotes.length){
     const ordered = extra.allNotes.slice().sort((a,b)=> (Number(a.grp)||0)-(Number(b.grp)||0));
     const btnStil = (an)=>`font:inherit;font-weight:700;font-size:13px;border:1.5px solid #0E7C8C;border-radius:999px;padding:6px 14px;cursor:pointer;background:${an?'#0E7C8C':'#fff'};color:${an?'#fff':'#0E7C8C'}`;
-    const btns = ordered.map((r,i)=>{ const g=Number(r.grp)||0; const lbl=g===0?'🏛️ Hauptraum':('👥 Gruppe '+g); return `<button type="button" class="lt-btn" style="${btnStil(i===0)}" onclick="ltShow('${esc(id)}',${g},this)">${lbl}</button>`; }).join('');
-    const panes = ordered.map((r,i)=>{ const g=Number(r.grp)||0; return `<div class="lt-pane" id="lt-${esc(id)}-${g}" style="display:${i===0?'block':'none'}"><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(r.notes)}</div></div>`; }).join('');
+    const btns = ordered.map((r,i)=>{ const g=Number(r.grp)||0; const lbl=g===0?'🏛️ Hauptraum':('👥 Gruppe '+g+(r.frueher?' (bis '+r.frueher+')':'')); return `<button type="button" class="lt-btn" style="${btnStil(i===0)}" onclick="ltShow('${esc(id)}',${i},this)">${lbl}</button>`; }).join('');
+    const panes = ordered.map((r,i)=>{ const g=Number(r.grp)||0; return `<div class="lt-pane" id="lt-${esc(id)}-${i}" style="display:${i===0?'block':'none'}"><div class="gnraw" style="font-size:.97rem;line-height:1.75">${sanitizeNotes(r.notes)}</div></div>`; }).join('');
     const lth=`<div class="kern"><h2>🧑‍🏫 Live-Tafel im Original</h2><p style="color:var(--muted);font-size:.86rem;margin:0">Die Original-Mitschrift aus der Stunde — wähl den Hauptraum oder eine Gruppe.</p></div><div class="card a-teal"><div class="lt-tabs" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">${btns}</div>${panes}</div>`;
     tabs.push({ label:'🧑‍🏫 Live-Tafel', html:lth });
   }

@@ -1682,16 +1682,20 @@
     const groups={}; Object.entries(window._boAssign).forEach(([id,g])=>{ if(g>0) groups[id]=g; });
     if(!Object.keys(groups).length) return;
     window._breakoutActive=true; window._breakoutGroups=groups;
-    await gnotesResetAll();                 // frische, leere Tafeln für alle Gruppen
-    const reset=Date.now();
+    let gleich=false; try{ gleich = !!window._boLastGroups && window._boLastGroups===JSON.stringify(Object.entries(groups).filter(([,g])=>(g|0)>0).sort()); }catch(e){}
+    let reset;
+    if(!gleich){ await gnotesResetAll(); reset=Date.now(); }   // neue Gruppen: Tafeln leeren (alte Runde wird in der DB archiviert)
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:true, groups, reset } }); }catch(e){}
     gruppenPersistieren();                  // Gruppen für den Reconnect sichern
     boRenderTeacher();
   }
   function boEnd(){
+    // Fix 26.11.2026: Zusammensetzung merken – startet der Lehrer danach DIESELBEN Gruppen
+    // erneut, bleiben ihre Notizen stehen (statt geleert zu werden).
+    try{ window._boLastGroups = JSON.stringify(Object.entries(window._breakoutGroups||{}).filter(([,g])=>(g|0)>0).sort()); }catch(e){}
     window._breakoutActive=false;
     try{ if(window._boCh) window._boCh.send({ type:'broadcast', event:'bo', payload:{ active:false } }); }catch(e){}
-    gruppenEntfernenDB();                 // laufende Gruppen aus der DB löschen (nichts mehr wiederherzustellen)
+    gruppenEntfernenDB();                 // Gruppen als beendet markieren (Zuordnung bleibt für die Nachbereitung)
     if(window._currentGroup) wechsleRaum(0);
     boRenderTeacher();
   }
@@ -2625,6 +2629,9 @@
         if(notes==null) return;
         if(istLehrer && notes===lastSaved) return;   // eigene Änderung nicht zurückspielen
         if(!istLehrer){ renderTafel(notes); flashTafelTab(); }  // Schüler: live aktualisieren + Hinweis am Reiter
+        else { /* Fix 26.11.2026: zweite Lehrkraft schreibt mit → Stand übernehmen (nicht beim Tippen),
+                  sonst überschreibt die nächste eigene Speicherung ihren Text („Hauptraum unvollständig“). */
+          const en=document.getElementById('notiz'); if(en && document.activeElement!==en){ en.innerHTML=notes; lastSaved=notes; } }
       })
       .subscribe();
 
