@@ -9,6 +9,7 @@ import { gruppeBlockHtml } from './_whatsapp-gruppe-mail.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Roh-Body für die Signaturprüfung (kein JSON-Parsing durch Vercel)
+import { testzeitMail } from './_testzeit-mail.js';
 export const config = { api: { bodyParser: false } };
 
 function rawBody(req) {
@@ -165,6 +166,12 @@ async function sendGoodbyeMail(email, name) {
     });
     if (!r.ok) console.error('goodbye brevo fail', r.status, await r.text());
   } catch (e) { console.error('goodbye mail err', e); }
+}
+
+
+async function sendTestzeitStart(email, name, trialEndSek, preis) {
+  if (!email) return;
+  await testzeitMail('start', await anLernende(email, name), { trialEndSek, preis });
 }
 
 // --- Trial-Willkommens-Mail: Wahl zwischen 7 Tagen testen ODER sofort voll starten ---
@@ -873,6 +880,35 @@ export default async function handler(req, res) {
     catch (e) { console.error('saveCustomer', e); }
   }
 
+  /* Testzeit Sprechclub starten: Zugang sofort (tier premium, aktiv),
+     Merker "trial:" fuer "nur einmal pro Person", Start-Mail mit dem
+     Abbuchungsdatum. (Die Leiste im Schuelerbereich fragt Stripe selbst.) */
+  async function testzeitStart(s, userId, buyerEmail) {
+    try {
+      let trialEnd = null, preis = 139, name = s.customer_details?.name || '';
+      if (s.subscription) {
+        try {
+          const sub = await stripe.subscriptions.retrieve(s.subscription);
+          trialEnd = sub.trial_end || null;
+          const it = sub.items && sub.items.data && sub.items.data[0];
+          if (it && it.price && it.price.unit_amount) preis = Math.round(it.price.unit_amount / 100);
+        } catch (e) { console.error('testzeit sub', e && e.message); }
+      }
+      if (!trialEnd) trialEnd = Math.floor(Date.now() / 1000) + 3 * 86400;
+      if (userId) {
+        const dk = 'trial_' + s.id;
+        const { data: ex } = await sb.from('credit_log').select('id').eq('stripe_session_id', dk).maybeSingle();
+        if (ex) return;   // Ereignis doppelt zugestellt
+        await sb.from('credit_log').insert({ user_id: userId, change: 0, reason: 'trial:' + (s.metadata?.plan || 'premium_month'), stripe_session_id: dk });
+        await sb.from('profiles').update({ tier: 'premium', status: 'aktiv', tier_ab: null }).eq('id', userId);
+        const { data: pr } = await sb.from('profiles').select('email,name').eq('id', userId).maybeSingle();
+        if (pr && pr.name) name = pr.name;
+        if (!buyerEmail && pr) buyerEmail = pr.email;
+      }
+      await sendTestzeitStart(buyerEmail, name, trialEnd, preis);
+    } catch (e) { console.error('testzeitStart', e); }
+  }
+
   try {
     if (event.type === 'checkout.session.completed') {
       const s = event.data.object;
@@ -915,6 +951,12 @@ export default async function handler(req, res) {
         } else {
           if (s.mode === 'payment') {
             await addPending(sb, buyerEmail, parseInt(s.metadata?.credits || '0', 10), s.metadata?.plan, 'aktiv', false, 'cs_' + s.id);
+          } else if (s.mode === 'subscription' && s.metadata?.testzeit) {
+            /* Testzeit Sprechclub, noch ohne Konto: als Mitglied parken
+               (Stunden 0, Status aktiv) - apply_pending_purchases macht beim
+               Registrieren tier=premium daraus und merkt sich das Testzeit-Ende. */
+            await addPending(sb, buyerEmail, 0, s.metadata?.plan, 'aktiv', true, 'trial_' + s.id);
+            await testzeitStart(s, null, buyerEmail);
           } else if (s.mode === 'subscription' && s.metadata?.trial === '1') {
             await addPending(sb, buyerEmail, 1, s.metadata?.plan, 'probeschuler', true, 'trial_' + s.id);
           }
@@ -929,7 +971,9 @@ export default async function handler(req, res) {
       } else if (s.mode === 'subscription') {
         await saveCustomer(userId, s.customer);   // Kundennummer fürs Kündigungs-Portal merken
         // Probestunde nur EINMAL pro Person: nur gutschreiben, wenn dieser Checkout eine Testphase hatte.
-        if (s.metadata?.trial === '1') {
+        if (s.metadata?.testzeit) {
+          await testzeitStart(s, userId, buyerEmail);
+        } else if (s.metadata?.trial === '1') {
           await grant(userId, 1, 'trial:' + (s.metadata?.plan || 'abo'), 'trial_' + s.id, 7);
           await sendTrialWelcome(s);
           // Probeschüler markieren + Vermerk: woher (Stripe-Probestunde) & welches Paket er möchte

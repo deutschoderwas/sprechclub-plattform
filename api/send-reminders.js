@@ -3,10 +3,15 @@
 // Fenster: alle gebuchten Stunden, die in den nächsten ~90 Minuten beginnen.
 // email_log (kind:'reminder') sorgt dafür, dass jede Buchung genau EINE Erinnerung bekommt.
 import { createClient } from '@supabase/supabase-js';
+import { erinnerungenSenden } from './_testzeit-mail.js';
 
 const FMT = new Intl.DateTimeFormat('de-DE', { timeZone:'Europe/Berlin', weekday:'long', hour:'2-digit', minute:'2-digit' });
 
 export default async function handler(req, res) {
+  /* Testzeit Sprechclub (ab 1.12.2026): Erinnerung 24 h vor der Abbuchung.
+     Haengt hier dran, weil dieser Lauf schon stuendlich kommt. Vor dem
+     1.12. tut erinnerungenSenden() nichts. Fehler stoeren den Rest nicht. */
+  try { await erinnerungenSenden(); } catch (e) { console.error('testzeit erinnerung', e); }
   if (!process.env.BREVO_API_KEY) return res.status(200).json({ ok:false, skipped:'BREVO_API_KEY fehlt' });
   const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
   const site = process.env.SITE_URL || 'https://www.deutschoderwas-club.de';

@@ -4,7 +4,8 @@
 // Benötigt ENV: STRIPE_SECRET_KEY, (optional) SITE_URL.
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS, AKTION_PREIS_6M } from './_tueren.js';
+import { tuerenZu, istSprechclubPlan, premiumPausiert, aktionLaeuft, AKTION_PREIS, AKTION_PREIS_6M,
+         testzeitAktiv, TESTZEIT_TAGE, TESTZEIT_PLAENE } from './_tueren.js';
 
 // Vorverkauf: Ab wann ist der gekaufte Bereich nutzbar? (Berlin-Zeit, ISO-Datum)
 // Wer vorher kauft, zahlt sofort — die Laufzeit beginnt aber erst an diesem Tag.
@@ -361,6 +362,11 @@ export default async function handler(req, res) {
       // schon irgendein Abo bei Stripe hatte, zahlt sofort – kein erneutes 7-Tage-Trial.
       let trialDays = (trial === false) ? 0 : 7; // "Sofort starten" => sofort zahlen, kein Test
       if (plan.tier) trialDays = 0; // Community/Premium: keine Testphase
+      /* Julia, 26.11.2026: ab 1.12. Sprechclub monatlich 3 Tage kostenlos,
+         danach automatisch 139 EUR. Nur dieser Plan, nur einmal pro Person.
+         Halbjahr, Lernclub und Black-Week-Preise bleiben ohne Testzeit. */
+      const istTestzeitPlan = plan.tier === 'premium' && TESTZEIT_PLAENE.includes(id) && testzeitAktiv();
+      if (istTestzeitPlan && trial !== false) trialDays = TESTZEIT_TAGE;
       try {
         if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
           const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -368,6 +374,29 @@ export default async function handler(req, res) {
           if (userId) {
             const { data: prev } = await sb.from('credit_log').select('id').eq('user_id', userId).like('reason', 'trial:%').limit(1);
             if (prev && prev.length) trialDays = 0;
+          }
+          /* Testzeit nur fuer wirklich Neue: wer schon je etwas gekauft hat
+             (Fruehbucher, Black Week, Altschueler mit Stundenpaketen,
+             Gekuendigte), bekommt keine 3 Tage. Gesucht wird ueber das
+             Konto UND ueber die E-Mail - wer ohne Anmeldung zur Kasse geht,
+             hat keine userId. */
+          if (trialDays > 0 && istTestzeitPlan) {
+            let uid = userId || null;
+            if (!uid && email) {
+              const { data: pe } = await sb.from('profiles').select('id').ilike('email', String(email).trim()).maybeSingle();
+              if (pe) uid = pe.id;
+            }
+            if (uid) {
+              const { data: frueher } = await sb.from('credit_log').select('id').eq('user_id', uid)
+                .or('reason.like.trial:%,reason.like.abo:%,reason.like.kauf:%,reason.like.pending_apply:%').limit(1);
+              if (frueher && frueher.length) trialDays = 0;
+              const { data: pt } = await sb.from('profiles').select('tier').eq('id', uid).maybeSingle();
+              if (pt && pt.tier) trialDays = 0;   // laeuft gerade schon eine Mitgliedschaft
+            }
+            if (trialDays > 0 && email) {
+              const { data: pp } = await sb.from('pending_purchases').select('id').ilike('email', String(email).trim()).limit(1);
+              if (pp && pp.length) trialDays = 0;
+            }
           }
           // 2) Schon mal IRGENDEIN Abo bei Stripe gehabt – auch ein gekündigtes? -> keine neue Probestunde
           if (trialDays > 0) {
@@ -409,7 +438,14 @@ export default async function handler(req, res) {
                           zugang_ab: zugangAb || '', mindest_bis: mindestBis(plan) };
       if (!istMitgliedschaft) metaBasis.stunden = String(plan.stunden);
       const subData = { metadata: { ...metaBasis } };
-      if (trialDays > 0) subData.trial_period_days = 7; // nur Neukund:innen bekommen die Gratis-Probestunde
+      if (trialDays > 0) subData.trial_period_days = trialDays; // nur Neue bekommen die Testzeit
+      if (trialDays > 0 && istTestzeitPlan) subData.metadata.testzeit = String(trialDays);
+      /* Ab wann wird abgebucht? Genau das Datum, das Stripe nimmt:
+         jetzt + Testtage. Steht so in der Kasse, damit niemand ueberrascht ist. */
+      const abbuchungTxt = trialDays > 0 && istTestzeitPlan
+        ? new Date(Date.now() + trialDays * 86400000).toLocaleDateString('de-DE',
+            { timeZone: 'Europe/Berlin', day: 'numeric', month: 'long', year: 'numeric' })
+        : '';
 
       /* Der Rueckfall, falls einem Plan die Beschreibung fehlt. Fuer eine
          Mitgliedschaft darf hier NIE plan.stunden landen: das Feld ist ein
@@ -427,6 +463,15 @@ export default async function handler(req, res) {
       } else if (zugangAb) {
         const dd = zugangAb.split('-');
         abodesc += ` — Start am ${dd[2]}.${dd[1]}.${dd[0]}: Die Laufzeit beginnt an diesem Tag.`;
+      }
+      if (abbuchungTxt) {
+        /* Julias wichtigster Punkt: ganz klar sagen, dass nach 3 Tagen
+           abgebucht wird - im Produkttext UND direkt ueber dem Knopf. */
+        abodesc = `3 Tage kostenlos. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, danach jeden Monat. `
+          + `Wenn du nicht weitermachen willst, kündige vor dem ${abbuchungTxt} in deinem Schülerbereich.`;
+        common.custom_text = { submit: { message:
+          `Heute zahlst du 0 €. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, danach jeden Monat. `
+          + `Vorher jederzeit kündbar. Melde dich danach mit genau dieser E-Mail-Adresse an.` } };
       }
       session = await createSafe({
         ...common,
@@ -446,7 +491,7 @@ export default async function handler(req, res) {
           },
         }],
         subscription_data: subData,
-        metadata: { ...metaBasis, kind: 'abo', trial: trialDays > 0 ? '1' : '0' },
+        metadata: { ...metaBasis, kind: 'abo', trial: trialDays > 0 ? '1' : '0', testzeit: (trialDays > 0 && istTestzeitPlan) ? String(trialDays) : '' },
       });
     } else {
       // Einmalkauf (Spar Pass)

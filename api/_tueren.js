@@ -18,7 +18,19 @@
 // ============================================================
 
 export const TUEREN_ZU_AB = Date.parse('2026-11-01T00:00:00+01:00');
-export const TUEREN_AUF   = null;   // z. B. Date.parse('2026-11-16T00:00:00+01:00')
+/* Julia, 26.11.2026 18:26: "ab dem 01.12 den Sprechclub fuer 139 Euro
+   wieder anbieten, definitiv offen lassen, aber dafuer 3 Tage kostenlos
+   (nach 3 Tagen wird automatisch abgebucht) ... Erst ab dem 01.12."
+   Die Tueren gehen am Dienstag, 1.12. um 0 Uhr Berliner Zeit von allein
+   auf und bleiben offen. Niemand muss nachts etwas umstellen. */
+export const TUEREN_AUF   = Date.parse('2026-12-01T00:00:00+01:00');
+
+/* 3 Tage kostenlos testen - NUR Sprechclub monatlich (premium_month),
+   NUR ab 1.12., NUR einmal pro Person (Pruefung in create-checkout.js). */
+export const TESTZEIT_AB    = TUEREN_AUF;
+export const TESTZEIT_TAGE  = 3;
+export const TESTZEIT_PLAENE = ['premium_month'];
+export const testzeitAktiv = (jetzt = Date.now()) => jetzt >= TESTZEIT_AB;
 
 export const tuerenZu = (jetzt = Date.now()) =>
   !aktionLaeuft(jetzt)
@@ -100,7 +112,11 @@ export const aktionLaeuft = (jetzt = Date.now()) =>
    Frueher eine Konstante; wer sie noch als Wert liest, bekommt den
    Stand beim Laden des Moduls. Darum gibt es premiumPausiert() als
    Funktion, und die Kasse benutzt sie. */
-export const premiumPausiert = (jetzt = Date.now()) => !aktionLaeuft(jetzt);
+/* Ab dem 1.12. (TUEREN_AUF) dauerhaft offen - sonst haette dieser
+   zweite Riegel den Sprechclub um Mitternacht wieder zugemacht, obwohl
+   tuerenZu() schon "offen" sagt. */
+export const premiumPausiert = (jetzt = Date.now()) =>
+  !aktionLaeuft(jetzt) && !(TUEREN_AUF && jetzt >= TUEREN_AUF);
 
 export const PREMIUM_PAUSIERT = premiumPausiert();
 
