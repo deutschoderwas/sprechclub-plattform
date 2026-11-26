@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deutschoderwas · Design-System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   deutschoderwas · DESIGN-SYSTEM — Single Source of Truth
+   Signaturfarbe: Türkis #2DD4BF · klar-weiß mit warmen Akzenten
+   Diese Tokens gelten für ALLES: App, Präsis, Fokus-Apps, Material.
+   ============================================================ */
+:root{
+  /* — Signatur & Marke — */
+  --tur:#2DD4BF;        /* Signaturfarbe (Logo) – auf allem */
+  --tur-d:#14B8A6;      /* Türkis dunkel – Hover, Verläufe */
+  --tur-ink:#0C7366;    /* Türkis als lesbarer Text/Label */
+  --tur-soft:#E7FAF5;   /* zarte Türkis-Fläche */
+  --tur-btntext:#06403A;/* Text auf Türkis-Button */
+  /* — Tinte & Text — */
+  --ink:#1A1A1A;        /* Überschriften & Text */
+  --soft:#6B7280;       /* Sekundärtext */
+  /* — Flächen (klar-weiß + warm) — */
+  --bg:#FFFFFF;         /* Seite */
+  --bg2:#FBFAF7;        /* zarte warme Sektion */
+  --card:#FFFFFF;       /* Karten */
+  --creme:#FFF8E0;      /* warmer Akzent-Fill (sparsam) */
+  --line:#ECE7DE;       /* warme feine Linie */
+  /* — Flaggen-Akzente (SPARSAM) — */
+  --rot:#DD0000; --gold:#FFCE00;
+  /* — Niveau — */
+  --n-ab:#14B8A6; --n-ab-s:#D6F3EC; --n-ab-t:#0C7366;
+  --n-bb:#E6A700; --n-bb-s:#FCEEC2; --n-bb-t:#7A5600;
+  --n-bc:#DD0000; --n-bc-s:#FBDEDA; --n-bc-t:#A81710;
+  /* — Form — */
+  --r:16px; --r-l:20px;
+  --sh:0 3px 12px rgba(30,25,15,.06);
+  --sh-m:0 14px 34px rgba(30,25,15,.10);
+  --ff-h:'Space Grotesk','Segoe UI',sans-serif;
+  --ff-b:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--ff-b);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.55;}
+h1,h2,h3,h4{font-family:var(--ff-h);margin:0;}
+.band{height:5px;background:linear-gradient(90deg,var(--ink) 0 33%,var(--rot) 33% 66%,var(--gold) 66% 100%);}
+.topbar{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:14px 30px;display:flex;align-items:center;gap:12px;}
+.wordmark{font-family:var(--ff-h);font-weight:700;font-size:1.3rem;letter-spacing:-.01em;}
+.wordmark .b{color:var(--ink);} .wordmark .o{color:var(--tur-d);}
+.topbar .tag{margin-left:auto;font-family:var(--ff-h);font-weight:600;font-size:.82rem;color:var(--tur-ink);background:var(--tur-soft);border-radius:999px;padding:5px 14px;}
+.page{max-width:1080px;margin:0 auto;padding:34px 30px 90px;}
+.lead{font-size:1.1rem;color:var(--soft);max-width:680px;margin:6px 0 0;}
+.sec{margin-top:52px;}
+.sec > h2{font-size:1.5rem;letter-spacing:-.01em;display:flex;align-items:center;gap:11px;}
+.sec > h2 .num{width:30px;height:30px;border-radius:999px;background:var(--tur);color:var(--tur-btntext);font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.sec > .hint{color:var(--soft);font-size:.95rem;margin:4px 0 20px 41px;}
+.grid{display:grid;gap:16px;}
+.cols-5{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+.cols-3{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+.cols-2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+/* Farb-Chips */
+.swatch{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:var(--sh);}
+.swatch .fill{height:84px;}
+.swatch .meta{padding:10px 13px;}
+.swatch .nm{font-family:var(--ff-h);font-weight:600;font-size:.92rem;}
+.swatch .hx{font-size:.8rem;color:var(--soft);font-variant-numeric:tabular-nums;}
+.swatch .role{font-size:.76rem;color:var(--soft);margin-top:3px;}
+.sig{grid-column:span 2;}
+.sig .fill{height:120px;display:flex;align-items:flex-end;padding:12px;color:var(--tur-btntext);font-family:var(--ff-h);font-weight:700;}
+/* Typo */
+.type-row{border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;background:#fff;box-shadow:var(--sh);margin-bottom:12px;}
+.type-row .lab{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);font-weight:700;margin-bottom:4px;}
+/* Buttons */
+.btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 18px;font-family:var(--ff-h);font-weight:600;font-size:.9rem;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:8px;transition:.14s;}
+.btn:hover{border-color:var(--tur);}
+.btn-prim{background:linear-gradient(135deg,var(--tur),var(--tur-d));color:var(--tur-btntext);border:none;box-shadow:var(--sh);}
+.btn-prim:hover{filter:brightness(1.04);}
+.btn-pill{border-radius:999px;}
+.btn-dark{background:var(--ink);color:#fff;border:none;}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff-h);font-weight:700;font-size:.74rem;border-radius:999px;padding:4px 12px;}
+.b-neu{background:var(--tur);color:var(--tur-btntext);}
+.b-frei{background:var(--gold);color:#4a3b00;}
+.b-ab{background:var(--n-ab-s);color:var(--n-ab-t);} .b-bb{background:var(--n-bb-s);color:var(--n-bb-t);} .b-bc{background:var(--n-bc-s);color:var(--n-bc-t);}
+.stars{color:var(--gold);font-size:1.05rem;letter-spacing:1px;}
+/* Beispiel-Karten */
+.demo{border:1px solid var(--line);border-radius:var(--r-l);padding:18px;background:#fff;box-shadow:var(--sh);}
+.demo .kem{width:42px;height:42px;border-radius:12px;background:var(--tur-soft);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:11px;}
+.demo h4{font-size:1.1rem;} .demo p{color:var(--soft);font-size:.9rem;margin:6px 0 0;}
+/* ===== LERN-BAUSTEINE (identisch in allen Apps) ===== */
+.sek-h{display:flex;align-items:center;gap:9px;font-family:var(--ff-h);font-weight:700;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--tur-ink);margin:0 0 12px;}
+.fakt-box{background:var(--tur-soft);border:1px solid #BFEDE4;border-radius:var(--r);padding:6px 6px;}
+.fakt{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;}
+.fakt+.fakt{border-top:1px solid #CDEFE8;}
+.fakt .ic{flex:none;width:26px;height:26px;border-radius:999px;background:#fff;color:var(--tur-ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;}
+.fakt .t{font-size:1rem;line-height:1.5;}
+.merk{background:linear-gradient(135deg,var(--tur),var(--tur-d));color:#fff;border-radius:var(--r);padding:17px 21px;box-shadow:var(--sh-m);}
+.merk .ml{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);border-radius:999px;padding:4px 12px;font-family:var(--ff-h);font-weight:700;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;}
+.merk .mt{font-family:var(--ff-h);font-weight:600;font-size:1.18rem;line-height:1.4;margin-top:10px;}
+.story{background:#fff;border:1px solid var(--line);border-left:4px solid var(--tur);border-radius:14px;padding:18px 22px;box-shadow:var(--sh);}
+.story p{font-size:1.02rem;line-height:1.7;margin:0;color:#2a2f33;}
+.story p::first-letter{font-family:var(--ff-h);font-weight:700;font-size:2.4rem;line-height:.9;float:left;margin:3px 9px 0 0;color:var(--tur-d);}
+.chunk-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;box-shadow:var(--sh);}
+.chunk-card h4{font-size:.95rem;margin-bottom:10px;color:var(--tur-ink);display:flex;gap:7px;align-items:center;}
+.chunk{background:var(--tur-soft);border:1px solid #CDEFE8;border-radius:11px;padding:9px 13px;font-size:.95rem;color:var(--tur-ink);font-weight:600;margin-bottom:7px;}
+.vok{position:relative;text-align:left;width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;cursor:pointer;box-shadow:var(--sh);}
+.vok .vw{display:block;font-family:var(--ff-h);font-weight:700;font-size:1.05rem;}
+.vok .vb{display:block;font-size:.88rem;color:var(--soft);font-style:italic;margin-top:4px;}
+.vok .vue{display:block;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:.9rem;color:var(--tur-ink);font-weight:600;}
+.gloss{border-bottom:2px dotted var(--tur);cursor:help;font-weight:600;}
+.gloss::after{content:"\24D8";font-size:.68em;vertical-align:super;color:var(--tur);margin-left:1px;}
+.sit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.sit{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--sh);border-top:4px solid var(--tur);}
+.sit.s1{border-top-color:#4E9E12;} .sit.s2{border-top-color:var(--gold);} .sit.s3{border-top-color:var(--rot);}
+.sit-top{display:flex;align-items:center;gap:9px;}
+.sit-em{font-size:1.4rem;} .sit-o{font-family:var(--ff-h);font-weight:700;font-size:.98rem;}
+.sit-t{font-size:.9rem;color:var(--soft);margin-top:7px;line-height:1.45;}
+.sit-meter{margin-top:9px;font-size:.78rem;color:var(--tur-ink);letter-spacing:2px;}
+.sit-meter span{letter-spacing:0;margin-left:6px;font-weight:600;}
+/* Token-Code */
+.code{background:#1A1A1A;color:#E8E8E8;border-radius:var(--r);padding:18px 20px;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;line-height:1.6;overflow:auto;}
+.code .c{color:#7fd9cb;} .code .k{color:#ffce7a;}
+.note{background:var(--creme);border:1px solid #F0E3A8;border-radius:var(--r);padding:13px 16px;font-size:.92rem;color:#6B5A00;display:flex;gap:10px;}
+.rule{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:.95rem;}
+.rule .y{color:var(--tur-d);font-weight:800;} .rule .n{color:var(--rot);font-weight:800;}
+</style>
+</head>
+<body>
+<div class="band"></div>
+<div class="topbar">
+  <span class="wordmark"><span class="b">deutsch</span><span class="o">oderwas</span></span>
+  <span class="tag">Design-System · v1</span>
+</div>
+<div class="page">
+  <h1 style="font-size:2.2rem;letter-spacing:-.02em;">Ein Look für alles.</h1>
+  <p class="lead">Dieselben Farben, Schriften und Bausteine — in der App, in den Präsentationen, in den Fokus-Apps und im Material. Das ist der Wiedererkennungswert von deutschoderwas. Hier ist die verbindliche Quelle.</p>
+
+  <!-- FARBEN -->
+  <div class="sec">
+    <h2><span class="num">1</span> Farben</h2>
+    <p class="hint">Türkis ist die Signaturfarbe — wie Duolingos Grün. Rot & Gold (die Flagge) nur als sparsame Akzente.</p>
+    <div class="grid cols-5">
+      <div class="swatch sig"><div class="fill" style="background:linear-gradient(135deg,#2DD4BF,#14B8A6)">Signatur</div><div class="meta"><div class="nm">Türkis</div><div class="hx">#2DD4BF</div><div class="role">Buttons, Akzente, Logo — überall</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#14B8A6"></div><div class="meta"><div class="nm">Türkis dunkel</div><div class="hx">#14B8A6</div><div class="role">Hover, Verläufe, Links</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#E7FAF5"></div><div class="meta"><div class="nm">Türkis soft</div><div class="hx">#E7FAF5</div><div class="role">zarte Flächen, Fakten</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#1A1A1A"></div><div class="meta"><div class="nm">Tinte</div><div class="hx">#1A1A1A</div><div class="role">Überschriften & Text</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#FFF8E0"></div><div class="meta"><div class="nm">Creme</div><div class="hx">#FFF8E0</div><div class="role">warmer Akzent-Fill</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#DD0000"></div><div class="meta"><div class="nm">Rot</div><div class="hx">#DD0000</div><div class="role">Akzent (sparsam)</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#FFCE00"></div><div class="meta"><div class="nm">Gold</div><div class="hx">#FFCE00</div><div class="role">Badges, Sterne (sparsam)</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#6B7280"></div><div class="meta"><div class="nm">Grau</div><div class="hx">#6B7280</div><div class="role">Sekundärtext</div></div></div>
+    </div>
+  </div>
+
+  <!-- TYPO -->
+  <div class="sec">
+    <h2><span class="num">2</span> Schriften</h2>
+    <p class="hint">Überschriften: Space Grotesk. Fließtext: Inter. Zwei Schriften, mehr nicht.</p>
+    <div class="type-row"><div class="lab">H1 · Space Grotesk 700</div><div style="font-family:var(--ff-h);font-weight:700;font-size:2.1rem;letter-spacing:-.02em;">Deutsch lernen mit Spaß</div></div>
+    <div class="type-row"><div class="lab">H2 · Space Grotesk 700</div><div style="font-family:var(--ff-h);font-weight:700;font-size:1.5rem;">Fünf Bereiche, ein Design</div></div>
+    <div class="type-row"><div class="lab">H3 · Space Grotesk 600</div><div style="font-family:var(--ff-h);font-weight:600;font-size:1.15rem;">Gespräche mit Ämtern</div></div>
+    <div class="type-row"><div class="lab">Body · Inter 400</div><div style="font-size:1rem;">Lest zuerst gemeinsam die Fakten. Dann nimmt sich eine Person eine Frage und liest sie vor — alle antworten reihum.</div></div>
+    <div class="type-row"><div class="lab">Label / Eyebrow · Inter 700 · GROSS</div><div style="font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tur-ink);">So sagt man's wirklich</div></div>
+  </div>
+
+  <!-- KOMPONENTEN -->
+  <div class="sec">
+    <h2><span class="num">3</span> Bausteine</h2>
+    <p class="hint">Buttons, Badges, Niveau-Tags und Karten — immer gleich.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px;">
+      <button class="btn btn-prim btn-pill">Weiter üben</button>
+      <button class="btn btn-prim">Jetzt wiederholen</button>
+      <button class="btn btn-pill">🖥️ Präsentieren</button>
+      <button class="btn btn-dark btn-pill">Buchen</button>
+    </div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:18px;">
+      <span class="badge b-neu">NEU</span>
+      <span class="badge b-frei">kostenlos</span>
+      <span class="badge b-ab">A2 · B1</span>
+      <span class="badge b-bb">B1 · B2</span>
+      <span class="badge b-bc">B2 · C1</span>
+      <span class="stars">★★★★★</span>
+    </div>
+    <div class="grid cols-3">
+      <div class="demo"><div class="kem">🏛️</div><h4>Gespräche mit Ämtern</h4><p>Freies Sprechen · Gruppe 2 · 10 Aufgaben</p></div>
+      <div class="demo"><div class="kem">⏰</div><h4>Pünktlichkeit</h4><p>Landeskunde · A2 · B1</p></div>
+      <div class="demo"><div class="kem">🧱</div><h4>Mauer & Wende</h4><p>Geschichte · B2 · C1</p></div>
+    </div>
+  </div>
+
+  <!-- LERN-BAUSTEINE -->
+  <div class="sec">
+    <h2><span class="num">4</span> Lern-Bausteine</h2>
+    <p class="hint">Die Elemente, die in jeder Präsi und App identisch aussehen.</p>
+    <div class="grid cols-2">
+      <div>
+        <div class="sek-h">🇩🇪 🇦🇹 🇨🇭 So ist es in DACH</div>
+        <div class="fakt-box">
+          <div class="fakt"><div class="ic">✓</div><div class="t">Pünktlichkeit gilt als Zeichen von Respekt.</div></div>
+          <div class="fakt"><div class="ic">✓</div><div class="t">Zu <span class="gloss">Terminen</span> kommt man lieber 5 Min früher.</div></div>
+        </div>
+        <div style="height:16px"></div>
+        <div class="merk"><span class="ml">💡 Merke</span><div class="mt">Pünktlichkeit = Respekt. Zum Amt früher, privat ruhig 5–10 Min später.</div></div>
+      </div>
+      <div>
+        <div class="sek-h">📖 Die Geschichte</div>
+        <div class="story"><p>Am 13. August 1961 begann der Bau der Berliner Mauer. Über Nacht wurde eine Stadt geteilt — Familien, Freunde, Nachbarn.</p></div>
+        <div style="height:16px"></div>
+        <div class="chunk-card"><h4>🧩 Über Zeit sprechen</h4>
+          <div class="chunk">Ich bin meistens pünktlich.</div>
+          <div class="chunk">Tut mir leid, ich habe mich verspätet.</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="sek-h">⏱️ Wo gilt das?</div>
+    <div class="sit-grid">
+      <div class="sit s3"><div class="sit-top"><span class="sit-em">🏥</span><span class="sit-o">Arzt & Amt</span></div><div class="sit-t">Lieber früher da sein. Zu spät = Termin weg.</div><div class="sit-meter">●●●<span>streng</span></div></div>
+      <div class="sit s2"><div class="sit-top"><span class="sit-em">🎓</span><span class="sit-o">Kurs & Uni</span></div><div class="sit-t">Manches startet „akademisch“ 15 Min später.</div><div class="sit-meter">●●○<span>mittel</span></div></div>
+      <div class="sit s1"><div class="sit-top"><span class="sit-em">🎉</span><span class="sit-o">Freunde & Party</span></div><div class="sit-t">5–10 Min später ist völlig normal.</div><div class="sit-meter">●○○<span>locker</span></div></div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="grid cols-3">
+      <button class="vok"><span class="vw">der Termin</span><span class="vb">Ich habe morgen einen Termin.</span><span class="vue">→ fester, vereinbarter Zeitpunkt</span></button>
+      <button class="vok"><span class="vw">rechtzeitig</span><span class="vb">Komm bitte rechtzeitig.</span><span class="vue">→ früh genug, nicht zu spät</span></button>
+      <button class="vok"><span class="vw">sich verspäten</span><span class="vb">Ich habe mich verspätet.</span><span class="vue">→ zu spät kommen</span></button>
+    </div>
+  </div>
+
+  <!-- REGELN -->
+  <div class="sec">
+    <h2><span class="num">5</span> Spielregeln</h2>
+    <p class="hint">Damit nichts ausschert.</p>
+    <div class="rule"><span class="y">JA</span><div>Türkis ist der Star. Ein Haupt-CTA pro Fläche, immer türkis.</div></div>
+    <div class="rule"><span class="y">JA</span><div>Weiße/klare Flächen, warme Akzente (Creme, Türkis-soft), runde Ecken, weiche Schatten.</div></div>
+    <div class="rule"><span class="y">JA</span><div>Space Grotesk für Überschriften, Inter für Text. Du-Form, herzlich.</div></div>
+    <div class="rule"><span class="n">NEIN</span><div>Kein kaltes Blaugrau, kein reines Grau als Fläche, keine dritte Schriftart.</div></div>
+    <div class="rule"><span class="n">NEIN</span><div>Rot & Gold nie flächig — nur als kleiner Akzent (Badge, Streifen, Zahl).</div></div>
+  </div>
+
+  <!-- TOKENS -->
+  <div class="sec">
+    <h2><span class="num">6</span> Die Tokens</h2>
+    <p class="hint">Dieser Block steckt in jeder Datei — so sind die Farben garantiert überall identisch.</p>
+    <div class="note">💡 Ich kopiere genau diese <code>:root</code>-Variablen in App, Präsis und Fokus-Apps. Ändern wir hier eine Farbe, ändert sie sich überall.</div>
+    <div style="height:12px"></div>
+    <div class="code">:root{<br>
+    &nbsp;&nbsp;<span class="c">--tur</span>:<span class="k">#2DD4BF</span>; <span class="c">--tur-d</span>:<span class="k">#14B8A6</span>; <span class="c">--tur-ink</span>:<span class="k">#0C7366</span>; <span class="c">--tur-soft</span>:<span class="k">#E7FAF5</span>;<br>
+    &nbsp;&nbsp;<span class="c">--ink</span>:<span class="k">#1A1A1A</span>; <span class="c">--soft</span>:<span class="k">#6B7280</span>; <span class="c">--bg</span>:<span class="k">#FFFFFF</span>; <span class="c">--creme</span>:<span class="k">#FFF8E0</span>; <span class="c">--line</span>:<span class="k">#ECE7DE</span>;<br>
+    &nbsp;&nbsp;<span class="c">--rot</span>:<span class="k">#DD0000</span>; <span class="c">--gold</span>:<span class="k">#FFCE00</span>;<br>
+    &nbsp;&nbsp;<span class="c">--r</span>:<span class="k">16px</span>; <span class="c">--sh</span>:<span class="k">0 3px 12px rgba(30,25,15,.06)</span>;<br>
+    &nbsp;&nbsp;<span class="c">font-h</span>:<span class="k">'Space Grotesk'</span>; <span class="c">font-body</span>:<span class="k">'Inter'</span>;<br>
+    }</div>
+  </div>
+
+  <p style="margin-top:50px;color:var(--soft);font-size:.9rem;">deutschoderwas · Design-System v1 · Deutsch lernen mit Spaß &amp; Leichtigkeit</p>
+</div>
+</body>
+</html>
