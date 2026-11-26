@@ -416,6 +416,15 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:4
 .badge-niv.ab .lv{background:var(--dow-ab)!important;color:#fff!important;}.badge-niv.bb .lv{background:var(--dow-bb)!important;color:#fff!important;}.badge-niv.bc .lv{background:var(--dow-bc)!important;color:#fff!important;}
 .niv-card .cnt{background:var(--dow-tuerkis-soft);color:var(--dow-tuerkis-dunkel);}
 .s-h,.home-h,.big-word h1,.frage-q,.these{font-family:var(--dow-ff-h);font-weight:700;}
+
+/* ===== FINALES Design 26.11.2026: Titelfolie ===== */
+.titel-final{display:block!important;max-width:60%;margin-top:22px;}
+.titel-final h1.dow-titel{font-family:var(--dow-ff-titel)!important;font-weight:400!important;color:var(--dow-gold-hell)!important;-webkit-text-stroke:3px var(--dow-ink);paint-order:stroke fill;text-shadow:5px 5px 0 var(--dow-ink)!important;font-size:clamp(3rem,7vw,6.2rem)!important;line-height:.95!important;letter-spacing:.005em!important;}
+.titel-polaroid{position:absolute!important;right:6vw;top:14vh;width:min(30vw,420px);margin:0;}
+.titel-polaroid img{aspect-ratio:4/5;height:auto;}
+.titel-hand{position:absolute;right:7vw;bottom:9vh;font-size:clamp(1.6rem,2.6vw,2.4rem);transform:rotate(-3deg);color:var(--dow-ink);}
+.slide .s-sub{max-width:56%;}
+.motif,.slide .spark{display:none!important;}
 </style>
 </head>
 <body>
@@ -2735,14 +2744,19 @@ function foto(src,em){return `<div class="foto"><img src="${src||''}" alt="" one
 function sag(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(ohneTags(t));u.lang='de-DE';u.rate=.92;speechSynthesis.speak(u);}catch(e){}}
 const ST={};   // Zustand der interaktiven Stationen (pro Einheit neu)
 
+// Titelfoto: 1) T.titelBild aus den Inhalten, 2) passendes Themenfoto, sonst kein Polaroid. Fehlt die Datei, wird das Polaroid ausgeblendet.
+const TITELBILD={puenktlichkeit:'bilder/thema/buero.jpg',duzen:'bilder/thema/buero.jpg',smalltalk:'bilder/thema/menschen.jpg',aemter:'bilder/thema/amt.jpg',einkaufen:'bilder/thema/einkaufen.jpg',esskultur:'bilder/thema/essen.jpg',arbeitskultur:'bilder/thema/buero.jpg',schule:'bilder/thema/bildung.jpg',feste:'bilder/thema/kultur.jpg',stadtland:'bilder/thema/natur.jpg',nachbarn:'bilder/thema/a1-wohnen.jpg',mieten:'bilder/thema/a1-wohnen.jpg',zuerich:'bilder/thema/ch.jpg'};
+let curThema='';
+function titelBild(){ return (T&&T.titelBild)||TITELBILD[curThema]||''; }
 function buildSL(){ SL=[]; for(const k in ST) delete ST[k];
 // Titel
 SL.push(()=>`<div class="slide">
   <span class="kicker">${T.bereich} · ${T.niveau}</span>
   <svg class="spark" style="top:17vh;left:40vw" viewBox="0 0 42 42"><line x1="21" y1="3" x2="21" y2="14"/><line x1="5" y1="9" x2="14" y2="18"/><line x1="37" y1="9" x2="28" y2="18"/></svg>
-  <div class="clock"><div class="ring"></div><span class="em">${T.emoji||'💬'}</span></div>
-  <div class="big-word"><h1>${T.titel}</h1><svg class="swoosh" viewBox="0 0 460 30" preserveAspectRatio="none"><path d="M6 20 C130 5, 340 5, 454 13"/></svg></div>
-  <p class="s-sub">${T.intro||''}</p></div>`);
+  ${titelBild()?`<figure class="dow-polaroid titel-polaroid"><img src="${titelBild()}" alt="" onerror="this.closest('figure').remove()"><figcaption>${T.titelZuruf||'Und bei euch?'}</figcaption></figure>`:''}
+  <div class="big-word titel-final"><h1 class="dow-titel">${T.titel}</h1></div>
+  <p class="s-sub">${T.intro||''}</p>
+  <div class="dow-hand titel-hand">Zu dritt – los geht's!</div></div>`);
 // Rollen in der Dreiergruppe
 SL.push(()=>`<div class="slide">
   <div class="s-h">👥 Wer macht was?</div>
@@ -3041,7 +3055,7 @@ function homeThemen(k){
 function startUnit(id){
   const theme=THEMEN.find(t=>t.id===id);
   if(!theme||!fertig(id,curNiv)) return;
-  T=EINHEITEN[id][curNiv]; T.niveau=NIV[curNiv].label; buildSL(); buildDots(); cur=0;
+  curThema=id; T=EINHEITEN[id][curNiv]; T.niveau=NIV[curNiv].label; buildSL(); buildDots(); cur=0;
   document.body.classList.remove('home');
   const bd=document.querySelector('.badge-niv'); bd.className='badge-niv '+curNiv;
   bd.querySelector('.lv').textContent=NIV[curNiv].label;
