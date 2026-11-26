@@ -34,6 +34,7 @@ function oeffentlich(f) {
   return {
     augen: f.augen, titel: f.titel, zeile2: f.zeile2, stark: f.stark,
     zitat: f.zitat, unter: f.unter, punkte: f.punkte || [], knopf: f.knopf,
+    bild: f.bild || '',
   };
 }
 

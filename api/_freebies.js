@@ -35,6 +35,7 @@ export const FREEBIES = {
       'Mit englischer Übersetzung und der lockeren Alltagsvariante',
       'Zum Ausfüllen: abhaken, was du schon benutzt hast',
     ],
+    bild:   '/freebies/vorschau/sos.jpg',   // erste Seite des Heftes, sieht man auf /freebies
     datei:  '/freebies/sos-alltag.pdf',
     knopf:  'Schick mir die 50 Sätze',
     liste:  0,        // 0 = BREVO_FREEBIE_LIST_ID, sonst Liste 14 (Sprechclub Interessenten)
@@ -52,6 +53,7 @@ export const UNBEKANNT = {
   zitat:  '',
   unter:  'Da hat sich etwas verlaufen. Schreib uns kurz, welches Material du gesucht hast — wir schicken es dir.',
   punkte: [],
+  bild:   '',
   datei:  '',
   knopf:  '',
   liste:  0,
