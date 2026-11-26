@@ -1029,6 +1029,10 @@
     try{
       if(window.supabase && window.SPRECHCLUB_CONFIG && !String(window.SPRECHCLUB_CONFIG.SUPABASE_URL).startsWith('HIER_')){
         sb = supabase.createClient(window.SPRECHCLUB_CONFIG.SUPABASE_URL, window.SPRECHCLUB_CONFIG.SUPABASE_ANON_KEY);
+        /* Fix 26.11.2026 (Natalia): amanda-mitschrift.js sucht den Client unter window.sb.
+           Ohne diese Zeile landete „Für mich speichern“ + die Auto-Sicherung der
+           Gruppen-Notiz NIE in der Datenbank – obwohl „Gespeichert ✓“ angezeigt wurde. */
+        window.sb = sb;
         // Sobald der Login bereit ist (v.a. Handy, verzögert): Präsentation erneut laden (RLS braucht Sitzung)
         try{ sb.auth.onAuthStateChange((ev, sess)=>{ if(sess && (ev==='SIGNED_IN'||ev==='INITIAL_SESSION'||ev==='TOKEN_REFRESHED')){ if(typeof ladeLektion==='function') ladeLektion(); } }); }catch(e){}
       }
@@ -1709,9 +1713,20 @@
   async function gruppenEntfernenDB(ids){
     if(!istLehrer || !sb || !STUNDE) return;
     try{
-      let q=sb.from('class_group_members').delete().eq('class_id',STUNDE);
-      if(ids && ids.length) q=q.in('user_id',ids);
-      await q;
+      /* Fix 26.11.2026 (Natalia): Beim Beenden der Gruppen die Zuordnung NICHT mehr löschen.
+         Nachbereitung („Eure Kleingruppe“), die persönliche Gruppen-Nachbereitung und das
+         Leserecht auf die Gruppen-Notiz (RLS) brauchen sie nach der Stunde. Seit ca. 07.11.
+         war sie nach jeder Stunde weg → Schüler sahen ihre Gruppen-Notizen nicht mehr.
+         Stattdessen als „alt“ markieren (4 h zurück), damit gruppenWiederherstellen()
+         (nur letzte 3 h) beendete Gruppen beim Neuladen nicht wiederbelebt. */
+      if(!ids || !ids.length){
+        const alt=new Date(Date.now()-4*3600*1000).toISOString();
+        const { error } = await sb.from('class_group_members').update({ updated_at:alt }).eq('class_id',STUNDE);
+        if(error) console.warn('Gruppen beenden', error);
+        return;
+      }
+      // Einzelnen Schüler aus der Gruppe nehmen: weiter löschen (sonst Reconnect zurück in die Gruppe)
+      await sb.from('class_group_members').delete().eq('class_id',STUNDE).in('user_id',ids);
     }catch(e){ console.warn('Gruppen DB löschen', e); }
   }
   window._gruppenGeladen=false;
