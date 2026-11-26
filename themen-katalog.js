@@ -27,8 +27,12 @@
 
   // Die Wochen-Fokusse und ihre Fokus-App. tage: 1 = Montag … 7 = Sonntag.
   var FOKUS = [
+    // In den Freien Sprechstunden kommen Redewendungen & Umgangssprache zwischendurch dran.
     { id: 'sprechen',    name: 'Freies Sprechen & Debatten', app: 'sprech-app.html',      tage: [1, 5] },
-    { id: 'grammatik',   name: 'Grammatikfokus',             app: 'grammatik-app.html',   tage: [2] },
+    // Grammatik ist seit 26.11. kein eigener Wochen-Fokus mehr (Julia: regt nicht zum Gespräch an).
+    // Der Eintrag bleibt für die bisherigen Grammatik-Stunden.
+    { id: 'grammatik',   name: 'Grammatikfokus',             app: 'grammatik-app.html',   tage: [] },
+    { id: 'landeskunde', name: 'Landeskunde DACH',           app: 'landeskunde-app.html', tage: [2] },
     { id: 'rollenspiel', name: 'Rollenspiele',               app: 'rollenspiel-app.html', tage: [3, 6] },
     { id: 'wortschatz',  name: 'Wortschatzfokus',            app: 'wortschatz-app.html',  tage: [4] },
     { id: 'quiz',        name: 'Wortschatzspiele & Quiz',    app: 'quiz-app.html',        tage: [7] }
@@ -129,10 +133,22 @@
       'Gefühle & Stimmungen': 'persoenlichkeit', 'Charakter': 'persoenlichkeit',
       'Im Büro': 'arbeit', 'Berufe': 'arbeit', 'In der Stadt': 'wohnen', 'Verkehr': 'alltag'
     },
+    landeskunde: {
+      'Pünktlichkeit': 'persoenlichkeit', 'Duzen & Siezen': 'freundschaft',
+      'Smalltalk & Höflichkeit': 'freundschaft', 'Nachbarschaft': 'wohnen',
+      'Wohnen & Miete': 'wohnen', 'Anmelden & Ämter': 'behoerden', 'Mülltrennung': 'umwelt',
+      'Einkaufen & Pfand': 'geld', 'Feiertage & Feste': 'gesellschaft', 'Vereine': 'freizeit',
+      'Essen & Esskultur': 'essen', 'Arbeitskultur': 'arbeit', 'Schule & Ausbildung': 'ausbildung',
+      'Direktheit & Werte': 'persoenlichkeit', 'Leben in Berlin': 'gesellschaft',
+      'Leben in Wien': 'gesellschaft', 'Leben in Zürich': 'gesellschaft',
+      'Leben in München': 'gesellschaft', 'Stadt oder Land?': 'wohnen',
+      'Geschichte kompakt': 'gesellschaft', 'Mauer & Wiedervereinigung': 'gesellschaft',
+      'Die drei DACH-Länder': 'gesellschaft'
+    },
     quiz: {} // Quiz & Spiele sind Spielformen, keine Themen: Nachbereitung kommt aus den Wörtern der Woche
   };
 
-  // Die Themen, die es in den Fokus-Apps gibt (Stand 25.11.2026).
+  // Die Themen, die es in den Fokus-Apps gibt (Stand 26.11.2026).
   var THEMEN = [
     { fokus: 'sprechen',    appId: 'gedaechtnis',    titel: 'Gedächtnis verbessern', niveau: 'bb', bereich: 'gesundheit' },
     { fokus: 'sprechen',    appId: 'haustiere',      titel: 'Hund oder Katze?',      niveau: 'ab', bereich: 'persoenlichkeit' },
@@ -148,7 +164,30 @@
     { fokus: 'wortschatz',  appId: 'buero',          titel: 'Im Büro',               niveau: 'bb', bereich: 'arbeit' },
     { fokus: 'quiz',        appId: 'quizmix',        titel: 'Großer Quiz-Mix',       niveau: 'bb' },
     { fokus: 'quiz',        appId: 'wahrfalsch',     titel: 'Wahr oder Falsch',      niveau: 'bb' },
-    { fokus: 'quiz',        appId: 'tabu',           titel: 'Tabu',                  niveau: 'ab' }
+    { fokus: 'quiz',        appId: 'tabu',           titel: 'Tabu',                  niveau: 'ab' },
+    // Landeskunde DACH (Stand 26.11.2026)
+    { fokus: 'landeskunde', appId: 'puenktlichkeit', titel: 'Pünktlichkeit', niveau: 'ab', bereich: 'persoenlichkeit' },
+    { fokus: 'landeskunde', appId: 'duzen-siezen', titel: 'Duzen & Siezen', niveau: 'bb', bereich: 'freundschaft' },
+    { fokus: 'landeskunde', appId: 'smalltalk', titel: 'Smalltalk & Höflichkeit', niveau: 'ab', bereich: 'freundschaft' },
+    { fokus: 'landeskunde', appId: 'nachbarschaft', titel: 'Nachbarschaft', niveau: 'bb', bereich: 'wohnen' },
+    { fokus: 'landeskunde', appId: 'wohnen-miete', titel: 'Wohnen & Miete', niveau: 'bb', bereich: 'wohnen' },
+    { fokus: 'landeskunde', appId: 'aemter', titel: 'Anmelden & Ämter', niveau: 'bb', bereich: 'behoerden' },
+    { fokus: 'landeskunde', appId: 'muelltrennung', titel: 'Mülltrennung', niveau: 'bc', bereich: 'umwelt' },
+    { fokus: 'landeskunde', appId: 'einkaufen-pfand', titel: 'Einkaufen & Pfand', niveau: 'ab', bereich: 'geld' },
+    { fokus: 'landeskunde', appId: 'feiertage', titel: 'Feiertage & Feste', niveau: 'ab', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'vereine', titel: 'Vereine', niveau: 'bb', bereich: 'freizeit' },
+    { fokus: 'landeskunde', appId: 'esskultur', titel: 'Essen & Esskultur', niveau: 'ab', bereich: 'essen' },
+    { fokus: 'landeskunde', appId: 'arbeitskultur', titel: 'Arbeitskultur', niveau: 'bb', bereich: 'arbeit' },
+    { fokus: 'landeskunde', appId: 'schule-ausbildung', titel: 'Schule & Ausbildung', niveau: 'bb', bereich: 'ausbildung' },
+    { fokus: 'landeskunde', appId: 'direktheit', titel: 'Direktheit & Werte', niveau: 'bc', bereich: 'persoenlichkeit' },
+    { fokus: 'landeskunde', appId: 'leben-berlin', titel: 'Leben in Berlin', niveau: 'bb', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'leben-wien', titel: 'Leben in Wien', niveau: 'bb', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'leben-zuerich', titel: 'Leben in Zürich', niveau: 'bb', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'leben-muenchen', titel: 'Leben in München', niveau: 'bb', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'stadt-land', titel: 'Stadt oder Land?', niveau: 'bb', bereich: 'wohnen' },
+    { fokus: 'landeskunde', appId: 'geschichte-kompakt', titel: 'Geschichte kompakt', niveau: 'bc', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'mauer-wende', titel: 'Mauer & Wiedervereinigung', niveau: 'bc', bereich: 'gesellschaft' },
+    { fokus: 'landeskunde', appId: 'dach-laender', titel: 'Die drei DACH-Länder', niveau: 'ab', bereich: 'gesellschaft' }
   ];
   THEMEN.forEach(function (t) { t.id = t.fokus + ':' + t.appId; });
 
@@ -160,7 +199,7 @@
   var THEMA = nachId(THEMEN), BEREICH = nachId(BEREICHE), GRAMM = nachId(GRAMMATIK), FOK = nachId(FOKUS), SPR = nachId(SPRACHE);
 
   var katalog = {
-    version: 2,
+    version: 3,
     NIVEAUS: NIVEAUS, FOKUS: FOKUS, GRUPPEN: GRUPPEN, BEREICHE: BEREICHE,
     GRAMMATIK: GRAMMATIK, SPRACHE: SPRACHE, NAV: NAV, THEMEN: THEMEN,
 
