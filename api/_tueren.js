@@ -25,11 +25,12 @@ export const TUEREN_ZU_AB = Date.parse('2026-11-01T00:00:00+01:00');
    auf und bleiben offen. Niemand muss nachts etwas umstellen. */
 export const TUEREN_AUF   = Date.parse('2026-12-01T00:00:00+01:00');
 
-/* 3 Tage kostenlos testen - NUR Sprechclub monatlich (premium_month),
+/* 3 Tage kostenlos testen - Sprechclub monatlich UND Halbjahr
+   (Julia, 26.11. 21:41: "doch halbjahres haben auch 3 tage"),
    NUR ab 1.12., NUR einmal pro Person (Pruefung in create-checkout.js). */
 export const TESTZEIT_AB    = TUEREN_AUF;
 export const TESTZEIT_TAGE  = 3;
-export const TESTZEIT_PLAENE = ['premium_month'];
+export const TESTZEIT_PLAENE = ['premium_month', 'premium_6m'];
 export const testzeitAktiv = (jetzt = Date.now()) => jetzt >= TESTZEIT_AB;
 
 export const tuerenZu = (jetzt = Date.now()) =>

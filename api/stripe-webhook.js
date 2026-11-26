@@ -169,9 +169,9 @@ async function sendGoodbyeMail(email, name) {
 }
 
 
-async function sendTestzeitStart(email, name, trialEndSek, preis) {
+async function sendTestzeitStart(email, name, trialEndSek, preis, monate) {
   if (!email) return;
-  await testzeitMail('start', await anLernende(email, name), { trialEndSek, preis });
+  await testzeitMail('start', await anLernende(email, name), { trialEndSek, preis, monate });
 }
 
 // --- Trial-Willkommens-Mail: Wahl zwischen 7 Tagen testen ODER sofort voll starten ---
@@ -885,13 +885,14 @@ export default async function handler(req, res) {
      Abbuchungsdatum. (Die Leiste im Schuelerbereich fragt Stripe selbst.) */
   async function testzeitStart(s, userId, buyerEmail) {
     try {
-      let trialEnd = null, preis = 139, name = s.customer_details?.name || '';
+      let trialEnd = null, preis = 139, monate = 1, name = s.customer_details?.name || '';
       if (s.subscription) {
         try {
           const sub = await stripe.subscriptions.retrieve(s.subscription);
           trialEnd = sub.trial_end || null;
           const it = sub.items && sub.items.data && sub.items.data[0];
           if (it && it.price && it.price.unit_amount) preis = Math.round(it.price.unit_amount / 100);
+          if (it && it.price && it.price.recurring && it.price.recurring.interval_count) monate = it.price.recurring.interval_count;
         } catch (e) { console.error('testzeit sub', e && e.message); }
       }
       if (!trialEnd) trialEnd = Math.floor(Date.now() / 1000) + 3 * 86400;
@@ -905,7 +906,7 @@ export default async function handler(req, res) {
         if (pr && pr.name) name = pr.name;
         if (!buyerEmail && pr) buyerEmail = pr.email;
       }
-      await sendTestzeitStart(buyerEmail, name, trialEnd, preis);
+      await sendTestzeitStart(buyerEmail, name, trialEnd, preis, monate);
     } catch (e) { console.error('testzeitStart', e); }
   }
 

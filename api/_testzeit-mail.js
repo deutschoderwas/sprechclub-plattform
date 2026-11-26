@@ -50,7 +50,7 @@ export function testzeitMailHtml({ hallo, kicker, titel, absaetze, knopfText, kn
 
 
 /* art: 'start' (direkt nach dem Abschluss) oder 'erinnerung' (24 h vor der Abbuchung).
-   to: { email, name }   daten: { trialEndSek, preis } */
+   to: { email, name }   daten: { trialEndSek, preis, monate } */
 export async function testzeitMail(art, to, daten) {
   try {
     if (!to || !to.email || !process.env.BREVO_API_KEY) return false;
@@ -58,6 +58,7 @@ export async function testzeitMail(art, to, daten) {
     const hallo = vorname ? `Hallo ${vorname},` : 'Hallo,';
     const datum = datumLang(daten.trialEndSek);
     const preis = daten.preis || 139;
+    const rhythmus = daten.monate === 6 ? 'danach alle 6 Monate' : 'danach jeden Monat';
     const start = art === 'start';
     const html = testzeitMailHtml(start ? {
       hallo,
@@ -65,7 +66,7 @@ export async function testzeitMail(art, to, daten) {
       titel: 'Willkommen im Sprechclub!',
       absaetze: [
         `schön, dass du dabei bist! Du kannst den Sprechclub jetzt <b>3 Tage kostenlos</b> testen: Stunden buchen, live sprechen, alles ausprobieren.`,
-        `<b>Wichtig:</b> Am <b>${datum}</b> buchen wir automatisch <b>${preis} &euro;</b> ab, danach jeden Monat.`,
+        `<b>Wichtig:</b> Am <b>${datum}</b> buchen wir automatisch <b>${preis} &euro;</b> ab, ${rhythmus}.`,
         `Du willst weitermachen? Dann musst du nichts tun. Du willst aufhören? Dann kündige <b>vor dem ${datum}</b> in deinem Schülerbereich unter „Mein Abo“. Dann zahlst du nichts.`,
         `Am besten buchst du jetzt gleich deine erste Stunde.`
       ],
@@ -77,7 +78,7 @@ export async function testzeitMail(art, to, daten) {
       titel: `Morgen buchen wir ${preis} € ab`,
       absaetze: [
         `deine 3 kostenlosen Tage im Sprechclub sind fast vorbei.`,
-        `<b>Morgen, am ${datum}, buchen wir ${preis} &euro; ab</b>, danach jeden Monat.`,
+        `<b>Morgen, am ${datum}, buchen wir ${preis} &euro; ab</b>, ${rhythmus}.`,
         `Du willst weitermachen? Dann musst du nichts tun.`,
         `Du willst aufhören? Dann kündige jetzt, vor dem ${datum}:`
       ],
@@ -127,7 +128,8 @@ export async function erinnerungenSenden() {
     } catch (e) { console.error('testzeit kunde', e && e.message); }
     const it = sub.items && sub.items.data && sub.items.data[0];
     const preis = (it && it.price && it.price.unit_amount) ? Math.round(it.price.unit_amount / 100) : 139;
-    if (await testzeitMail('erinnerung', { email, name }, { trialEndSek: sub.trial_end, preis })) {
+    const monate = (it && it.price && it.price.recurring && it.price.recurring.interval_count) || 1;
+    if (await testzeitMail('erinnerung', { email, name }, { trialEndSek: sub.trial_end, preis, monate })) {
       await stripe.subscriptions.update(sub.id, { metadata: { testzeit_erinnert: '1' } });
       ergebnis.gesendet++;
     }

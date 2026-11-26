@@ -363,8 +363,8 @@ export default async function handler(req, res) {
       let trialDays = (trial === false) ? 0 : 7; // "Sofort starten" => sofort zahlen, kein Test
       if (plan.tier) trialDays = 0; // Community/Premium: keine Testphase
       /* Julia, 26.11.2026: ab 1.12. Sprechclub monatlich 3 Tage kostenlos,
-         danach automatisch 139 EUR. Nur dieser Plan, nur einmal pro Person.
-         Halbjahr, Lernclub und Black-Week-Preise bleiben ohne Testzeit. */
+         danach automatisch 139 EUR. Halbjahr ebenso (Julia 21:41). Nur einmal
+         pro Person. Lernclub und Black-Week-Preise bleiben ohne Testzeit. */
       const istTestzeitPlan = plan.tier === 'premium' && TESTZEIT_PLAENE.includes(id) && testzeitAktiv();
       if (istTestzeitPlan && trial !== false) trialDays = TESTZEIT_TAGE;
       try {
@@ -464,13 +464,14 @@ export default async function handler(req, res) {
         const dd = zugangAb.split('-');
         abodesc += ` — Start am ${dd[2]}.${dd[1]}.${dd[0]}: Die Laufzeit beginnt an diesem Tag.`;
       }
+      const rhythmus = (plan.intervallAnzahl === 6) ? 'danach alle 6 Monate' : 'danach jeden Monat';
       if (abbuchungTxt) {
         /* Julias wichtigster Punkt: ganz klar sagen, dass nach 3 Tagen
            abgebucht wird - im Produkttext UND direkt ueber dem Knopf. */
-        abodesc = `3 Tage kostenlos. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, danach jeden Monat. `
+        abodesc = `3 Tage kostenlos. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, ${rhythmus}. `
           + `Wenn du nicht weitermachen willst, kündige vor dem ${abbuchungTxt} in deinem Schülerbereich.`;
         common.custom_text = { submit: { message:
-          `Heute zahlst du 0 €. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, danach jeden Monat. `
+          `Heute zahlst du 0 €. Am ${abbuchungTxt} buchen wir automatisch ${plan.preis} € ab, ${rhythmus}. `
           + `Vorher jederzeit kündbar. Melde dich danach mit genau dieser E-Mail-Adresse an.` } };
       }
       session = await createSafe({
