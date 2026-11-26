@@ -3,8 +3,9 @@
 // beide schreiben class_notes.notes) und noch KEINER Nachbereitung, und erstellt sie.
 // Eigenständig (keine externen lib-Imports), damit Vercel sicher bündelt.
 import { createClient } from '@supabase/supabase-js';
+import { runGruppenNachbereitung } from './gruppen-nachbereitung.js';
 
-export const maxDuration = 60;
+export const maxDuration = 300;   // 26.11.2026: Puffer, da die Gruppen-Nachbereitung jetzt im selben Lauf passiert
 /* Julia, 14.10.2026: "Bis zum 01.11 laeuft alles normal mit der
    Nachbereitung, sowohl in der Hauptgruppe als auch alles von den
    Kleingruppen werden in EINER Nachbereitung erstellt und an die
@@ -172,16 +173,13 @@ export default async function handler(req, res) {
 async function gruppenAnstossen(sb, base, c) {
   let stand = '?', text = '';
   try {
-    const r = await fetch(base + '/api/gruppen-nachbereitung', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET || '' },
-      body: JSON.stringify({ classId: c.id }),
-      signal: AbortSignal.timeout(45000),
-    });
-    stand = String(r.status);
-    text = (await r.text()).slice(0, 300);
-    if (r.ok) {
-      const j = JSON.parse(text || '{}');
+    /* Fix 26.11.2026: DIREKT aufrufen statt per HTTP. Der HTTP-Weg brauchte CRON_SECRET,
+       das auf Vercel fehlt → seit 14.10. 2598× „401 unauthorized“, keine einzige
+       persönliche Nachbereitung. So hängt nichts mehr an einem Schlüssel. */
+    const j = await runGruppenNachbereitung(sb, c.id);
+    stand = j && j.ok ? '200' : 'fehler';
+    text = JSON.stringify(j || {}).slice(0, 300);
+    {
       /* 'no_group_members' ist kein Fehler: viele Stunden haben keine
          Kleingruppen. Nur echte Fehlschlaege werden vermerkt. */
       if (j && j.ok === false && j.error === 'no_group_members') return;
@@ -229,7 +227,13 @@ async function rueckstandGruppen(sb, base, ended) {
       .filter(c => hatGruppen.has(c.id) && hatGemeinsame.has(c.id) && !hatEigene.has(c.id))
       .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));   /* aelteste zuerst */
     if (!offen.length) return;
-    await gruppenAnstossen(sb, base, offen[0]);
+    /* 26.11.2026: bis zu 3 Stunden pro Lauf (max. ~2 Min.), damit der Rückstand
+       seit 07.11. in Stunden statt Tagen abgearbeitet ist. */
+    const t0 = Date.now();
+    for (const c of offen.slice(0, 3)) {
+      if (Date.now() - t0 > 120000) break;
+      await gruppenAnstossen(sb, base, c);
+    }
   } catch (e) { /* Nachholen darf den Lauf nie aufhalten */ }
 }
 

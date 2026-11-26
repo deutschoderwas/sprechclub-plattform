@@ -32,21 +32,34 @@ export default async function handler(req, res) {
   return res.status(200).json(result);
 }
 
-async function runGruppenNachbereitung(sb, classId) {
+export async function runGruppenNachbereitung(sb, classId) {
   if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'anthropic_key_missing' };
 
   const { data: cls } = await sb.from('classes').select('id,title,level,topic').eq('id', classId).maybeSingle();
   if (!cls) return { ok: false, error: 'class_not_found' };
 
-  const [{ data: note }, { data: members }, { data: gnotes }, { data: bks }] = await Promise.all([
+  let [{ data: note }, { data: members }, { data: gnotes }, { data: bks }] = await Promise.all([
     sb.from('class_notes').select('post_content').eq('class_id', classId).maybeSingle(),
     sb.from('class_group_members').select('user_id,grp').eq('class_id', classId),
+    /* Fix 26.11.2026: auch der Verlauf (alle Gruppen, in denen jemand war – mehrere Runden,
+       aus Daily rekonstruiert). */
     sb.from('group_notes').select('grp,notes').eq('class_id', classId),
     sb.from('bookings').select('user_id').eq('class_id', classId).eq('status', 'booked'),
   ]);
 
   const base = (note && note.post_content) || {};
-  if (!members || !members.length) return { ok: false, error: 'no_group_members' };
+  let hist = [];
+  try { const { data } = await sb.from('class_group_history').select('user_id,grp').eq('class_id', classId); hist = data || []; } catch (e) {}
+  // Pro Person ALLE Gruppen sammeln (aktuelle Zuordnung zuerst)
+  const grpsByUser = new Map();
+  for (const m of [...(members || []), ...hist]) {
+    if (m.grp == null || Number(m.grp) <= 0) continue;
+    const l = grpsByUser.get(m.user_id) || [];
+    if (!l.includes(Number(m.grp))) l.push(Number(m.grp));
+    grpsByUser.set(m.user_id, l);
+  }
+  members = [...grpsByUser.entries()].map(([user_id, grps]) => ({ user_id, grp: grps[0], grps }));
+  if (!members.length) return { ok: false, error: 'no_group_members' };
 
   const booked = new Set((bks || []).map(b => b.user_id));
   const notesByGrp = {};
@@ -54,7 +67,7 @@ async function runGruppenNachbereitung(sb, classId) {
 
   // Pro Gruppe EINE KI-Zusammenfassung (sparsam) – nur wo es echte Notizen gibt
   const grpSummary = {};
-  const grpsUsed = [...new Set(members.map(m => m.grp).filter(g => g != null))];
+  const grpsUsed = [...new Set(members.flatMap(m => m.grps).filter(g => g != null))];
   for (const g of grpsUsed) {
     const txt = (notesByGrp[g] || '').trim();
     if (txt.length < 15) { grpSummary[g] = null; continue; } // zu wenig geschrieben → kein Gruppenteil
@@ -67,7 +80,15 @@ async function runGruppenNachbereitung(sb, classId) {
   const rows = [];
   for (const m of members) {
     if (!booked.has(m.user_id)) continue;            // nur gebuchte Schüler:innen
-    const gruppe = (m.grp != null) ? grpSummary[m.grp] : null;
+    // mehrere Gruppen → zu EINEM Gruppenteil zusammenführen
+    const teile = (m.grps || [m.grp]).map(g => grpSummary[g] ? Object.assign({ _nr: g }, grpSummary[g]) : null).filter(Boolean);
+    const gruppe = !teile.length ? null : (teile.length === 1 ? teile[0] : {
+      text: teile.map(t => (t.text || '')).filter(Boolean).join(' '),
+      punkte: teile.flatMap(t => Array.isArray(t.punkte) ? t.punkte : []).slice(0, 10),
+      vocab: teile.flatMap(t => Array.isArray(t.vocab) ? t.vocab : []),
+      exercises: teile.flatMap(t => Array.isArray(t.exercises) ? t.exercises : []),
+      _nr: teile.map(t => t._nr).join(' + '),
+    });
     let post_content;
     if (gruppe) {
       // Vokabeln der Gruppe in den Gesamt-Wortschatz mischen (fuer Vokabeltrainer + Vokabeln-Tab),
@@ -79,7 +100,7 @@ async function runGruppenNachbereitung(sb, classId) {
       const mergedVocab = baseVocab.concat(gv.filter(v => v.de && !seen.has(v.de.toLowerCase())));
       const baseEx = Array.isArray(base.exercises) ? base.exercises : [];
       post_content = Object.assign({}, base, {
-        gruppe: Object.assign({ nr: m.grp }, gruppe),
+        gruppe: Object.assign({}, gruppe, { nr: gruppe._nr }),
         vocab: mergedVocab,
         exercises: ge.concat(baseEx),
         generated_at: nowISO,
