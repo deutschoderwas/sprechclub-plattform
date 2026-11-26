@@ -18,10 +18,12 @@
 html,body{height:100%;}
 body{font-family:var(--ff-b);background:#17110A;color:#fff;overflow:hidden;-webkit-font-smoothing:antialiased;}
 /* === warmer, lebendiger Marken-Hintergrund === */
-.scene{position:fixed;inset:0;overflow:hidden;background:
-  radial-gradient(120% 115% at 14% 6%,#1C3A34 0%,#17110A 60%),
-  radial-gradient(100% 100% at 88% 96%,#3A2A0E 0%,transparent 62%),
-  radial-gradient(90% 90% at 50% 120%,#2A1E0A 0%,transparent 55%);}
+.scene{position:fixed;inset:0;overflow:hidden;background:#17110A;}
+.photo{position:absolute;inset:0;background:url('bilder/ui/bg-warm.webp') center/cover no-repeat;opacity:.5;}
+.scene::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(120% 115% at 14% 6%,rgba(28,58,52,.72) 0%,rgba(23,17,10,.86) 60%),
+  radial-gradient(100% 100% at 88% 96%,rgba(58,42,14,.6) 0%,transparent 62%),
+  linear-gradient(180deg,rgba(23,17,10,.4),rgba(23,17,10,.7));}
 .blob{position:absolute;border-radius:50%;filter:blur(72px);opacity:.4;mix-blend-mode:screen;animation:drift 22s ease-in-out infinite;}
 .b1{width:560px;height:560px;background:#14B8A6;top:-140px;left:-90px;}
 .b2{width:480px;height:480px;background:#2DD4BF;bottom:-160px;right:-70px;animation-delay:-7s;}
@@ -132,6 +134,46 @@ body{font-family:var(--ff-b);background:#17110A;color:#fff;overflow:hidden;-webk
 .gpop-w{font-family:var(--ff-h);font-weight:800;font-size:1.7rem;}
 .gpop-t{font-size:1.18rem;line-height:1.55;color:#3a454d;margin-top:10px;font-weight:600;}
 .gpop-hint{margin-top:18px;display:inline-block;font-family:var(--ff-h);font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--tur-ink);background:#D9F5EF;border-radius:999px;padding:6px 15px;}
+/* ===== HOME: Niveau- & Themenwahl ===== */
+body.home .nav,body.home .counter,body.home .badge-niv,body.home .to-themen{display:none;}
+.to-themen{position:fixed;top:4.5vh;left:7vw;z-index:25;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:var(--ff-h);font-weight:700;font-size:.82rem;border-radius:999px;padding:7px 14px;cursor:pointer;}
+.to-themen:hover{background:rgba(255,255,255,.18);}
+body:not(.home) .counter{display:none;}
+.home-head{text-align:center;max-width:760px;margin:0 auto;}
+.home-logo{font-family:var(--ff-h);font-weight:800;font-size:1.3rem;color:#fff;margin-bottom:26px;}
+.home-logo .o{color:var(--tur);}
+.home-step{display:inline-flex;align-items:center;gap:9px;font-family:var(--ff-h);font-weight:800;font-size:.8rem;letter-spacing:.13em;text-transform:uppercase;color:#17110A;background:var(--gold);padding:7px 15px;border-radius:999px;box-shadow:0 8px 20px rgba(224,176,0,.35);}
+.home-h{font-family:var(--ff-h);font-weight:800;font-size:clamp(2rem,4.5vw,3.3rem);letter-spacing:-.02em;margin:16px 0 6px;text-shadow:0 10px 36px rgba(0,0,0,.4);}
+.home-sub{font-size:1.15rem;font-weight:700;color:#cfe9e4;}
+/* Niveau-Karten */
+.niv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:40px auto 0;}
+.niv-card{position:relative;background:var(--cream2);color:var(--ink);border-radius:26px;padding:30px 24px 26px;text-align:center;cursor:pointer;box-shadow:0 26px 54px rgba(0,0,0,.42);border:1px solid rgba(0,0,0,.05);transition:transform .18s,box-shadow .18s;overflow:hidden;}
+.niv-card:hover{transform:translateY(-6px);box-shadow:0 36px 66px rgba(0,0,0,.5);}
+.niv-card .top{height:7px;position:absolute;left:0;right:0;top:0;}
+.niv-card.ab .top{background:var(--tur);}.niv-card.bb .top{background:var(--gold-d);}.niv-card.bc .top{background:var(--rot);}
+.niv-card .ring{width:84px;height:84px;border-radius:999px;margin:4px auto 16px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-weight:800;font-size:1.5rem;color:#fff;box-shadow:0 14px 28px rgba(0,0,0,.25);}
+.niv-card.ab .ring{background:linear-gradient(150deg,var(--tur),var(--tur-d));}.niv-card.bb .ring{background:linear-gradient(150deg,#ffd84a,var(--gold-d));color:var(--gold-ink);}.niv-card.bc .ring{background:linear-gradient(150deg,#ff5a4d,var(--rot));}
+.niv-card .lab{font-family:var(--ff-h);font-weight:800;font-size:1.5rem;}
+.niv-card .wort{color:#7a6f52;font-weight:700;font-size:.95rem;margin-top:3px;}
+.niv-card .cnt{margin-top:14px;display:inline-block;font-family:var(--ff-h);font-weight:800;font-size:.76rem;color:var(--tur-ink);background:#D9F5EF;border-radius:999px;padding:4px 13px;}
+/* Themen */
+.back{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:var(--ff-h);font-weight:700;font-size:.9rem;border-radius:999px;padding:9px 16px;cursor:pointer;margin-bottom:6px;}
+.back:hover{background:rgba(255,255,255,.18);}
+.themen-wrap{max-width:1040px;margin:26px auto 0;}
+.bereich-h{font-family:var(--ff-h);font-weight:800;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:22px 0 12px;display:flex;align-items:center;gap:10px;}
+.bereich-h::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.12);}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.t-card{position:relative;text-align:left;background:var(--cream2);color:var(--ink);border-radius:18px;padding:16px 17px;cursor:pointer;box-shadow:0 16px 34px rgba(0,0,0,.34);border:1px solid rgba(0,0,0,.05);transition:transform .15s,box-shadow .15s;}
+.t-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px rgba(0,0,0,.44);}
+.t-card .em{width:46px;height:46px;border-radius:14px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:11px;box-shadow:inset 0 -4px 10px rgba(180,140,0,.1);}
+.t-card .tt{font-family:var(--ff-h);font-weight:800;font-size:1.08rem;line-height:1.15;}
+.t-card .meta{margin-top:9px;display:flex;align-items:center;gap:7px;}
+.t-card .go{font-family:var(--ff-h);font-weight:800;font-size:.8rem;color:var(--tur-ink);}
+.t-card.soon{opacity:.6;cursor:default;}
+.t-card.soon:hover{transform:none;box-shadow:0 16px 34px rgba(0,0,0,.34);}
+.t-card .soon-b{font-family:var(--ff-h);font-weight:800;font-size:.68rem;color:#9a8c5f;background:#efe6cd;border-radius:999px;padding:3px 10px;}
+.lv2{font-family:var(--ff-h);font-weight:800;font-size:.7rem;border-radius:999px;padding:2px 9px;}
+.lv2.ab{background:#D9F5EF;color:#0A6256;}.lv2.bb{background:#FBEFC6;color:#7a5e00;}.lv2.bc{background:#FBE0DB;color:#a81710;}
 /* Navigation */
 .nav{position:fixed;left:0;right:0;bottom:0;height:9vh;min-height:62px;display:flex;align-items:center;justify-content:center;gap:18px;background:linear-gradient(0deg,rgba(10,12,14,.85),transparent);z-index:30;}
 .nav button{border:none;cursor:pointer;background:var(--cream2);color:var(--ink);width:46px;height:46px;border-radius:999px;font-size:1.2rem;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:.14s;}
@@ -151,6 +193,8 @@ body{font-family:var(--ff-b);background:#17110A;color:#fff;overflow:hidden;-webk
 <div class="tex"></div><div class="vig"></div>
 
 <div class="counter" id="counter"></div>
+<button class="to-themen" onclick="homeThemen(curNiv)">‹ Themen</button>
+<div class="badge-niv"><span class="lv">A2 · B1</span></div>
 <div class="stage" id="stage"></div>
 <div class="nav">
   <button id="prev" onclick="go(-1)">‹</button>
@@ -277,6 +321,57 @@ SL.push(()=>`<div class="slide">
   <div class="s-h">💡 Tipp zum Schluss</div>
   <div class="tipp" style="margin-top:26px"><div class="ic">💡</div><div class="t">${T.tipp}</div></div></div>`);
 
+/* ============ START: Niveau & Themen ============ */
+const NIV={ ab:{label:'A2 · B1',wort:'Grundstufe'}, bb:{label:'B1 · B2',wort:'Mittelstufe'}, bc:{label:'B2 · C1',wort:'Oberstufe'} };
+const THEMEN=[
+  {id:'puenktlichkeit',titel:'Pünktlichkeit',bereich:'Alltag & Zusammenleben',em:'⏰',niveau:'ab',ready:true},
+  {id:'duzen',titel:'Duzen & Siezen',bereich:'Alltag & Zusammenleben',em:'🤝',niveau:'ab'},
+  {id:'smalltalk',titel:'Smalltalk & Höflichkeit',bereich:'Alltag & Zusammenleben',em:'💬',niveau:'bb'},
+  {id:'nachbarn',titel:'Nachbarschaft',bereich:'Alltag & Zusammenleben',em:'🏡',niveau:'ab'},
+  {id:'muell',titel:'Mülltrennung',bereich:'Wohnen & Ämter',em:'♻️',niveau:'ab'},
+  {id:'aemter',titel:'Anmeldung & Ämter',bereich:'Wohnen & Ämter',em:'🏛️',niveau:'bb'},
+  {id:'mieten',titel:'Mieten & Wohnen',bereich:'Wohnen & Ämter',em:'🔑',niveau:'bb'},
+  {id:'feste',titel:'Feste & Feiertage',bereich:'Feste & Freizeit',em:'🎉',niveau:'ab'},
+  {id:'verein',titel:'Vereine & Ehrenamt',bereich:'Feste & Freizeit',em:'⚽',niveau:'bb'},
+  {id:'mauer',titel:'Mauer & Wiedervereinigung',bereich:'Geschichte & Gesellschaft',em:'🧱',niveau:'bc'},
+  {id:'meinung',titel:'Meinungsfreiheit',bereich:'Geschichte & Gesellschaft',em:'🗣️',niveau:'bc'},
+];
+let curNiv=null;
+function homeNiveau(){
+  document.body.classList.add('home');
+  stage.innerHTML=`<div class="slide on">
+    <div class="home-head">
+      <div class="home-logo">deutsch<span class="o">oderwas</span> · Sprechclub</div>
+      <span class="home-step">Schritt 1 von 2</span>
+      <div class="home-h">Welches Niveau seid ihr?</div>
+      <p class="home-sub">Wählt als Gruppe euer Niveau – dann zeigen wir euch passende Themen.</p>
+    </div>
+    <div class="niv-grid">${Object.keys(NIV).map(k=>{const n=NIV[k];const c=THEMEN.filter(t=>t.niveau===k).length;
+      return `<div class="niv-card ${k}" onclick="homeThemen('${k}')"><div class="top"></div><div class="ring">${n.label.split(' · ')[0]}</div><div class="lab">${n.label}</div><div class="wort">${n.wort}</div><div class="cnt">${c} Themen</div></div>`;}).join('')}</div>
+  </div>`;
+}
+function homeThemen(k){
+  curNiv=k; document.body.classList.add('home');
+  const list=THEMEN.filter(t=>t.niveau===k);
+  const bereiche=[...new Set(list.map(t=>t.bereich))];
+  stage.innerHTML=`<div class="slide on">
+    <div style="text-align:center"><button class="back" onclick="homeNiveau()">‹ Niveau ändern</button>
+      <div class="home-h" style="margin-top:10px">Welches Thema?</div>
+      <p class="home-sub">Niveau <b style="color:var(--gold)">${NIV[k].label}</b> · Schritt 2 von 2 – tippt ein Thema an.</p></div>
+    <div class="themen-wrap">${bereiche.map(b=>`<div class="bereich-h">${b}</div><div class="t-grid">${
+      list.filter(t=>t.bereich===b).map(t=>t.ready
+        ? `<div class="t-card" onclick="startUnit('${t.id}')"><div class="em">${t.em}</div><div class="tt">${t.titel}</div><div class="meta"><span class="lv2 ${t.niveau}">${NIV[t.niveau].label}</span><span class="go" style="margin-left:auto">Los ›</span></div></div>`
+        : `<div class="t-card soon"><div class="em">${t.em}</div><div class="tt">${t.titel}</div><div class="meta"><span class="lv2 ${t.niveau}">${NIV[t.niveau].label}</span><span class="soon-b" style="margin-left:auto">bald</span></div></div>`
+      ).join('')}</div>`).join('')}</div>
+  </div>`;
+}
+function startUnit(id){
+  const theme=THEMEN.find(t=>t.id===id);
+  if(!theme||!theme.ready) return;
+  document.body.classList.remove('home');
+  document.querySelector('.badge-niv .lv').textContent=NIV[theme.niveau].label;
+  show(0);
+}
 /* ============ ENGINE ============ */
 let cur=0;
 const stage=document.getElementById('stage'),dots=document.getElementById('dots'),counter=document.getElementById('counter');
@@ -292,8 +387,8 @@ function show(i){cur=Math.max(0,Math.min(SL.length-1,i));
   stage.querySelectorAll('.meter i').forEach(el=>{requestAnimationFrame(()=>el.style.width=el.dataset.w+'%');});
 }
 function go(d){show(cur+d);}
-addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape')closeGloss();});
-show(0);
+addEventListener('keydown',e=>{if(document.body.classList.contains('home'))return;if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape')closeGloss();});
+homeNiveau();
 </script>
 </body>
 </html>
