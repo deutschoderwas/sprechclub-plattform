@@ -90,6 +90,19 @@
   /* Fuer window.TUEREN_AUF: ein Zeitpunkt, ab dem die Tueren offen sind. */
   O.aufAb = function () { return VORSCHAU ? 1 : O.ab; };
   window.OFFEN = O;
+  /* In der Vorschau darf niemand versehentlich zahlen: vor dem 1.12.
+     wuerde die Kasse noch den Black-Week-Preis ohne Testzeit nehmen. */
+  if (VORSCHAU && window.fetch && !window.fetch.vorschauSperre) {
+    var echtFetch = window.fetch;
+    window.fetch = function (u) {
+      if (String(u || '').indexOf('create-checkout') >= 0) {
+        try { alert('Vorschau: So sieht es ab dem 1. Dezember aus. Bezahlen geht in der Vorschau nicht.'); } catch (e) {}
+        return Promise.resolve(new Response(JSON.stringify({ error: 'vorschau' }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+      }
+      return echtFetch.apply(this, arguments);
+    };
+    window.fetch.vorschauSperre = true;
+  }
 
   /* Der Rabatt in der Form, die die Seiten schon kennen: dort steht
      ueberall "var PREIS = 139, RABATT = 0" - RABATT ist der

@@ -3118,6 +3118,52 @@ document.addEventListener('DOMContentLoaded',function(){premiumAnzeigen(false);}
 </script>
 
 <script>(function(){var n=Date.now(),ph=n<Date.parse('2026-10-01T00:00:00+02:00')?0:(n<Date.parse('2026-11-01T00:00:00+01:00')?1:2);document.querySelectorAll('.rf-ph').forEach(function(e){e.hidden=(+e.getAttribute('data-ph')!==ph)})})();</script>
+<script>
+/* ============================================================
+   AB 1.12.2026: Sprechclub dauerhaft offen, 3 Tage kostenlos
+   (Julia, 26.11.2026; Auftrag Livia 18:40). Haengt an aktion.js
+   (window.OFFEN). Vorher passiert hier nichts. Vorschau: ?vorschau=0112
+   ============================================================ */
+(function(){
+  function setzen(){
+    var O = window.OFFEN;
+    if (!(O && O.offen()) || (window.AKTION && window.AKTION.laeuft())) return;
+    var $ = function(i){ return document.getElementById(i); };
+    var monat = !(window.TARIF && window.TARIF.gewaehlt && window.TARIF.gewaehlt.id === 'premium_6m');
+    /* Klebeleiste unten */
+    var t = $('kbxTitel'); if (t) t.textContent = '👑 Sprechclub · 3 Tage kostenlos';
+    var x = $('kbxText'); if (x) x.textContent = 'danach 139 € im Monat · vorher jederzeit kündbar';
+    var k = $('kbxKnopf');
+    if (k && !k.dataset.offen) { k.dataset.offen = '1'; k.textContent = O.knopf; k.removeAttribute('onclick');
+      k.onclick = function(){ if (typeof window.premiumKaufen === 'function') return window.premiumKaufen(); location.href = '/preise'; }; }
+    /* Preise-Fenster */
+    var b = $('btnP'); if (b && /np-btn-kauf/.test(b.className)) b.textContent = O.knopf;
+    var f = $('feinP'); if (f) f.textContent = monat ? O.text : O.text6m;
+    var bd = $('badgeP'); if (bd) bd.textContent = 'Sprechclub · 3 Tage kostenlos testen';
+    /* Mitgliedschaftskarte */
+    var ek = $('ekBtnK'); if (ek) { ek.removeAttribute('data-i18n'); ek.textContent = O.knopf; }
+    var abr = document.querySelector('.ek-abr'); if (abr && monat) abr.textContent = O.text;
+    /* Etikett im Hero */
+    var lbl = $('raLabel'); if (lbl) { lbl.removeAttribute('data-i18n'); lbl.textContent = '👑 Sprechclub · 3 Tage kostenlos'; }
+    /* FAQ "Bin ich langfristig gebunden?" */
+    var faq = document.querySelector('[data-i18n="t196"]');
+    if (faq) { faq.removeAttribute('data-i18n');
+      faq.textContent = 'Nein. Der Sprechclub ist monatlich kündbar. Neu dabei? Dann testest du die ersten 3 Tage kostenlos. Danach buchen wir automatisch 139 € im Monat ab (beim Halbjahr 583 € für 6 Monate). Kündigst du vorher in deinem Schülerbereich, zahlst du nichts.'; }
+    /* Lehrerteam (Julias Worte, Livia 18:40) */
+    var jl = document.querySelector('#lehrerteam [data-i18n="lt10"]');
+    if (jl) { jl.removeAttribute('data-i18n'); jl.textContent = 'Gründerin und das Gesicht von deutschoderwas. Julia schult unsere Lehrer.';
+      var rolle = jl.parentNode && jl.parentNode.querySelector('.rteam-rolle');
+      if (rolle) { rolle.removeAttribute('data-i18n'); rolle.textContent = 'Gründerin'; }
+      var liste = document.querySelector('#lehrerteam .rteam-liste');
+      if (liste && !document.getElementById('teamSatz')) { var p = document.createElement('p'); p.id = 'teamSatz';
+        p.style.cssText = 'text-align:center;margin:18px auto 0;max-width:640px;font-size:16px;opacity:.85';
+        p.textContent = 'Im Sprechclub unterrichten Mateo, Nikos, Abil und Ingrid.'; liste.parentNode.insertBefore(p, liste.nextSibling); } }
+  }
+  window.offenSetzen = setzen;
+  document.addEventListener('DOMContentLoaded', function(){ setzen(); setTimeout(setzen, 700); setTimeout(setzen, 2000); });
+  document.addEventListener('click', function(){ setTimeout(setzen, 150); }, true);
+})();
+</script>
 <script src="aktionsleiste.js?v=1" defer></script>
 
 

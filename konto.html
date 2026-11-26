@@ -6616,5 +6616,48 @@ window.__I18N__=Object.assign(window.__I18N__||{},{"nav_start": {"en": "Home", "
 }
 </style>
 <script src="/uebersetzung-warnung.js?v=1" defer></script>
+<script>
+/* ============================================================
+   TESTZEIT-LEISTE (ab 1.12.2026). Julia/Livia, 26.11.: "Im Schuelerbereich
+   waehrend der Testzeit: Leiste 'Deine kostenlose Testzeit endet am [Datum].
+   Danach 139 EUR im Monat.'" Das Datum kommt von Stripe (/api/mein-abo),
+   damit es genau das ist, an dem abgebucht wird. Nur fuer Sprechclub-
+   Mitglieder, einmal pro Sitzung nachgefragt.
+   ============================================================ */
+(function(){
+  var AB = Date.parse('2026-12-01T00:00:00+01:00');
+  function zeigen(d){
+    if (!d || !d.abo || d.abo.status !== 'trialing' || !d.abo.laeuft_bis) return;
+    if (document.getElementById('testzeitLeiste')) return;
+    var datum = new Date(d.abo.laeuft_bis * 1000).toLocaleDateString('de-DE', { timeZone:'Europe/Berlin', weekday:'long', day:'numeric', month:'long' });
+    var betrag = d.abo.betrag ? Math.round(d.abo.betrag / 100) : 139;
+    var takt = (d.abo.intervall_anzahl === 6) ? 'für 6 Monate' : 'im Monat';
+    var el = document.createElement('div');
+    el.id = 'testzeitLeiste'; el.setAttribute('role', 'status');
+    el.style.cssText = 'position:sticky;top:0;z-index:300;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;'
+      + 'padding:10px 16px;background:#FFCE00;color:#14181B;border-bottom:1.5px solid #14181B;font:600 14.5px Inter,system-ui,sans-serif;text-align:center';
+    el.innerHTML = '<span>Deine kostenlose Testzeit endet am <b>' + datum + '</b>. Danach ' + betrag + ' € ' + takt + '.</span>'
+      + '<a href="#abo" onclick="go(\'abo\');return false" style="color:#14181B;font-weight:800;text-decoration:underline">Mein Abo / kündigen</a>';
+    document.body.insertBefore(el, document.body.firstChild);
+  }
+  function pruefen(versuch){
+    if (Date.now() < AB) return;
+    if (typeof profile === 'undefined' || typeof sb === 'undefined' || !sb || !profile || !(profile.id || profile.tier)) {
+      if ((versuch || 0) < 20) setTimeout(function(){ pruefen((versuch || 0) + 1); }, 1000); return; }
+    if (profile.tier !== 'premium') return;
+    try { var c = sessionStorage.getItem('testzeitInfo'); if (c) { zeigen(JSON.parse(c)); return; } } catch(e){}
+    sb.auth.getSession().then(function(r){
+      var s = r && r.data && r.data.session; if (!s) return;
+      return fetch('/api/mein-abo', { headers: { 'Authorization': 'Bearer ' + s.access_token } })
+        .then(function(x){ return x.json(); })
+        .then(function(d){ var kurz = { abo: d && d.abo ? { status: d.abo.status, laeuft_bis: d.abo.laeuft_bis, betrag: d.abo.betrag, intervall_anzahl: d.abo.intervall_anzahl } : null };
+          try { sessionStorage.setItem('testzeitInfo', JSON.stringify(kurz)); } catch(e){}
+          zeigen(kurz); });
+    }).catch(function(){});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ pruefen(0); });
+  else pruefen(0);
+})();
+</script>
 </body>
 </html>
