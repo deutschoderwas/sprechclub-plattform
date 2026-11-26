@@ -41,6 +41,23 @@ export const FREEBIES = {
     liste:  0,        // 0 = BREVO_FREEBIE_LIST_ID, sonst Liste 14 (Sprechclub Interessenten)
   },
 
+  'telefon': {
+    augen:  'Für den Anruf, den du seit Tagen aufschiebst',
+    titel:  'Telefonieren',
+    zeile2: '20 Sätze für',
+    stark:  'jeden Anruf.',
+    zitat:  '„Schreiben kann ich. Aber wenn das Telefon klingelt, lege ich lieber auf.“',
+    unter:  'Kennst du? Dann ist das hier für dich.',
+    punkte: [
+      'Arzt, Amt, Vermieter, Mailbox — Wort für Wort, was du sagen kannst',
+      'Mit englischer Übersetzung und der lockeren Alltagsvariante',
+      'Mit Buchstabiertafel, damit dein Name am Telefon ankommt',
+    ],
+    bild:   '/freebies/vorschau/telefon.jpg',
+    datei:  '/freebies/telefon-anruf.pdf',
+    knopf:  'Schick mir die 20 Sätze',
+    liste:  0,
+  },
 };
 
 /* Wird ein Schlüssel benutzt, den es hier nicht gibt, zeigt die Seite
