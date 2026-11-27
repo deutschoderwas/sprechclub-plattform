@@ -927,8 +927,11 @@
       const d = ifr.contentDocument, w = ifr.contentWindow; if(!d || !w) return;
       const stage=d.getElementById('stage');
       // Nur echte Folien-Decks (#stage 1280×720) bekommen den 16:9-Kasten; Tab-/Scroll-Lektionen volle Höhe.
-      document.body.classList.toggle('deck169', !!stage);
-      if(!stage) return;
+      /* Präsis mit data-hochformat (einheit-wow.html u. a.) füllen die ganze Spalte von oben bis unten
+         (Julia 27.11.: „im Hochformat, damit es nicht auf der halben Seite ist“). */
+      const hoch = d.documentElement && d.documentElement.hasAttribute('data-hochformat');
+      document.body.classList.toggle('deck169', !!stage && !hoch);
+      if(!stage || hoch) return;
       if(!d.getElementById('dow-stagefix')){
         const st=d.createElement('style'); st.id='dow-stagefix';
         st.textContent='#stage{flex:0 0 auto !important;}';
